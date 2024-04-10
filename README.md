@@ -1,2 +1,3 @@
-# prebuilt-actions
-Contains all the pre-built AI Actions provided by Sema4.ai
+# Prebuilt AI Actions provided by Sema4.ai
+
+Repository contains the implementations of prebuilt AI Actions available inside Sema4.ai Control Room.
