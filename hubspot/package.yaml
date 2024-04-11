@@ -1,0 +1,24 @@
+
+# Required: A short name for the action package
+name: HubSpot
+
+# Required: A description of what's in the action package.
+description: Atomic actions operating on resources in HubSpot.
+
+# Required: The current version of this action package.
+version: 0.0.1
+
+# Required: A link to where the documentation on the package lives.
+documentation: https://github.com/robocorp/prebuilt-actions
+
+dependencies:
+  conda-forge:
+  - python=3.10.12
+  - pip=23.2.1
+  - robocorp-truststore=0.8.0
+  pypi:
+  - robocorp=2.0.2
+  - robocorp-actions=0.1.3
+  - hubspot-api-client=9.0.0
+  - python-dotenv=1.0.1
+  - pydantic=2.6.4
