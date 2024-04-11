@@ -40,7 +40,7 @@ def _get_api_client(request: Request) -> HubSpot:
     return HubSpot(access_token=access_token)
 
 
-@action
+@action(is_consequential=False)
 def search_companies(request: Request, query: str, limit: int = 10) -> CompanyResult:
     """Search for companies based on the provided string query.
 
@@ -49,7 +49,7 @@ def search_companies(request: Request, query: str, limit: int = 10) -> CompanyRe
         limit: The maximum number of results the search can return.
 
     Returns:
-        A list of company names matching the query.
+        A structure with a list of company names matching the query.
     """
     api_client = _get_api_client(request)
     search_request = CompanySearchRequest(query=query, limit=limit)
