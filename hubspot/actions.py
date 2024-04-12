@@ -11,11 +11,11 @@ from pathlib import Path
 from typing import Annotated
 
 from dotenv import load_dotenv
-from hubspot import HubSpot
-from hubspot.crm.companies import PublicObjectSearchRequest as CompanySearchRequest
 from pydantic import BaseModel, Field
 from robocorp.actions import Request, action
 
+from hubspot import HubSpot
+from hubspot.crm.companies import PublicObjectSearchRequest as CompanySearchRequest
 
 ACCESS_TOKEN_FIELD = "HUBSPOT_ACCESS_TOKEN"
 
@@ -41,11 +41,18 @@ def _get_api_client(request: Request) -> HubSpot:
 
 
 @action(is_consequential=False)
-def search_companies(request: Request, query: str, limit: int = 10) -> CompanyResult:
-    """Search for companies based on the provided string query.
+def hubspot_search_companies(
+    request: Request, query: str, limit: int = 10
+) -> CompanyResult:
+    """Search for HubSpot companies based on the provided string query.
+
+    This is a basic search returning a list of company names that are matching the
+    `query` among any of their properties. The search will be limited to at most
+    `limit` results, therefore you have to increase this parameter if you want to
+    obtain more.
 
     Args:
-        query: String that is searched for in all the properties for a match.
+        query: String that is searched for in all the company properties for a match.
         limit: The maximum number of results the search can return.
 
     Returns:
