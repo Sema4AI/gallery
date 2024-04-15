@@ -12,7 +12,7 @@ from typing import Annotated
 
 from dotenv import load_dotenv
 from pydantic import BaseModel, Field
-from robocorp.actions import Request, action
+from robocorp.actions import Request, Secret, action
 
 from hubspot import HubSpot
 from hubspot.crm.companies import PublicObjectSearchRequest as CompanySearchRequest
@@ -28,21 +28,16 @@ class CompanyResult(BaseModel):
     names: Annotated[list[str], Field(description="Company names.")]
 
 
-def _get_api_client(request: Request) -> HubSpot:
-    # Sets the access token from the incoming request object if present, otherwise it
+def _get_api_client(access_token: Secret) -> HubSpot:
+    # Sets the access token from the incoming injected secret if present, otherwise it
     #  defaults to an environment variable.
-    access_token = os.getenv(ACCESS_TOKEN_FIELD)
-    context_data = request.headers.get("X-Action-Context")
-    if context_data:
-        action_context = json.loads(context_data)
-        access_token = action_context.get(ACCESS_TOKEN_FIELD, access_token)
-
-    return HubSpot(access_token=access_token)
+    token = os.getenv(ACCESS_TOKEN_FIELD, access_token.value)
+    return HubSpot(access_token=token)
 
 
 @action(is_consequential=False)
 def hubspot_search_companies(
-    request: Request, query: str, limit: int = 10
+    request: Request, access_token: Secret, query: str, limit: int = 10
 ) -> CompanyResult:
     """Search for HubSpot companies based on the provided string query.
 
@@ -58,7 +53,7 @@ def hubspot_search_companies(
     Returns:
         A structure with a list of company names matching the query.
     """
-    api_client = _get_api_client(request)
+    api_client = _get_api_client(access_token)
     search_request = CompanySearchRequest(query=query, limit=limit)
     response = api_client.crm.companies.search_api.do_search(
         public_object_search_request=search_request
