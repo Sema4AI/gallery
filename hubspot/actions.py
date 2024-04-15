@@ -31,7 +31,7 @@ class CompanyResult(BaseModel):
 def _get_api_client(access_token: Secret) -> HubSpot:
     # Sets the access token from the incoming injected secret if present, otherwise it
     #  defaults to an environment variable.
-    token = os.getenv(ACCESS_TOKEN_FIELD, access_token.value)
+    token = access_token.value or os.getenv(ACCESS_TOKEN_FIELD)
     return HubSpot(access_token=token)
 
 
