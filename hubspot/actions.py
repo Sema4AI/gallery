@@ -11,10 +11,11 @@ from typing import Annotated
 
 from dotenv import load_dotenv
 from pydantic import BaseModel, Field
-from robocorp.actions import Request, Secret, action
+from robocorp.actions import Secret, action
 
 from hubspot import HubSpot
 from hubspot.crm.companies import PublicObjectSearchRequest as CompanySearchRequest
+
 
 ACCESS_TOKEN_FIELD = "HUBSPOT_ACCESS_TOKEN"
 
@@ -29,7 +30,6 @@ class CompanyResult(BaseModel):
 
 @action(is_consequential=False)
 def hubspot_search_companies(
-    request: Request,
     query: str,
     limit: int = 10,
     access_token: Secret = Secret.model_validate(os.getenv(ACCESS_TOKEN_FIELD, "")),
