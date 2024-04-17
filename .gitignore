@@ -1,2 +1,3 @@
 # Temporarily store secrets as env vars.
 .env
+.vscode
