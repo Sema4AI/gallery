@@ -8,7 +8,7 @@ Currently supporting:
 - search news
 """
 
-from robocorp.actions import action
+from robocorp.actions import action, Secret
 from robocorp import browser
 
 from dotenv import load_dotenv
@@ -29,6 +29,8 @@ from support import _ensure_https, _get_form_elements, _get_page_links, _locator
 load_dotenv()
 
 HEADLESS_BROWSER = not os.getenv("HEADLESS_BROWSER")
+API_KEY_FIELD = "GOOGLE_SEARCH_API_KEY"
+CONTEXT_FIELD = "GOOGLE_SEARCH_CONTEXT"
 
 if sys.platform == "win32":
     asyncio.set_event_loop_policy(asyncio.WindowsProactorEventLoopPolicy())
@@ -107,7 +109,12 @@ def web_search_places(
 
 
 @action(is_consequential=False)
-def google_search(topic: str, count: int = 3) -> SearchResultList:
+def google_search(
+    topic: str,
+    count: int = 3,
+    api_key: Secret = Secret.model_validate(os.getenv(API_KEY_FIELD, "")),
+    context: Secret = Secret.model_validate(os.getenv(CONTEXT_FIELD, "")),
+) -> SearchResultList:
     """Performs Google Search to find information about a topic.
 
     Do not use this action to search for places, use 'web_search_places' instead.
@@ -121,15 +128,16 @@ def google_search(topic: str, count: int = 3) -> SearchResultList:
     """
     url = "https://www.googleapis.com/customsearch/v1"
     params = {
-        "key": os.getenv("GOOGLE_SEARCH_API_KEY"),
-        "cx": os.getenv("GOOGLE_SEARCH_CONTEXT"),
+        "key": api_key.value or os.getenv(API_KEY_FIELD, ""),
+        "cx": context.value or os.getenv(CONTEXT_FIELD, ""),
         "q": topic,
     }
     response = requests.get(url, params=params)
     result = response.json()
     items = []
-    for item in result["items"]:
-        items.append(SearchResult(title=item["title"], link=item["link"]))
+    if "items" in result.keys():
+        for item in result["items"]:
+            items.append(SearchResult(title=item["title"], link=item["link"]))
 
     return SearchResultList(results=items[:count])
 
