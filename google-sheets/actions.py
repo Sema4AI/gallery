@@ -162,8 +162,8 @@ def update_sheet_row(
 
     Example:
         ```python
-            update_sheet_row("Orders", "January Sheet", "A1", "Order number")
-            update_sheet_row("Orders", "January Sheet", "B1", "Item")
+            update_sheet_row("Orders", "January Sheet", "A1", [["Order number"]])
+            update_sheet_row("Orders", "January Sheet", "B1", [["Item"]])
             update_sheet_row("Orders", "January Sheet", "A2:B3", [[5, "Macbook Pro"], [6, "iPhone"]])
         ```
 
