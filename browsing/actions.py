@@ -84,7 +84,14 @@ def download_file(
         DownloadedFile: Content of the file (if text), the filepath
         where file is download and status of the download.
     """
-    df = DownloadedFile(content="", filepath="", status="", request_status=200)
+    df = DownloadedFile(
+        content="",
+        filepath="",
+        status="",
+        request_status=200,
+        content_type="",
+        content_length=0,
+    )
     try:
         with requests.get(file_url, stream=True) as response:
             df.request_status = response.status_code
@@ -99,17 +106,17 @@ def download_file(
                 filename = os.path.basename(urlparse(file_url).path)
 
             # Check file type and size from headers
-            content_type = response.headers.get("Content-Type", "")
-            content_length = response.headers.get("Content-Length", 0)
-            print(f"Content-Type: {content_type}")
-            print(f"Content-Length: {content_length} bytes")
+            df.content_type = response.headers.get("Content-Type", "")
+            df.content_length = response.headers.get("Content-Length", 0)
+            print(f"Content-Type: {df.content_type}")
+            print(f"Content-Length: {df.content_length} bytes")
 
-            if int(content_length) > max_filesize_in_megabytes * 1000000:
+            if int(df.content_length) > max_filesize_in_megabytes * 1000000:
                 df.status = f"File is too large to download - limit is {max_filesize_in_megabytes} MB"
                 return df
 
             # Check if content is text-based or binary
-            if "text" in content_type:
+            if "text" in df.content_type:
                 df.content = response.text
 
             if target_folder == "":

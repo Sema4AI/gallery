@@ -68,3 +68,5 @@ class DownloadedFile(BaseModel):
     filepath: str = Field(description="The path of the downloaded file")
     status: str = Field(description="The status of the download")
     request_status: int = Field(description="The status of the request")
+    content_type: str = Field(description="The content type of the file")
+    content_length: int = Field(description="The size of the content in bytes")
