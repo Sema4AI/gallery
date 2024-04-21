@@ -25,9 +25,9 @@ def _get_page_links(page, url) -> Links:
             continue
         href = element.get_attribute("href")
         text = element.text_content().strip()
-        if "http" not in href:
+        if href and "http" not in href:
             href = f"{url}{href}"
-        links.append(Link(href=href, text=text))
+        links.append(Link(href=href or "", text=text or ""))
     return Links(links=links)
 
 
