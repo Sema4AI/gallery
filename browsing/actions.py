@@ -131,7 +131,7 @@ def download_file(
 
 @action(is_consequential=False)
 def web_search_places(
-    place: str, city: str = "", country: str = "", radius: int = 5, count: int = 3
+    place: str, city: str = "", country: str = "", radius: int = 10, count: int = 3
 ) -> SearchResultList:
     """Find places in a map location.
 
@@ -148,11 +148,13 @@ def web_search_places(
         SearchResultList: Titles and links of the results
     """
     ddgs = DDGS()
-    parameters = {"max_results": count, "radius": radius}
+    parameters = {"max_results": count, "place": place}
     if city:
         parameters["city"] = city
+        parameters["radius"] = radius
     if country:
         parameters["country"] = country
+        parameters["radius"] = radius
     results = ddgs.maps(place, **parameters)
     items = []
     for r in results:
