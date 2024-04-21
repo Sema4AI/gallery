@@ -108,16 +108,14 @@ def download_file(
                 df.status = f"File is too large to download - limit is {max_filesize_in_megabytes} MB"
                 return df
 
-            file_download_type = "wb"
             # Check if content is text-based or binary
             if "text" in content_type:
-                file_download_type = "w"
                 df.content = response.text
 
             if target_folder == "":
                 target_folder = os.getcwd()
             file_path = os.path.join(target_folder, filename)
-            with open(file_path, file_download_type) as file:
+            with open(file_path, "wb") as file:
                 for chunk in response.iter_content(chunk_size=8192):
                     file.write(chunk)
             df.status = f"File downloaded successfully at: {os.path.abspath(file_path)}"
