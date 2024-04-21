@@ -153,7 +153,7 @@ def web_search_places(
         SearchResultList: Titles and links of the results
     """
     ddgs = DDGS()
-    parameters = {"max_results": count, "place": place}
+    parameters = {"max_results": count}
     if city:
         parameters["city"] = city
         parameters["radius"] = radius
