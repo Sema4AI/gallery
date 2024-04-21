@@ -8,7 +8,7 @@ Currently supporting:
 - search news
 """
 
-from robocorp.actions import action, Secret
+from robocorp.actions import action, Secret, Request
 from robocorp import browser
 
 from dotenv import load_dotenv
@@ -37,7 +37,7 @@ if sys.platform == "win32":
 
 
 @action(is_consequential=False)
-def get_website_content(url: str) -> WebPage:
+def get_website_content(url: str, request: Request) -> WebPage:
     """Gets the text content, form elements, links and other elements of a website.
 
     If url ends with .csv then use 'download_file' action.
@@ -48,6 +48,8 @@ def get_website_content(url: str) -> WebPage:
     Returns:
         WebPage: Text content, form elements and elements of the website
     """
+    print(f"cookies: {request.cookies}")
+    print(f"headers: {request.headers}")
     url = _ensure_https(url)
     browser.configure(browser_engine="chromium", headless=HEADLESS_BROWSER)
     page = browser.goto(url)
