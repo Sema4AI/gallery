@@ -61,3 +61,10 @@ class WebPage(BaseModel):
     text_content: str = Field(description="The text content of the website")
     form: Form
     links: Links
+
+
+class DownloadedFile(BaseModel):
+    content: str = Field(description="The content of the downloaded file")
+    filepath: str = Field(description="The path of the downloaded file")
+    status: str = Field(description="The status of the download")
+    request_status: int = Field(description="The status of the request")

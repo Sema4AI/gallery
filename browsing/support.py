@@ -5,6 +5,7 @@ from action_types import (
     FormElement,
     Option,
 )
+from urllib.parse import unquote
 
 
 def _get_form_elements(page, url) -> Form:
@@ -73,3 +74,13 @@ def _locator_action(locator, element):
         locator.select_option(element.value_to_fill)
     else:
         locator.fill(element.value_to_fill)
+
+
+def _get_filename_from_cd(cd):
+    """
+    Get filename from content-disposition header if available.
+    """
+    if not cd:
+        return None
+    fname = cd.split("filename=")[1] if "filename=" in cd else None
+    return unquote(fname.strip('"')) if fname else None
