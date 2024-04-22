@@ -86,7 +86,7 @@ def get_sheet_content(
 
 
 @action(is_consequential=False)
-def get_google_spreadsheet_schema(
+def get_spreadsheet_schema(
     spreadsheet: str, credentials: Secret = DEFAULT_CREDENTIALS
 ) -> str:
     """Get necessary information to be able to work with a Google Spreadsheets correctly.
@@ -179,8 +179,8 @@ def update_sheet_row(
 
 
 def _get_sheet_content(worksheet: Worksheet, from_row, limit) -> str:
-    output = f"Sheet {worksheet.title} contains following rows:\n\n"
-    is_empty = f"Sheet {worksheet.title} is empty."
+    output = f"{worksheet.title} contains following rows:\n\n"
+    is_empty = f"{worksheet.title} is empty."
 
     letter_column = _to_column_letter(worksheet.column_count)
     content = worksheet.get(f"A{from_row}:{letter_column}{limit}")
