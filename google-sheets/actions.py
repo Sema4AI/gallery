@@ -1,7 +1,11 @@
-"""Set of actions operating on HubSpot resources.
+"""Set of actions operating on Google Sheets.
 
 Currently supporting:
-- Searching: companies, contacts, deals, tasks
+- Creating a new sheet
+- Get a sheet schema
+- Retrieve the contents of a sheet
+- Update a sheet row
+- Add rows to a sheet
 """
 
 import gspread
@@ -16,9 +20,10 @@ from pydantic import BaseModel, Field
 from robocorp.actions import Secret, action
 from gspread import Worksheet
 
-GSPREAD_CREDENTIALS = "GSPREAD_CREDENTIALS"
-
 load_dotenv(Path("devdata") / ".env")
+
+DEFAULT_CREDENTIALS = Secret.model_validate(os.getenv("GSPREAD_CREDENTIALS", ""))
+ALPHA_LENGTH = ord("Z") - ord("A") + 1
 
 
 class Row(BaseModel):
@@ -33,17 +38,14 @@ class RowData(BaseModel):
 
 
 @action(is_consequential=False)
-def create_spreadsheet(
-    name: str,
-    credentials: Secret = Secret.model_validate(os.getenv(GSPREAD_CREDENTIALS, "")),
-):
-    """Creates a new Spreadsheet
+def create_spreadsheet(name: str, credentials: Secret = DEFAULT_CREDENTIALS) -> str:
+    """Creates a new Spreadsheet.
 
     Args:
-        name: name of the Spreadsheet, which will be later used when reading or writing to it
+        name: name of the Spreadsheet, which will be later used when reading or writing into it
 
     Returns:
-        The spreadsheet title and url.
+        Message containing the spreadsheet title and url.
     """
     gc = gspread.service_account_from_dict(json.loads(credentials.value))
 
@@ -58,7 +60,7 @@ def get_sheet_content(
     worksheet: str,
     from_row: int = 1,
     limit: int = 100,
-    credentials: Secret = Secret.model_validate(os.getenv(GSPREAD_CREDENTIALS, "")),
+    credentials: Secret = DEFAULT_CREDENTIALS,
 ) -> str:
     """Get all content from the chosen Google Spreadsheet Sheet.
 
@@ -85,8 +87,7 @@ def get_sheet_content(
 
 @action(is_consequential=False)
 def get_google_spreadsheet_schema(
-    spreadsheet: str,
-    credentials: Secret = Secret.model_validate(os.getenv(GSPREAD_CREDENTIALS, "")),
+    spreadsheet: str, credentials: Secret = DEFAULT_CREDENTIALS
 ) -> str:
     """Get necessary information to be able to work with a Google Spreadsheets correctly.
 
@@ -102,12 +103,12 @@ def get_google_spreadsheet_schema(
     sh = gc.open(spreadsheet)
 
     output = "Here are the sheets and their first rows.\n\n"
+    content = []
 
     for sheet in sh.worksheets():
-        output += _get_sheet_content(sheet, from_row=1, limit=5)
-        output += "\n"
+        content.append(_get_sheet_content(sheet, from_row=1, limit=5))
 
-    return output
+    return output + "\n".join(content)
 
 
 @action(is_consequential=False)
@@ -115,7 +116,7 @@ def add_sheet_rows(
     spreadsheet: str,
     worksheet: str,
     rows_to_add: RowData,
-    credentials: Secret = Secret.model_validate(os.getenv(GSPREAD_CREDENTIALS, "")),
+    credentials: Secret = DEFAULT_CREDENTIALS,
 ) -> str:
     """Add multiple rows to the Google sheet.
 
@@ -127,17 +128,13 @@ def add_sheet_rows(
         rows_to_add: the rows to be added to the end of the sheet
 
     Returns:
-        Message indicating the success or failure of the operation.
+        Message indicating the success of the operation.
     """
 
     gc = gspread.service_account_from_dict(json.loads(credentials.value))
 
     spreadsheet = gc.open(spreadsheet)
     worksheet = spreadsheet.worksheet(worksheet)
-
-    raw_data = []
-    for row in rows_to_add.rows:
-        raw_data.append(row.columns)
 
     worksheet.append_rows(values=rows_to_add.to_raw_data())
 
@@ -150,7 +147,7 @@ def update_sheet_row(
     worksheet: str,
     cells: str,
     data: RowData,
-    credentials: Secret = Secret.model_validate(os.getenv(GSPREAD_CREDENTIALS, "")),
+    credentials: Secret = DEFAULT_CREDENTIALS,
 ) -> str:
     """Update a cell or a range of cells in a worksheet using A1 or R1:C1 notation.
 
@@ -198,15 +195,15 @@ def _get_sheet_content(worksheet: Worksheet, from_row, limit) -> str:
 
 
 def _to_column_letter(number: int) -> str:
-    """Convert a column number into a column letter(s)."""
+    # Convert a column number into a column letter(s).
 
     if number < 1:
         raise ValueError("Number must be greater than 0")
 
     column_letter = ""
     while number > 0:
-        remainder = (number - 1) % 26
-        column_letter = chr(65 + remainder) + column_letter
-        number = (number - 1) // 26
+        remainder = (number - 1) % ALPHA_LENGTH
+        column_letter = chr(ord("A") + remainder) + column_letter
+        number = (number - 1) // ALPHA_LENGTH
 
     return column_letter
