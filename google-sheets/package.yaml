@@ -1,0 +1,24 @@
+
+# Required: A short name for the action package
+name: Google Sheets
+
+# Required: A description of what's in the action package.
+description: Atomic actions operating with Google Sheets.
+
+# Required: The current version of this action package.
+version: 0.0.1
+
+# Required: A link to where the documentation on the package lives.
+documentation: https://github.com/robocorp/prebuilt-actions/google-sheets/README.md
+
+dependencies:
+  conda-forge:
+  - python=3.10.12
+  - pip=23.2.1
+  - robocorp-truststore=0.8.0
+  - python-dotenv=1.0.1
+  pypi:
+  - robocorp=2.0.2
+  - robocorp-actions=0.2.0
+  - gspread=6.1.0
+  - pydantic=2.6.4
