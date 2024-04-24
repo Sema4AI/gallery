@@ -8,7 +8,7 @@ description: Base actions needed to get information from websites and interact w
 version: 0.0.1
 
 # Required: A link to where the documentation on the package lives.
-documentation: https://github.com/robocorp/prebuilt-actions
+documentation: https://github.com/robocorp/prebuilt-actions/browsing/README.md
 
 dependencies:
   conda-forge:
@@ -19,6 +19,6 @@ dependencies:
   pypi:
     - robocorp-browser=2.3.3
     - robocorp-actions=0.2.1
-    - pydantic=2.6.4
+    - pydantic=2.7.1
     - requests=2.31.0
     - duckduckgo-search=5.3.0

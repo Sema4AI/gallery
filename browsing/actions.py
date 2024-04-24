@@ -23,6 +23,8 @@ from urllib.parse import urlparse
 from action_types import (
     DownloadedFile,
     WebPage,
+    PlaceSearchResult,
+    PlaceSearchResultList,
     SearchResultList,
     SearchResult,
 )
@@ -137,7 +139,7 @@ def download_file(
 @action(is_consequential=False)
 def web_search_places(
     place: str, city: str = "", country: str = "", radius: int = 10, count: int = 3
-) -> SearchResultList:
+) -> PlaceSearchResultList:
     """Find places in a map location.
 
     Returned link can be used to check opening hours for the place.
@@ -150,7 +152,7 @@ def web_search_places(
         count (int): Count on how many results to retrieve
 
     Returns:
-        SearchResultList: Titles and links of the results
+        PlaceSearchResultList: Details on the place search results
     """
     ddgs = DDGS()
     parameters = {"max_results": count}
@@ -163,9 +165,28 @@ def web_search_places(
     results = ddgs.maps(place, **parameters)
     items = []
     for r in results:
+        place_result = PlaceSearchResult()
         print(r)
-        items.append(SearchResult(title=r["title"], link=r["url"]))
-    return SearchResultList(results=items)
+        if "title" in r.keys():
+            place_result.title = r["title"]
+        if "address" in r.keys():
+            place_result.address = r["address"]
+        if "phone" in r.keys():
+            place_result.phone = r["phone"]
+        if "desc" in r.keys():
+            place_result.desc = r["desc"]
+        if "source" in r.keys():
+            place_result.source = r["source"]
+        if "latitude" in r.keys():
+            place_result.latitude = str(r["latitude"])
+        if "longitude" in r.keys():
+            place_result.longitude = str(r["longitude"])
+        if "url" in r.keys():
+            place_result.url = r["url"]
+        if "category" in r.keys():
+            place_result.category = r["category"]
+        items.append(place_result)
+    return PlaceSearchResultList(results=items)
 
 
 @action(is_consequential=False)
