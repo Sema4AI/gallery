@@ -88,7 +88,6 @@ def send_email(
             server.starttls()  # Secure the connection
             server.login(username, password)
             text = message.as_string()
-            print(text)
             server.sendmail(sender_email, recipients, text)
     except Exception as e:
         print(f"Email send error: {e}")
