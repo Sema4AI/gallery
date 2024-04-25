@@ -6,6 +6,7 @@ Currently supporting:
 - fill form elements
 - search places in a map location
 - search news
+- download file
 """
 
 from robocorp.actions import action, Secret
@@ -23,6 +24,8 @@ from urllib.parse import urlparse
 from action_types import (
     DownloadedFile,
     WebPage,
+    PlaceSearchResult,
+    PlaceSearchResultList,
     SearchResultList,
     SearchResult,
 )
@@ -51,10 +54,10 @@ def get_website_content(url: str) -> WebPage:
     If url ends with .csv then use 'download_file' action.
 
     Args:
-        url (str): URL of the website
+        url: the URL of the website
 
     Returns:
-        WebPage: Text content, form elements and elements of the website
+        Text content, form elements and elements of the website.
     """
     url = _ensure_https(url)
     browser.configure(browser_engine="chromium", headless=HEADLESS_BROWSER)
@@ -77,12 +80,13 @@ def download_file(
     """Download a file from the given URL.
 
     Args:
-        file_url (str): URL of the file to download
-        max_filesize_in_megabytes (int): Maximum file size in MB to download
-        target_folder (str): Folder to download the file
+        file_url: the URL of the file to download
+        max_filesize_in_megabytes: maximum file size in MB to download
+        target_folder: folder to download the file
+
     Returns:
-        DownloadedFile: Content of the file (if text), the filepath
-        where file is download and status of the download.
+        Content of the file (if text), the filepath where file is download and
+        status of the download.
     """
     df = DownloadedFile(
         content="",
@@ -137,20 +141,21 @@ def download_file(
 @action(is_consequential=False)
 def web_search_places(
     place: str, city: str = "", country: str = "", radius: int = 10, count: int = 3
-) -> SearchResultList:
+) -> PlaceSearchResultList:
     """Find places in a map location.
 
-    Returned link can be used to check opening hours for the place.
+    Returned link can be used to check opening hours for the place if hours
+    are not already included in the results.
 
     Args:
-        place (str): Place to search for
-        city (str): City to search on
-        country (str): Country to search on
-        radius (int): Radius to search on (in kilometers)
-        count (int): Count on how many results to retrieve
+        place: place to search for
+        city: city to search on
+        country: country to search on
+        radius: radius to search on (in kilometers)
+        count: count on how many results to retrieve
 
     Returns:
-        SearchResultList: Titles and links of the results
+        Details on the place search results.
     """
     ddgs = DDGS()
     parameters = {"max_results": count}
@@ -163,9 +168,28 @@ def web_search_places(
     results = ddgs.maps(place, **parameters)
     items = []
     for r in results:
+        place_result = PlaceSearchResult()
         print(r)
-        items.append(SearchResult(title=r["title"], link=r["url"]))
-    return SearchResultList(results=items)
+        if "title" in r.keys():
+            place_result.title = r["title"]
+        if "address" in r.keys():
+            place_result.address = r["address"]
+        if "phone" in r.keys():
+            place_result.phone = r["phone"]
+        if "desc" in r.keys():
+            place_result.desc = r["desc"]
+        if "source" in r.keys():
+            place_result.source = r["source"]
+        if "latitude" in r.keys():
+            place_result.latitude = str(r["latitude"])
+        if "longitude" in r.keys():
+            place_result.longitude = str(r["longitude"])
+        if "url" in r.keys():
+            place_result.url = r["url"]
+        if "category" in r.keys():
+            place_result.category = r["category"]
+        items.append(place_result)
+    return PlaceSearchResultList(results=items)
 
 
 @action(is_consequential=False)
@@ -180,11 +204,11 @@ def google_search(
     Do not use this action to search for places, use 'web_search_places' instead.
 
     Args:
-        topic (str): Topic to search on
-        count (int): Count on how many results to retrieve
+        topic: topic to search on
+        count: count on how many results to retrieve
 
     Returns:
-        SearchResultList: Titles and links of the results
+        Titles and links of the results.
     """
     url = "https://www.googleapis.com/customsearch/v1"
     params = {
@@ -206,13 +230,13 @@ def google_search(
 def fill_elements(
     web_page: WebPage,
 ) -> str:
-    """Fill form elements according to input values given in
-    the Form object. And return result for the user.
+    """Fill form elements according to input values given in the Form object.
 
     Args:
-        web_page (WebPage):  details on the web page and its form elements
+        web_page:  details on the web page and its form elements
+
     Returns:
-        str: Resulting page content after page load
+        Resulting page content after page load.
     """
     browser.configure(browser_engine="chromium", headless=HEADLESS_BROWSER)
     page = browser.goto(web_page.url)
@@ -262,11 +286,11 @@ def web_search_news(topic: str, count: int = 3) -> SearchResultList:
     """Performs DuckDuckGo Search to find news about a topic.
 
     Args:
-        topic (str): Topic to search on
-        count (int): Count on how many results to retrieve
+        topic: topic to search on
+        count: count on how many results to retrieve
 
     Returns:
-        SearchResultList: Titles and links of the results
+        Titles and links of the results.
     """
     ddgs = DDGS()
     results = ddgs.news(topic, max_results=count)
