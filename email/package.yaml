@@ -2,13 +2,10 @@
 name: Email actions
 
 # Required: A description of what's in the action package.
-description: Base actions needed to send emails
-
-# Required: The current version of this action package.
-version: 0.0.1
+description: Base actions needed to send emails using Sema4.ai service.
 
 # Required: A link to where the documentation on the package lives.
-documentation: https://github.com/robocorp/prebuilt-actions/emails/README.md
+documentation: https://github.com/robocorp/prebuilt-actions/email/README.md
 
 dependencies:
   conda-forge:
@@ -18,4 +15,11 @@ dependencies:
     - python-dotenv=1.0.1
   pypi:
     - robocorp-actions=0.2.1
-    - pydantic=2.6.4
+    - pydantic=2.7.1
+
+packaging:
+  exclude:
+    - "*.pyc" # Excludes .pyc files anywhere
+    - ".vscode/**" # Excludes the `.vscode` directory in the current dir
+    - "./devdata/**" # Excludes the `devdata` directory in the current dir
+    - ".*" # Excludes all hidden files
