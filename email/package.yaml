@@ -1,11 +1,11 @@
 # Required: A short name for the action package
-name: Browsing actions
+name: Email actions
 
 # Required: A description of what's in the action package.
-description: Base actions needed to get information from websites and interact with them.
+description: Base actions needed to send emails using Sema4.ai service.
 
 # Required: A link to where the documentation on the package lives.
-documentation: https://github.com/robocorp/prebuilt-actions/browsing/README.md
+documentation: https://github.com/robocorp/prebuilt-actions/email/README.md
 
 dependencies:
   conda-forge:
@@ -14,11 +14,8 @@ dependencies:
     - robocorp-truststore=0.8.0
     - python-dotenv=1.0.1
   pypi:
-    - robocorp-browser=2.3.3
     - robocorp-actions=0.2.1
     - pydantic=2.7.1
-    - requests=2.31.0
-    - duckduckgo-search=5.3.0
 
 packaging:
   exclude:

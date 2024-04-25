@@ -5,6 +5,7 @@ from action_types import (
     FormElement,
     Option,
 )
+from urllib.parse import unquote
 
 
 def _get_form_elements(page, url) -> Form:
@@ -25,15 +26,16 @@ def _get_page_links(page, url) -> Links:
             continue
         href = element.get_attribute("href")
         text = element.text_content().strip()
-        if "http" not in href:
+        if href and "http" not in href:
             href = f"{url}{href}"
-        links.append(Link(href=href, text=text))
+        links.append(Link(href=href or "", text=text or ""))
     return Links(links=links)
 
 
 def _get_elements_by_type(page, element_type, page_form):
     elements = page.locator(f"//{element_type}").all()
     print(f"len {element_type}: {len(elements)}")
+    form_elements = {}
     for element in elements:
         options = []
         if element_type == "select":
@@ -48,6 +50,7 @@ def _get_elements_by_type(page, element_type, page_form):
 
         fe = FormElement(
             type=element_type,
+            text=element.text_content(),
             placeholder=element.get_attribute("placeholder") or "",
             aria_label=element.get_attribute("aria-label") or "",
             value_type=element.get_attribute("type") or "",
@@ -56,7 +59,13 @@ def _get_elements_by_type(page, element_type, page_form):
             name=element.get_attribute("name") or "",
             options=options,
         )
-        page_form.elements.append(fe)
+        if fe in form_elements:
+            existing_element = form_elements[fe]
+            existing_element.count += 1
+        else:
+            fe.count = 1
+            form_elements[fe] = fe
+    page_form.elements = list(form_elements.values())
     return page_form
 
 
@@ -73,3 +82,13 @@ def _locator_action(locator, element):
         locator.select_option(element.value_to_fill)
     else:
         locator.fill(element.value_to_fill)
+
+
+def _get_filename_from_cd(cd):
+    """
+    Get filename from content-disposition header if available.
+    """
+    if not cd:
+        return None
+    fname = cd.split("filename=")[1] if "filename=" in cd else None
+    return unquote(fname.strip('"')) if fname else None

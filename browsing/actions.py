@@ -6,6 +6,7 @@ Currently supporting:
 - fill form elements
 - search places in a map location
 - search news
+- download file
 """
 
 from robocorp.actions import action, Secret
@@ -18,13 +19,23 @@ import sys
 from duckduckgo_search import DDGS
 import os
 import requests
+from urllib.parse import urlparse
 
 from action_types import (
+    DownloadedFile,
     WebPage,
+    PlaceSearchResult,
+    PlaceSearchResultList,
     SearchResultList,
     SearchResult,
 )
-from support import _ensure_https, _get_form_elements, _get_page_links, _locator_action
+from support import (
+    _ensure_https,
+    _get_form_elements,
+    _get_page_links,
+    _locator_action,
+    _get_filename_from_cd,
+)
 
 load_dotenv()
 
@@ -43,10 +54,10 @@ def get_website_content(url: str) -> WebPage:
     If url ends with .csv then use 'download_file' action.
 
     Args:
-        url (str): URL of the website
+        url: the URL of the website
 
     Returns:
-        WebPage: Text content, form elements and elements of the website
+        Text content, form elements and elements of the website.
     """
     url = _ensure_https(url)
     browser.configure(browser_engine="chromium", headless=HEADLESS_BROWSER)
@@ -63,49 +74,122 @@ def get_website_content(url: str) -> WebPage:
 
 
 @action(is_consequential=False)
-def download_file(file_url: str) -> str:
+def download_file(
+    file_url: str, max_filesize_in_megabytes: int = 100, target_folder: str = ""
+) -> DownloadedFile:
     """Download a file from the given URL.
 
     Args:
-        file_url (str): URL of the file to download
+        file_url: the URL of the file to download
+        max_filesize_in_megabytes: maximum file size in MB to download
+        target_folder: folder to download the file
 
     Returns:
-        str: Content of the file
+        Content of the file (if text), the filepath where file is download and
+        status of the download.
     """
-    response = requests.get(file_url)
-    return response.text
+    df = DownloadedFile(
+        content="",
+        filepath="",
+        status="",
+        request_status=200,
+        content_type="",
+        content_length=0,
+    )
+    try:
+        with requests.get(file_url, stream=True) as response:
+            df.request_status = response.status_code
+            response.raise_for_status()  # Check for HTTP errors
+
+            # Attempt to fetch the filename from the Content-Disposition header
+            content_disposition = response.headers.get("Content-Disposition", "")
+            filename = _get_filename_from_cd(content_disposition)
+
+            # If no filename in the header, extract from URL
+            if not filename:
+                filename = os.path.basename(urlparse(file_url).path)
+
+            # Check file type and size from headers
+            df.content_type = response.headers.get("Content-Type", "")
+            df.content_length = response.headers.get("Content-Length", 0)
+            print(f"Content-Type: {df.content_type}")
+            print(f"Content-Length: {df.content_length} bytes")
+
+            if int(df.content_length) > max_filesize_in_megabytes * 1000000:
+                df.status = f"File is too large to download - limit is {max_filesize_in_megabytes} MB"
+                return df
+
+            # Check if content is text-based or binary
+            if "text" in df.content_type:
+                df.content = response.text
+
+            if target_folder == "":
+                target_folder = os.getcwd()
+            file_path = os.path.join(target_folder, filename)
+            with open(file_path, "wb") as file:
+                for chunk in response.iter_content(chunk_size=8192):
+                    file.write(chunk)
+            df.status = f"File downloaded successfully at: {os.path.abspath(file_path)}"
+            df.filepath = os.path.abspath(file_path)  # Return the full path of the file
+    except Exception as e:
+        df.filepath = ""
+        df.status = f"Download failed: {str(e)}"
+    print(df.status)
+    return df
 
 
 @action(is_consequential=False)
 def web_search_places(
-    place: str, city: str = "", country: str = "", radius: int = 5, count: int = 3
-) -> SearchResultList:
+    place: str, city: str = "", country: str = "", radius: int = 10, count: int = 3
+) -> PlaceSearchResultList:
     """Find places in a map location.
 
-    Returned link can be used to check opening hours for the place.
+    Returned link can be used to check opening hours for the place if hours
+    are not already included in the results.
 
     Args:
-        place (str): Place to search for
-        city (str): City to search on
-        country (str): Country to search on
-        radius (int): Radius to search on (in kilometers)
-        count (int): Count on how many results to retrieve
+        place: place to search for
+        city: city to search on
+        country: country to search on
+        radius: radius to search on (in kilometers)
+        count: count on how many results to retrieve
 
     Returns:
-        SearchResultList: Titles and links of the results
+        Details on the place search results.
     """
     ddgs = DDGS()
-    parameters = {"max_results": count, "radius": radius}
+    parameters = {"max_results": count}
     if city:
         parameters["city"] = city
+        parameters["radius"] = radius
     if country:
         parameters["country"] = country
+        parameters["radius"] = radius
     results = ddgs.maps(place, **parameters)
     items = []
     for r in results:
+        place_result = PlaceSearchResult()
         print(r)
-        items.append(SearchResult(title=r["title"], link=r["url"]))
-    return SearchResultList(results=items)
+        if "title" in r.keys():
+            place_result.title = r["title"]
+        if "address" in r.keys():
+            place_result.address = r["address"]
+        if "phone" in r.keys():
+            place_result.phone = r["phone"]
+        if "desc" in r.keys():
+            place_result.desc = r["desc"]
+        if "source" in r.keys():
+            place_result.source = r["source"]
+        if "latitude" in r.keys():
+            place_result.latitude = str(r["latitude"])
+        if "longitude" in r.keys():
+            place_result.longitude = str(r["longitude"])
+        if "url" in r.keys():
+            place_result.url = r["url"]
+        if "category" in r.keys():
+            place_result.category = r["category"]
+        items.append(place_result)
+    return PlaceSearchResultList(results=items)
 
 
 @action(is_consequential=False)
@@ -120,11 +204,11 @@ def google_search(
     Do not use this action to search for places, use 'web_search_places' instead.
 
     Args:
-        topic (str): Topic to search on
-        count (int): Count on how many results to retrieve
+        topic: topic to search on
+        count: count on how many results to retrieve
 
     Returns:
-        SearchResultList: Titles and links of the results
+        Titles and links of the results.
     """
     url = "https://www.googleapis.com/customsearch/v1"
     params = {
@@ -146,13 +230,13 @@ def google_search(
 def fill_elements(
     web_page: WebPage,
 ) -> str:
-    """Fill form elements according to input values given in
-    the Form object. And return result for the user.
+    """Fill form elements according to input values given in the Form object.
 
     Args:
-        web_page (WebPage):  details on the web page and its form elements
+        web_page:  details on the web page and its form elements
+
     Returns:
-        str: Resulting page content after page load
+        Resulting page content after page load.
     """
     browser.configure(browser_engine="chromium", headless=HEADLESS_BROWSER)
     page = browser.goto(web_page.url)
@@ -202,11 +286,11 @@ def web_search_news(topic: str, count: int = 3) -> SearchResultList:
     """Performs DuckDuckGo Search to find news about a topic.
 
     Args:
-        topic (str): Topic to search on
-        count (int): Count on how many results to retrieve
+        topic: topic to search on
+        count: count on how many results to retrieve
 
     Returns:
-        SearchResultList: Titles and links of the results
+        Titles and links of the results.
     """
     ddgs = DDGS()
     results = ddgs.news(topic, max_results=count)
