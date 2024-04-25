@@ -35,6 +35,7 @@ def _get_page_links(page, url) -> Links:
 def _get_elements_by_type(page, element_type, page_form):
     elements = page.locator(f"//{element_type}").all()
     print(f"len {element_type}: {len(elements)}")
+    form_elements = {}
     for element in elements:
         options = []
         if element_type == "select":
@@ -49,6 +50,7 @@ def _get_elements_by_type(page, element_type, page_form):
 
         fe = FormElement(
             type=element_type,
+            text=element.text_content(),
             placeholder=element.get_attribute("placeholder") or "",
             aria_label=element.get_attribute("aria-label") or "",
             value_type=element.get_attribute("type") or "",
@@ -57,7 +59,13 @@ def _get_elements_by_type(page, element_type, page_form):
             name=element.get_attribute("name") or "",
             options=options,
         )
-        page_form.elements.append(fe)
+        if fe in form_elements:
+            existing_element = form_elements[fe]
+            existing_element.count += 1
+        else:
+            fe.count = 1
+            form_elements[fe] = fe
+    page_form.elements = list(form_elements.values())
     return page_form
 
 

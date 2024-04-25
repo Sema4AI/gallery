@@ -12,13 +12,32 @@ class Links(BaseModel):
 
 
 class SearchResult(BaseModel):
-    title: str = Field(description="The title of the search result")
-    link: str = Field(description="The link of the search result")
+    title: str = Field(description="The title of the search result", default="")
+    link: str = Field(description="The link of the search result", default="")
 
 
 class SearchResultList(BaseModel):
     results: Annotated[
-        list[SearchResult], Field(description="A list of search results")
+        list[SearchResult], Field(description="A list of google search results")
+    ]
+
+
+class PlaceSearchResult(BaseModel):
+    title: str = Field(description="The title of the search result", default="")
+    address: str = Field(description="The address of the search result", default="")
+    phone: str = Field(description="The phone number of the search result", default="")
+    desc: str = Field(description="The description of the search result", default="")
+    source: str = Field(description="The source of the search result", default="")
+    latitude: str = Field(description="The latitude of the search result", default="")
+    longitude: str = Field(description="The longitude of the search result", default="")
+    url: str = Field(description="The link of the search result", default="")
+    hours: str = Field(description="The opening hours of the search result", default="")
+    category: str = Field(description="The category of the search result", default="")
+
+
+class PlaceSearchResultList(BaseModel):
+    results: Annotated[
+        list[PlaceSearchResult], Field(description="A list of place search results")
     ]
 
 
@@ -29,6 +48,7 @@ class Option(BaseModel):
 
 class FormElement(BaseModel):
     type: str = Field(description="The type of the form element")
+    text: str = Field(description="The text of the form element", default="")
     placeholder: str = Field(
         description="The placeholder of the form element", default=""
     )
@@ -47,6 +67,36 @@ class FormElement(BaseModel):
     options: Annotated[
         list[Option], Field(description="A list of select options", default=[])
     ]
+    count: int = Field(description="The count of the form element", default=1)
+
+    def __eq__(self, other):
+        if not isinstance(other, FormElement):
+            return NotImplemented
+        return (
+            (self.type == other.type)
+            and (self.text == other.text)
+            and (self.placeholder == other.placeholder)
+            and (self.aria_label == other.aria_label)
+            and (self.id == other.id)
+            and (self.name == other.name)
+            and (self.class_ == other.class_)
+            and (self.value_type == other.value_type)
+            and (self.options == other.options)
+        )
+
+    def __hash__(self):
+        return hash(
+            (
+                self.type,
+                self.text,
+                self.placeholder,
+                self.aria_label,
+                self.id,
+                self.name,
+                self.class_,
+                self.value_type,
+            )
+        )
 
 
 class Form(BaseModel):
