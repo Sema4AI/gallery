@@ -16,7 +16,7 @@ Right now we support Service Account credentials which can be setup following th
 If you are testing the actions locally with the action-server then update the `devdata/.env.template` file with the 
 newly created json key or pass it as `credentials` request parameter.
 
-## Actions
+# Actions
 
 The following actions are contained with this package:
 
