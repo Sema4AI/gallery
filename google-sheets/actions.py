@@ -142,7 +142,7 @@ def add_sheet_rows(
 
 
 @action(is_consequential=False)
-def update_sheet_row(
+def update_sheet_rows(
     spreadsheet: str,
     worksheet: str,
     cells: str,
@@ -159,9 +159,9 @@ def update_sheet_row(
 
     Example:
         ```python
-            update_sheet_row("Orders", "January Sheet", "A1", [["Order number"]])
-            update_sheet_row("Orders", "January Sheet", "B1", [["Item"]])
-            update_sheet_row("Orders", "January Sheet", "A2:B3", [[5, "Macbook Pro"], [6, "iPhone"]])
+            update_sheet_rows("Orders", "January Sheet", "A1", [["Order number"]])
+            update_sheet_rows("Orders", "January Sheet", "B1", [["Item"]])
+            update_sheet_rows("Orders", "January Sheet", "A2:B3", [[5, "Macbook Pro"], [6, "iPhone"]])
         ```
 
     Returns:
@@ -175,7 +175,7 @@ def update_sheet_row(
 
     worksheet.update(data.to_raw_data(), range_name=cells)
 
-    return "Row was successfully updated."
+    return "Rows were successfully updated."
 
 
 def _get_sheet_content(worksheet: Worksheet, from_row, limit) -> str:
