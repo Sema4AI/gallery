@@ -28,8 +28,6 @@ def send_email(
 ) -> bool:
     """Send email to set recipients with subject and body using SMTP server.
 
-    The SMTP server connection details are read from the environment variables.
-
     Recipient email addresses ('to', 'cc' and 'bcc') can be separated by commas without any spaces.
 
     If email is sent successfully please remind the user that recipient may need to
