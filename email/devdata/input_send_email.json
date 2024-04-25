@@ -1,0 +1,7 @@
+{
+    "to": "TARGET_EMAIL_ADDRESS",
+    "cc": "",
+    "bcc": "",
+    "subject": "Email subject",
+    "body": "Email body message."
+}
