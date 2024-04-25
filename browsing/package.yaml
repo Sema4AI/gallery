@@ -4,9 +4,6 @@ name: Browsing actions
 # Required: A description of what's in the action package.
 description: Base actions needed to get information from websites and interact with them.
 
-# Required: The current version of this action package.
-version: 0.0.1
-
 # Required: A link to where the documentation on the package lives.
 documentation: https://github.com/robocorp/prebuilt-actions/browsing/README.md
 

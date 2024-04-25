@@ -48,6 +48,7 @@ class Option(BaseModel):
 
 class FormElement(BaseModel):
     type: str = Field(description="The type of the form element")
+    text: str = Field(description="The text of the form element", default="")
     placeholder: str = Field(
         description="The placeholder of the form element", default=""
     )
@@ -66,6 +67,36 @@ class FormElement(BaseModel):
     options: Annotated[
         list[Option], Field(description="A list of select options", default=[])
     ]
+    count: int = Field(description="The count of the form element", default=1)
+
+    def __eq__(self, other):
+        if not isinstance(other, FormElement):
+            return NotImplemented
+        return (
+            (self.type == other.type)
+            and (self.text == other.text)
+            and (self.placeholder == other.placeholder)
+            and (self.aria_label == other.aria_label)
+            and (self.id == other.id)
+            and (self.name == other.name)
+            and (self.class_ == other.class_)
+            and (self.value_type == other.value_type)
+            and (self.options == other.options)
+        )
+
+    def __hash__(self):
+        return hash(
+            (
+                self.type,
+                self.text,
+                self.placeholder,
+                self.aria_label,
+                self.id,
+                self.name,
+                self.class_,
+                self.value_type,
+            )
+        )
 
 
 class Form(BaseModel):

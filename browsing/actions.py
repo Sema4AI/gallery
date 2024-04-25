@@ -6,6 +6,7 @@ Currently supporting:
 - fill form elements
 - search places in a map location
 - search news
+- download file
 """
 
 from robocorp.actions import action, Secret
