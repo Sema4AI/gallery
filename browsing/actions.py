@@ -201,7 +201,7 @@ def google_search(
 ) -> SearchResultList:
     """Performs Google Search to find information about a topic.
 
-    Do not use this action to search for places, use 'web_search_places' instead.
+    To list all possible results use count=0.
 
     Args:
         topic: topic to search on
@@ -221,9 +221,21 @@ def google_search(
     items = []
     if "items" in result.keys():
         for item in result["items"]:
-            items.append(SearchResult(title=item["title"], link=item["link"]))
+            items.append(
+                SearchResult(
+                    title=item["title"], link=item["link"], desc=item["snippet"]
+                )
+            )
 
-    return SearchResultList(results=items[:count])
+    message = f"Found {len(items)} results for '{topic}'"
+    if count > 0:
+        message += f" and returning {count} of those."
+    print(message)
+    return (
+        SearchResultList(results=items[:count])
+        if count > 0
+        else SearchResultList(results=items)
+    )
 
 
 @action(is_consequential=True)
