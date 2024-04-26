@@ -9,7 +9,7 @@ Currently supporting:
 - download file
 """
 
-from robocorp.actions import action, Secret
+from sema4ai.actions import action, Secret
 from robocorp import browser
 
 from dotenv import load_dotenv

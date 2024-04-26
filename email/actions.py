@@ -1,7 +1,7 @@
 """Actions for sending email.
 """
 
-from robocorp.actions import action, Secret
+from sema4ai.actions import action, Secret
 
 from dotenv import load_dotenv
 import os

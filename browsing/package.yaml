@@ -5,17 +5,17 @@ name: Browsing actions
 description: Base actions needed to get information from websites and interact with them.
 
 # Required: A link to where the documentation on the package lives.
-documentation: https://github.com/robocorp/prebuilt-actions/browsing/README.md
+documentation: https://github.com/Sema4AI/prebuilt-actions/blob/main/browsing/README.md
 
 dependencies:
   conda-forge:
     - python=3.10.12
-    - pip=23.2.1
+    - uv=0.1.38
     - robocorp-truststore=0.8.0
     - python-dotenv=1.0.1
   pypi:
     - robocorp-browser=2.3.3
-    - robocorp-actions=0.2.1
+    - sema4ai-actions=0.3.1
     - pydantic=2.7.1
     - requests=2.31.0
     - duckduckgo-search=5.3.0
