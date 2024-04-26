@@ -11,6 +11,7 @@ dependencies:
   conda-forge:
     - python=3.10.12
     - uv=0.1.38
+    - robocorp-truststore=0.8.0
     - python-dotenv=1.0.1
   pypi:
     - sema4ai-actions=0.3.1
