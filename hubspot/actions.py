@@ -1,7 +1,7 @@
 """Set of actions operating on HubSpot resources.
 
 Currently supporting:
-- Searching: companies, contacts, deals, tasks
+- Searching CRM: companies, contacts, deals, tickets, tasks
 """
 
 
@@ -13,6 +13,7 @@ from hubspot import HubSpot
 from hubspot.crm.companies import PublicObjectSearchRequest as CompanySearchRequest
 from hubspot.crm.contacts import PublicObjectSearchRequest as ContactSearchRequest
 from hubspot.crm.deals import PublicObjectSearchRequest as DealSearchRequest
+from hubspot.crm.tickets import PublicObjectSearchRequest as TicketSearchRequest
 from sema4ai.actions import Secret, action
 
 from models import (
@@ -22,6 +23,8 @@ from models import (
     ContactsResult,
     DealResult,
     DealsResult,
+    TicketResult,
+    TicketsResult,
 )
 
 
@@ -130,3 +133,37 @@ def hubspot_search_deals(
     names = [deal.dealname for deal in deals]
     print(f"Deals matching query: {', '.join(names)}")
     return DealsResult(deals=deals)
+
+
+@action(is_consequential=False)
+def hubspot_search_tickets(
+    query: str,
+    limit: int = 10,
+    access_token: Secret = DEV_ACCESS_TOKEN,
+) -> TicketsResult:
+    """Search for HubSpot deals based on the provided string query.
+
+    This is a basic search returning a list of deals that are matching the
+    `query` among any of their properties. The search will be limited to at most
+    `limit` results, therefore you have to increase this parameter if you want to
+    obtain more.
+
+    Args:
+        query: String that is searched for in all the deals properties for a match.
+        limit: The maximum number of results the search can return.
+        access_token: Your Private App generated access token used to make API calls.
+
+    Returns:
+        A structure with a list of deals matching the query.
+    """
+    api_client = HubSpot(access_token=access_token.value)
+    search_request = TicketSearchRequest(query=query, limit=limit)
+    response = api_client.crm.tickets.search_api.do_search(
+        public_object_search_request=search_request
+    )
+    tickets = [
+        TicketResult(id=result.id, **result.properties) for result in response.results
+    ]
+    subjects = [ticket.subject for ticket in tickets]
+    print(f"Tickets matching query: {', '.join(subjects)}")
+    return TicketsResult(tickets=tickets)

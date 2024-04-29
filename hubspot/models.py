@@ -45,3 +45,20 @@ class DealsResult(BaseModel):
     """Deals search result object holding the queried information."""
 
     deals: Annotated[list[DealResult], Field(description="Searched deals.")]
+
+
+class TicketResult(BaseModel):
+    """Ticket entity data."""
+
+    id: Annotated[str, Field(description="Ticket ID.")]
+    subject: Annotated[str, Field(description="Ticket name.")]
+    content: Annotated[str, Field(description="Ticket content.")]
+    createdate: Annotated[str, Field(description="Ticket create date.")]
+    hs_ticket_priority: Annotated[str, Field(description="Ticket priority.")]
+    hs_pipeline_stage: Annotated[str, Field(description="Ticket status.")]
+
+
+class TicketsResult(BaseModel):
+    """Tickets search result object holding the queried information."""
+
+    tickets: Annotated[list[TicketResult], Field(description="Searched tickets.")]
