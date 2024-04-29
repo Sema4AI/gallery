@@ -12,9 +12,17 @@ from dotenv import load_dotenv
 from hubspot import HubSpot
 from hubspot.crm.companies import PublicObjectSearchRequest as CompanySearchRequest
 from hubspot.crm.contacts import PublicObjectSearchRequest as ContactSearchRequest
+from hubspot.crm.deals import PublicObjectSearchRequest as DealSearchRequest
 from sema4ai.actions import Secret, action
 
-from models import CompaniesResult, CompanyResult, ContactResult, ContactsResult
+from models import (
+    CompaniesResult,
+    CompanyResult,
+    ContactResult,
+    ContactsResult,
+    DealResult,
+    DealsResult,
+)
 
 
 load_dotenv(Path("devdata") / ".env")
@@ -38,6 +46,7 @@ def hubspot_search_companies(
     Args:
         query: String that is searched for in all the company properties for a match.
         limit: The maximum number of results the search can return.
+        access_token: Your Private App generated access token used to make API calls.
 
     Returns:
         A structure with a list of companies matching the query.
@@ -71,6 +80,7 @@ def hubspot_search_contacts(
     Args:
         query: String that is searched for in all the contact properties for a match.
         limit: The maximum number of results the search can return.
+        access_token: Your Private App generated access token used to make API calls.
 
     Returns:
         A structure with a list of contacts matching the query.
@@ -86,3 +96,37 @@ def hubspot_search_contacts(
     emails = [contact.email for contact in contacts]
     print(f"Contacts matching query: {', '.join(emails)}")
     return ContactsResult(contacts=contacts)
+
+
+@action(is_consequential=False)
+def hubspot_search_deals(
+    query: str,
+    limit: int = 10,
+    access_token: Secret = DEV_ACCESS_TOKEN,
+) -> DealsResult:
+    """Search for HubSpot deals based on the provided string query.
+
+    This is a basic search returning a list of deals that are matching the
+    `query` among any of their properties. The search will be limited to at most
+    `limit` results, therefore you have to increase this parameter if you want to
+    obtain more.
+
+    Args:
+        query: String that is searched for in all the deals properties for a match.
+        limit: The maximum number of results the search can return.
+        access_token: Your Private App generated access token used to make API calls.
+
+    Returns:
+        A structure with a list of deals matching the query.
+    """
+    api_client = HubSpot(access_token=access_token.value)
+    search_request = DealSearchRequest(query=query, limit=limit)
+    response = api_client.crm.deals.search_api.do_search(
+        public_object_search_request=search_request
+    )
+    deals = [
+        DealResult(id=result.id, **result.properties) for result in response.results
+    ]
+    names = [deal.dealname for deal in deals]
+    print(f"Deals matching query: {', '.join(names)}")
+    return DealsResult(deals=deals)

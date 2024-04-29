@@ -16,3 +16,18 @@ dependencies:
     - sema4ai-actions=0.3.1
     - hubspot-api-client=9.0.0
     - pydantic=2.7.1
+
+packaging:
+  # This section is optional.
+  # By default all files and folders in this directory are packaged when uploaded.
+  # Add exclusion rules below (expects glob format: https://docs.python.org/3/library/glob.html)
+  exclude:
+    - ./.git/**
+    - ./.vscode/**
+    - ./devdata/**
+    - ./output/**
+    - ./.DS_store/**
+    - ./venv/**
+    - ./.venv/**
+    - ./**/*.pyc
+    - ./**/*.zip
