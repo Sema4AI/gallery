@@ -18,3 +18,4 @@ testrun/*
 .use
 .project
 .pydevproject
+/venv/
