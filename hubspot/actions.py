@@ -6,6 +6,7 @@ Currently supporting:
 
 
 import os
+from enum import Enum
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -13,6 +14,7 @@ from hubspot import HubSpot
 from hubspot.crm.companies import PublicObjectSearchRequest as CompanySearchRequest
 from hubspot.crm.contacts import PublicObjectSearchRequest as ContactSearchRequest
 from hubspot.crm.deals import PublicObjectSearchRequest as DealSearchRequest
+from hubspot.crm.objects import PublicObjectSearchRequest as ObjectSearchRequest
 from hubspot.crm.tickets import PublicObjectSearchRequest as TicketSearchRequest
 from sema4ai.actions import Secret, action
 
@@ -23,6 +25,8 @@ from models import (
     ContactsResult,
     DealResult,
     DealsResult,
+    ObjectsResult,
+    TaskResult,
     TicketResult,
     TicketsResult,
 )
@@ -33,8 +37,19 @@ load_dotenv(Path("devdata") / ".env")
 DEV_ACCESS_TOKEN = Secret.model_validate(os.getenv("HUBSPOT_ACCESS_TOKEN", ""))
 
 
+class ObjectEnum(Enum):
+    """Types of objects we accept under the `search_objects` function."""
+
+    TASKS = "tasks"
+
+
+OBJECT_MODEL_MAP = {
+    ObjectEnum.TASKS: TaskResult,
+}
+
+
 @action(is_consequential=False)
-def hubspot_search_companies(
+def search_companies(
     query: str,
     limit: int = 10,
     access_token: Secret = DEV_ACCESS_TOKEN,
@@ -68,7 +83,7 @@ def hubspot_search_companies(
 
 
 @action(is_consequential=False)
-def hubspot_search_contacts(
+def search_contacts(
     query: str,
     limit: int = 10,
     access_token: Secret = DEV_ACCESS_TOKEN,
@@ -102,7 +117,7 @@ def hubspot_search_contacts(
 
 
 @action(is_consequential=False)
-def hubspot_search_deals(
+def search_deals(
     query: str,
     limit: int = 10,
     access_token: Secret = DEV_ACCESS_TOKEN,
@@ -136,7 +151,7 @@ def hubspot_search_deals(
 
 
 @action(is_consequential=False)
-def hubspot_search_tickets(
+def search_tickets(
     query: str,
     limit: int = 10,
     access_token: Secret = DEV_ACCESS_TOKEN,
@@ -147,6 +162,9 @@ def hubspot_search_tickets(
     `query` among any of their properties. The search will be limited to at most
     `limit` results, therefore you have to increase this parameter if you want to
     obtain more.
+    Tickets are best for managing customer interactions, track progress and reporting
+    to them. While tasks are better for managing internal workflows, the stepping
+    stones to get tickets done.
 
     Args:
         query: String that is searched for in all the deals properties for a match.
@@ -167,3 +185,45 @@ def hubspot_search_tickets(
     subjects = [ticket.subject for ticket in tickets]
     print(f"Tickets matching query: {', '.join(subjects)}")
     return TicketsResult(tickets=tickets)
+
+
+@action(is_consequential=False)
+def search_objects(
+    object_type: str,
+    query: str,
+    limit: int = 10,
+    access_token: Secret = DEV_ACCESS_TOKEN,
+) -> ObjectsResult:
+    """Search for HubSpot objects based on the provided string query.
+
+    This is a basic search returning a list of objects that are matching the
+    `query` among any of their properties. The search will be limited to at most
+    `limit` results, therefore you have to increase this parameter if you want to
+    obtain more.
+
+    Args:
+        object_type: The kind of object you are searching, currently supporting: tasks.
+        query: String that is searched for in all the object properties for a match.
+        limit: The maximum number of results the search can return.
+        access_token: Your Private App generated access token used to make API calls.
+
+    Returns:
+        A structure with a list of objects matching the query.
+    """
+    api_client = HubSpot(access_token=access_token.value)
+    object_type = ObjectEnum(object_type)  # normalizes string value to enumeration
+    search_api = getattr(api_client.crm.objects, object_type.value).search_api
+    ObjectResult = OBJECT_MODEL_MAP[object_type]
+    search_request = ObjectSearchRequest(
+        query=query, limit=limit, properties=ObjectResult.get_properties()
+    )
+    response = search_api.do_search(public_object_search_request=search_request)
+    objects = [
+        ObjectResult(id=result.id, **result.properties) for result in response.results
+    ]
+    EOL = "\n"
+    print(
+        f"{object_type.value.capitalize()} matching query:"
+        f" {EOL.join(map(str, objects))}"
+    )
+    return ObjectsResult(objects=objects)

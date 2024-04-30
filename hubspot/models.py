@@ -62,3 +62,40 @@ class TicketsResult(BaseModel):
     """Tickets search result object holding the queried information."""
 
     tickets: Annotated[list[TicketResult], Field(description="Searched tickets.")]
+
+
+class ObjectResult(BaseModel):
+    """Object entity data."""
+
+    id: Annotated[str, Field(description="Object ID.")]
+    hs_createdate: Annotated[str, Field(description="Object create date.")]
+
+    @classmethod
+    def get_properties(cls) -> list[str]:
+        return list(cls.model_fields.keys())
+
+
+class TaskResult(ObjectResult):
+    """Task object entity data."""
+
+    hs_task_subject: Annotated[str, Field(description="Task title.")]
+    hs_task_body: Annotated[str, Field(description="Task notes.")]
+    hubspot_owner_id: Annotated[str, Field(description="Task owner ID.")]
+    hs_timestamp: Annotated[str, Field(description="Task due date.")]
+    hs_task_status: Annotated[str, Field(description="Task status.")]
+    hs_task_priority: Annotated[str, Field(description="Task priority.")]
+    hs_task_type: Annotated[str, Field(description="Task type.")]
+
+    def __str__(self):
+        props = {
+            "Task": self.hs_task_subject,
+            "Owner": self.hubspot_owner_id,
+            "Status": self.hs_task_status,
+        }
+        return " | ".join(f"{prop}: {value}" for prop, value in props.items())
+
+
+class ObjectsResult(BaseModel):
+    """Objects search result object holding the queried information."""
+
+    objects: Annotated[list[ObjectResult], Field(description="Searched objects.")]
