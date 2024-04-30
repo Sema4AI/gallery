@@ -25,8 +25,8 @@ from models import (
     ContactsResult,
     DealResult,
     DealsResult,
-    ObjectsResult,
     TaskResult,
+    TasksResult,
     TicketResult,
     TicketsResult,
 )
@@ -44,7 +44,7 @@ class ObjectEnum(Enum):
 
 
 OBJECT_MODEL_MAP = {
-    ObjectEnum.TASKS: TaskResult,
+    ObjectEnum.TASKS: (TaskResult, TasksResult),
 }
 
 
@@ -193,7 +193,7 @@ def search_objects(
     query: str,
     limit: int = 10,
     access_token: Secret = DEV_ACCESS_TOKEN,
-) -> ObjectsResult:
+) -> TasksResult:  # FIXME(cmin764): Add rest of the types when implementing them.
     """Search for HubSpot objects based on the provided string query.
 
     This is a basic search returning a list of objects that are matching the
@@ -213,7 +213,7 @@ def search_objects(
     api_client = HubSpot(access_token=access_token.value)
     object_type = ObjectEnum(object_type)  # normalizes string value to enumeration
     search_api = getattr(api_client.crm.objects, object_type.value).search_api
-    ObjectResult = OBJECT_MODEL_MAP[object_type]
+    ObjectResult, ObjectsResult = OBJECT_MODEL_MAP[object_type]
     search_request = ObjectSearchRequest(
         query=query, limit=limit, properties=ObjectResult.get_properties()
     )
@@ -226,4 +226,5 @@ def search_objects(
         f"{object_type.value.capitalize()} matching query:"
         f" {EOL.join(map(str, objects))}"
     )
-    return ObjectsResult(objects=objects)
+    kwargs = {object_type.value: objects}
+    return ObjectsResult(**kwargs)

@@ -95,7 +95,7 @@ class TaskResult(ObjectResult):
         return " | ".join(f"{prop}: {value}" for prop, value in props.items())
 
 
-class ObjectsResult(BaseModel):
-    """Objects search result object holding the queried information."""
+class TasksResult(BaseModel):
+    """Tasks search result object holding the queried information."""
 
-    objects: Annotated[list[ObjectResult], Field(description="Searched objects.")]
+    tasks: Annotated[list[TaskResult], Field(description="Searched tasks.")]
