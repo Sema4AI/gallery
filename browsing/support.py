@@ -65,7 +65,7 @@ def _get_elements_by_type(page, element_type, page_form):
         else:
             fe.count = 1
             form_elements[fe] = fe
-    page_form.elements = list(form_elements.values())
+    page_form.elements.extend(form_elements.values())
     return page_form
 
 
