@@ -111,11 +111,11 @@ def download_file(
 
             # Check file type and size from headers
             df.content_type = response.headers.get("Content-Type", "")
-            df.content_length = response.headers.get("Content-Length", 0)
+            df.content_length = int(response.headers.get("Content-Length", 0))
             print(f"Content-Type: {df.content_type}")
             print(f"Content-Length: {df.content_length} bytes")
 
-            if int(df.content_length) > max_filesize_in_megabytes * 1000000:
+            if df.content_length > max_filesize_in_megabytes * 1000000:
                 df.status = f"File is too large to download - limit is {max_filesize_in_megabytes} MB"
                 return df
 
