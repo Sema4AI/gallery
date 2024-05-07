@@ -193,7 +193,7 @@ def get_files_by_query(
         query: Google Drive API V3 query string for search files in the format query_term operator values
 
     Returns:
-        Message containing the details of the found files or error message.
+        A list of files or an error message if no files were found.
     """
     service = _build_service(credentials)
 
@@ -223,13 +223,16 @@ def get_file_contents(
         worksheet: name of the worksheet in case of Excel files, default is the first sheet
 
     Return:
-        The file contents.
+        The file contents or an error message.
     """
     service = _build_service(credentials)
 
     file = _get_file_by_name(service, name)
     if not file:
         return "File was not found"
+
+    if not EXPORT_MIMETYPE_MAP.get(file.mimeType):
+        return f"Type document {file.mimeType} is not supported for this operation"
 
     file_content = _export_file_content(
         service, file.id, EXPORT_MIMETYPE_MAP[file.mimeType]
