@@ -7,19 +7,22 @@ https://github.com/robocorp/robocorp/blob/master/README.md
 """
 
 import os
-from dotenv import load_dotenv
-from models import MessageList, Response
 from pathlib import Path
+
+from dotenv import load_dotenv
 from sema4ai.actions import action, Secret
 from slack_sdk import WebClient as SlackWebClient
 from slack_sdk.errors import SlackApiError
 from typing_extensions import Self
+
 from utils import get_channel_id, ChannelNotFoundError
+from models import MessageList, Response
+
 
 load_dotenv(Path(__file__).absolute().parent / "devdata" / ".env")
 
 
-DEV_SLACK_ACCESS_TOKEN = Secret.model_validate(os.getenv("SLACK_TOKEN", ""))
+DEV_SLACK_ACCESS_TOKEN = Secret.model_validate(os.getenv("DEV_SLACK_ACCESS_TOKEN", ""))
 
 
 class CaptureError:
@@ -33,21 +36,21 @@ class CaptureError:
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-
         if not exc_type:
             return
 
-        if issubclass(exc_type, SlackApiError):
-            err = exc_val.response["error"]
-            if err == "no_in_channel":
-                self._error = "Slack bot was not added to the channel"
-            else:
-                self._error = err
-        elif issubclass(exc_type, ChannelNotFoundError):
-            self._error = str(exc_val)
-        else:
-            # return None to raise other exceptions as usual
-            return
+        match exc_val:
+            case ChannelNotFoundError() as e:
+                self._error = str(e)
+            case SlackApiError(response):
+                err = response["error"]
+                if err == "no_in_channel":
+                    self._error = "Slack bot was not added to the channel"
+                else:
+                    self._error = err
+            case _:
+                # return None to supress the exception
+                return None
 
         # return True to supress the exception
         return True
@@ -69,12 +72,16 @@ def send_message_to_channel(
         access_token: The Slack application access token.
 
     Returns:
-        A structure containing a boolean if the message was successfully sent or an error if it occurred
+        A structure containing a boolean if the message was successfully sent or an error if it occurred.
     """
 
     with CaptureError() as error:
         access_token = _parse_token(access_token)
-        response = SlackWebClient(token=access_token).chat_postMessage(channel=channel_name, text=message).validate()
+        response = (
+            SlackWebClient(token=access_token)
+            .chat_postMessage(channel=channel_name, text=message)
+            .validate()
+        )
 
         return Response(result=bool(response.data.get("ok", False)))
 
@@ -94,7 +101,7 @@ def read_messages_from_channel(
 
     Returns:
         A structure containing the messages and associated metadata from the specified Slack channel
-        or an error if it occurred
+        or an error if it occurred.
     """
     with CaptureError() as error:
         access_token = _parse_token(access_token)

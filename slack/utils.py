@@ -1,6 +1,7 @@
 from functools import lru_cache
-from slack_sdk import WebClient as SlackWebClient
 from typing import Dict
+
+from slack_sdk import WebClient as SlackWebClient
 
 
 class ChannelNotFoundError(Exception):
@@ -35,7 +36,7 @@ def get_users_id_to_display_name(*user_ids: str, access_token: str) -> Dict[str,
         try:
             cursor = response["response_metadata"]["next_cursor"]
         except KeyError:
-            pass
+            cursor = None
 
         if not cursor:
             return result
@@ -59,13 +60,16 @@ def get_channel_id(channel_name: str, *, access_token: str) -> str:
         )
 
         for channel in response.get("channels", []):
-            if channel_name == channel["name"].lower() and channel["is_channel"] is True:
+            if (
+                channel_name == channel["name"].lower()
+                and channel["is_channel"] is True
+            ):
                 return channel["id"]
 
         try:
             cursor = response["response_metadata"]["next_cursor"]
         except KeyError:
-            pass
+            cursor = None
 
         if not cursor:
             raise ChannelNotFoundError(channel_name)

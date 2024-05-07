@@ -1,6 +1,8 @@
 from datetime import datetime
-from pydantic import BaseModel, Extra, model_validator, ValidationInfo, Field
 from typing import List, Annotated, Dict, Optional, TypeVar, Generic
+
+from pydantic import BaseModel, Extra, model_validator, ValidationInfo, Field
+
 from utils import get_users_id_to_display_name
 
 DataT = TypeVar("DataT")
@@ -8,11 +10,13 @@ DataT = TypeVar("DataT")
 
 class Messages(BaseModel, extra=Extra.allow):
     type: str
-    user: str
-    text: str
-    ts: datetime
+    user: str = Field(description="Human friendly username")
+    text: str = Field(description="Message body")
+    ts: datetime = Field(description="The timestamp when the messaage was posted")
     user_id: Annotated[str, Field(validation_alias="user")]
-    bot_profile: Optional[Dict] = None
+    bot_profile: Optional[Dict] = Field(
+        None, description="Mapping containing bot profile information"
+    )
 
 
 class MessageList(BaseModel, extra=Extra.ignore):
