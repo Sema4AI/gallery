@@ -9,7 +9,7 @@ class ChannelNotFoundError(Exception):
         super().__init__(f"Channel '{channel_name}' not found")
 
 
-def get_users_display_name(*user_ids: str, access_token: str) -> Dict[str, str]:
+def get_users_id_to_display_name(*user_ids: str, access_token: str) -> Dict[str, str]:
     cursor = None
     updates = 0
     result = {uid: uid for uid in user_ids}

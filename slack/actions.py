@@ -16,10 +16,10 @@ from slack_sdk.errors import SlackApiError
 from typing_extensions import Self
 from utils import get_channel_id, ChannelNotFoundError
 
-load_dotenv(Path("devdata") / ".env")
+load_dotenv(Path(__file__).absolute().parent / "devdata" / ".env")
 
 
-ACCESS_TOKEN = Secret.model_validate(os.getenv("SLACK_TOKEN", ""))
+DEV_SLACK_ACCESS_TOKEN = Secret.model_validate(os.getenv("SLACK_TOKEN", ""))
 
 
 class CaptureError:
@@ -46,17 +46,21 @@ class CaptureError:
         elif issubclass(exc_type, ChannelNotFoundError):
             self._error = str(exc_val)
         else:
+            # return None to raise other exceptions as usual
             return
 
+        # return True to supress the exception
         return True
 
 
 def _parse_token(token: Secret) -> str:
-    return token.value or ACCESS_TOKEN.value
+    return token.value or DEV_SLACK_ACCESS_TOKEN.value
 
 
 @action(is_consequential=True)
-def send_message_to_channel(channel_name: str, message: str, access_token: Secret = ACCESS_TOKEN) -> Response[bool]:
+def send_message_to_channel(
+    channel_name: str, message: str, access_token: Secret = DEV_SLACK_ACCESS_TOKEN
+) -> Response[bool]:
     """Sends a message to the specified Slack channel.
 
     Args:
@@ -79,7 +83,7 @@ def send_message_to_channel(channel_name: str, message: str, access_token: Secre
 
 @action(is_consequential=False)
 def read_messages_from_channel(
-    channel_name: str, limit: int = 20, access_token: Secret = ACCESS_TOKEN
+    channel_name: str, limit: int = 20, access_token: Secret = DEV_SLACK_ACCESS_TOKEN
 ) -> Response[MessageList]:
     """Sends a message to the specified Slack channel.
 

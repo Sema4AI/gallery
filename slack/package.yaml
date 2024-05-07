@@ -3,19 +3,18 @@
 name: Slack
 
 # Required: A description of what's in the action package.
-description: Action package description
+description: Prebuild actions to read and write to Slack channels
 
 # Required: A link to where the documentation on the package lives.
-documentation: https://github.com/...
+documentation: https://github.com/Sema4AI/prebuilt-actions/blob/main/slack/README.md
 
 dependencies:
   conda-forge:
   - python=3.10.12
   - uv=0.1.37
-  - robocorp-truststore=0.8.0
   - python-dotenv=1.0.1
   pypi:
-  - sema4ai-actions=0.3.1
+  - sema4ai-actions=0.4.0
   - slack_sdk=3.27.1
   - pydantic=2.7.1
 

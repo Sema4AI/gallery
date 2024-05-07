@@ -1,7 +1,7 @@
 from datetime import datetime
 from pydantic import BaseModel, Extra, model_validator, ValidationInfo, Field
 from typing import List, Annotated, Dict, Optional, TypeVar, Generic
-from utils import get_users_display_name
+from utils import get_users_id_to_display_name
 
 DataT = TypeVar("DataT")
 
@@ -20,7 +20,7 @@ class MessageList(BaseModel, extra=Extra.ignore):
 
     @model_validator(mode="after")
     def update_user_names(self, info: ValidationInfo):
-        users_display_name = get_users_display_name(
+        users_display_name = get_users_id_to_display_name(
             *(m.user_id for m in self.messages if not m.bot_profile),
             access_token=info.context["access_token"],
         )
