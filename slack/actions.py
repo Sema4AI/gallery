@@ -93,7 +93,6 @@ def read_messages_from_channel(
         or an error if it occurred
     """
     with CaptureError() as error:
-        limit = min(limit, 200)  # Slack docs recommend a limit of 200 for optimal usage.
         access_token = _parse_token(access_token)
         # When reading from a channel, the API label doesn't contain the `#` in the beginning of the channel name
         channel_name = channel_name.lstrip("#")
