@@ -13,8 +13,8 @@ from pathlib import Path
 from sema4ai.actions import action, Secret
 from slack_sdk import WebClient as SlackWebClient
 from slack_sdk.errors import SlackApiError
-from slack_utils import get_channel_id, ChannelNotFoundError
 from typing_extensions import Self
+from utils import get_channel_id, ChannelNotFoundError
 
 load_dotenv(Path("devdata") / ".env")
 

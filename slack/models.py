@@ -1,7 +1,7 @@
 from datetime import datetime
 from pydantic import BaseModel, Extra, model_validator, ValidationInfo, Field
-from slack_utils import get_users_display_name
 from typing import List, Annotated, Dict, Optional, TypeVar, Generic
+from utils import get_users_display_name
 
 DataT = TypeVar("DataT")
 

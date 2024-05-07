@@ -1,8 +1,6 @@
 from functools import lru_cache
 from slack_sdk import WebClient as SlackWebClient
-from typing import Dict, TypeVar, Callable
-
-T = TypeVar("T", bound=Callable)
+from typing import Dict
 
 
 class ChannelNotFoundError(Exception):
@@ -71,16 +69,3 @@ def get_channel_id(channel_name: str, *, access_token: str) -> str:
 
         if not cursor:
             raise ChannelNotFoundError(channel_name)
-
-
-# @contextmanager
-# def handle_error() -> Callable:
-#
-#     ctx = {"error": None}
-#
-#     try:
-#         yield ctx
-#     except SlackApiError as e:
-#         ctx["error"] = e.response["error"]
-#     except ChannelNotFoundError as e:
-#         ctx["error"] = str(e)
