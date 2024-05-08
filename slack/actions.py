@@ -1,8 +1,8 @@
 """
-A simple AI Action template for comparing timezones
+Prebuild AI Action package that integrates with Slack SDK.
 
 Please check out the base guidance on AI Actions in our main repository readme:
-https://github.com/robocorp/robocorp/blob/master/README.md
+https://github.com/sema4ai/actions/blob/master/README.md
 
 """
 
@@ -10,13 +10,13 @@ import os
 from pathlib import Path
 
 from dotenv import load_dotenv
-from sema4ai.actions import action, Secret
 from slack_sdk import WebClient as SlackWebClient
 from slack_sdk.errors import SlackApiError
 from typing_extensions import Self
+from sema4ai.actions import action, Secret
 
-from utils import get_channel_id, ChannelNotFoundError
 from models import MessageList, Response
+from utils import get_channel_id, ChannelNotFoundError
 
 
 load_dotenv(Path(__file__).absolute().parent / "devdata" / ".env")
@@ -49,7 +49,7 @@ class CaptureError:
                 else:
                     self._error = err
             case _:
-                # return None to supress the exception
+                # return None to raise the exception
                 return None
 
         # return True to supress the exception
@@ -77,6 +77,8 @@ def send_message_to_channel(
 
     with CaptureError() as error:
         access_token = _parse_token(access_token)
+        channel_name = channel_name.strip()
+
         response = (
             SlackWebClient(token=access_token)
             .chat_postMessage(channel=channel_name, text=message)
@@ -106,7 +108,7 @@ def read_messages_from_channel(
     with CaptureError() as error:
         access_token = _parse_token(access_token)
         # When reading from a channel, the API label doesn't contain the `#` in the beginning of the channel name
-        channel_name = channel_name.lstrip("#")
+        channel_name = channel_name.strip().lstrip("#")
 
         response = (
             SlackWebClient(token=access_token)

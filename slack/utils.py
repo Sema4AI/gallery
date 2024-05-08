@@ -1,7 +1,7 @@
 from functools import lru_cache
-from typing import Dict
 
 from slack_sdk import WebClient as SlackWebClient
+from robocorp import log
 
 
 class ChannelNotFoundError(Exception):
@@ -10,7 +10,8 @@ class ChannelNotFoundError(Exception):
         super().__init__(f"Channel '{channel_name}' not found")
 
 
-def get_users_id_to_display_name(*user_ids: str, access_token: str) -> Dict[str, str]:
+@log.suppress
+def get_users_id_to_display_name(*user_ids: str, access_token: str) -> dict[str, str]:
     cursor = None
     updates = 0
     result = {uid: uid for uid in user_ids}
@@ -43,6 +44,7 @@ def get_users_id_to_display_name(*user_ids: str, access_token: str) -> Dict[str,
 
 
 @lru_cache(maxsize=1000)
+@log.suppress
 def get_channel_id(channel_name: str, *, access_token: str) -> str:
     cursor = None
     channel_name = channel_name.lower()
