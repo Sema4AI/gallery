@@ -21,7 +21,13 @@ dependencies:
 
 packaging:
   exclude:
-    - "*.pyc" # Excludes .pyc files anywhere
-    - ".vscode/**" # Excludes the `.vscode` directory in the current dir
-    - "./devdata/**" # Excludes the `devdata` directory in the current dir
     - ".*" # Excludes all hidden files
+    - ./.git/**
+    - ./.vscode/**
+    - ./devdata/**
+    - ./output/**
+    - ./.DS_store/**
+    - ./venv/**
+    - ./.venv/**
+    - ./**/*.pyc
+    - ./**/*.zip
