@@ -7,7 +7,7 @@ from youtube_transcript_api import YouTubeTranscriptApi
 
 
 @action(is_consequential=False)
-def get_youtube_transcript(video_url: str) -> str:
+def get_transcript(video_url: str) -> str:
     """
     Extracts the transcription of a Youtube video. Only works if subtitles or captions are available for the video.
 
