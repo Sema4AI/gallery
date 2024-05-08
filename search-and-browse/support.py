@@ -1,4 +1,4 @@
-from action_types import (
+from models import (
     Links,
     Link,
     Form,

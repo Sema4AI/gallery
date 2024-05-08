@@ -1,8 +1,8 @@
-# Browsing
+# Search and Browse
 
 ## Required secrets
 
-This action package utilizes Google Custom Search API. The API usage requires the [API key](https://developers.google.com/custom-search/v1/overview#api_key) and
+The action `google_search` utilizes Google Custom Search API. The API usage requires the [API key](https://developers.google.com/custom-search/v1/overview#api_key) and
 [search engine ID](https://programmablesearchengine.google.com/).
 
 ## Actions
