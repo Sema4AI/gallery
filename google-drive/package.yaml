@@ -5,11 +5,8 @@ name: Google Drive
 # Required: A description of what's in the action package.
 description: Atomic actions operating with Google Drive.
 
-# Required: The current version of this action package.
-version: 0.0.1
-
 # Required: A link to where the documentation on the package lives.
-documentation: https://github.com/robocorp/prebuilt-actions/google-drive/README.md
+documentation: https://github.com/sema4ai/prebuilt-actions/google-drive/README.md
 
 dependencies:
   conda-forge:
@@ -19,7 +16,7 @@ dependencies:
   - python-dotenv=1.0.1
   pypi:
   - robocorp=2.0.2
-  - sema4ai-actions=0.3.0
+  - sema4ai-actions=0.4.0
   - google-api-python-client=2.127.0
   - google-auth-oauthlib=1.2.0
   - google-auth-httplib2=0.2.0
