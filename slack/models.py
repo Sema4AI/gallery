@@ -1,7 +1,7 @@
 from datetime import datetime
-from typing import Annotated, TypeVar, Generic
+from typing import Annotated, Generic, TypeVar
 
-from pydantic import BaseModel, Extra, model_validator, ValidationInfo, Field
+from pydantic import BaseModel, Extra, Field, ValidationInfo, model_validator
 
 from utils import get_users_id_to_display_name
 

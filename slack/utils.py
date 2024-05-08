@@ -1,7 +1,7 @@
 from functools import lru_cache
 
-from slack_sdk import WebClient as SlackWebClient
 from robocorp import log
+from slack_sdk import WebClient as SlackWebClient
 
 
 class ChannelNotFoundError(Exception):
