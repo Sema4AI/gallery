@@ -163,8 +163,7 @@ def search_tickets(
     `limit` results, therefore you have to increase this parameter if you want to
     obtain more.
     Tickets are best for managing customer interactions, track progress and reporting
-    to them. While tasks are better for managing internal workflows, the stepping
-    stones to get tickets done.
+    to them.
 
     Args:
         query: String that is searched for in all the deals properties for a match.
@@ -200,6 +199,8 @@ def search_objects(
     `query` among any of their properties. The search will be limited to at most
     `limit` results, therefore you have to increase this parameter if you want to
     obtain more.
+    Tasks are better for managing internal workflows, the stepping stones to get
+    tickets done.
 
     Args:
         object_type: The kind of object you are searching, currently supporting: tasks.
