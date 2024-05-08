@@ -34,7 +34,7 @@ from models import (
 
 load_dotenv(Path("devdata") / ".env")
 
-DEV_ACCESS_TOKEN = Secret.model_validate(os.getenv("HUBSPOT_ACCESS_TOKEN", ""))
+DEV_ACCESS_TOKEN = Secret.model_validate(os.getenv("DEV_HUBSPOT_ACCESS_TOKEN", ""))
 
 
 class ObjectEnum(Enum):
@@ -64,7 +64,7 @@ def search_companies(
     Args:
         query: String that is searched for in all the company properties for a match.
         limit: The maximum number of results the search can return.
-        access_token: Your Private App generated access token used to make API calls.
+        access_token: Your app (client) generated access token used to make API calls.
 
     Returns:
         A structure with a list of companies matching the query.
@@ -98,7 +98,7 @@ def search_contacts(
     Args:
         query: String that is searched for in all the contact properties for a match.
         limit: The maximum number of results the search can return.
-        access_token: Your Private App generated access token used to make API calls.
+        access_token: Your app (client) generated access token used to make API calls.
 
     Returns:
         A structure with a list of contacts matching the query.
@@ -132,7 +132,7 @@ def search_deals(
     Args:
         query: String that is searched for in all the deals properties for a match.
         limit: The maximum number of results the search can return.
-        access_token: Your Private App generated access token used to make API calls.
+        access_token: Your app (client) generated access token used to make API calls.
 
     Returns:
         A structure with a list of deals matching the query.
@@ -169,7 +169,7 @@ def search_tickets(
     Args:
         query: String that is searched for in all the deals properties for a match.
         limit: The maximum number of results the search can return.
-        access_token: Your Private App generated access token used to make API calls.
+        access_token: Your app (client) generated access token used to make API calls.
 
     Returns:
         A structure with a list of deals matching the query.
@@ -205,7 +205,7 @@ def search_objects(
         object_type: The kind of object you are searching, currently supporting: tasks.
         query: String that is searched for in all the object properties for a match.
         limit: The maximum number of results the search can return.
-        access_token: Your Private App generated access token used to make API calls.
+        access_token: Your app (client) generated access token used to make API calls.
 
     Returns:
         A structure with a list of objects matching the query.
