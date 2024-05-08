@@ -1,4 +1,4 @@
-"""Set of actions for web browsing.
+"""Set of actions for searching and web browsing.
 
 Currently supporting:
 - google search
@@ -21,7 +21,7 @@ import os
 import requests
 from urllib.parse import urlparse
 
-from action_types import (
+from models import (
     DownloadedFile,
     WebPage,
     PlaceSearchResult,
@@ -200,6 +200,8 @@ def google_search(
     context: Secret = Secret.model_validate(os.getenv(CONTEXT_FIELD, "")),
 ) -> SearchResultList:
     """Performs Google Search to find information about a topic.
+
+    Secrets are required. Do not call if they are given.
 
     To list all possible results use count=0.
 
