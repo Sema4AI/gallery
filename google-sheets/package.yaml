@@ -13,12 +13,11 @@ documentation: https://github.com/robocorp/prebuilt-actions/google-sheets/README
 
 dependencies:
   conda-forge:
-  - python=3.10.12
-  - pip=23.2.1
-  - robocorp-truststore=0.8.0
+  - python=3.10.14
+  - uv=0.1.41
   - python-dotenv=1.0.1
   pypi:
-  - robocorp=2.0.2
-  - robocorp-actions=0.2.0
+  - sema4ai-actions=0.5.0
+  - pytz=2024.1
   - gspread=6.1.0
   - pydantic=2.6.4
