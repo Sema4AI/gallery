@@ -41,9 +41,9 @@ class CaptureError:
         match exc_val:
             case ChannelNotFoundError() as e:
                 self._error = str(e)
-            case SlackApiError(response):
-                err = response["error"]
-                if err == "no_in_channel":
+            case SlackApiError() as e:
+                err = e.response["error"]
+                if err == "not_in_channel":
                     self._error = "Slack bot was not added to the channel"
                 else:
                     self._error = err
