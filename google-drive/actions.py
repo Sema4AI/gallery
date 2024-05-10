@@ -2,15 +2,16 @@ import json
 import os
 from io import BytesIO
 from pathlib import Path
-from typing import Generic, List, Optional, TypeVar
+from typing import Optional
 
 from dotenv import load_dotenv
 from google.oauth2 import service_account
 from googleapiclient.discovery import Resource, build
 from googleapiclient.errors import HttpError
 from googleapiclient.http import MediaIoBaseDownload
-from pydantic import BaseModel
 from sema4ai.actions import Secret, action
+
+from models import CommentList, File, FileList, Response
 
 load_dotenv(Path(__file__).absolute().parent / "devdata" / ".env")
 
@@ -33,78 +34,6 @@ EXPORT_MIMETYPE_MAP = {
     "application/vnd.google-apps.spreadsheet": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     "application/vnd.google-apps.document": "text/plain",
 }
-
-
-class Owner(BaseModel):
-    displayName: str
-    emailAddress: Optional[str] = None
-
-
-class Permission(BaseModel):
-    emailAddress: str
-    role: str
-    deleted: bool
-    pendingOwner: bool
-
-
-class File(BaseModel):
-    id: str
-    name: str
-    mimeType: str
-    createdTime: str
-    modifiedTime: str
-    owners: List[Owner]
-    size: str
-    version: str
-    webViewLink: str
-    permissions: List[Permission]
-
-    def size_in_megabytes(self) -> float:
-        size_in_bytes = int(self.size)
-        size_in_mb = size_in_bytes / (1024 * 1024)
-        return round(size_in_mb, 2)
-
-    def is_excel(self) -> bool:
-        return self.mimeType == "application/vnd.google-apps.spreadsheet"
-
-    def is_doc(self) -> bool:
-        return self.mimeType == "application/vnd.google-apps.document"
-
-
-class FileList(BaseModel):
-    files: List[File]
-
-
-class BaseComment(BaseModel):
-    id: str
-    kind: str
-    createdTime: str
-    modifiedTime: str
-    htmlContent: str
-    content: str
-    author: Owner
-    deleted: bool
-
-
-class Reply(BaseComment):
-    action: Optional[str] = None
-
-
-class Comment(BaseComment):
-    resolved: Optional[bool] = None
-    replies: List[Reply]
-
-
-class CommentList(BaseModel):
-    comments: List[Comment]
-
-
-DataT = TypeVar("DataT")
-
-
-class Response(BaseModel, Generic[DataT]):
-    result: Optional[DataT] = None
-    error: Optional[str] = None
 
 
 def _build_service(credentials: Secret) -> Resource:
@@ -217,7 +146,7 @@ def get_files_by_query(
 @action(is_consequential=False)
 def get_file_contents(
     name: str, worksheet: str = "", google_credentials: Secret = DEFAULT_CREDENTIALS
-) -> str:
+) -> Response:
     """
     Get the file contents.
 
@@ -233,10 +162,12 @@ def get_file_contents(
 
     file = _get_file_by_name(service, name)
     if not file:
-        return "File was not found"
+        return Response(error=f"The file named '{name}' could not be found")
 
     if not EXPORT_MIMETYPE_MAP.get(file.mimeType):
-        return f"Type document {file.mimeType} is not supported for this operation"
+        return Response(
+            error=f"Type document {file.mimeType} is not supported for this operation"
+        )
 
     file_content = _export_file_content(
         service, file.id, EXPORT_MIMETYPE_MAP[file.mimeType]
@@ -245,9 +176,9 @@ def get_file_contents(
     service.close()
 
     if file.is_excel():
-        return _get_excel_content(file_content, worksheet)
+        return Response(result=_get_excel_content(file_content, worksheet))
 
-    return file_content.getvalue().decode("utf-8", errors="replace")
+    return Response(result=file_content.getvalue().decode("utf-8", errors="replace"))
 
 
 @action(is_consequential=True)
@@ -256,7 +187,7 @@ def share_document(
     role: str,
     email_address: str,
     google_credentials: Secret = DEFAULT_CREDENTIALS,
-) -> str:
+) -> Response:
     """
     Share a document with a specific email address.
 
@@ -275,18 +206,20 @@ def share_document(
 
     file = _get_file_by_name(service, name)
     if not file:
-        return "File was not found"
+        return Response(error=f"The file named '{name}' could not be found")
 
     try:
         service.permissions().create(
             fileId=file.id, body=permission, fields="id"
         ).execute()
     except HttpError as e:
-        return f"Failed to share the document. Reason: {e.reason}"
+        return Response(error=f"Failed to share the document. Reason: {e.reason}")
     finally:
         service.close()
 
-    return f"Permission {role} was granted. File link: {file.webViewLink}"
+    return Response(
+        result=f"Permission {role} was granted. File link: {file.webViewLink}"
+    )
 
 
 @action(is_consequential=False)
