@@ -4,7 +4,26 @@ Youtube Actions for Sema4.ai Action Server
 
 from sema4ai.actions import action
 from youtube_transcript_api import YouTubeTranscriptApi
+from youtube_search import YoutubeSearch
 
+
+@action(is_consequential=False)
+def search(search_term: str, max_results: int = 3) -> str:
+    """
+    Searches for the YouTube videos with a search keyword.
+
+    Args:
+        search_term (str): A search term for the Youtube video search, example: "Agentic Automation"
+        max_results (int): How many results to return, default 3.
+
+    Returns:
+        str: Youtube video links that match the search criteria. The return value is a json string.
+    """
+    try:
+        results = YoutubeSearch(search_term, max_results=max_results).to_json()
+        return results
+    except Exception as e:
+        return f"An error occurred: {str(e)}"
 
 @action(is_consequential=False)
 def get_transcript(video_url: str) -> str:
