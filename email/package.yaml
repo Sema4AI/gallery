@@ -1,5 +1,5 @@
 # Required: A short name for the action package
-name: Email actions
+name: Email sending
 
 # Required: A description of what's in the action package.
 description: Base actions needed to send emails using Sema4.ai service.
@@ -11,15 +11,20 @@ dependencies:
   conda-forge:
     - python=3.10.12
     - uv=0.1.38
-    - robocorp-truststore=0.8.0
     - python-dotenv=1.0.1
   pypi:
-    - sema4ai-actions=0.3.1
+    - sema4ai-actions=0.4.0
     - pydantic=2.7.1
 
 packaging:
   exclude:
-    - "*.pyc" # Excludes .pyc files anywhere
-    - ".vscode/**" # Excludes the `.vscode` directory in the current dir
-    - "./devdata/**" # Excludes the `devdata` directory in the current dir
     - ".*" # Excludes all hidden files
+    - ./.git/**
+    - ./.vscode/**
+    - ./devdata/**
+    - ./output/**
+    - ./.DS_store/**
+    - ./venv/**
+    - ./.venv/**
+    - ./**/*.pyc
+    - ./**/*.zip

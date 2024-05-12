@@ -34,7 +34,7 @@ from models import (
 
 load_dotenv(Path("devdata") / ".env")
 
-DEV_ACCESS_TOKEN = Secret.model_validate(os.getenv("HUBSPOT_ACCESS_TOKEN", ""))
+DEV_ACCESS_TOKEN = Secret.model_validate(os.getenv("DEV_HUBSPOT_ACCESS_TOKEN", ""))
 
 
 class ObjectEnum(Enum):
@@ -64,7 +64,7 @@ def search_companies(
     Args:
         query: String that is searched for in all the company properties for a match.
         limit: The maximum number of results the search can return.
-        access_token: Your Private App generated access token used to make API calls.
+        access_token: Your app (client) generated access token used to make API calls.
 
     Returns:
         A structure with a list of companies matching the query.
@@ -98,7 +98,7 @@ def search_contacts(
     Args:
         query: String that is searched for in all the contact properties for a match.
         limit: The maximum number of results the search can return.
-        access_token: Your Private App generated access token used to make API calls.
+        access_token: Your app (client) generated access token used to make API calls.
 
     Returns:
         A structure with a list of contacts matching the query.
@@ -132,7 +132,7 @@ def search_deals(
     Args:
         query: String that is searched for in all the deals properties for a match.
         limit: The maximum number of results the search can return.
-        access_token: Your Private App generated access token used to make API calls.
+        access_token: Your app (client) generated access token used to make API calls.
 
     Returns:
         A structure with a list of deals matching the query.
@@ -163,13 +163,12 @@ def search_tickets(
     `limit` results, therefore you have to increase this parameter if you want to
     obtain more.
     Tickets are best for managing customer interactions, track progress and reporting
-    to them. While tasks are better for managing internal workflows, the stepping
-    stones to get tickets done.
+    to them.
 
     Args:
         query: String that is searched for in all the deals properties for a match.
         limit: The maximum number of results the search can return.
-        access_token: Your Private App generated access token used to make API calls.
+        access_token: Your app (client) generated access token used to make API calls.
 
     Returns:
         A structure with a list of deals matching the query.
@@ -200,12 +199,14 @@ def search_objects(
     `query` among any of their properties. The search will be limited to at most
     `limit` results, therefore you have to increase this parameter if you want to
     obtain more.
+    Tasks are better for managing internal workflows, the stepping stones to get
+    tickets done.
 
     Args:
         object_type: The kind of object you are searching, currently supporting: tasks.
         query: String that is searched for in all the object properties for a match.
         limit: The maximum number of results the search can return.
-        access_token: Your Private App generated access token used to make API calls.
+        access_token: Your app (client) generated access token used to make API calls.
 
     Returns:
         A structure with a list of objects matching the query.
