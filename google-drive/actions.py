@@ -240,7 +240,7 @@ def list_file_comments(
 
     file = _get_file_by_name(service, name)
     if not file:
-        return []
+        return Response(error=f"The file named '{name}' could not be found")
 
     comments_list = (
         service.comments()
@@ -248,5 +248,6 @@ def list_file_comments(
         .execute()
         .get("comments", [])
     )
+    service.close()
 
     return Response(result=CommentList(comments=comments_list))
