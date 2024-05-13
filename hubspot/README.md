@@ -6,21 +6,27 @@ It is currently capable of searching for and retrieving CRM objects like compani
 
 ## Prompts
 
-`Hey, please tell me what companies we have in HubSpot matching "AI".`
+```
+Hey, please tell me what companies we have in HubSpot matching "AI".
+```
 
 > Here are the companies in HubSpot matching "AI":
 > 1. Fireflies.ai
 > 2. substorm.ai
 > 3. sp.ai
 
-`Now, please give me a contact for the first company listed previously.`
+```
+Now, please give me a contact for the first company listed previously.
+```
 
 > The contact for Fireflies.ai listed in HubSpot is:
 >
 > * Name: Fireflies.ai Notetaker
 > * Email: fred@fireflies.ai
 
-`Show me the tasks in HubSpot matching "prebuilt" and list them by priority please.`
+```
+Show me the tasks in HubSpot matching "prebuilt" and list them by priority please.
+```
 
 > I found 2 tasks in HubSpot matching "prebuilt" and here they are listed by priority:
 >
