@@ -1,20 +1,26 @@
+from dataclasses import dataclass
 from functools import lru_cache
 
 from robocorp import log
+from sema4ai.actions import Secret
 from slack_sdk import WebClient as SlackWebClient
+from typing_extensions import Self
 
 
-class ChannelNotFoundError(Exception):
-    def __init__(self, channel_name: str):
-        self.channel_name = channel_name
-        super().__init__(f"Channel '{channel_name}' not found")
+class ConversationNotFoundError(Exception):
+    def __init__(self, conversation_name: str):
+        self.conversation_name = conversation_name
+        super().__init__(f"'{conversation_name}' was not found")
 
 
 @log.suppress
-def get_users_id_to_display_name(*user_ids: str, access_token: str) -> dict[str, str]:
+def map_users_id_to_display_name(
+    *user_ids: str, access_token: str, return_only_found: bool = False
+) -> dict[str, str]:
     cursor = None
     updates = 0
-    result = {uid: uid for uid in user_ids}
+
+    result = {}
 
     while True:
         response = (
@@ -27,8 +33,8 @@ def get_users_id_to_display_name(*user_ids: str, access_token: str) -> dict[str,
         )
 
         for member in response.get("members", []):
-            if member["id"] in result:
-                result[member["id"]] = member["name"]
+            if (member_id := member["id"]) in user_ids:
+                result[member_id] = member["profile"]["real_name"]
                 updates += 1
 
         if updates >= len(user_ids):
@@ -40,38 +46,105 @@ def get_users_id_to_display_name(*user_ids: str, access_token: str) -> dict[str,
             cursor = None
 
         if not cursor:
+            if not return_only_found:
+                # When populating username for conversation history,
+                # we need the user ids to use as labels if the username was not.
+                result = {**{user_id: user_id for user_id in user_ids}, **result}
+
             return result
 
 
-@lru_cache(maxsize=1000)
-@log.suppress
-def get_channel_id(channel_name: str, *, access_token: str) -> str:
-    cursor = None
-    channel_name = channel_name.lower()
+class UserConversationId(str):
+    pass
 
-    while True:
-        response = (
-            SlackWebClient(token=access_token)
-            .conversations_list(
-                exclude_archived=True,
-                limit=1000,
-                cursor=cursor,
-                types="public_channel,private_channel",
-            )
-            .validate()
-        )
 
-        for channel in response.get("channels", []):
-            if (
-                channel_name == channel["name"].lower()
-                and channel["is_channel"] is True
-            ):
-                return channel["id"]
+class ChannelConversationId(str):
+    pass
 
-        try:
-            cursor = response["response_metadata"]["next_cursor"]
-        except KeyError:
+
+@dataclass
+class ConversationsInfo:
+    _access_token: Secret
+    _conversation_name_to_id: dict[str, UserConversationId | ChannelConversationId]
+    _user_id_to_conversation_id: dict[str, str]
+
+    _updated: bool = False
+
+    @classmethod
+    @lru_cache(maxsize=1)
+    def new(cls, *, access_token: str) -> Self:
+        user_ids = {}
+        conversations = {}
+
+        while True:
             cursor = None
 
-        if not cursor:
-            raise ChannelNotFoundError(channel_name)
+            response = (
+                SlackWebClient(token=access_token)
+                .conversations_list(
+                    cursor=cursor,
+                    types="public_channel,private_channel,mpim,im",
+                )
+                .validate()
+            )
+
+            for channel in response["channels"]:
+                if channel.get("is_channel", False):
+                    # We only add channels in the init, we will lazy-load the user info if it gets requested.
+                    conversations[channel["name"].lower()] = ChannelConversationId(
+                        channel["id"]
+                    )
+                else:
+                    user_ids[channel["user"]] = channel["id"]
+
+            try:
+                cursor = response["response_metadata"]["next_cursor"]
+            except KeyError:
+                cursor = None
+
+            if not cursor:
+                break
+
+        return cls(
+            _conversation_name_to_id=conversations,
+            _user_id_to_conversation_id=user_ids,
+            _access_token=Secret.model_validate(access_token),
+        )
+
+    def _fetch_usernames(self):
+        """Since we don't always need the usernames, we lazy load the usernames"""
+        if not self._updated:
+            for user_id, user_name in map_users_id_to_display_name(
+                *self._user_id_to_conversation_id.keys(),
+                access_token=self._access_token.value,
+                return_only_found=True,
+            ).items():
+                self._conversation_name_to_id[user_name.lower()] = UserConversationId(
+                    self._user_id_to_conversation_id[user_id]
+                )
+
+            self._updated = True
+
+        return self
+
+    def get_channel_id(self, name: str) -> str | None:
+        info = self._conversation_name_to_id.get(name)
+        return str(info) if isinstance(info, ChannelConversationId) else None
+
+    def get_user_id(self, name: str) -> str | None:
+        self._fetch_usernames()
+
+        info = self._conversation_name_to_id.get(name)
+        return str(info) if isinstance(info, UserConversationId) else None
+
+
+def get_conversation_id(name: str, *, access_token: str) -> str:
+    name = name.strip().strip("#").lower()
+    conversations = ConversationsInfo.new(access_token=access_token)
+
+    if channel_id := conversations.get_channel_id(name):
+        return channel_id
+    elif user_id := conversations.get_user_id(name):
+        return user_id
+
+    raise ConversationNotFoundError(name)

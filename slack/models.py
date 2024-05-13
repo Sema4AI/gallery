@@ -3,7 +3,7 @@ from typing import Annotated, Generic, TypeVar
 
 from pydantic import BaseModel, Extra, Field, ValidationInfo, model_validator
 
-from utils import get_users_id_to_display_name
+from utils import map_users_id_to_display_name
 
 DataT = TypeVar("DataT")
 
@@ -27,6 +27,9 @@ class Messages(BaseModel, extra=Extra.allow):
         """Strips down some extra data from the payload to reduce model input"""
 
         data.pop("blocks", None)
+        # The API is a very inconsistent, but if we do get this data,
+        # we trim it down since we already need to fetch all usernames for the cases where we don't have it.
+        data.pop("user_profile", None)
 
         if bot_profile := data.pop("bot_profile", None):  # type: dict | None
             data["bot_name"] = bot_profile.get("name")
@@ -39,7 +42,7 @@ class MessageList(BaseModel, extra=Extra.ignore):
 
     @model_validator(mode="after")
     def update_user_names(self, info: ValidationInfo):
-        users_display_name = get_users_id_to_display_name(
+        users_display_name = map_users_id_to_display_name(
             *(m.user_id for m in self.messages if not m.bot_name),
             access_token=info.context["access_token"],
         )

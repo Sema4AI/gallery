@@ -16,7 +16,7 @@ from slack_sdk.errors import SlackApiError
 from typing_extensions import Self
 
 from models import MessageList, Response
-from utils import ChannelNotFoundError, get_channel_id
+from utils import ConversationNotFoundError, get_conversation_id
 
 load_dotenv(Path(__file__).absolute().parent / "devdata" / ".env")
 
@@ -39,7 +39,7 @@ class CaptureError:
             return
 
         match exc_val:
-            case ChannelNotFoundError() as e:
+            case ConversationNotFoundError() as e:
                 self._error = str(e)
             case SlackApiError() as e:
                 err = e.response["error"]
@@ -76,11 +76,13 @@ def send_message_to_channel(
 
     with CaptureError() as error:
         access_token = _parse_token(access_token)
-        channel_name = channel_name.strip()
 
         response = (
             SlackWebClient(token=access_token)
-            .chat_postMessage(channel=channel_name, text=message)
+            .chat_postMessage(
+                channel=get_conversation_id(channel_name, access_token=access_token),
+                text=message,
+            )
             .validate()
         )
 
@@ -91,19 +93,22 @@ def send_message_to_channel(
 
 @action(is_consequential=False)
 def read_messages_from_channel(
-    channel_name: str, limit: int = 20, access_token: Secret = DEV_SLACK_ACCESS_TOKEN
+    channel_name: str,
+    message_limit: int = 20,
+    access_token: Secret = DEV_SLACK_ACCESS_TOKEN,
 ) -> Response[MessageList]:
     """Sends a message to the specified Slack channel.
 
     Args:
         channel_name: The name of the Slack channel to read the messages from.
-        limit: The number of messages to read from the channel. Limited to a maximum of 200.
+        message_limit: The number of messages to read from the channel. Limited to a maximum of 200.
         access_token: The Slack application access token.
 
     Returns:
         A structure containing the messages and associated metadata from the specified Slack channel
         or an error if it occurred.
     """
+
     with CaptureError() as error:
         access_token = _parse_token(access_token)
         # When reading from a channel, the API label doesn't contain the `#` in the beginning of the channel name
@@ -112,8 +117,8 @@ def read_messages_from_channel(
         response = (
             SlackWebClient(token=access_token)
             .conversations_history(
-                channel=get_channel_id(channel_name, access_token=access_token),
-                limit=limit,
+                channel=get_conversation_id(channel_name, access_token=access_token),
+                limit=message_limit,
             )
             .validate()
         )
