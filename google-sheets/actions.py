@@ -21,7 +21,7 @@ from sema4ai.actions import Secret, action
 
 load_dotenv(Path(__file__).absolute().parent / "devdata" / ".env")
 
-DEFAULT_CREDENTIALS = Secret.model_validate(os.getenv("DEV_GOOGLE_CREDENTIALS", ""))
+DEV_GOOGLE_CREDENTIALS = Secret.model_validate(os.getenv("DEV_GOOGLE_CREDENTIALS", ""))
 ALPHA_LENGTH = ord("Z") - ord("A") + 1
 
 
@@ -38,7 +38,7 @@ class RowData(BaseModel):
 
 @action(is_consequential=True)
 def create_spreadsheet(
-    name: str, google_credentials: Secret = DEFAULT_CREDENTIALS
+    name: str, google_credentials: Secret = DEV_GOOGLE_CREDENTIALS
 ) -> str:
     """Creates a new Spreadsheet.
 
@@ -58,7 +58,7 @@ def create_spreadsheet(
 
 @action(is_consequential=True)
 def create_worksheet(
-    spreadsheet: str, title: str, google_credentials: Secret = DEFAULT_CREDENTIALS
+    spreadsheet: str, title: str, google_credentials: Secret = DEV_GOOGLE_CREDENTIALS
 ) -> str:
     """Creates a new Worksheet.
 
@@ -84,7 +84,7 @@ def get_sheet_content(
     worksheet: str,
     from_row: int = 1,
     limit: int = 100,
-    google_credentials: Secret = DEFAULT_CREDENTIALS,
+    google_credentials: Secret = DEV_GOOGLE_CREDENTIALS,
 ) -> str:
     """Get all content from the chosen Google Spreadsheet Sheet.
 
@@ -112,7 +112,7 @@ def get_sheet_content(
 
 @action(is_consequential=False)
 def get_spreadsheet_schema(
-    spreadsheet: str, google_credentials: Secret = DEFAULT_CREDENTIALS
+    spreadsheet: str, google_credentials: Secret = DEV_GOOGLE_CREDENTIALS
 ) -> str:
     """Get necessary information to be able to work with a Google Spreadsheets correctly.
 
@@ -142,7 +142,7 @@ def add_sheet_rows(
     spreadsheet: str,
     worksheet: str,
     rows_to_add: RowData,
-    google_credentials: Secret = DEFAULT_CREDENTIALS,
+    google_credentials: Secret = DEV_GOOGLE_CREDENTIALS,
 ) -> str:
     """Add multiple rows to the Google sheet.
 
@@ -174,7 +174,7 @@ def update_sheet_rows(
     worksheet: str,
     cells: str,
     data: RowData,
-    google_credentials: Secret = DEFAULT_CREDENTIALS,
+    google_credentials: Secret = DEV_GOOGLE_CREDENTIALS,
 ) -> str:
     """Update a cell or a range of cells in a worksheet using A1 or R1:C1 notation.
 
