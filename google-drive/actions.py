@@ -15,7 +15,7 @@ from models import CommentList, File, FileList, Response
 
 load_dotenv(Path(__file__).absolute().parent / "devdata" / ".env")
 
-DEFAULT_CREDENTIALS = Secret.model_validate(os.getenv("DEV_GOOGLE_CREDENTIALS", ""))
+DEV_GOOGLE_CREDENTIALS = Secret.model_validate(os.getenv("DEV_GOOGLE_CREDENTIALS", ""))
 SCOPES = ["https://www.googleapis.com/auth/drive"]
 FILE_FIELDS = [
     "id",
@@ -87,7 +87,7 @@ def _get_excel_content(file_content: BytesIO, worksheet: Optional[str] = None) -
 
 @action(is_consequential=False)
 def get_file_by_id(
-    file_id: str, google_credentials: Secret = DEFAULT_CREDENTIALS
+    file_id: str, google_credentials: Secret = DEV_GOOGLE_CREDENTIALS
 ) -> Response[File]:
     """Get a file from Google Drive by id.
 
@@ -116,7 +116,7 @@ def get_file_by_id(
 
 @action(is_consequential=False)
 def get_files_by_query(
-    query: str, google_credentials: Secret = DEFAULT_CREDENTIALS
+    query: str, google_credentials: Secret = DEV_GOOGLE_CREDENTIALS
 ) -> Response[FileList]:
     """Get all files from Google Drive that match the given query.
 
@@ -145,7 +145,7 @@ def get_files_by_query(
 
 @action(is_consequential=False)
 def get_file_contents(
-    name: str, worksheet: str = "", google_credentials: Secret = DEFAULT_CREDENTIALS
+    name: str, worksheet: str = "", google_credentials: Secret = DEV_GOOGLE_CREDENTIALS
 ) -> Response:
     """
     Get the file contents.
@@ -186,7 +186,7 @@ def share_document(
     name: str,
     role: str,
     email_address: str,
-    google_credentials: Secret = DEFAULT_CREDENTIALS,
+    google_credentials: Secret = DEV_GOOGLE_CREDENTIALS,
 ) -> Response:
     """
     Share a document with a specific email address.
@@ -224,7 +224,7 @@ def share_document(
 
 @action(is_consequential=False)
 def list_file_comments(
-    name: str, google_credentials: Secret = DEFAULT_CREDENTIALS
+    name: str, google_credentials: Secret = DEV_GOOGLE_CREDENTIALS
 ) -> Response[CommentList]:
     """
     List the comments on a specific file.
@@ -234,6 +234,7 @@ def list_file_comments(
         google_credentials: Json containing Google service account credentials.
 
     Return:
+        List of comments associated with the file.
     """
     service = _build_service(google_credentials)
 
