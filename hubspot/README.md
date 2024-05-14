@@ -6,47 +6,46 @@ It is currently capable of searching for and retrieving CRM objects like compani
 
 ## Prompts
 
-> Hey, please tell me what companies we have in HubSpot matching "AI".
-
 ```
-Here are the companies in HubSpot matching "AI":
-1. Fireflies.ai
-2. substorm.ai
-3. sp.ai
+Hey, please tell me what companies we have in HubSpot matching "AI".
 ```
 
-> Now, please give me a contact for the first company listed previously.
+> Here are the companies in HubSpot matching "AI":
+> 1. Fireflies.ai
+> 2. substorm.ai
+> 3. sp.ai
 
 ```
-The contact for Fireflies.ai listed in HubSpot is:
-
-* Name: Fireflies.ai Notetaker
-* Email: fred@fireflies.ai
+Now, please give me a contact for the first company listed previously.
 ```
 
-> Show me the tasks in HubSpot matching "prebuilt" and list them by priority please.
+> The contact for Fireflies.ai listed in HubSpot is:
+>
+> * Name: Fireflies.ai Notetaker
+> * Email: fred@fireflies.ai
 
 ```
-I found 2 tasks in HubSpot matching "prebuilt" and here they are listed by priority:
-
-1. Prebuilt Actions - README test
-   * Priority: HIGH
-   * Status: NOT_STARTED
-   * Type: TODO
-   * Created Date: 2024-05-08
-   * Description: This is high prio!
-2. Prebuilt Action task
-   * Priority: MEDIUM
-   * Status: NOT_STARTED
-   * Type: CALL
-   * Created Date: 2024-04-29
-   * Description: Hey, please take this task and sort it out so it is shown in our Prebuilt Action searching capability.
+Show me the tasks in HubSpot matching "prebuilt" and list them by priority please.
 ```
+
+> I found 2 tasks in HubSpot matching "prebuilt" and here they are listed by priority:
+>
+> 1. Prebuilt Actions - README test
+>    * Priority: HIGH
+>    * Status: NOT_STARTED
+>    * Type: TODO
+>    * Created Date: 2024-05-08
+>    * Description: This is high prio!
+> 2. Prebuilt Action task
+>    * Priority: MEDIUM
+>    * Status: NOT_STARTED
+>    * Type: CALL
+>    * Created Date: 2024-04-29
+>    * Description: Hey, please take this task and sort it out so it is shown in our Prebuilt Action searching capability.
 
 ## Authorization
 
-In order to allow the AI Actions access your resources, you need to supply a mandatory
-secret called the "access token".  
+In order to allow the AI Actions access your resources, you need to supply a mandatory secret called the "access token".  
 This is a long-lived stable token that once generated, never expires, and it should be kept safe and rotated in case it gets leaked. Compared to an API key, this token is tied to a Private App that you need to create and generate the token with.
 
 Follow these steps to obtain a suitable access token:
