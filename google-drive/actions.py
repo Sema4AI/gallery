@@ -15,21 +15,10 @@ from models import CommentList, File, FileList, Response
 
 load_dotenv(Path(__file__).absolute().parent / "devdata" / ".env")
 
-DEV_GOOGLE_CREDENTIALS = Secret.model_validate(os.getenv("DEV_GOOGLE_CREDENTIALS", ""))
+DEV_GOOGLE_SERVICE_ACCOUNT = Secret.model_validate(
+    os.getenv("DEV_GOOGLE_SERVICE_ACCOUNT", "")
+)
 SCOPES = ["https://www.googleapis.com/auth/drive"]
-FILE_FIELDS = [
-    "id",
-    "name",
-    "mimeType",
-    "createdTime",
-    "modifiedTime",
-    "owners",
-    "size",
-    "version",
-    "webViewLink",
-    "permissions",
-]
-
 EXPORT_MIMETYPE_MAP = {
     "application/vnd.google-apps.spreadsheet": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     "application/vnd.google-apps.document": "text/plain",
@@ -46,11 +35,7 @@ def _build_service(credentials: Secret) -> Resource:
 
 
 def _get_file_by_name(service: Resource, name: str) -> Optional[File]:
-    response = (
-        service.files()
-        .list(q=f"name = '{name}'", fields=f'files({",".join(FILE_FIELDS)})')
-        .execute()
-    )
+    response = service.files().list(q=f"name = '{name}'", fields="*").execute()
 
     if not response.get("files"):
         return
@@ -87,13 +72,13 @@ def _get_excel_content(file_content: BytesIO, worksheet: Optional[str] = None) -
 
 @action(is_consequential=False)
 def get_file_by_id(
-    file_id: str, google_credentials: Secret = DEV_GOOGLE_CREDENTIALS
+    file_id: str, google_credentials: Secret = DEV_GOOGLE_SERVICE_ACCOUNT
 ) -> Response[File]:
     """Get a file from Google Drive by id.
 
     Args:
         file_id: Unique id of the file.
-        google_credentials: Json containing Google service account credentials.
+        google_credentials: JSON containing Google service account credentials.
 
     Returns:
         Message containing the details of the file or error message.
@@ -102,11 +87,7 @@ def get_file_by_id(
     service = _build_service(google_credentials)
     try:
         return Response(
-            result=File(
-                **service.files()
-                .get(fileId=file_id, fields=",".join(FILE_FIELDS))
-                .execute()
-            )
+            result=File(**service.files().get(fileId=file_id, fields="*").execute())
         )
     except HttpError:
         return Response(error=f"No files were found with the id: {file_id}")
@@ -116,24 +97,20 @@ def get_file_by_id(
 
 @action(is_consequential=False)
 def get_files_by_query(
-    query: str, google_credentials: Secret = DEV_GOOGLE_CREDENTIALS
+    query: str, google_credentials: Secret = DEV_GOOGLE_SERVICE_ACCOUNT
 ) -> Response[FileList]:
     """Get all files from Google Drive that match the given query.
 
     Args:
         query: Google Drive API V3 query string for search files in the format query_term operator values.
-        google_credentials: Json containing Google service account credentials.
+        google_credentials: JSON containing Google service account credentials.
 
     Returns:
         A list of files or an error message if no files were found.
     """
     service = _build_service(google_credentials)
 
-    response = (
-        service.files()
-        .list(q=query, fields=f'files({",".join(FILE_FIELDS)})')
-        .execute()
-    )
+    response = service.files().list(q=query, fields="*").execute()
     service.close()
 
     files = FileList(files=response.get("files", []))
@@ -145,17 +122,18 @@ def get_files_by_query(
 
 @action(is_consequential=False)
 def get_file_contents(
-    name: str, worksheet: str = "", google_credentials: Secret = DEV_GOOGLE_CREDENTIALS
+    name: str,
+    worksheet: str = "",
+    google_credentials: Secret = DEV_GOOGLE_SERVICE_ACCOUNT,
 ) -> Response:
-    """
-    Get the file contents.
+    """Get the file contents.
 
     Args:
         name: Name of the file.
         worksheet: Name of the worksheet in case of Excel files, default is the first sheet.
-        google_credentials: Json containing Google service account credentials.
+        google_credentials: JSON containing Google service account credentials.
 
-    Return:
+    Returns:
         The file contents or an error message.
     """
     service = _build_service(google_credentials)
@@ -186,18 +164,17 @@ def share_document(
     name: str,
     role: str,
     email_address: str,
-    google_credentials: Secret = DEV_GOOGLE_CREDENTIALS,
+    google_credentials: Secret = DEV_GOOGLE_SERVICE_ACCOUNT,
 ) -> Response:
-    """
-    Share a document with a specific email address.
+    """Share a document with a specific email address.
 
     Args:
         name: Name of the file to be shared.
         role: Assign a specific role. Possible options are: reader, writer, commenter, organizer, fileOrganizer.
         email_address: The email address of the user or group to share the file with.
-        google_credentials: Json containing Google service account credentials.
+        google_credentials: JSON containing Google service account credentials.
 
-    Return:
+    Returns:
         Message indicating the success or failure of the operation.
     """
     service = _build_service(google_credentials)
@@ -209,9 +186,7 @@ def share_document(
         return Response(error=f"The file named '{name}' could not be found")
 
     try:
-        service.permissions().create(
-            fileId=file.id, body=permission, fields="id"
-        ).execute()
+        service.permissions().create(fileId=file.id, body=permission).execute()
     except HttpError as e:
         return Response(error=f"Failed to share the document. Reason: {e.reason}")
     finally:
@@ -224,16 +199,15 @@ def share_document(
 
 @action(is_consequential=False)
 def list_file_comments(
-    name: str, google_credentials: Secret = DEV_GOOGLE_CREDENTIALS
+    name: str, google_credentials: Secret = DEV_GOOGLE_SERVICE_ACCOUNT
 ) -> Response[CommentList]:
-    """
-    List the comments on a specific file.
+    """List the comments on a specific file.
 
     Args:
         name: Name of the file to read its associated comments.
-        google_credentials: Json containing Google service account credentials.
+        google_credentials: JSON containing Google service account credentials.
 
-    Return:
+    Returns:
         List of comments associated with the file.
     """
     service = _build_service(google_credentials)
