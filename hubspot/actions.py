@@ -32,7 +32,7 @@ from models import (
 )
 
 
-load_dotenv(Path("devdata") / ".env")
+load_dotenv(Path(__file__).absolute().parent / "devdata" / ".env")
 
 DEV_ACCESS_TOKEN = Secret.model_validate(os.getenv("DEV_HUBSPOT_ACCESS_TOKEN", ""))
 

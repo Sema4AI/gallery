@@ -45,8 +45,7 @@ Show me the tasks in HubSpot matching "prebuilt" and list them by priority pleas
 
 ## Authorization
 
-In order to allow the AI Actions access your resources, you need to supply a mandatory
-secret called the "access token".  
+In order to allow the AI Actions access your resources, you need to supply a mandatory secret called the "access token".  
 This is a long-lived stable token that once generated, never expires, and it should be kept safe and rotated in case it gets leaked. Compared to an API key, this token is tied to a Private App that you need to create and generate the token with.
 
 Follow these steps to obtain a suitable access token:
