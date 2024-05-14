@@ -1,6 +1,4 @@
-"""
-Youtube Actions for Sema4.ai Action Server
-"""
+# YouTube Actions for Sema4.ai Action Server
 
 from sema4ai.actions import action
 from youtube_transcript_api import YouTubeTranscriptApi
@@ -9,15 +7,14 @@ from youtube_search import YoutubeSearch
 
 @action(is_consequential=False)
 def search(search_term: str, max_results: int = 3) -> str:
-    """
-    Searches for the YouTube videos with a search keyword.
+    """Searches for the YouTube videos with a search keyword.
 
     Args:
-        search_term (str): A search term for the Youtube video search, example: "Agentic Automation"
-        max_results (int): How many results to return, default 3.
+        search_term: A search term for the Youtube video search, example: "Agentic Automation"
+        max_results: How many results to return, default 3.
 
     Returns:
-        str: Youtube video links that match the search criteria. The return value is a json string.
+        Youtube video links that match the search criteria. The return value is a json string.
     """
     try:
         results = YoutubeSearch(search_term, max_results=max_results).to_json()
@@ -27,14 +24,13 @@ def search(search_term: str, max_results: int = 3) -> str:
 
 @action(is_consequential=False)
 def get_transcript(video_url: str) -> str:
-    """
-    Extracts the transcription of a Youtube video. Only works if subtitles or captions are available for the video.
+    """Extracts the transcription of a Youtube video. Only works if subtitles or captions are available for the video.
 
     Args:
-        video_url (str): Youtube video URL as a complete URL, example: "https://www.youtube.com/watch?v=YOUR_VIDEO_ID"
+        video_url: Youtube video URL as a complete URL, example: "https://www.youtube.com/watch?v=YOUR_VIDEO_ID"
 
     Returns:
-        str: Complete transcription of the youtube video
+        Complete transcription of the youtube video
     """
 
     # Extract video ID from the URL
