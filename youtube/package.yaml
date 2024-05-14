@@ -1,17 +1,17 @@
 
 # Required: A short name for the action package
-name: Youtube
+name: YouTube
 
 # Required: A description of what's in the action package.
-description: Use content from Youtube
+description: Search for videos and extract various details from YouTube videos.
 
 # Required: A link to where the documentation on the package lives.
-documentation: https://github.com/...
+documentation: https://github.com/Sema4AI/prebuilt-actions/blob/main/README.md
 
 dependencies:
   conda-forge:
-  - python=3.10.12
-  - uv=0.1.39
+  - python=3.10.14
+  - uv=0.1.41
   pypi:
   - sema4ai-actions=0.5.0
   - youtube_transcript_api=0.6.2
