@@ -18,6 +18,7 @@ import asyncio
 import sys
 from duckduckgo_search import DDGS
 import os
+from pathlib import Path
 import requests
 from urllib.parse import urlparse
 
@@ -37,7 +38,7 @@ from support import (
     _get_filename_from_cd,
 )
 
-load_dotenv()
+load_dotenv(Path(__file__).absolute().parent / "devdata" / ".env")
 
 HEADLESS_BROWSER = not os.getenv("HEADLESS_BROWSER")
 API_KEY_FIELD = "GOOGLE_SEARCH_API_KEY"
@@ -208,6 +209,8 @@ def google_search(
     Args:
         topic: topic to search on
         count: count on how many results to retrieve
+        api_key: the Google Custom Search API key
+        context: the Custom Search Engine ID
 
     Returns:
         Titles and links of the results.
