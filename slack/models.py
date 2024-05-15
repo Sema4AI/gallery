@@ -3,7 +3,7 @@ from typing import Annotated, Generic, TypeVar
 
 from pydantic import BaseModel, Extra, Field, ValidationInfo, model_validator
 
-from utils import map_users_id_to_display_name
+from conversations import map_users_id_to_display_name
 
 DataT = TypeVar("DataT")
 

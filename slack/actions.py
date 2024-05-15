@@ -15,8 +15,8 @@ from slack_sdk import WebClient as SlackWebClient
 from slack_sdk.errors import SlackApiError
 from typing_extensions import Self
 
+from conversations import ConversationNotFoundError, get_conversation_id
 from models import MessageList, Response
-from utils import ConversationNotFoundError, get_conversation_id
 
 load_dotenv(Path(__file__).absolute().parent / "devdata" / ".env")
 
@@ -34,9 +34,9 @@ class CaptureError:
     def __enter__(self) -> Self:
         return self
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
+    def __exit__(self, exc_type, exc_val, exc_tb) -> bool | None:
         if not exc_type:
-            return
+            return None
 
         match exc_val:
             case ConversationNotFoundError() as e:
@@ -111,8 +111,6 @@ def read_messages_from_channel(
 
     with CaptureError() as error:
         access_token = _parse_token(access_token)
-        # When reading from a channel, the API label doesn't contain the `#` in the beginning of the channel name
-        channel_name = channel_name.strip().lstrip("#")
 
         response = (
             SlackWebClient(token=access_token)

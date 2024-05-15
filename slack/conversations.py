@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 from functools import lru_cache
 
+from rapidfuzz.distance.Levenshtein import distance as levenshtein_distance
+from rapidfuzz.process import extract as rapidfuzz_extract
 from robocorp import log
 from sema4ai.actions import Secret
 from slack_sdk import WebClient as SlackWebClient
@@ -48,7 +50,7 @@ def map_users_id_to_display_name(
         if not cursor:
             if not return_only_found:
                 # When populating username for conversation history,
-                # we need the user ids to use as labels if the username was not.
+                # we need the user ids to use as labels if the username was not found.
                 result = {**{user_id: user_id for user_id in user_ids}, **result}
 
             return result
@@ -112,7 +114,7 @@ class ConversationsInfo:
         )
 
     def _fetch_usernames(self):
-        """Since we don't always need the usernames, we lazy load the usernames"""
+        # Since we don't always need the usernames, we lazy load them on demand.
         if not self._updated:
             for user_id, user_name in map_users_id_to_display_name(
                 *self._user_id_to_conversation_id.keys(),
@@ -127,19 +129,32 @@ class ConversationsInfo:
 
         return self
 
+    def _get_info(self, name: str) -> UserConversationId | ChannelConversationId | None:
+        name = name.strip().lstrip("#").lower()
+
+        if result := rapidfuzz_extract(
+            name,
+            list(self._conversation_name_to_id.keys()),
+            scorer=levenshtein_distance,
+            limit=1,
+            score_cutoff=2,
+        ):
+            return self._conversation_name_to_id[result[0][0]]
+
+        return None
+
     def get_channel_id(self, name: str) -> str | None:
-        info = self._conversation_name_to_id.get(name)
+        info = self._get_info(name)
         return str(info) if isinstance(info, ChannelConversationId) else None
 
     def get_user_id(self, name: str) -> str | None:
         self._fetch_usernames()
 
-        info = self._conversation_name_to_id.get(name)
+        info = self._get_info(name)
         return str(info) if isinstance(info, UserConversationId) else None
 
 
 def get_conversation_id(name: str, *, access_token: str) -> str:
-    name = name.strip().strip("#").lower()
     conversations = ConversationsInfo.new(access_token=access_token)
 
     if channel_id := conversations.get_channel_id(name):
