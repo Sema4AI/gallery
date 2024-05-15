@@ -74,14 +74,23 @@ Follow these steps to obtain Custom Search engine context key:
 
 1. Go to [Programmable Search Engine](https://programmablesearchengine.google.com/) and click `Add` button.
 2. Create a new search engine
+   
    a. Give it a name, for example. "My Action Search Engine"
+   
    b. Select `Search the entire web`
-3. Click the checkbox on `I'm not a robot`
-4. Click `Create`
+   
+   c. Click the checkbox on `I'm not a robot`
+   
+3. Click `Create`
+
    ![create search engine](./docs/images/5_create_search_engine.png)
-5. Click `Customize`
+
+4. Click `Customize`
+
    ![customize engine](./docs/images/6_customize_engine.png)
-6. Copy the `Search engine ID` as `context` Secret
+
+5. Copy the `Search engine ID` as `context` Secret
+
    ![customize engine](./docs/images/7_copy_search_engine_id.png)
 
 ## Instruction for the Agent
