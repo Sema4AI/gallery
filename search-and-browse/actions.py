@@ -209,6 +209,8 @@ def google_search(
     Args:
         topic: topic to search on
         count: count on how many results to retrieve
+        api_key: the Google Custom Search API key
+        context: the Custom Search Engine ID
 
     Returns:
         Titles and links of the results.
