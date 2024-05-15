@@ -11,7 +11,7 @@ documentation: https://github.com/sema4ai/prebuilt-actions/blob/main/google-driv
 dependencies:
   conda-forge:
   - python=3.10.14
-  - uv=0.1.41
+  - uv=0.1.38
   - python-dotenv=1.0.1
   pypi:
   - sema4ai-actions=0.5.0
