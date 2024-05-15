@@ -21,7 +21,9 @@ from sema4ai.actions import Secret, action
 
 load_dotenv(Path(__file__).absolute().parent / "devdata" / ".env")
 
-DEV_GOOGLE_CREDENTIALS = Secret.model_validate(os.getenv("DEV_GOOGLE_CREDENTIALS", ""))
+DEV_GOOGLE_SERVICE_ACCOUNT = Secret.model_validate(
+    os.getenv("DEV_GOOGLE_SERVICE_ACCOUNT", "")
+)
 ALPHA_LENGTH = ord("Z") - ord("A") + 1
 
 
@@ -38,13 +40,13 @@ class RowData(BaseModel):
 
 @action(is_consequential=True)
 def create_spreadsheet(
-    name: str, google_credentials: Secret = DEV_GOOGLE_CREDENTIALS
+    name: str, google_credentials: Secret = DEV_GOOGLE_SERVICE_ACCOUNT
 ) -> str:
     """Creates a new Spreadsheet.
 
     Args:
         name: Name of the Spreadsheet, which will be later used when reading or writing into it.
-        google_credentials: Json containing the Google service account credentials.
+        google_credentials: JSON containing the Google service account credentials.
 
     Returns:
         Message containing the spreadsheet title and url.
@@ -58,14 +60,20 @@ def create_spreadsheet(
 
 @action(is_consequential=True)
 def create_worksheet(
-    spreadsheet: str, title: str, google_credentials: Secret = DEV_GOOGLE_CREDENTIALS
+    spreadsheet: str,
+    title: str,
+    rows: int = 100,
+    columns: int = 20,
+    google_credentials: Secret = DEV_GOOGLE_SERVICE_ACCOUNT,
 ) -> str:
     """Creates a new Worksheet.
 
     Args:
         spreadsheet: Name of the Spreadsheet where to add the new Worksheet.
         title: The title of the new Worksheet.
-        google_credentials: Json containing the Google service account credentials.
+        rows: Number of rows to be added in the new Worksheet.
+        columns: Number of columns to be added in the new Worksheet.
+        google_credentials: JSON containing the Google service account credentials.
 
     Returns:
         Message containing the newly created worksheet title and url.
@@ -73,7 +81,7 @@ def create_worksheet(
     gc = gspread.service_account_from_dict(json.loads(google_credentials.value))
 
     spreadsheet = gc.open(spreadsheet)
-    worksheet = spreadsheet.add_worksheet(title=title, rows=100, cols=20)
+    worksheet = spreadsheet.add_worksheet(title=title, rows=rows, cols=columns)
 
     return f"Worksheet successfully created the worksheet: {worksheet.title}: {worksheet.url}"
 
@@ -84,7 +92,7 @@ def get_sheet_content(
     worksheet: str,
     from_row: int = 1,
     limit: int = 100,
-    google_credentials: Secret = DEV_GOOGLE_CREDENTIALS,
+    google_credentials: Secret = DEV_GOOGLE_SERVICE_ACCOUNT,
 ) -> str:
     """Get all content from the chosen Google Spreadsheet Sheet.
 
@@ -96,7 +104,7 @@ def get_sheet_content(
         worksheet: Name of the worksheet within the spreadsheet.
         from_row: Used for pagination, default is first row.
         limit: How many rows to retrieve starting from line number defined in `from_row`.
-        google_credentials: Json containing the Google service account credentials.
+        google_credentials: JSON containing the Google service account credentials.
 
     Returns:
         The sheet's content.
@@ -112,7 +120,7 @@ def get_sheet_content(
 
 @action(is_consequential=False)
 def get_spreadsheet_schema(
-    spreadsheet: str, google_credentials: Secret = DEV_GOOGLE_CREDENTIALS
+    spreadsheet: str, google_credentials: Secret = DEV_GOOGLE_SERVICE_ACCOUNT
 ) -> str:
     """Get necessary information to be able to work with a Google Spreadsheets correctly.
 
@@ -120,7 +128,7 @@ def get_spreadsheet_schema(
 
     Args:
         spreadsheet: Name of the spreadsheet from which to get the data.
-        google_credentials: Json containing the Google service account credentials.
+        google_credentials: JSON containing the Google service account credentials.
 
     Returns:
         Names of the sheets, and the first rows from each sheet to explain the context.
@@ -142,7 +150,7 @@ def add_sheet_rows(
     spreadsheet: str,
     worksheet: str,
     rows_to_add: RowData,
-    google_credentials: Secret = DEV_GOOGLE_CREDENTIALS,
+    google_credentials: Secret = DEV_GOOGLE_SERVICE_ACCOUNT,
 ) -> str:
     """Add multiple rows to the Google sheet.
 
@@ -152,7 +160,7 @@ def add_sheet_rows(
         spreadsheet: Name of the spreadsheet you want to work on.
         worksheet: Name of the sheet where the data is added to.
         rows_to_add: The rows to be added to the end of the sheet.
-        google_credentials: Json containing the Google service account credentials.
+        google_credentials: JSON containing the Google service account credentials.
 
     Returns:
         Message indicating the success of the operation.
@@ -174,7 +182,7 @@ def update_sheet_rows(
     worksheet: str,
     cells: str,
     data: RowData,
-    google_credentials: Secret = DEV_GOOGLE_CREDENTIALS,
+    google_credentials: Secret = DEV_GOOGLE_SERVICE_ACCOUNT,
 ) -> str:
     """Update a cell or a range of cells in a worksheet using A1 or R1:C1 notation.
 
@@ -183,7 +191,7 @@ def update_sheet_rows(
         worksheet: Name of the sheet where the data is added to.
         cells: Cell or range of cells to update.
         data: Data to be inserted into the cell or cells.
-        google_credentials: Json containing the Google service account credentials.
+        google_credentials: JSON containing the Google service account credentials.
 
     Example:
         ```python

@@ -6,52 +6,46 @@ The package is able to create, read and add / update rows in a spreadsheet. You 
 
 ## Prompts
 
-> Create a new spreadsheet called Testing.
+```Create a new spreadsheet called Testing.```
 
-```
-I've created a new spreadsheet named "Testing." You can access it [here](link to file).
-```
+> I've created a new spreadsheet named "Testing." You can access it [here](link to file).
 
-> Add the following rows to the newly created document:
+```Add the following rows to the newly created document:
 Order, Item, Price
 1, Macbook, 2000
 2, iPad, 1000
 3, iPhone, 1000
-
-```
-The rows have been successfully added to the "Testing" spreadsheet. You can view the updated data [here](link to file).
 ```
 
-> Create a new worksheet called "Finance" in the "Testing" file and add the following rows to it:
+> The rows have been successfully added to the "Testing" spreadsheet. You can view the updated data [here](link to file).
+
+```Create a new worksheet called "Finance" in the "Testing" file and add the following rows to it:
 Year, Quarter, Revenue
 2023, 1, 50000
 2023, 2, 200000
 2023, 3, 160000
 2023, 4, 350000
 2024, 1, 250000
-
-```
-I've created a new worksheet named "Finance" in the "Testing" spreadsheet and added your data. You can view it using this link: [Finance Worksheet](link to worksheet).
 ```
 
-> Give me the contents of "Testing" file
+> I've created a new worksheet named "Finance" in the "Testing" spreadsheet and added your data. You can view it using this link: [Finance Worksheet](link to worksheet).
 
-```
-The "Testing" file contains the following sheets and data:
+```Give me the contents of "Testing" file```
 
-1. Sheet1:
-    * Order, Item, Price
-    * 1, Macbook, 2000
-    * 2, iPad, 1000
-    * 3, iPhone, 1000
-2. Finance:
-    * Year, Quarter, Revenue
-    * 2023, 1, 50000
-    * 2023, 2, 200000
-    * 2023, 3, 160000
-    * 2023, 4, 350000
-    * 2024, 1, 250000
-```
+> The "Testing" file contains the following sheets and data:
+>
+> 1. Sheet1:
+>    * Order, Item, Price
+>    * 1, Macbook, 2000
+>    * 2, iPad, 1000
+>    * 3, iPhone, 1000
+> 2. Finance:
+>    * Year, Quarter, Revenue
+>    * 2023, 1, 50000
+>    * 2023, 2, 200000
+>    * 2023, 3, 160000
+>    * 2023, 4, 350000
+>    * 2024, 1, 250000
 
 ## Authorization
 
@@ -68,6 +62,5 @@ Right now we support Service Account credentials which can be setup following th
 7. Press on ⋮ near recently created service account and select “Manage keys” and then click on “ADD KEY > Create new key”.
 8. Select JSON key type and press “Create”.
 
-
-If you are testing the actions locally with the action-server then add the `devdata/.env` file with the 
-newly created json key or pass it as `google_credentials` request parameter.
+When testing actions locally with the action server, create a `devdata/.env` file based on the `devdata/.env.template`, including the newly created JSON key. 
+Alternatively, you can provide it as a `google_credentials` form field in Action Server UI.
