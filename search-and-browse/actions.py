@@ -22,8 +22,11 @@ from pathlib import Path
 import requests
 from urllib.parse import urlparse
 
+
 from models import (
     DownloadedFile,
+    Form,
+    Links,
     WebPage,
     PlaceSearchResult,
     PlaceSearchResultList,
@@ -50,9 +53,8 @@ if sys.platform == "win32":
 
 @action(is_consequential=False)
 def get_website_content(url: str) -> WebPage:
-    """Gets the text content, form elements, links and other elements of a website.
-
-    If url ends with .csv then use 'download_file' action.
+    """Gets the text content, form elements, links and other elements of a website
+    if provided URL content-type is "text/html" otherwise returns just URL content.
 
     Args:
         url: the URL of the website
@@ -62,15 +64,26 @@ def get_website_content(url: str) -> WebPage:
     """
     url = _ensure_https(url)
     browser.configure(browser_engine="chromium", headless=HEADLESS_BROWSER)
-    page = browser.goto(url)
+    context = browser.context()
+    page = context.new_page()
+    response = page.goto(url)
     page.wait_for_load_state("domcontentloaded")
     page.wait_for_load_state("networkidle")
-    text_contents = page.locator("//body").inner_text()
-    form = _get_form_elements(page, url)
-    links = _get_page_links(page, url)
-    wb = WebPage(url=url, text_content=text_contents, form=form, links=links)
-    print(text_contents)
-    print(f"len text_contents: {len(text_contents)}")
+    content_type = response.headers.get("content-type", "").lower()
+    print(f"content type: {content_type}")
+    if "text/html" in content_type:
+        text_contents = page.locator("//body").inner_text()
+        form = _get_form_elements(page, url)
+        links = _get_page_links(page, url)
+        wb = WebPage(url=url, text_content=text_contents, form=form, links=links)
+    else:
+        wb = WebPage(
+            url=url,
+            text_content=response.body(),
+            links=Links(links=[]),
+            form=Form(url=url, elements=[]),
+        )
+    print(f"len text_contents: {len(wb.text_content)}")
     return wb
 
 
