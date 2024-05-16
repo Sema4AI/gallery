@@ -63,11 +63,11 @@ Here are the comments on the document Doctest:
 
 ## Authorization
 
-To access spreadsheets via Google Sheets actions you need to authenticate and authorize your application.
+To access files via Google Drive actions you need to authenticate and authorize your application.
 
 Right now we support Service Account credentials which can be setup following these steps:
 1. [Head to Google Developers Console](https://console.cloud.google.com/apis/dashboard) and create a new project (or select the one you already have).
-2. Enable API Access for the Project if you haven’t done it yet.
+2. Enable Google Drive API Access for the Project if you haven’t done it yet.
 3. Go to "APIs & Services > Credentials" and choose "Create credentials > Service account key".
 4. Fill out the form
 5. Click “Create and continue” and then “Done”.
