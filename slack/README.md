@@ -11,14 +11,6 @@ In order to allow the AI Actions access to Slack it requires a "Slack Bot User O
 This is a non-refreshable private token associated with a Slack Application. 
 In order to generate this token you need to create a Slack Application (with the appropriate OAuth scopes) and install the application in your Slack Workspace. 
 
-### Required Scopes
-* channels:history
-* channels:read
-* chat:write
-* users:read
-
-The `users:read` scope is required by the action to be able to display the human-readable username of the person (or bot) that posted the message. 
-Without this scope the messages would display the user ID instead.  
 
 ## Types of Slack bots
 Depending on your use case you can use one of two types of bots. 
@@ -44,7 +36,7 @@ Depending on your use case you can use one of two types of bots.
 6. Depending on the type of bot you wish to have (see [Types of Slack bots](#types-of-slack-bots)), copy-paste one of the following app manifest into the modal. This contains the name of app, the required permission scope and any optional settings you may like.  
 For more info on app manifests visit: https://api.slack.com/concepts/manifests
 
-#### **General purpose bot**. 
+### **General purpose bot**. 
 ```json
 {
   "display_information": {
@@ -74,7 +66,7 @@ For more info on app manifests visit: https://api.slack.com/concepts/manifests
 }
 ```
 
-#### **"User Identity" bot**.
+### **"User Identity" bot**.
 ```json
 {
     "display_information": {
@@ -142,7 +134,6 @@ Example with both tokens:
   }
 }
 ```
-
 
 7. Click "Create"
 8. Click "Install to workspace". If you don't have the permission to install the app you will see a button labeled "Request to Install". By clicking it a notification will be sent to the workspace admin to install the app.

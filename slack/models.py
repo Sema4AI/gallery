@@ -24,7 +24,7 @@ class Messages(BaseModel, extra=Extra.allow):
     @model_validator(mode="before")
     @classmethod
     def strip_extra_data(cls, data: dict) -> dict:
-        """Strips down some extra data from the payload to reduce model input"""
+        """Strips down some extra data from the payload to reduce model input."""
 
         data.pop("blocks", None)
         # The API is a very inconsistent, but if we do get this data,

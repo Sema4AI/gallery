@@ -3,7 +3,6 @@ Prebuild AI Action package that integrates with Slack SDK.
 
 Please check out the base guidance on AI Actions in our main repository readme:
 https://github.com/sema4ai/actions/blob/master/README.md
-
 """
 
 import os
@@ -101,7 +100,7 @@ def read_messages_from_channel(
 
     Args:
         channel_name: The name of the Slack channel to read the messages from.
-        message_limit: The number of messages to read from the channel. Limited to a maximum of 200.
+        message_limit: The number of messages to read from the channel. Defaults to 20 messages and has a maximum limit of 200 messages.
         access_token: The Slack application access token.
 
     Returns:
