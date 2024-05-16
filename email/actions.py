@@ -39,6 +39,10 @@ def send_email(
         body: body of the email
         cc: email address(es) of the recipient(s) to be CC'd
         bcc: email address(es) of the recipient(s) to be BCC'd
+        smtp_host: SMTP server host
+        smtp_port: SMTP server port, default value is 587
+        smtp_username: SMTP server username
+        smtp_password: SMTP server password
 
     Returns:
         True is email is successfully sent, False otherwise
