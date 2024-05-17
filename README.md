@@ -1,5 +1,5 @@
 # Official Sema4.ai Agents and Actions
 
-## [Agents](./agents/README.md)
+## [Agents](agents/README.md)
 
-## Actions(./actions/README.md)
+## [Actions](actions/README.md)
