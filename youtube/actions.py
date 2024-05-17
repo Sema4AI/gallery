@@ -51,7 +51,7 @@ def get_transcript(video_url: str) -> str:
     # Extract video ID from the URL
     video_id = _extract_youtube_id(video_url)
 
-    if video_id == None:
+    if video_id is None:
         return "Could not extract YouTube video ID from the given URL."
 
     try:
