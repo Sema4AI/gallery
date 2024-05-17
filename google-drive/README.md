@@ -12,11 +12,12 @@ Possible actions with this package are:
 
 ## Prompts
 
-```Give me the details about file id 1-cbO3a1M9Yf2YO7qDxDhFumD2FM4JOBEU-ogyTTcdY0.```
+```Give me the details about the file named "Doctest".```
 
-> Here's some information about the file with ID 1-cbO3a1M9Yf2YO7qDxDhFumD2FM4JOBEU-ogyTTcdY0:
+> Here are the details about the file named "Doctest":
 >
 > * Name: Doctest
+> * File ID: 1-cbO3a1M9Yf2YO7qDxDhFumD2FM4JOBEU-ogyTTcdY0
 > * Type: Google Docs Document
 > * Created Time: April 29, 2024, 14:28:38 UTC
 > * Last Modified Time: May 7, 2024, 11:56:40 UTC
@@ -71,5 +72,5 @@ Right now we support Service Account credentials which can be setup following th
 7. Press on ⋮ near recently created service account and select “Manage keys” and then click on “ADD KEY > Create new key”.
 8. Select JSON key type and press “Create”.
 
-When testing actions locally with the action server, create a `devdata/.env` file based on the `devdata/.env.template`, including the newly created JSON key. 
+When testing actions locally with the action server, create a `devdata/.env` file based on the [_.env.template_](devdata/.env.template), including the newly created JSON key.
 Alternatively, you can provide it as a `google_credentials` form field in Action Server UI.
