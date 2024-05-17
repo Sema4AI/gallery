@@ -12,7 +12,9 @@ Possible actions with this package are:
 
 ## Prompts
 
-```Give me the details about the file named "Doctest".```
+```
+Give me the details about the file named "Doctest".
+```
 
 > Here are the details about the file named "Doctest":
 >
@@ -31,7 +33,9 @@ Possible actions with this package are:
 > 
 > You can access the document through this link: [View Document](link to document).
 
-```Give me all the files that were updated in the past 2 days```
+```
+Give me all the files that were updated in the past 2 days
+```
 
 > Here are the files updated in the past two days:
 > 1. Doctest (Google Docs)
@@ -45,7 +49,9 @@ Possible actions with this package are:
 >   * Last modified on May 9th, 2024, by jondoe.robocorp
 
 
-```List all comments associated with Doctest```
+```
+List all comments associated with Doctest
+```
 
 > Here are the comments on the document Doctest:
 >

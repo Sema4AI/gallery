@@ -10,14 +10,14 @@ documentation: https://github.com/sema4ai/prebuilt-actions/blob/main/google-driv
 
 dependencies:
   conda-forge:
-  - python=3.10.14
-  - uv=0.1.38
-  - python-dotenv=1.0.1
+    - python=3.10.14
+    - python-dotenv=1.0.1
+    - uv=0.1.38
   pypi:
-  - sema4ai-actions=0.5.0
-  - google-api-python-client=2.127.0
-  - google-auth-oauthlib=1.2.0
-  - google-auth-httplib2=0.2.0
-  - pydantic=2.6.4
-  - pandas=2.2.2
-  - openpyxl=3.1.2
+    - sema4ai-actions=0.5.0
+    - google-api-python-client=2.127.0
+    - google-auth-oauthlib=1.2.0
+    - google-auth-httplib2=0.2.0
+    - pydantic=2.6.4
+    - pandas=2.2.2
+    - openpyxl=3.1.2

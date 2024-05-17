@@ -6,7 +6,9 @@ The package is able to create, read and add / update rows in a spreadsheet. You 
 
 ## Prompts
 
-```Create a new spreadsheet called Testing.```
+```
+Create a new spreadsheet called Testing.
+```
 
 > I've created a new spreadsheet named "Testing." You can access it [here](link to file).
 
@@ -19,7 +21,8 @@ Order, Item, Price
 
 > The rows have been successfully added to the "Testing" spreadsheet. You can view the updated data [here](link to file).
 
-```Create a new worksheet called "Finance" in the "Testing" file and add the following rows to it:
+```
+Create a new worksheet called "Finance" in the "Testing" file and add the following rows to it:
 Year, Quarter, Revenue
 2023, 1, 50000
 2023, 2, 200000
@@ -30,7 +33,9 @@ Year, Quarter, Revenue
 
 > I've created a new worksheet named "Finance" in the "Testing" spreadsheet and added your data. You can view it using this link: [Finance Worksheet](link to worksheet).
 
-```Give me the contents of "Testing" file```
+```
+Give me the contents of "Testing" file
+```
 
 > The "Testing" file contains the following sheets and data:
 >

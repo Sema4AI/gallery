@@ -9,9 +9,9 @@ documentation: https://github.com/Sema4AI/prebuilt-actions/blob/main/search-and-
 
 dependencies:
   conda-forge:
-    - python=3.10.12
-    - uv=0.1.38
+    - python=3.10.14
     - python-dotenv=1.0.1
+    - uv=0.1.38
   pypi:
     - robocorp-browser=2.3.3
     - sema4ai-actions=0.5.0
