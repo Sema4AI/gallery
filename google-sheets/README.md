@@ -49,7 +49,6 @@ Year, Quarter, Revenue
 
 ## Authorization
 
-
 To access spreadsheets via Google Sheets actions you need to authenticate and authorize your application.
 
 Right now we support Service Account credentials which can be setup following these steps:
@@ -62,5 +61,5 @@ Right now we support Service Account credentials which can be setup following th
 7. Press on ⋮ near recently created service account and select “Manage keys” and then click on “ADD KEY > Create new key”.
 8. Select JSON key type and press “Create”.
 
-When testing actions locally with the action server, create a `devdata/.env` file based on the `devdata/.env.template`, including the newly created JSON key. 
+When testing actions locally with the action server, create a `devdata/.env` file based on the [_.env.template_](devdata/.env.template), including the newly created JSON key. 
 Alternatively, you can provide it as a `google_credentials` form field in Action Server UI.
