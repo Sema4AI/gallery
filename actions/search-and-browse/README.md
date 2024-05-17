@@ -1,6 +1,6 @@
 # Search and Browse
 
-# Prompts
+## Prompts
 
 ```
 Find me three Chinese restaurants in Menlo Park, and get their menu’s from their website and tell me which one is the most affordable.

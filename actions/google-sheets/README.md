@@ -12,7 +12,8 @@ Create a new spreadsheet called Testing.
 
 > I've created a new spreadsheet named "Testing." You can access it [here](link to file).
 
-```Add the following rows to the newly created document:
+```
+Add the following rows to the newly created document:
 Order, Item, Price
 1, Macbook, 2000
 2, iPad, 1000
