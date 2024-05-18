@@ -3,7 +3,22 @@
 from sema4ai.actions import action
 from youtube_transcript_api import YouTubeTranscriptApi
 from youtube_search import YoutubeSearch
+import re
 
+def _extract_youtube_id(url):
+    # Regular expression patterns to match various YouTube URL formats
+    patterns = [
+        r'(?:https?://)?(?:www\.)?youtube\.com/watch\?v=([^&amp;]+)',  # Matches https://www.youtube.com/watch?v=VIDEO_ID
+        r'(?:https?://)?(?:www\.)?youtu\.be/([^?]+)',  # Matches https://youtu.be/VIDEO_ID
+        r'(?:https?://)?(?:www\.)?youtube\.com/embed/([^?]+)',  # Matches https://www.youtube.com/embed/VIDEO_ID
+        r'(?:https?://)?(?:www\.)?youtube\.com/v/([^?]+)'  # Matches https://www.youtube.com/v/VIDEO_ID
+    ]
+    
+    for pattern in patterns:
+        match = re.search(pattern, url)
+        if match:
+            return match.group(1)
+    return None
 
 @action(is_consequential=False)
 def search(search_term: str, max_results: int = 3) -> str:
@@ -34,12 +49,11 @@ def get_transcript(video_url: str) -> str:
     """
 
     # Extract video ID from the URL
-    video_id = video_url.split('v=')[1]
-    # Handle video URLs with additional parameters after the video ID
-    ampersand_position = video_id.find('&')
-    if ampersand_position != -1:
-        video_id = video_id[:ampersand_position]
-    
+    video_id = _extract_youtube_id(video_url)
+
+    if video_id is None:
+        return "Could not extract YouTube video ID from the given URL."
+
     try:
         # Fetching the transcript
         transcript_list = YouTubeTranscriptApi.get_transcript(video_id)
