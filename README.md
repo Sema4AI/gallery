@@ -1,11 +1,5 @@
-# Prebuilt AI Actions provided by Sema4.ai
+# Official Sema4.ai Agents and Actions
 
-Repository containing the implementations of prebuilt AI Actions available inside Sema4.ai Desktop and Control Room.
+## [Agents](agents/README.md)
 
-| Action Package | Description | Works without auth |
-|---|---|---|
-| [Email](/email/README.md) | Send emails with Sema4.ai (free for demos) | Yes (when ready) |
-| [Google Sheets](/google-sheets/README.md) | Interact with Google Sheets | No |
-| [Hubspot](/hubspot/README.md) | Work with various Hubspot objects like Companies, Contact, Deals and Tickets.  | No |
-| [YouTube](/youtube/README.md) | Search videos and get transcriptions | Yes |
-| [Search and Browse](/search-and-browse/README.md) | Search for content with DuckDuckGo and Google, get website content and fill forms. | Y & N |
+## [Actions](actions/README.md)
