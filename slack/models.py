@@ -10,8 +10,8 @@ DataT = TypeVar("DataT")
 
 class Messages(BaseModel, extra=Extra.allow):
     type: str
-    user: str = Field(description="Human friendly username")
-    text: str = Field(description="Message body")
+    user: Annotated[str, Field(description="Human friendly username")]
+    text: Annotated[str, Field(description="Message body")]
     ts: Annotated[
         datetime, Field(description="The timestamp when the message was posted")
     ]
