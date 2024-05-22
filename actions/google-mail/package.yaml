@@ -1,0 +1,22 @@
+
+# Required: A short name for the action package
+name: Google Mail
+
+# Required: A description of what's in the action package.
+description: Atomic actions operating with Google Mail (GMail).
+
+# Required: A link to where the documentation on the package lives.
+documentation: https://github.com/sema4ai/prebuilt-actions/blob/main/google-mail/README.md
+
+dependencies:
+  conda-forge:
+    - python=3.10.14
+    - python-dotenv=1.0.1
+    - uv=0.1.38
+  pypi:
+    - sema4ai-actions=0.6.0
+    - google-api-python-client=2.129.0
+    - google-auth-oauthlib=1.2.0
+    - google-auth-httplib2=0.2.0
+    - pydantic=2.7.1
+    - markdown=3.6
