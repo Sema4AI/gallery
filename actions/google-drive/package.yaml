@@ -1,6 +1,6 @@
 
 # Required: A short name for the action package
-name: Google Drive
+name: Google Drive OAuth
 
 # Required: A description of what's in the action package.
 description: Atomic actions operating with Google Drive.
@@ -14,7 +14,7 @@ dependencies:
     - python-dotenv=1.0.1
     - uv=0.1.38
   pypi:
-    - sema4ai-actions=0.5.0
+    - sema4ai-actions=0.6.0
     - google-api-python-client=2.127.0
     - google-auth-oauthlib=1.2.0
     - google-auth-httplib2=0.2.0
