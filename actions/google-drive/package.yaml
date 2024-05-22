@@ -1,6 +1,6 @@
 
 # Required: A short name for the action package
-name: Google Drive OAuth
+name: Google Drive
 
 # Required: A description of what's in the action package.
 description: Atomic actions operating with Google Drive.
