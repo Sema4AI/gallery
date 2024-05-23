@@ -5,9 +5,10 @@ retrieving and setting data from/into their cells.
 """
 
 
+import contextlib
 from pathlib import Path
 
-from robocorp import excel
+from robocorp import excel, log
 from sema4ai.actions import action
 
 
@@ -37,6 +38,17 @@ def _search_excel_file(file_path: str, is_expected: bool = False) -> Path:
     return path.expanduser().resolve()
 
 
+@contextlib.contextmanager
+def _capture_error(exc_type: type = Exception):
+    error = exc_type()
+    error.message = None
+    try:
+        yield error
+    except exc_type as exc:
+        log.exception(exc)
+        error.message = str(exc)
+
+
 @action(is_consequential=True)
 def create_workbook(file_path: str, sheet_name: str = "") -> str:
     path = _search_excel_file(file_path)
@@ -52,12 +64,24 @@ def create_workbook(file_path: str, sheet_name: str = "") -> str:
 
 @action(is_consequential=True)
 def delete_workbook(file_path: str) -> str:
-    path = None
-    try:
+    with _capture_error(FileNotFoundError) as error:
         path = _search_excel_file(file_path, is_expected=True)
         print(f"Removing Excel file: {path}")
         path.unlink()
-    except FileNotFoundError:
-        return f"Couldn't find Excel file: {path or file_path}"
+        return f"Removed Excel file: {path}"
 
-    return f"Removed Excel file: {path}"
+    return error.message
+
+
+@action(is_consequential=False)
+def get_workbook_schema(file_path: str) -> str:
+    with _capture_error(FileNotFoundError) as error:
+        path = _search_excel_file(file_path, is_expected=True)
+        workbook = excel.open_workbook(path)
+    if error.message:
+        return error.message
+
+    sheets = workbook.list_worksheets()
+    schema = ", ".join(sheets)
+    print(schema)
+    return schema
