@@ -9,7 +9,7 @@ documentation: https://github.com/Sema4AI/prebuilt-actions/blob/main/slack/READM
 
 dependencies:
   conda-forge:
-  - python=3.10
+  - python=3.10.14
   - uv=0.1.38
   - python-dotenv=1.0.1
   pypi:
