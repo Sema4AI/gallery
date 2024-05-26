@@ -14,12 +14,13 @@ Possible actions with this package are:
 ## Prompts
 
 ```
-Send email to mika.hanninen@gmail.com and robocorp.tester.2@gmail.com, subject "process these files" and
+Send email to x@y.com and y@x.com, subject "process these files" and
 body "message content sent from the Sema4Desktop v0.0.26"
 ```
 
-> The email has been successfully sent to mika.hanninen@gmail.com and robocorp.tester.2@gmail.com with the
-> subject "process these files" and the specified body content. If there's anything else you need, let me know!
+> The email has been successfully sent to x@y.com and y@x.com with the
+> subject "process these files" and the specified body content. If there's anything else you
+> need, let me know!
 
 ```
 How many emails I have from ReleaseNotes ?
