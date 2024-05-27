@@ -122,7 +122,6 @@ def get_files_by_query(
     response = service.files().list(q=query, fields="*").execute()
     service.close()
 
-    print(response.get("files", []))
     files = FileList(files=response.get("files", []))
     if not files:
         return Response(error=f"No files were found for the query: {query}")
