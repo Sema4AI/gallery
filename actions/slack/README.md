@@ -15,7 +15,7 @@ In order to generate this token you need to create a Slack Application (with the
 ## Types of Slack bots
 Depending on your use case you can use one of two types of bots. 
 1) **General purpose bot**.  
-- This bot will have its own identity and it will behave like a separate user withing the Slack workspace.   
+- This bot will have its own identity and it will behave like a separate user within the Slack workspace.   
 - Messages posted by this bot will show as posted by the bot
 - In order for the LLM to access different channels, it first needs to be added to that specific channel.
 - It can not access private DMs however, it can access group chats as long as the bot is added to the group.
@@ -103,7 +103,7 @@ Example with both tokens:
   },
   "features": {
     "bot_user": {
-      "display_name": "Sema4 Agent"
+      "display_name": "Sema4.ai Agent"
     }
   },
   "settings": {
