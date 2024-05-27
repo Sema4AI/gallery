@@ -66,17 +66,10 @@ List all comments associated with Doctest
 
 ## Authorization
 
-To access files via Google Drive actions you need to authenticate and authorize your application.
+This action package uses Google OAuth2 flow to authenticate user.
 
-Right now we support Service Account credentials which can be setup following these steps:
-1. [Head to Google Developers Console](https://console.cloud.google.com/apis/dashboard) and create a new project (or select the one you already have).
-2. Enable Google Drive API Access for the Project if you haven’t done it yet.
-3. Go to "APIs & Services > Credentials" and choose "Create credentials > Service account key".
-4. Fill out the form.
-5. Click “Create and continue” and then “Done”.
-6. Press “Manage service accounts” above Service Accounts.
-7. Press on ⋮ near recently created service account and select “Manage keys” and then click on “ADD KEY > Create new key”.
-8. Select JSON key type and press “Create”.
+Scopes in use:
 
-When testing actions locally with the action server, create a `devdata/.env` file based on the [_.env.template_](devdata/.env.template), including the newly created JSON key.
-Alternatively, you can provide it as a `google_credentials` form field in Action Server UI.
+    - https://www.googleapis.com/auth/drive.readonly
+    - https://www.googleapis.com/auth/drive.metadata.readonly
+    - https://www.googleapis.com/auth/drive.file
