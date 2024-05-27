@@ -17,8 +17,8 @@ dependencies:
   - slack_sdk=3.27.1
   - pydantic=2.7.1
   - rapidfuzz=3.9.0
-packaging:
-  # This section is optional.
+
+packaging:  
   # By default, all files and folders in this directory are packaged when uploaded.
   # Add exclusion rules below (expects glob format: https://docs.python.org/3/library/glob.html)
   exclude:
@@ -26,4 +26,9 @@ packaging:
     - ./.vscode/**
     - ./devdata/**
     - ./output/**
-    - ./.idea/**
+    - ./venv/**
+    - ./.venv/**
+    - ./.DS_store/**
+    - ".*" # Excludes all hidden files
+    - ./**/*.pyc
+    - ./**/*.zip
