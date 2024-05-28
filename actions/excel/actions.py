@@ -9,7 +9,7 @@ import contextlib
 from pathlib import Path
 
 from robocorp import excel, log
-from sema4ai.actions import action
+from sema4ai.actions import ActionError, Response, action
 
 from models import Row, Schema, Sheet, Table
 
@@ -34,7 +34,7 @@ def _search_excel_file(file_path: str, is_expected: bool = True) -> Path:
                     f"No Excel file matching {file_name!r} found in: {search_dir}"
                 )
             else:
-                # Otherwise we just pick a default extension.
+                # Otherwise we just pick a default favoured extension.
                 path = Path(f"{file_path}.xlsx")
 
     return path.expanduser().resolve()
@@ -42,17 +42,39 @@ def _search_excel_file(file_path: str, is_expected: bool = True) -> Path:
 
 @contextlib.contextmanager
 def _capture_error(exc_type: type = Exception):
-    error = exc_type()
-    error.message = None
+    # Captures given error types and re-raises them as action errors in order to return
+    #  a result containing an error message through the Action Server.
     try:
-        yield error
+        yield
     except exc_type as exc:
         log.exception(exc)
-        error.message = str(exc)
+        raise ActionError(exc) from exc
+
+
+@contextlib.contextmanager
+def _open_workbook(file_path: str, sheet_name: str | None = None, save: bool = True):
+    # Opens a workbook, provides the control to a sheet optionally, then saves the
+    #  changes that may have occurred in the caller.
+    print(f"Opening workbook with file path: {file_path}")
+    with _capture_error(FileNotFoundError):
+        path = _search_excel_file(file_path)
+        workbook = excel.open_workbook(path)
+
+    if sheet_name:
+        print(f"Opening worksheet with name: {sheet_name}")
+        with _capture_error(KeyError):
+            worksheet = workbook.worksheet(sheet_name)
+        yield workbook, worksheet
+    else:
+        yield workbook, None
+
+    if save:
+        print(f"Saving workbook changes in path: {path}")
+        workbook.save(path, overwrite=True)
 
 
 @action(is_consequential=True)
-def create_workbook(file_path: str, sheet_name: str = "") -> str:
+def create_workbook(file_path: str, sheet_name: str = "") -> Response[str]:
     path = _search_excel_file(file_path, is_expected=False)
     extension = path.suffix.strip(".").lower()
     workbook = excel.create_workbook(
@@ -60,158 +82,108 @@ def create_workbook(file_path: str, sheet_name: str = "") -> str:
     )
     path.parent.mkdir(parents=True, exist_ok=True)
     workbook.save(path)
-    print(f"Created new Excel file in location: {path}")
-    return str(path)
+    return Response(result=f"Created new Excel file in location: {path}")
 
 
 @action(is_consequential=True)
-def delete_workbook(file_path: str) -> str:
-    with _capture_error(FileNotFoundError) as error:
+def delete_workbook(file_path: str) -> Response[str]:
+    print(f"Removing Excel file in path: {file_path}")
+    with _capture_error(FileNotFoundError):
         path = _search_excel_file(file_path)
-        print(f"Removing Excel file: {path}")
         path.unlink()
-        return f"Removed Excel file: {path}"
 
-    return error.message
+    return Response(result=f"Removed Excel file at location: {path}")
 
 
 @action(is_consequential=True)
-def create_worksheet(file_path: str, sheet_name: str) -> str:
-    with _capture_error(FileNotFoundError) as error:
-        path = _search_excel_file(file_path)
-        workbook = excel.open_workbook(path)
-    if error.message:
-        return error.message
-
-    try:
+def create_worksheet(file_path: str, sheet_name: str) -> Response[str]:
+    with _open_workbook(file_path) as (workbook, _):
         print(f"Creating sheet with name: {sheet_name}")
-        workbook.create_worksheet(sheet_name)
-    except ValueError as exc:
-        return str(exc)
-    else:
-        workbook.save(path, overwrite=True)
+        try:
+            workbook.create_worksheet(sheet_name)
+        except ValueError as exc:
+            raise ActionError(exc) from exc
 
-    return f"Successfully created sheet {sheet_name!r} in Excel: {path}"
+    return Response(result=f"Successfully created sheet {sheet_name!r}!")
 
 
 @action(is_consequential=True)
-def delete_worksheet(file_path: str, sheet_name: str) -> str:
-    with _capture_error(FileNotFoundError) as error:
-        path = _search_excel_file(file_path)
-        workbook = excel.open_workbook(path)
-    if error.message:
-        return error.message
+def delete_worksheet(file_path: str, sheet_name: str) -> Response[str]:
+    with _open_workbook(file_path) as (workbook, _):
+        print(f"Removing sheet with name: {sheet_name}")
+        try:
+            workbook.remove_worksheet(sheet_name)
+        except KeyError as exc:
+            raise ActionError(exc) from exc
 
-    print(f"Removing sheet with name: {sheet_name}")
-    with _capture_error(KeyError) as error:
-        workbook.remove_worksheet(sheet_name)
-    if error.message:
-        return error.message
-
-    workbook.save(path, overwrite=True)
-    return f"Successfully deleted sheet {sheet_name!r} in Excel: {path}"
+    return Response(result=f"Successfully deleted sheet {sheet_name!r}!")
 
 
 @action(is_consequential=True)
 def add_rows(
     file_path: str, sheet_name: str, data_table: Table, header: Row = Row(cells=[])
-) -> str:
-    with _capture_error(FileNotFoundError) as error:
-        path = _search_excel_file(file_path)
-        workbook = excel.open_workbook(path)
-    if error.message:
-        return error.message
+) -> Response[str]:
+    with _open_workbook(file_path, sheet_name) as (_, worksheet):
+        table = [header.cells] if header else []
+        table.extend(data_table.as_list())
+        effect = f"{len(table)} rows to sheet {sheet_name!r}"
+        print(f"Adding {effect}...")
+        worksheet.append_rows_to_worksheet(table)
 
-    with _capture_error(KeyError) as error:
-        worksheet = workbook.worksheet(sheet_name)
-    if error.message:
-        return error.message
-
-    table = [header.cells] if header else []
-    table.extend(data_table.as_list())
-    print(f"Adding {len(table)} rows to sheet {sheet_name!r}...")
-    worksheet.append_rows_to_worksheet(table)
-    workbook.save(path, overwrite=True)
-    return "Rows were added successfully!"
+    return Response(result=f"{effect} were added successfully!")
 
 
 @action(is_consequential=True)
-def set_cell(file_path: str, sheet_name: str, row: str, column: str, value: str) -> str:
-    with _capture_error(FileNotFoundError) as error:
-        path = _search_excel_file(file_path)
-        workbook = excel.open_workbook(path)
-    if error.message:
-        return error.message
+def set_cell(
+    file_path: str, sheet_name: str, row: str, column: str, value: str
+) -> Response[str]:
+    with _open_workbook(file_path, sheet_name) as (_, worksheet):
+        worksheet.set_cell_value(int(row), column, value)
 
-    with _capture_error(KeyError) as error:
-        worksheet = workbook.worksheet(sheet_name)
-    if error.message:
-        return error.message
-
-    worksheet.set_cell_value(int(row), column, value)
-    workbook.save(path, overwrite=True)
-    return f"Value {value!r} set successfully at row {row!r} column {column!r}."
+    return Response(
+        result=f"Value {value!r} set successfully at row {row!r} column {column!r}."
+    )
 
 
 @action(is_consequential=False)
-def get_cell(file_path: str, sheet_name: str, row: str, column: str) -> str:
-    with _capture_error(FileNotFoundError) as error:
-        path = _search_excel_file(file_path)
-        workbook = excel.open_workbook(path)
-    if error.message:
-        return error.message
+def get_cell(file_path: str, sheet_name: str, row: str, column: str) -> Response[str]:
+    with _open_workbook(file_path, sheet_name, save=False) as (_, worksheet):
+        value = worksheet.get_cell_value(int(row), column)
 
-    with _capture_error(KeyError) as error:
-        worksheet = workbook.worksheet(sheet_name)
-    if error.message:
-        return error.message
-
-    value = worksheet.get_cell_value(int(row), column)
-    return value
+    return Response(result=value)
 
 
 @action(is_consequential=False)
-def get_table(file_path: str, sheet_name: str, has_header: bool = False) -> Table:
-    with _capture_error(FileNotFoundError) as error:
-        path = _search_excel_file(file_path)
-        workbook = excel.open_workbook(path)
-    if error.message:
-        return error.message
-
-    with _capture_error(KeyError) as error:
-        worksheet = workbook.worksheet(sheet_name)
-    if error.message:
-        return error.message
+def get_table(
+    file_path: str, sheet_name: str, has_header: bool = False
+) -> Response[Table]:
+    with _open_workbook(file_path, sheet_name, save=False) as (_, worksheet):
+        sheet_table = worksheet.as_table(header=has_header)
 
     rows = []
-    sheet_table = worksheet.as_table(header=has_header)
     for sheet_row in sheet_table.iter_lists(with_index=False):
         row = Row(cells=sheet_row)
         rows.append(row)
 
-    return Table(rows=rows)
+    return Response(result=Table(rows=rows))
 
 
 @action(is_consequential=False)
-def get_workbook_schema(file_path: str) -> Schema:
-    with _capture_error(FileNotFoundError) as error:
-        path = _search_excel_file(file_path)
-        workbook = excel.open_workbook(path)
-    if error.message:
-        return error.message
-
+def get_workbook_schema(file_path: str) -> Response[Schema]:
     sheets = []
-    sheet_names = workbook.list_worksheets()
-    for sheet_name in sheet_names:
-        worksheet = workbook.worksheet(sheet_name)
-        try:
-            first_row = next(worksheet.as_table().iter_lists(with_index=False))
-        except StopIteration:
-            first_row = []
 
-        cells = [cell for cell in first_row if cell is not None]
-        top_row = Row(cells=cells)
-        sheet = Sheet(name=sheet_name, top_row=top_row)
-        sheets.append(sheet)
+    with _open_workbook(file_path, save=False) as (workbook, _):
+        sheet_names = workbook.list_worksheets()
+        for sheet_name in sheet_names:
+            worksheet = workbook.worksheet(sheet_name)
+            try:
+                first_row = next(worksheet.as_table().iter_lists(with_index=False))
+            except StopIteration:
+                first_row = []
 
-    return Schema(sheets=sheets)
+            cells = [cell for cell in first_row if cell is not None]
+            top_row = Row(cells=cells)
+            sheet = Sheet(name=sheet_name, top_row=top_row)
+            sheets.append(sheet)
+
+    return Response(result=Schema(sheets=sheets))
