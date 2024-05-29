@@ -161,9 +161,11 @@ def delete_worksheet(file_path: str, sheet_name: str) -> Response[str]:
     return Response(result=f"Successfully deleted sheet {sheet_name!r}!")
 
 
+# FIXME(cmin764): Pass the right default for the `header` param as AS 0.11.0 isn't
+#  supporting yet pydantic model instances as defaults.
 @action(is_consequential=True)
 def add_rows(
-    file_path: str, sheet_name: str, data_table: Table, header: Row = Row(cells=[])
+    file_path: str, sheet_name: str, data_table: Table, header: Row = ""
 ) -> Response[str]:
     """Add rows in an already existing worksheet of a workbook.
 
@@ -177,11 +179,15 @@ def add_rows(
         sheet_name: The name of the sheet you want to store the rows into.
         data_table: A 2D matrix containing the sheet cell values.
         header: A vector containing the column names you want to have as the first row
-            in the newly filled sheet representing the header.
+            in the newly filled sheet representing the header. If passed as a string,
+            then the values should be comma-separated.
 
     Returns:
         How many rows were added in the sheet, excluding the header if given.
     """
+    if isinstance(header, str):
+        header = Row(cells=[cell.strip() for cell in header.split(",")])
+
     with _open_workbook(file_path, sheet_name) as (_, worksheet):
         table = ExcelTable(data=data_table.as_list(), columns=header.cells)
         effect = f"{len(table)} rows to sheet {sheet_name!r}"
@@ -220,7 +226,7 @@ def set_cell(
 
 
 @action(is_consequential=False)
-def get_cell(file_path: str, sheet_name: str, row: str, column: str) -> Response[str]:
+def get_cell(file_path: str, sheet_name: str, row: str, column: str) -> Response[str | None]:
     """Retrieve the value of a cell from an already existing worksheet of a workbook.
 
     This action works similarly to `set_cell`, but instead of setting a value it
