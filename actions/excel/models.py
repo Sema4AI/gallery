@@ -8,6 +8,7 @@ class Row(BaseModel):
 
 
 class Table(BaseModel):
+    header: Annotated[Row | None, Field(None, description="Table header")]
     rows: Annotated[list[Row], Field(description="Table rows")]
 
     def as_list(self) -> list[list[str]]:
