@@ -1,3 +1,4 @@
 {
-    "file_path": "./output/data.xlsx"
+    "file_path": "./output/data.xlsx",
+    "sheet_name": "MySheet"
 }

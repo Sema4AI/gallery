@@ -1,6 +1,6 @@
 {
     "file_path": "./output/data.xlsx",
-    "sheet_name": "Sheet",
+    "sheet_name": "MySheet",
     "header": {
         "cells": ["Name", "Age"]
     },

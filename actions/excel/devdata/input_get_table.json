@@ -1,5 +1,5 @@
 {
     "file_path": "./output/data.xlsx",
-    "sheet_name": "Sheet",
+    "sheet_name": "MySheet",
     "has_header": true
 }
