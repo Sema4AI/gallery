@@ -169,8 +169,6 @@ def delete_worksheet(file_path: str, sheet_name: str) -> Response[str]:
     return Response(result=f"Successfully deleted sheet {sheet_name!r}!")
 
 
-# FIXME(cmin764): Pass the right default for the `header` param as AS 0.11.0 isn't
-#  supporting yet pydantic model instances as defaults.
 @action(is_consequential=True)
 def add_rows(file_path: str, sheet_name: str, data_table: Table) -> Response[str]:
     """Add rows in an already existing worksheet of a workbook.
@@ -213,7 +211,8 @@ def set_cell(
     """Set the value of a cell in an already existing worksheet of a workbook.
 
     This action expects a string `value` to be written in the cell identified by the
-    given `row` and `column`.
+    given `row` and `column`. If `has_header` is true, then the row index number is
+    adjusted so it matches the target row in the sheet.
     Will return an error message if the workbook or worksheet can't be found.
 
     Args:
