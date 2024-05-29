@@ -190,7 +190,7 @@ def add_rows(file_path: str, sheet_name: str, data_table: Table) -> Response[str
     """
     header: list[str] = data_table.get_header()
     table = ExcelTable(data=data_table.as_list(), columns=header)
-    effect = f"{len(table)} rows to sheet {sheet_name!r}"
+    effect = f"{len(table)} row(s) to sheet {sheet_name!r}"
 
     print(f"Adding {effect}...")
     with _open_workbook(file_path, sheet_name) as (_, worksheet):
