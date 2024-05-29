@@ -4,7 +4,6 @@ from typing import Literal
 
 from sema4ai.actions import action, OAuth2Secret, Response
 
-
 from google_mail._support import (
     _create_message,
     _get_google_service,
@@ -17,12 +16,14 @@ load_dotenv(Path(__file__).absolute().parent / "devdata" / ".env")
 @action(is_consequential=True)
 def send_email(
     subject: str,
-    message: str,
+    body: str,
     to: str,
     token: OAuth2Secret[
         Literal["google"],
         list[Literal["https://www.googleapis.com/auth/gmail.send"]],
     ],
+    cc: str = "",
+    bcc: str = "",
 ) -> Response[str]:
     """Send the email to the recipient(s) using the Gmail API.
 
@@ -30,12 +31,27 @@ def send_email(
 
     Args:
         subject: the subject of the email
-        message: the message of the email
+        body: the message of the email
         to: the email address(es) of the recipient(s), comma separated
         token: the OAuth2 token for the user
+        cc: the email address(es) of the recipient(s) to be cc'd, comma separated
+        bcc: the email address(es) of the recipient(s) to be bcc'd, comma separated
 
-    Returns: result of the email sending, "email sent" if successful
+    Returns:
+        Result of the email sending, "email sent" if successful
     """
     service = _get_google_service(token)
-    result = _send_message(service, "me", _create_message("me", to, subject, message))
+    result = _send_message(
+        service,
+        "me",
+        _create_message(
+            "me",
+            subject=subject,
+            body=body,
+            to=to,
+            cc=cc,
+            bcc=bcc,
+            attachments=None,
+        ),
+    )
     return Response(result="email sent" if result is None else result)

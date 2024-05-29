@@ -35,7 +35,8 @@ def get_email_content(
         max_results: the maximum number of emails to return (default 10)
         token: the OAuth2 token for the user
 
-    Returns: list of emails matching filter
+    Returns:
+        The list of emails matching filter
     """
     if not email_id and not query:
         raise ActionError("Either email_id or query must be provided")

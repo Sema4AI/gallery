@@ -6,10 +6,14 @@ Details on GMail query syntax: https://support.google.com/mail/answer/7190?hl=en
 
 Possible actions with this package are:
 
-- send email (to, subject and body fields)
+- send email (to, subject, body, cc and bcc fields)
 - search for emails
 - get email content
 - move email (Identifying an e-mail and moving it into a folder, including trash (delete))
+- create draft emails
+
+If draft_id is unknown when updating draft then first do "search_for_email" to find the
+correct draft and its id.
 
 ## Prompts
 

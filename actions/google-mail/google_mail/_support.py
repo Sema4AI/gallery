@@ -1,17 +1,49 @@
 import base64
+from email import encoders
+from email.mime.base import MIMEBase
 from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
 from google_mail._models import Email, Attachment
+import markdown
+import os
 from sema4ai.actions import ActionError
 import time
 
 
-def _create_message(sender, to, subject, message_text):
-    message = MIMEText(message_text)
-    message["to"] = to
-    message["from"] = sender
-    message["subject"] = subject
+def _create_message(sender, to, subject, body, cc=None, bcc=None, attachments=None):
+    message = MIMEMultipart()
+    # Checking all params if they are set as this same method is used to create
+    # draft messages
+    if to:
+        message["to"] = to
+    if sender:
+        message["from"] = sender
+    if subject:
+        message["subject"] = subject
+    if cc:
+        message["cc"] = cc
+    if bcc:
+        message["bcc"] = bcc
+    if body:
+        # Convert Markdown to HTML
+        html_content = markdown.markdown(body)
+        part1 = MIMEText(body, "plain")
+        part2 = MIMEText(html_content, "html")
+        message.attach(part1)
+        message.attach(part2)
+    # Attach files
+    if attachments:
+        for file in attachments:
+            part = MIMEBase("application", "octet-stream")
+            part.set_payload(open(file, "rb").read())
+            encoders.encode_base64(part)
+            part.add_header(
+                "Content-Disposition",
+                f"attachment; filename={os.path.basename(file)}",
+            )
+            message.attach(part)
     raw = base64.urlsafe_b64encode(message.as_bytes()).decode()
     return {"raw": raw}
 
@@ -191,3 +223,97 @@ def _get_google_service(token):
     creds = Credentials(token=token.access_token)
     service = build("gmail", "v1", credentials=creds)
     return service
+
+
+def _create_draft(service, message_body):
+    try:
+        draft = (
+            service.users()
+            .drafts()
+            .create(userId="me", body={"message": message_body})
+            .execute()
+        )
+        print(f'Draft created with ID: {draft["id"]}')
+        return draft["id"]
+    except Exception as error:
+        raise ActionError(f"An error occurred: {error}")
+
+
+def _update_draft(service, draft_id, message_body):
+    try:
+        draft = (
+            service.users()
+            .drafts()
+            .update(userId="me", id=draft_id, body={"message": message_body})
+            .execute()
+        )
+        print(f"Draft with ID {draft_id} updated.")
+        return draft["id"]
+    except Exception as error:
+        raise ActionError(f"An error occurred: {error}")
+
+
+def _delete_draft(service, draft_id):
+    try:
+        service.users().drafts().delete(userId="me", id=draft_id).execute()
+        print(f"Draft with ID {draft_id} deleted.")
+    except Exception as error:
+        raise ActionError(f"An error occurred: {error}")
+
+
+def _send_draft(service, draft_id):
+    try:
+        sent_message = (
+            service.users().drafts().send(userId="me", body={"id": draft_id}).execute()
+        )
+        print(f"Draft with ID {draft_id} sent.")
+        return sent_message
+    except Exception as error:
+        raise ActionError(f"An error occurred: {error}")
+
+
+def _get_draft_by_id(service, draft_id):
+    try:
+        draft = service.users().drafts().get(userId="me", id=draft_id).execute()
+        print(f"Draft with ID {draft_id} found.")
+        return draft
+    except Exception as error:
+        raise ActionError(f"An error occurred: {error}")
+
+
+def _get_message_headers(email):
+    headers = {
+        header["name"]: header["value"]
+        for header in email["message"]["payload"]["headers"]
+    }
+    return headers
+
+
+def _list_drafts(service):
+    try:
+        results = service.users().drafts().list(userId="me").execute()
+        drafts = results.get("drafts", [])
+        for draft in drafts:
+            draft_details = (
+                service.users().drafts().get(userId="me", id=draft["id"]).execute()
+            )
+            headers = {
+                header["name"]: header["value"]
+                for header in draft_details["message"]["payload"]["headers"]
+            }
+            print(f'Draft ID: {draft["id"]}')
+            print(f'Subject: {headers.get("Subject", "")}')
+            print(f'To: {headers.get("To", "")}')
+        return drafts
+    except Exception as error:
+        print(f"An error occurred: {error}")
+        return None
+
+
+def _extract_body(message):
+    if "parts" in message["payload"]:
+        for part in message["payload"]["parts"]:
+            if part["mimeType"] == "text/plain":
+                body = base64.urlsafe_b64decode(part["body"]["data"]).decode("utf-8")
+                return body
+    return None

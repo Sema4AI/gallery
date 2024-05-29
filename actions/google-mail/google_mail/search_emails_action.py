@@ -10,6 +10,7 @@ from google_mail._support import (
     _get_message_details,
     _list_messages_with_query,
 )
+from google_mail._variables import DEFAULT_EMAIL_QUERY_COUNT
 
 load_dotenv(Path(__file__).absolute().parent / "devdata" / ".env")
 
@@ -21,7 +22,7 @@ def search_emails(
         Literal["google"],
         list[Literal["https://www.googleapis.com/auth/gmail.readonly"]],
     ],
-    max_results: int = 500,
+    max_results: int = DEFAULT_EMAIL_QUERY_COUNT,
 ) -> Response[Emails]:
     """Search Google emails with a query filter.
 
@@ -31,7 +32,8 @@ def search_emails(
         max_results: the maximum number of emails to return (default 500)
         token: the OAuth2 token for the user
 
-    Returns: list of emails matching filter
+    Returns:
+        The list of emails matching filter
     """
     service = _get_google_service(token)
     emails = Emails(items=[])

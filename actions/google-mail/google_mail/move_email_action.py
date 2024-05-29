@@ -17,7 +17,7 @@ load_dotenv(Path(__file__).absolute().parent / "devdata" / ".env")
 
 
 @action(is_consequential=True)
-def email_move(
+def move_email(
     token: OAuth2Secret[
         Literal["google"],
         list[Literal["https://www.googleapis.com/auth/gmail.modify"]],
@@ -40,7 +40,8 @@ def email_move(
         token: the OAuth2 token for the user
         max_results: the maximum number of emails to move
 
-    Returns: result of the operation
+    Returns:
+        The result of the operation
     """
     if not email_ids and not query:
         raise ActionError("Either email_ids or query must be provided")

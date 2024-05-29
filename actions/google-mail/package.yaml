@@ -14,10 +14,10 @@ dependencies:
     - uv=0.1.38
   pypi:
     - sema4ai-actions=0.8.0
-    - google-api-python-client=2.130.0
+    - google-api-python-client=2.131.0
     - google-auth-oauthlib=1.2.0
     - google-auth-httplib2=0.2.0
-    - pydantic=2.7.1
+    - pydantic=2.7.2
     - markdown=3.6
 
 packaging:

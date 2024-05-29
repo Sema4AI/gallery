@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from typing import Annotated
+from typing import Annotated, Optional
 
 
 class Attachment(BaseModel):
@@ -11,7 +11,9 @@ class Attachment(BaseModel):
 
 
 class Email(BaseModel):
-    id_: str = Field(alias="id", description="The ID of the email", default="")
+    id_: Optional[str] = Field(
+        alias="id", description="The ID of the email", default=""
+    )
     subject: str = Field(description="The subject of the email", default="")
     body: str = Field(description="The body of the email", default="")
     from_: str = Field(alias="from", description="The sender of the email", default="")
@@ -40,3 +42,10 @@ class Emails(BaseModel):
 
 class EmailIdList(BaseModel):
     id_list: list[str] = Field(description="A list of email ids", default=[])
+
+
+class Attachments(BaseModel):
+    items: Annotated[
+        list[Attachment],
+        Field(description="A list of attachments", default=[]),
+    ]
