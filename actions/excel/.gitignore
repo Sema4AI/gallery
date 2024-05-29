@@ -8,3 +8,4 @@ temp/
 *.pyc
 *.zip
 .env
+*.xls*
