@@ -1,0 +1,7 @@
+{
+    "file_path": "./output/data.xlsx",
+    "sheet_name": "MySheet",
+    "row": "2",
+    "column": "B",
+    "has_header": true
+}

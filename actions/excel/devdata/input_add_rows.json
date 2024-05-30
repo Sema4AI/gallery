@@ -1,0 +1,17 @@
+{
+    "file_path": "./output/data.xlsx",
+    "sheet_name": "MySheet",
+    "header": {
+        "cells": ["Name", "Age"]
+    },
+    "data_table": {
+        "rows": [
+            {
+                "cells": ["Cosmin", "31"]
+            },
+            {
+                "cells": ["Mark", "2"]
+            }
+        ]
+    }
+}
