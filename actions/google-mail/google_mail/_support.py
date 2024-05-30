@@ -5,7 +5,7 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
-from google_mail._models import Email, Attachment
+from google_mail._models import Email, Attachment, Drafts, Draft
 import markdown
 import os
 from sema4ai.actions import ActionError
@@ -28,11 +28,14 @@ def _create_message(sender, to, subject, body, cc=None, bcc=None, attachments=No
         message["bcc"] = bcc
     if body:
         # Convert Markdown to HTML
-        html_content = markdown.markdown(body)
+        # html_content = markdown.markdown(body)
+        alternative_part = MIMEMultipart("alternative")
         part1 = MIMEText(body, "plain")
-        part2 = MIMEText(html_content, "html")
-        message.attach(part1)
-        message.attach(part2)
+        # TODO. Add HTML support later (prelimenary testing results were not the best)
+        # part2 = MIMEText(html_content, "html")
+        alternative_part.attach(part1)
+        # alternative_part.attach(part2)
+        message.attach(alternative_part)
     # Attach files
     if attachments:
         for file in attachments:
@@ -283,28 +286,27 @@ def _get_draft_by_id(service, draft_id):
 
 def _get_message_headers(email):
     headers = {
-        header["name"]: header["value"]
+        header["name"].lower(): header["value"]
         for header in email["message"]["payload"]["headers"]
     }
     return headers
 
 
-def _list_drafts(service):
+def _list_drafts(service, query=None):
+    draft_list = Drafts(items=[])
     try:
-        results = service.users().drafts().list(userId="me").execute()
+        params = {"userId": "me"}
+        if query:
+            params["q"] = query
+        results = service.users().drafts().list(**params).execute()
         drafts = results.get("drafts", [])
         for draft in drafts:
             draft_details = (
                 service.users().drafts().get(userId="me", id=draft["id"]).execute()
             )
-            headers = {
-                header["name"]: header["value"]
-                for header in draft_details["message"]["payload"]["headers"]
-            }
-            print(f'Draft ID: {draft["id"]}')
-            print(f'Subject: {headers.get("Subject", "")}')
-            print(f'To: {headers.get("To", "")}')
-        return drafts
+            draft_item = Draft(draft_id=draft["id"], message=draft_details)
+            draft_list.items.append(draft_item)
+        return draft_list
     except Exception as error:
         print(f"An error occurred: {error}")
         return None

@@ -3,7 +3,7 @@
     "token": {
         "provider": "google",
         "scopes": [
-            "https://www.googleapis.com/auth/gmail.send"
+            "https://www.googleapis.com/auth/gmail.modify"
         ],
         "access_token": "ya29.x",
         "metadata": {}

@@ -19,7 +19,7 @@ load_dotenv(Path(__file__).absolute().parent / "devdata" / ".env")
 
 
 @action(is_consequential=True)
-def update_draft_email(
+def update_draft(
     draft_id: str,
     token: OAuth2Secret[
         Literal["google"],
@@ -31,7 +31,7 @@ def update_draft_email(
     cc: str = "",
     bcc: str = "",
 ) -> Response[str]:
-    """Update existing draft email by its id.
+    """Update existing draft email by its draft id.
 
     If draft_id is unknown then use action "get_email_content" to get the draft_id.
 
@@ -39,7 +39,6 @@ def update_draft_email(
 
     Args:
         draft_id: identify the draft by its id
-        query: identify the draft by querying
         subject: the subject of the email
         body: the message of the email
         to: the email address(es) of the recipient(s), comma separated
@@ -56,28 +55,26 @@ def update_draft_email(
         )
     service = _get_google_service(token)
     # get previous draft AND update only parts of it
-
     draft = _get_draft_by_id(service, draft_id)
-    print(draft)
     original_body = _extract_body(draft["message"])
     headers = _get_message_headers(draft)
-    subject = subject or headers.get("Subject", "")
+    subject = subject or headers.get("subject", "")
     body = body or original_body
-    to = to or headers.get("To", "")
-    cc = cc or headers.get("Cc", "")
-    bcc = bcc or headers.get("Bcc", "")
-    print(draft)
-    # result = _update_draft(
-    #     service,
-    #     draft_id,
-    #     _create_message(
-    #         "me",
-    #         subject=subject,
-    #         body=body,
-    #         to=to,
-    #         cc=cc,
-    #         bcc=bcc,
-    #         attachments=None,
-    #     ),
-    # )
-    return Response(result=f"Draft with id '{subject}' updated")
+    to = to or headers.get("to", "")
+    cc = cc or headers.get("cc", "")
+    bcc = bcc or headers.get("bcc", "")
+
+    draft_id = _update_draft(
+        service,
+        draft_id,
+        _create_message(
+            "me",
+            subject=subject,
+            body=body,
+            to=to,
+            cc=cc,
+            bcc=bcc,
+            attachments=None,
+        ),
+    )
+    return Response(result=f"Draft with id '{draft_id}' updated")

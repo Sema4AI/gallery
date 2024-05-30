@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from typing import Annotated, Optional
+from typing import Annotated, Optional, Dict
 
 
 class Attachment(BaseModel):
@@ -49,3 +49,16 @@ class Attachments(BaseModel):
         list[Attachment],
         Field(description="A list of attachments", default=[]),
     ]
+
+
+class Draft(BaseModel):
+    draft_id: str = Field(description="The ID of the draft", default="")
+    message: Dict = Field(description="The message of the draft", default={})
+
+
+class Drafts(BaseModel):
+    items: Annotated[
+        list[Draft],
+        Field(description="A list of drafts matching the filter", default=[]),
+    ]
+    error_message: str = Field(description="Possible error message", default="")

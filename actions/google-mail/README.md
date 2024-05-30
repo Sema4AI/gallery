@@ -9,11 +9,13 @@ Possible actions with this package are:
 - send email (to, subject, body, cc and bcc fields)
 - search for emails
 - get email content
-- move email (Identifying an e-mail and moving it into a folder, including trash (delete))
-- create draft emails
+- move email (identifying an e-mail and moving it into a folder, including trash (delete))
+- create draft
+- update draft
+- list drafts
+- send draft
 
-If draft_id is unknown when updating draft then first do "search_for_email" to find the
-correct draft and its id.
+If the email contains attachment "invite.ics" then don't show that attachment (and don't list attachments at all if that was the only one), and lastly tag email to be about "MEETING" (and that into end of subject line with bold letters).
 
 ## Prompts
 
