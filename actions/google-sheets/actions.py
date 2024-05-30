@@ -179,7 +179,7 @@ def get_spreadsheet_schema(
         for sheet in sh.worksheets():
             content.append(_get_sheet_content(sheet, from_row=1, limit=5))
 
-        result = f"output + {"\n".join(content)}"
+        result = output + "\n".join(content)
 
         return Response(result=result)
 
