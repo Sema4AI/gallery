@@ -8,4 +8,5 @@ temp/
 *.pyc
 *.zip
 .env
+metadata.json
 *.xls*
