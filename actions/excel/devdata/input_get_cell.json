@@ -1,5 +1,5 @@
 {
-    "file_path": "./output/data.xlsx",
+    "file_path": "./output/data",
     "sheet_name": "MySheet",
     "row": "2",
     "column": "B",

@@ -1,16 +1,16 @@
 {
-    "file_path": "./output/data.xlsx",
+    "file_path": "./output/data",
     "sheet_name": "MySheet",
-    "header": {
-        "cells": ["Name", "Age"]
-    },
     "data_table": {
+        "header": {
+            "cells": ["Name", "Age"]
+        },
         "rows": [
             {
                 "cells": ["Cosmin", "31"]
             },
             {
-                "cells": ["Mark", "2"]
+                "cells": ["Mark", "6"]
             }
         ]
     }
