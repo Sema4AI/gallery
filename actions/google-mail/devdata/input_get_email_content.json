@@ -1,0 +1,12 @@
+{
+    "query": "from:robocorp.tester@gmail.com in:Testing",
+    "max_results": 100,
+    "token": {
+        "provider": "google",
+        "scopes": [
+            "https://www.googleapis.com/auth/gmail.readonly"
+        ],
+        "access_token": "ya29.x",
+        "metadata": {}
+    }
+}
