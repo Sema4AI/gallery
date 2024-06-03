@@ -25,13 +25,6 @@ load_dotenv(Path(__file__).absolute().parent / "devdata" / ".env")
 
 ALPHA_LENGTH = ord("Z") - ord("A") + 1
 
-SCOPES = list[
-    Literal[
-        "https://www.googleapis.com/auth/spreadsheets",
-        "https://www.googleapis.com/auth/drive",
-    ]
-]
-
 
 class _CatchError:
     def __enter__(self):
@@ -66,7 +59,15 @@ class RowData(BaseModel):
 
 @action(is_consequential=True)
 def create_spreadsheet(
-    oauth_access_token: OAuth2Secret[Literal["google"], SCOPES],
+    oauth_access_token: OAuth2Secret[
+        Literal["google"],
+        list[
+            Literal[
+                "https://www.googleapis.com/auth/spreadsheets",
+                "https://www.googleapis.com/auth/drive",
+            ],
+        ],
+    ],
     name: str,
 ) -> Response[str]:
     """Creates a new Spreadsheet.
@@ -89,7 +90,15 @@ def create_spreadsheet(
 
 @action(is_consequential=True)
 def create_worksheet(
-    oauth_access_token: OAuth2Secret[Literal["google"], SCOPES],
+    oauth_access_token: OAuth2Secret[
+        Literal["google"],
+        list[
+            Literal[
+                "https://www.googleapis.com/auth/spreadsheets",
+                "https://www.googleapis.com/auth/drive",
+            ],
+        ],
+    ],
     spreadsheet: str,
     title: str,
     rows: int = 100,
@@ -121,7 +130,15 @@ def create_worksheet(
 
 @action(is_consequential=False)
 def get_sheet_content(
-    oauth_access_token: OAuth2Secret[Literal["google"], SCOPES],
+    oauth_access_token: OAuth2Secret[
+        Literal["google"],
+        list[
+            Literal[
+                "https://www.googleapis.com/auth/spreadsheets.readonly",
+                "https://www.googleapis.com/auth/drive.readonly",
+            ],
+        ],
+    ],
     spreadsheet: str,
     worksheet: str,
     from_row: int = 1,
@@ -154,7 +171,15 @@ def get_sheet_content(
 
 @action(is_consequential=False)
 def get_spreadsheet_schema(
-    oauth_access_token: OAuth2Secret[Literal["google"], SCOPES],
+    oauth_access_token: OAuth2Secret[
+        Literal["google"],
+        list[
+            Literal[
+                "https://www.googleapis.com/auth/spreadsheets.readonly",
+                "https://www.googleapis.com/auth/drive.readonly",
+            ]
+        ],
+    ],
     spreadsheet: str,
 ) -> Response[str]:
     """Get necessary information to be able to work with a Google Spreadsheets correctly.
@@ -186,7 +211,15 @@ def get_spreadsheet_schema(
 
 @action(is_consequential=True)
 def add_sheet_rows(
-    oauth_access_token: OAuth2Secret[Literal["google"], SCOPES],
+    oauth_access_token: OAuth2Secret[
+        Literal["google"],
+        list[
+            Literal[
+                "https://www.googleapis.com/auth/spreadsheets",
+                "https://www.googleapis.com/auth/drive",
+            ],
+        ],
+    ],
     spreadsheet: str,
     worksheet: str,
     rows_to_add: RowData,
@@ -218,7 +251,15 @@ def add_sheet_rows(
 
 @action(is_consequential=True)
 def update_sheet_rows(
-    oauth_access_token: OAuth2Secret[Literal["google"], SCOPES],
+    oauth_access_token: OAuth2Secret[
+        Literal["google"],
+        list[
+            Literal[
+                "https://www.googleapis.com/auth/spreadsheets",
+                "https://www.googleapis.com/auth/drive",
+            ],
+        ],
+    ],
     spreadsheet: str,
     worksheet: str,
     cells: str,
