@@ -27,15 +27,15 @@ def send_email(
 ) -> Response[str]:
     """Send the email to the recipient(s) using the Gmail API.
 
-    The recipients can be given with `to` parameter as a comma separated list.
+    The recipients can be given with `to`, `cc` and `bcc` parameters as a comma separated list.
 
     Args:
         subject: the subject of the email
         body: the message of the email
         to: the email address(es) of the recipient(s), comma separated
-        token: the OAuth2 token for the user
         cc: the email address(es) of the recipient(s) to be cc'd, comma separated
         bcc: the email address(es) of the recipient(s) to be bcc'd, comma separated
+        token: the OAuth2 token for the user
 
     Returns:
         Result of the email sending, "email sent" if successful

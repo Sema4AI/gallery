@@ -28,6 +28,7 @@ def list_drafts(
 
     Args:
         query: query to filter drafts or list all drafts
+        token: the OAuth2 token for the user
 
     Returns:
         The list of draft emails

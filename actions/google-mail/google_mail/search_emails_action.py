@@ -29,7 +29,7 @@ def search_emails(
     Please inform user if there are more than `max_results` emails.
     Args:
         query: the query filter to apply to the emails
-        max_results: the maximum number of emails to return (default 500)
+        max_results: the maximum number of emails to return (default 100)
         token: the OAuth2 token for the user
 
     Returns:

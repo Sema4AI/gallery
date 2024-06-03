@@ -5,8 +5,6 @@ import json
 import os
 from pathlib import Path
 
-# from google.oauth2 import service_account
-
 
 devdata_directory = Path(__file__).absolute().parent / "devdata"
 load_dotenv(devdata_directory / ".env")
@@ -27,7 +25,7 @@ def do_oauth2_flow():
     credentials = flow.run_local_server(port=FLOW_BROWSER_PORT)
     access_token = credentials.token
     print(f"\nAccess Token: {access_token}\n")
-    # Update access_token in all the json files in devdata directory
+    # Update the "access_token" in all the json files in devdata directory
     for file in os.listdir(devdata_directory):
         if file.endswith(".json"):
             file_path = devdata_directory / file

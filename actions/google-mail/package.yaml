@@ -2,7 +2,7 @@
 name: Google Mail
 
 # Required: A description of what's in the action package.
-description: Atomic actions operating with Google Mail (GMail).
+description: Atomic actions operating with Google Mail (GMail) using OAuth2 authentication.
 
 # Required: A link to where the documentation on the package lives.
 documentation: https://github.com/sema4ai/prebuilt-actions/blob/main/google-mail/README.md
@@ -11,7 +11,7 @@ dependencies:
   conda-forge:
     - python=3.10.14
     - python-dotenv=1.0.1
-    - uv=0.1.38
+    - uv=0.2.5
   pypi:
     - sema4ai-actions=0.9.1
     - google-api-python-client=2.131.0
@@ -25,7 +25,6 @@ packaging:
   # By default all files and folders in this directory are packaged when uploaded.
   # Add exclusion rules below (expects glob format: https://docs.python.org/3/library/glob.html)
   exclude:
-    - ".*" # Excludes all hidden files
     - ./.git/**
     - ./.vscode/**
     - ./devdata/**

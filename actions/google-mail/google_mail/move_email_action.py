@@ -12,6 +12,7 @@ from google_mail._support import (
     _move_email_to_trash,
     _list_messages_with_query,
 )
+from google_mail._variables import DEFAULT_EMAIL_QUERY_COUNT
 
 load_dotenv(Path(__file__).absolute().parent / "devdata" / ".env")
 
@@ -25,20 +26,20 @@ def move_email(
     query: str = "",
     email_ids: EmailIdList = "",
     label: str = "",
-    max_results: int = 1,
+    max_results: int = DEFAULT_EMAIL_QUERY_COUNT,
 ) -> Response[str]:
-    """Moves emails using Google Email labels with a specific email id
-    or with a query filter.
+    """Moves emails using Google Email labels with a specific email id or with a query filter.
 
-    Maximum of 500 emails can be moved at a time (set that on "all")
+    Maximum of 100 emails can be moved at a time (set that on "all").
+
     Email can be moved to a label or to the trash (label="TRASH").
 
     Args:
-        email_ids: the email id(s) to move
         query: the query filter to find emails to move
+        email_ids: the email id(s) to move
         label: the label name to apply to the emails
+        max_results: the maximum number of emails to move (default 100)
         token: the OAuth2 token for the user
-        max_results: the maximum number of emails to move
 
     Returns:
         The result of the operation
@@ -64,4 +65,4 @@ def move_email(
             _move_email_to_label(service, email_id_list, new_label_id)
     else:
         raise ActionError("Label must be provided to move emails.")
-    return Response(result="action done")
+    return Response(result="Email(s) moved successfully.")

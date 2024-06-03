@@ -15,8 +15,6 @@ Possible actions with this package are:
 - list drafts
 - send draft
 
-If the email contains attachment "invite.ics" then don't show that attachment (and don't list attachments at all if that was the only one), and lastly tag email to be about "MEETING" (and that into end of subject line with bold letters).
-
 ## Prompts
 
 ```
@@ -53,6 +51,10 @@ the subject and dates of those emails. Include also the count of how many emails
 ## Authorization
 
 This action package uses Google OAuth2 flow to authenticate user.
+
+A OAuth2 client must be created and GMail API needs to be enabled - https://console.cloud.google.com/.
+
+The OAuth2 `client_id` and `client_secret` need to be placed into S4DT application permission configuration.
 
 Scopes in use:
 

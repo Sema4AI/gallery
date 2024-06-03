@@ -10,10 +10,8 @@ from google_mail._support import (
     _create_message,
     _get_draft_by_id,
     _extract_body,
-    _list_messages_with_query,
     _get_message_headers,
 )
-from google_mail.get_email_content_action import get_email_content
 
 load_dotenv(Path(__file__).absolute().parent / "devdata" / ".env")
 
@@ -35,16 +33,16 @@ def update_draft(
 
     If draft_id is unknown then use action "get_email_content" to get the draft_id.
 
-    The recipients can be given with `to` parameter as a comma separated list.
+    The recipients can be given with `to`, `cc` and `bcc` parameters as a comma separated list.
 
     Args:
         draft_id: identify the draft by its id
         subject: the subject of the email
         body: the message of the email
         to: the email address(es) of the recipient(s), comma separated
-        token: the OAuth2 token for the user
         cc: the email address(es) of the recipient(s) to be cc'd, comma separated
         bcc: the email address(es) of the recipient(s) to be bcc'd, comma separated
+        token: the OAuth2 token for the user
 
     Returns:
         The id of the drafted email

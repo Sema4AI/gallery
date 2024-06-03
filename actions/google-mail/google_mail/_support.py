@@ -319,3 +319,23 @@ def _extract_body(message):
                 body = base64.urlsafe_b64decode(part["body"]["data"]).decode("utf-8")
                 return body
     return None
+
+
+def _remove_labels_from_emails(service, email_ids, label_ids):
+    try:
+        batch_size = 10
+        for i in range(0, len(email_ids), batch_size):
+            batch = service.new_batch_http_request(callback=_create_batch_callback)
+            for email_id in email_ids[i : i + batch_size]:
+                # Create the modify request
+                modify_request = {
+                    "removeLabelIds": label_ids,
+                }
+                batch.add(
+                    service.users()
+                    .messages()
+                    .modify(userId="me", id=email_id, body=modify_request)
+                )
+            _execute_batch_with_retry(batch)
+    except Exception as error:
+        raise ActionError(f"An error occurred while removing labels: {error}")

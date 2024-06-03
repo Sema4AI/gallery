@@ -2,7 +2,7 @@ from dotenv import load_dotenv
 from pathlib import Path
 from typing import Literal
 
-from sema4ai.actions import action, OAuth2Secret, Response, ActionError
+from sema4ai.actions import action, OAuth2Secret, Response
 
 from google_mail._support import _get_google_service, _send_draft
 
@@ -17,10 +17,10 @@ def send_draft(
         list[Literal["https://www.googleapis.com/auth/gmail.send"]],
     ],
 ) -> Response[str]:
-    """Send draft email by its id.
+    """Send draft email by its draft id.
 
     Args:
-        draft_id: the id of the draft to update
+        draft_id: the id of the draft to send
         token: the OAuth2 token for the user
 
     Returns:
