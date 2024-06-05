@@ -63,7 +63,7 @@ class Event(BaseModel):
     attendees: Optional[List[Attendee]] = Field(
         None, description="A list of attendees."
     )
-    reminders: Reminder = Field(description="Reminders settings for the event.")
+    # reminders: Reminder = Field(description="Reminders settings for the event.")
 
 
 class UpdateEvent(BaseModel):

@@ -40,7 +40,10 @@ def create_event(
     """
     service = _build_service(google_credentials)
 
-    event = service.events().insert(calendarId=calendar_id, body=event.dict()).execute()
+    event_dict = event.dict()
+    event_dict.pop("id")
+
+    event = service.events().insert(calendarId=calendar_id, body=event_dict).execute()
 
     return Event(**event)
 
