@@ -1,19 +1,18 @@
-from datetime import datetime
 from typing import Annotated, Generic, TypeVar
 
-from pydantic import BaseModel, Extra, Field, ValidationInfo, model_validator
+from pydantic import BaseModel, Field, ValidationInfo, model_validator
 
 from conversations import map_users_id_to_display_name
 
 DataT = TypeVar("DataT")
 
 
-class Messages(BaseModel, extra=Extra.allow):
+class Message(BaseModel, extra="allow"):
     type: str
     user: Annotated[str, Field(description="Human friendly username")]
     text: Annotated[str, Field(description="Message body")]
     ts: Annotated[
-        datetime, Field(description="The timestamp when the message was posted")
+        str, Field(description="The timestamp when the message was posted")
     ]
     user_id: Annotated[
         str, Field(description="The ID of the user", validation_alias="user")
@@ -37,8 +36,8 @@ class Messages(BaseModel, extra=Extra.allow):
         return data
 
 
-class MessageList(BaseModel, extra=Extra.ignore):
-    messages: list[Messages]
+class MessageList(BaseModel, extra="ignore"):
+    messages: list[Message]
 
     @model_validator(mode="after")
     def update_user_names(self, info: ValidationInfo):
@@ -54,8 +53,3 @@ class MessageList(BaseModel, extra=Extra.ignore):
                 message.user = users_display_name[message.user_id]
 
         return self
-
-
-class Response(BaseModel, Generic[DataT]):
-    result: DataT | None = None
-    error: str | None = None

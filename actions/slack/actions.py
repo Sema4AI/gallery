@@ -15,7 +15,8 @@ from slack_sdk.errors import SlackApiError
 from typing_extensions import Self
 
 from conversations import ConversationNotFoundError, get_conversation_id
-from models import MessageList, Response
+from models import MessageList
+from sema4ai.actions import Response
 
 load_dotenv(Path(__file__).absolute().parent / "devdata" / ".env")
 
