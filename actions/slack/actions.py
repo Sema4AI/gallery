@@ -6,6 +6,7 @@ https://github.com/sema4ai/actions/blob/master/README.md
 """
 
 import os
+from datetime import datetime
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -95,6 +96,8 @@ def send_message_to_channel(
 def read_messages_from_channel(
     channel_name: str,
     message_limit: int = 20,
+    newer_than: str = "",
+    saved_only: bool = False,
     access_token: Secret = DEV_SLACK_ACCESS_TOKEN,
 ) -> Response[MessageList]:
     """Sends a message to the specified Slack channel.
@@ -103,11 +106,19 @@ def read_messages_from_channel(
         channel_name: The name of the Slack channel to read the messages from.
         message_limit: The number of messages to read from the channel. Defaults to 20 messages and has a maximum limit of 200 messages.
         access_token: The Slack application access token.
+        newer_than: Get messages newer than the specified date in YYYY-MM-DD format.
+        saved_only: Only the messages you saved would be returned when this is on.
 
     Returns:
         A structure containing the messages and associated metadata from the specified Slack channel
         or an error if it occurred.
     """
+
+    if newer_than:
+        newer_than_date = datetime.strptime(newer_than, "%Y-%m-%d")
+        newer_than_timestamp = newer_than_date.timestamp()
+    else:
+        newer_than_timestamp = None
 
     with CaptureError() as error:
         access_token = _parse_token(access_token)
@@ -117,16 +128,23 @@ def read_messages_from_channel(
             .conversations_history(
                 channel=get_conversation_id(channel_name, access_token=access_token),
                 limit=message_limit,
+                oldest=newer_than_timestamp,
             )
             .validate()
         )
 
-        return Response(
-            result=MessageList.model_validate(
-                response.data,
-                from_attributes=True,
-                context={"access_token": access_token},
-            )
+        messages_result = MessageList.model_validate(
+            response.data,
+            from_attributes=True,
+            context={"access_token": access_token},
         )
+        if saved_only:
+            messages = messages_result.messages
+            for idx in range(len(messages) - 1, -1, -1):
+                saved = getattr(messages[idx], "saved", {})
+                if not saved.get("state") == "in_progress":
+                    messages.pop(idx)
+
+        return Response(result=messages_result)
 
     return error.get_response()

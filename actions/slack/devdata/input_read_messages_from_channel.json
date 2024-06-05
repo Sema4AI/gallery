@@ -1,3 +1,5 @@
 {
-    "channel_name": "general"
+    "channel_name": "general",
+    "newer_than": "2024-06-05",
+    "saved_only": true
 }
