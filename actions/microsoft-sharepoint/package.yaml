@@ -1,0 +1,33 @@
+# Required: A short name for the action package
+name: Microsoft Sharepoint
+
+# Required: A description of what's in the action package.
+description: Microsoft actions for Sharepoint
+
+# Package version number, recommend using semver.org
+version: 0.1.0
+
+dependencies:
+  conda-forge:
+    - python=3.10.14
+    - python-dotenv=1.0.1
+    - uv=0.2.6
+  pypi:
+    - sema4ai-actions=0.9.1
+    - requests=2.32.3
+    - msal=1.28.0
+    - pydantic=2.7.3
+
+packaging:
+  # By default, all files and folders in this directory are packaged when uploaded.
+  # Add exclusion rules below (expects glob format: https://docs.python.org/3/library/glob.html)
+  exclude:
+    - ./.git/**
+    - ./.vscode/**
+    - ./devdata/**
+    - ./output/**
+    - ./venv/**
+    - ./.venv/**
+    - ./.DS_store/**
+    - ./**/*.pyc
+    - ./**/*.zip
