@@ -28,8 +28,7 @@ def _get_page_links(page, url) -> Links:
         text = element.text_content().strip()
         if href and "http" not in href:
             parsed_url = urlparse(url)
-            protocol_and_domain = f"{parsed_url.scheme}://{parsed_url.netloc}"
-            href = f"{protocol_and_domain}{href}"
+            href = f"{parsed_url.scheme}://{parsed_url.netloc}{href}"
         links.append(Link(href=href or "", text=text or ""))
     return Links(links=links)
 
