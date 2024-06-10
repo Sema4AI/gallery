@@ -40,8 +40,8 @@ def create_event(
     """
     service = _build_service(google_credentials)
 
-    event_dict = event.dict()
-    event_dict.pop("id")
+    event_dict = event.model_dump(mode="json")
+    event_dict.pop("id", None)
 
     event = service.events().insert(calendarId=calendar_id, body=event_dict).execute()
 
@@ -80,7 +80,6 @@ def list_events(
     """
     service = _build_service(google_credentials)
 
-    print(query, start_date, end_date)
     events = (
         service.events()
         .list(
@@ -88,12 +87,15 @@ def list_events(
             q=query if query else None,
             timeMin=start_date if start_date else None,
             timeMax=end_date if end_date else None,
+            singleEvents=True,
         )
         .execute()
         .get("items", [])
     )
 
-    return Response(result=EventList(events=events))
+    filtered_events = [event for event in events if event.get("status") != "cancelled"]
+
+    return Response(result=EventList(events=filtered_events))
 
 
 @action(is_consequential=False)
@@ -145,15 +147,14 @@ def update_event(
     """
 
     service = _build_service(google_credentials)
-
     event = service.events().get(calendarId=calendar_id, eventId=event_id).execute()
 
     # Update the fields based on provided updates dictionary
-    event.update(updates)
-
+    event.update(updates.model_dump(mode="json", exclude_none=True))
     updated_event = (
         service.events()
         .update(calendarId=calendar_id, eventId=event_id, body=event)
         .execute()
     )
+
     return Response(result=Event(**updated_event))
