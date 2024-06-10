@@ -64,8 +64,7 @@ def get_website_content(url: str) -> WebPage:
     """
     url = _ensure_https(url)
     browser.configure(browser_engine="chromium", headless=HEADLESS_BROWSER)
-    context = browser.context()
-    page = context.new_page()
+    page = browser.page()
     response = page.goto(url)
     page.wait_for_load_state("domcontentloaded")
     page.wait_for_load_state("networkidle")
