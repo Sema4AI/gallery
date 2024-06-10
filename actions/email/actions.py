@@ -1,7 +1,7 @@
 """Actions for sending email.
 """
 
-from sema4ai.actions import action, Secret
+from sema4ai.actions import action, Secret, Response, ActionError
 
 from dotenv import load_dotenv
 import os
@@ -25,7 +25,7 @@ def send_email(
     smtp_port: Secret = Secret.model_validate(os.getenv("SEMA4_SMTP_PORT", "587")),
     smtp_username: Secret = Secret.model_validate(os.getenv("SEMA4_SMTP_USERNAME", "")),
     smtp_password: Secret = Secret.model_validate(os.getenv("SEMA4_SMTP_PASSWORD", "")),
-) -> bool:
+) -> Response:
     """Send email to set recipients with subject and body using SMTP server.
 
     Recipient email addresses ('to', 'cc' and 'bcc') can be separated by commas without any spaces.
@@ -45,7 +45,7 @@ def send_email(
         smtp_password: SMTP server password
 
     Returns:
-        True is email is successfully sent, False otherwise
+        Text "Email sent successfully!" or error message if email sending fails
     """
     if (
         not smtp_host.value
@@ -53,8 +53,7 @@ def send_email(
         or not smtp_username.value
         or not smtp_password.value
     ):
-        print("SMTP server details are missing.")
-        return False
+        raise ActionError("SMTP server details are missing.")
     # Email server details
     host = smtp_host.value
     port = int(smtp_port.value)
@@ -92,8 +91,8 @@ def send_email(
             text = message.as_string()
             server.sendmail(sender_email, recipients, text)
     except Exception as e:
-        print(f"Email send error: {e}")
-        return False
+        error_message = f"Email send error: {e}"
+        print(error_message)
+        raise ActionError(error_message)
 
-    print("Email sent successfully!")
-    return True
+    return Response(result="Email sent successfully!")
