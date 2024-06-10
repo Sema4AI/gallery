@@ -4,23 +4,23 @@ name: PDF
 # Required: A description of what's in the action package.
 description: Reading and finding text- and image-based PDFs.
 
-# Required: A link to where the documentation on the package lives.
-documentation: https://github.com/sema4ai/prebuilt-actions/blob/main/pdf/README.md
+# Package version number, recommend using semver.org
+version: 1.0.0
 
 dependencies:
   conda-forge:
-  - python=3.10.14
-  - uv=0.2.5
-  - tesseract=5.3.4
-  - pdf2image=1.17.0
-  - poppler=24.04.0
+    - python=3.10.14
+    - uv=0.2.4
+    - tesseract=5.3.4
+    - pdf2image=1.17.0
+    - poppler=24.04.0
   pypi:
-  - sema4ai-actions=0.9.1
-  - pydantic=2.7.2
-  - pypdf=4.2.0
-  - pytesseract=0.3.10
-  - pillow=10.3.0
-  - opencv-python-headless=4.9.0.80
+    - sema4ai-actions=0.9.1
+    - pydantic=2.7.1
+    - pypdf=4.2.0
+    - pytesseract=0.3.10
+    - pillow=10.3.0
+    - opencv-python-headless=4.9.0.80
 
 packaging:
   # By default, all files and folders in this directory are packaged when uploaded.
