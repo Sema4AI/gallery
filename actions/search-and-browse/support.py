@@ -5,7 +5,7 @@ from models import (
     FormElement,
     Option,
 )
-from urllib.parse import unquote
+from urllib.parse import unquote, urlparse
 
 
 def _get_form_elements(page, url) -> Form:
@@ -27,7 +27,9 @@ def _get_page_links(page, url) -> Links:
         href = element.get_attribute("href")
         text = element.text_content().strip()
         if href and "http" not in href:
-            href = f"{url}{href}"
+            parsed_url = urlparse(url)
+            protocol_and_domain = f"{parsed_url.scheme}://{parsed_url.netloc}"
+            href = f"{protocol_and_domain}{href}"
         links.append(Link(href=href or "", text=text or ""))
     return Links(links=links)
 
