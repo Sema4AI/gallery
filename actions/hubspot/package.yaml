@@ -1,25 +1,24 @@
 # Required: A short name for the action package
 name: HubSpot
 
-# Required: A description of what's in the action package.
+# Required: A description of what's in the action package
 description: Atomic actions operating on resources in HubSpot.
 
-# Required: A link to where the documentation on the package lives.
-documentation: https://github.com/Sema4AI/prebuilt-actions/blob/main/hubspot/README.md
+# Package version number, recommend using semver.org
+version: 1.0.0
 
 dependencies:
   conda-forge:
     - python=3.10.14
     - python-dotenv=1.0.1
-    - uv=0.1.38
+    - uv=0.2.10
   pypi:
-    - sema4ai-actions=0.5.0
+    - sema4ai-actions=0.9.1
+    - pydantic=2.7.3
     - hubspot-api-client=9.0.0
-    - pydantic=2.7.1
 
 packaging:
-  # This section is optional.
-  # By default all files and folders in this directory are packaged when uploaded.
+  # By default, all files and folders in this directory are packaged when uploaded.
   # Add exclusion rules below (expects glob format: https://docs.python.org/3/library/glob.html)
   exclude:
     - ./.git/**
