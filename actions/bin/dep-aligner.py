@@ -52,7 +52,11 @@ def inline_deps(data: str) -> str:
         line = line.rstrip()
         if line == "dependencies:":
             cursor = deps
-        elif RE_DIRECTIVE.match(line) and line.strip() not in ("conda-forge:", "pypi:") and cursor == deps:
+        elif (
+            RE_DIRECTIVE.match(line)
+            and line.strip() not in ("conda-forge:", "pypi:")
+            and cursor == deps
+        ):
             cursor = footer
         cursor.append(line)
 
@@ -76,7 +80,7 @@ def inline_deps(data: str) -> str:
         deps.append(dep_directive)
         deps.extend(inlined_deps)
 
-    return "\n".join(itertools.chain(header, deps, footer))
+    return "\n".join(itertools.chain(header, deps, footer)) + "\n"
 
 
 def main(args):
