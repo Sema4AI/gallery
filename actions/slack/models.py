@@ -9,17 +9,15 @@ DataT = TypeVar("DataT")
 
 
 class Messages(BaseModel, extra=Extra.allow):
-    type: str
-    user: Annotated[str, Field(description="Human friendly username")]
+    type: Annotated[str, Field(description="Message type")]
+    user_name: Annotated[str | None, Field(None, description="Human friendly username")]
     text: Annotated[str, Field(description="Message body")]
     ts: Annotated[
         datetime, Field(description="The timestamp when the message was posted")
     ]
-    user_id: Annotated[
-        str, Field(description="The ID of the user", validation_alias="user")
-    ]
-    bot_id: Annotated[str | None, Field(description="The ID of the bot")] = None
-    bot_name: Annotated[str | None, Field(description="The name of the bot")] = None
+    user: Annotated[str, Field(description="The ID of the user")]
+    bot_id: Annotated[str | None, Field(None, description="The ID of the bot")]
+    bot_name: Annotated[str | None, Field(None, description="The name of the bot")]
 
     @model_validator(mode="before")
     @classmethod
@@ -43,15 +41,15 @@ class MessageList(BaseModel, extra=Extra.ignore):
     @model_validator(mode="after")
     def update_user_names(self, info: ValidationInfo):
         users_display_name = map_users_id_to_display_name(
-            *(m.user_id for m in self.messages if not m.bot_name),
+            *(m.user for m in self.messages if not m.bot_name),
             access_token=info.context["access_token"],
         )
 
         for message in self.messages:
             if message.bot_name:
-                message.user = message.bot_name
+                message.user_name = message.bot_name
             else:
-                message.user = users_display_name[message.user_id]
+                message.user_name = users_display_name[message.user]
 
         return self
 
