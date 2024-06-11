@@ -123,7 +123,7 @@ jobs:
               # Yes, `return`, not `continue` (as it would break the loop).
               return  # skips non-packages
             }
-            if (-not $changed_files.Contains($($_.FullName))) {
+            if (-not $changed_files.Contains("actions/$($_.Name)")) {  # linux path
               return  # skips unaffected packages
             }
 
