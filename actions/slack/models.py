@@ -10,12 +10,14 @@ DataT = TypeVar("DataT")
 
 class Messages(BaseModel, extra=Extra.allow):
     type: Annotated[str, Field(description="Message type")]
+    # FIXME(cmin764): Add back the `alias="user"` param once the AS will support it.
+    user: Annotated[str, Field(description="The raw user ID as received")]
+    user_id: Annotated[str | None, Field(None, description="The ID of the user")]
     user_name: Annotated[str | None, Field(None, description="Human friendly username")]
     text: Annotated[str, Field(description="Message body")]
     ts: Annotated[
         datetime, Field(description="The timestamp when the message was posted")
     ]
-    user: Annotated[str, Field(description="The ID of the user")]
     bot_id: Annotated[str | None, Field(None, description="The ID of the bot")]
     bot_name: Annotated[str | None, Field(None, description="The name of the bot")]
 
@@ -46,6 +48,7 @@ class MessageList(BaseModel, extra=Extra.ignore):
         )
 
         for message in self.messages:
+            message.user_id = message.user
             if message.bot_name:
                 message.user_name = message.bot_name
             else:
