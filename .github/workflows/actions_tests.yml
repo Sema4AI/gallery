@@ -31,7 +31,6 @@ jobs:
           echo "Action Server version: $(action-server version)"
 
           echo "Building metadata for every Action Package..."
-          failed=0
           for dir in $(find actions -type d -maxdepth 1); do
             if [ ! -f "$dir/package.yaml" ]; then
               continue
@@ -52,15 +51,15 @@ jobs:
           Write-Output "Action Server version: $version"
 
           Write-Output "Building metadata for every Action Package..."
-          Get-ChildItem -Directory | ForEach-Object {
+          Get-ChildItem actions -Directory | ForEach-Object {
             if (-not (Test-Path "$($_.FullName)\package.yaml")) {
-              continue
+              return  # yes, `return`, not `continue` (as it would break the loop)
             }
             Write-Output "Building metadata over Action Package: $($_.FullName)"
             Set-Location -Path $_.FullName
             action-server.exe package metadata
             if ($LASTEXITCODE -ne 0) {
-              Write-Output "Metadat building failed in $($_.FullName)"
+              Write-Output "Metadata building failed in: $($_.FullName)"
               exit 1
             }
             Set-Location -Path $Env:GITHUB_WORKSPACE
