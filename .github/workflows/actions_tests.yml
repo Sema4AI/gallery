@@ -10,7 +10,7 @@ jobs:
     strategy:
       matrix:
         # os: [macos-latest, ubuntu-latest, windows-latest]
-        os: [macos-latest]
+        os: [macos-latest, ubuntu-latest]
 
     steps:
       - name: Checkout repository
@@ -19,7 +19,20 @@ jobs:
       - name: Build package metadata on *nix OS
         if: runner.os != 'Windows'
         run: |
+          system=$(uname -s)
+          case ${system} in
+              Darwin*)    url=https://cdn.sema4.ai/action-server/releases/latest/macos64/action-server;;
+              Linux*)     url=https://cdn.sema4.ai/action-server/releases/latest/linux64/action-server;;
+              *)           echo "Invalid platform '$system' detected!"; exit 1;
+          esac
+          curl -L -o action-server $url
+          chmod +x action-server
+          ./action-server version
+
           for dir in $(find actions -type d -maxdepth 1); do
+            if [ ! -f "$dir/package.yaml" ]; then
+              continue
+            fi
             echo "Building metadata over Action Package: $dir"
             (pushd $dir && pwd && popd)
           done
