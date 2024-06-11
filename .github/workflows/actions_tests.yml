@@ -6,6 +6,7 @@ on:
 
 jobs:
   get-changed-files:
+    # Exports a comma-separated list of changed files for later introspection.
     runs-on: ubuntu-latest
     outputs:
       changed_files: ${{ steps.changed_files.outputs.files }}
@@ -18,7 +19,8 @@ jobs:
         run: |
           echo "Changed files:"
           git fetch origin ${{ github.event.pull_request.base.ref }}
-          changed_files=$(git diff --name-only origin/${{ github.event.pull_request.base.ref }})
+          changed_files=$(git diff --name-only origin/${{ github.event.pull_request.base.ref }} | tr '\n' ',')
+          changed_files=${changed_files%,} # removes the trailing comma
           echo "$changed_files"
           echo "files=$changed_files" >> $GITHUB_OUTPUT
 
