@@ -54,7 +54,7 @@ jobs:
           Write-Output "Building metadata for every Action Package..."
           Get-ChildItem -Directory | ForEach-Object {
             if (-not (Test-Path "$($_.FullName)\package.yaml")) {
-              return
+              continue
             }
             Write-Output "Building metadata over Action Package: $($_.FullName)"
             Set-Location -Path $_.FullName
