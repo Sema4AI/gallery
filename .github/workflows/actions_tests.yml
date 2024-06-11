@@ -9,8 +9,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        # os: [macos-latest, ubuntu-latest, windows-latest]
-        os: [macos-latest, ubuntu-latest]
+        os: [macos-latest, ubuntu-latest, windows-latest]
     timeout-minutes: 60  # timeouts after 1h
 
     steps:
@@ -38,26 +37,32 @@ jobs:
               continue
             fi
             echo "Building metadata over Action Package: $dir"
-            (pushd $dir && action-server package metadata && popd) &  # runs in parallel
+            # Tried to run this in parallel, but we get bottlenecked by RCC locks.
+            (pushd $dir && action-server package metadata && popd)
           done
-
-          wait
-          for job in $(jobs -p); do
-            wait $job || let "failed+=1"
-          done
-          if [ "$failed" -ne 0 ]; then
-            echo "$failed builds failed!"
-            exit 1
-          fi
         shell: bash
 
-      # - name: Build package metadata on Windows OS
-      #   if: runner.os == 'Windows'
-      #   run: |
-      #     Get-ChildItem -Directory | ForEach-Object {
-      #       Write-Output "Running command in $($_.FullName)"
-      #       Set-Location -Path $_.FullName
-      #       your-command-here
-      #       Set-Location -Path $Env:GITHUB_WORKSPACE
-      #     }
-      #   shell: pwsh
+      - name: Build package metadata on Windows OS
+        if: runner.os == 'Windows'
+        run: |
+          Write-Output "Downloading latest Action Server..."
+          Invoke-WebRequest -Uri https://cdn.sema4.ai/action-server/releases/latest/windows/action-server.exe -OutFile $Env:TEMP\action-server.exe
+          [Environment]::SetEnvironmentVariable('PATH', $Env:TEMP + ';' + [Environment]::GetEnvironmentVariable('PATH', [EnvironmentVariableTarget]::Process), [EnvironmentVariableTarget]::Process)
+          $version = action-server.exe version
+          Write-Output "Action Server version: $version"
+
+          Write-Output "Building metadata for every Action Package..."
+          Get-ChildItem -Directory | ForEach-Object {
+            if (-not (Test-Path "$($_.FullName)\package.yaml")) {
+              return
+            }
+            Write-Output "Building metadata over Action Package: $($_.FullName)"
+            Set-Location -Path $_.FullName
+            action-server.exe package metadata
+            if ($LASTEXITCODE -ne 0) {
+              Write-Output "Metadat building failed in $($_.FullName)"
+              exit 1
+            }
+            Set-Location -Path $Env:GITHUB_WORKSPACE
+          }
+        shell: pwsh
