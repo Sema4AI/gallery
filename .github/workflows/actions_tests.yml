@@ -26,9 +26,9 @@ jobs:
               Linux*)     url=https://cdn.sema4.ai/action-server/releases/latest/linux64/action-server;;
               *)           echo "Invalid platform '$system' detected!"; exit 1;
           esac
-          curl -L -o action-server $url
-          chmod +x action-server
-          echo "Action Server version: $(./action-server version)"
+          curl -L -o /usr/local/bin/action-server $url
+          chmod +x /usr/local/bin/action-server
+          echo "Action Server version: $(action-server version)"
 
           echo "Building metadata for every Action Package..."
           for dir in $(find actions -type d -maxdepth 1); do
@@ -36,7 +36,7 @@ jobs:
               continue
             fi
             echo "Building metadata over Action Package: $dir"
-            (pushd $dir && ./action-server package metadata && popd)
+            (pushd $dir && action-server package metadata && popd)
           done
         shell: bash
 
