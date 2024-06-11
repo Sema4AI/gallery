@@ -11,6 +11,9 @@ jobs:
       matrix:
         os: [macos-latest, ubuntu-latest, windows-latest]
     timeout-minutes: 60  # timeouts after 1h
+    env:
+      # Configure it in GH Actions settings; replace with "latest" for the latest version.
+      ACTION_SERVER_VERSION: ${{ vars.ACTION_SERVER_VERSION }}
 
     steps:
       - name: Checkout repository
