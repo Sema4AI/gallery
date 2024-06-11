@@ -11,10 +11,11 @@ jobs:
       matrix:
         os: [macos-latest, ubuntu-latest, windows-latest]
     timeout-minutes: 60  # timeouts after 1h
-    environment: staging  # configure it in GH Settings -> Environments
+    # environment: staging  # configure it in GH Settings -> Environments
     env:
       # Set it to "latest" if you want the bleeding edge.
-      ACTION_SERVER_VERSION: {{ vars.ACTION_SERVER_VERSION }}
+      # ACTION_SERVER_VERSION: {{ vars.ACTION_SERVER_VERSION }}
+      ACTION_SERVER_VERSION: "0.12.0"
 
     steps:
       - name: Checkout repository
