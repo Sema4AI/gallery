@@ -5,7 +5,27 @@ on:
     types: [opened, synchronize, reopened]
 
 jobs:
+  get-changed-files:
+    # Exports a comma-separated list of changed files for later introspection.
+    runs-on: ubuntu-latest
+    outputs:
+      changed_files: ${{ steps.changed_files.outputs.files }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Get changed files
+        id: changed_files
+        run: |
+          echo "Changed files:"
+          git fetch origin ${{ github.event.pull_request.base.ref }}
+          changed_files=$(git diff --name-only origin/${{ github.event.pull_request.base.ref }} | tr '\n' ',')
+          changed_files=${changed_files%,} # removes the trailing comma
+          echo "$changed_files"
+          echo "files=$changed_files" >> $GITHUB_OUTPUT
+
   run-command:
+    needs: get-changed-files
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -52,11 +72,17 @@ jobs:
       - name: Build package metadata on *nix OS
         if: runner.os != 'Windows'
         run: |
-          echo "Building metadata for every Action Package..."
+          echo "Building metadata for every affected Action Package..."
+          changed_files="${{ needs.get-changed-files.outputs.changed_files }}"
+
           for dir in $(find actions -type d -maxdepth 1); do
             if [ ! -f "$dir/package.yaml" ]; then
-              continue
+              continue  # skips non-packages
             fi
+            if ! echo "$changed_files" | grep -q "$dir"; then
+              continue  # skips unaffected packages
+            fi
+
             echo "Building metadata over Action Package: $dir"
             # Tried to run this in parallel, but we get bottlenecked by RCC locks.
             (pushd $dir && action-server package metadata && popd)
@@ -88,12 +114,19 @@ jobs:
       - name: Build package metadata on Windows OS
         if: runner.os == 'Windows'
         run: |
-          Write-Output "Building metadata for every Action Package..."
+          Write-Output "Building metadata for every affected Action Package..."
+          $changed_files = "${{ needs.get-changed-files.outputs.changed_files }}"
           [Environment]::SetEnvironmentVariable('PATH', $Env:TEMP + ';' + [Environment]::GetEnvironmentVariable('PATH', [EnvironmentVariableTarget]::Process), [EnvironmentVariableTarget]::Process)
+
           Get-ChildItem actions -Directory | ForEach-Object {
             if (-not (Test-Path "$($_.FullName)\package.yaml")) {
-              return  # yes, `return`, not `continue` (as it would break the loop)
+              # Yes, `return`, not `continue` (as it would break the loop).
+              return  # skips non-packages
             }
+            if (-not $changed_files.Contains("actions/$($_.Name)")) {  # linux path
+              return  # skips unaffected packages
+            }
+
             Write-Output "Building metadata over Action Package: $($_.FullName)"
             Set-Location -Path $_.FullName
             action-server.exe package metadata
