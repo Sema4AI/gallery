@@ -1,24 +1,24 @@
 # Required: A short name for the action package
 name: Slack
 
-# Required: A description of what's in the action package.
-description: Prebuild actions to read and write to Slack channels.
+# Required: A description of what's in the action package
+description: Prebuilt actions to read and write to Slack channels.
 
-# Required: A link to where the documentation on the package lives.
-documentation: https://github.com/Sema4AI/prebuilt-actions/blob/main/slack/README.md
+# Package version number, recommend using semver.org
+version: 0.1.0
 
 dependencies:
   conda-forge:
   - python=3.10.14
-  - uv=0.1.38
   - python-dotenv=1.0.1
+  - uv=0.2.6
   pypi:
-  - sema4ai-actions=0.6.0
+  - sema4ai-actions=0.9.1
+  - pydantic=2.7.3
   - slack_sdk=3.27.1
-  - pydantic=2.7.1
   - rapidfuzz=3.9.0
+
 packaging:
-  # This section is optional.
   # By default, all files and folders in this directory are packaged when uploaded.
   # Add exclusion rules below (expects glob format: https://docs.python.org/3/library/glob.html)
   exclude:
@@ -26,4 +26,8 @@ packaging:
     - ./.vscode/**
     - ./devdata/**
     - ./output/**
-    - ./.idea/**
+    - ./venv/**
+    - ./.venv/**
+    - ./.DS_store/**
+    - ./**/*.pyc
+    - ./**/*.zip
