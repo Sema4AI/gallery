@@ -19,6 +19,7 @@ jobs:
       - name: Build package metadata on *nix OS
         if: runner.os != 'Windows'
         run: |
+          echo "Downloading latest Action Server..."
           system=$(uname -s)
           case ${system} in
               Darwin*)    url=https://cdn.sema4.ai/action-server/releases/latest/macos64/action-server;;
@@ -27,14 +28,15 @@ jobs:
           esac
           curl -L -o action-server $url
           chmod +x action-server
-          ./action-server version
+          echo "Action Server version: $(./action-server version)"
 
+          echo "Building metadata for every Action Package..."
           for dir in $(find actions -type d -maxdepth 1); do
             if [ ! -f "$dir/package.yaml" ]; then
               continue
             fi
             echo "Building metadata over Action Package: $dir"
-            (pushd $dir && pwd && popd)
+            (pushd $dir && ./action-server package metadata && popd)
           done
         shell: bash
 
