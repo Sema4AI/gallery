@@ -11,6 +11,7 @@ jobs:
       matrix:
         # os: [macos-latest, ubuntu-latest, windows-latest]
         os: [macos-latest, ubuntu-latest]
+    timeout-minutes: 60  # timeouts after 1h
 
     steps:
       - name: Checkout repository
@@ -31,13 +32,23 @@ jobs:
           echo "Action Server version: $(action-server version)"
 
           echo "Building metadata for every Action Package..."
+          failed=0
           for dir in $(find actions -type d -maxdepth 1); do
             if [ ! -f "$dir/package.yaml" ]; then
               continue
             fi
             echo "Building metadata over Action Package: $dir"
-            (pushd $dir && action-server package metadata && popd)
+            (pushd $dir && action-server package metadata && popd) &  # runs in parallel
           done
+
+          wait
+          for job in $(jobs -p); do
+            wait $job || let "failed+=1"
+          done
+          if [ "$failed" -ne 0 ]; then
+            echo "$failed builds failed!"
+            exit 1
+          fi
         shell: bash
 
       # - name: Build package metadata on Windows OS
