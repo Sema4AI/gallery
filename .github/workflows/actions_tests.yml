@@ -11,9 +11,6 @@ jobs:
       matrix:
         os: [macos-latest, ubuntu-latest, windows-latest]
     timeout-minutes: 60  # timeouts after 1h
-    env:
-      # Configure it in GH Actions settings; replace with "latest" for the latest version.
-      ACTION_SERVER_VERSION: ${{ vars.ACTION_SERVER_VERSION }}
 
     steps:
       - name: Checkout repository
@@ -25,7 +22,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: /usr/local/bin/action-server
-          key: nix-action-server-${{ env.ACTION_SERVER_VERSION }}
+          key: nix-action-server-${{ vars.ACTION_SERVER_VERSION }}
           restore-keys: |
             nix-action-server-
 
@@ -35,8 +32,8 @@ jobs:
           echo "Downloading latest Action Server..."
           system=$(uname -s)
           case ${system} in
-              Darwin*)    url=https://cdn.sema4.ai/action-server/releases/${{ env.ACTION_SERVER_VERSION }}/macos64/action-server;;
-              Linux*)     url=https://cdn.sema4.ai/action-server/releases/${{ env.ACTION_SERVER_VERSION }}/linux64/action-server;;
+              Darwin*)    url=https://cdn.sema4.ai/action-server/releases/${{ vars.ACTION_SERVER_VERSION }}/macos64/action-server;;
+              Linux*)     url=https://cdn.sema4.ai/action-server/releases/${{ vars.ACTION_SERVER_VERSION }}/linux64/action-server;;
               *)           echo "Invalid platform '$system' detected!"; exit 1;
           esac
           curl -L -o /usr/local/bin/action-server $url
@@ -64,7 +61,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: $Env:TEMP\action-server.exe
-          key: windows-action-server-${{ env.ACTION_SERVER_VERSION }}
+          key: windows-action-server-${{ vars.ACTION_SERVER_VERSION }}
           restore-keys: |
             windows-action-server-
 
@@ -72,7 +69,7 @@ jobs:
         if: runner.os == 'Windows'
         run: |
           Write-Output "Downloading latest Action Server..."
-          Invoke-WebRequest -Uri https://cdn.sema4.ai/action-server/releases/${{ env.ACTION_SERVER_VERSION }}/windows64/action-server.exe -OutFile $Env:TEMP\action-server.exe
+          Invoke-WebRequest -Uri https://cdn.sema4.ai/action-server/releases/${{ vars.ACTION_SERVER_VERSION }}/windows64/action-server.exe -OutFile $Env:TEMP\action-server.exe
           [Environment]::SetEnvironmentVariable('PATH', $Env:TEMP + ';' + [Environment]::GetEnvironmentVariable('PATH', [EnvironmentVariableTarget]::Process), [EnvironmentVariableTarget]::Process)
           $version = action-server.exe version
           Write-Output "Action Server version: $version"
