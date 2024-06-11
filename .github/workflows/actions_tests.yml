@@ -23,6 +23,7 @@ jobs:
           echo "::set-output name=files::$changed_files"
 
   run-command:
+    needs: get-changed-files
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -70,11 +71,17 @@ jobs:
       - name: Build package metadata on *nix OS
         if: runner.os != 'Windows'
         run: |
-          echo "Building metadata for every Action Package..."
+          changed_files="${{ needs.get-changed-files.outputs.changed_files }}"
+
+          echo "Building metadata for every affected Action Package..."
           for dir in $(find actions -type d -maxdepth 1); do
             if [ ! -f "$dir/package.yaml" ]; then
-              continue
+              continue  # skips non-packages
             fi
+            if ! echo "$changed_files" | grep -q "$dir"; then
+              continue  # skips unaffected packages
+            fi
+
             echo "Building metadata over Action Package: $dir"
             # Tried to run this in parallel, but we get bottlenecked by RCC locks.
             (pushd $dir && action-server package metadata && popd)
