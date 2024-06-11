@@ -25,7 +25,7 @@ def send_email(
     smtp_port: Secret = Secret.model_validate(os.getenv("SEMA4_SMTP_PORT", "587")),
     smtp_username: Secret = Secret.model_validate(os.getenv("SEMA4_SMTP_USERNAME", "")),
     smtp_password: Secret = Secret.model_validate(os.getenv("SEMA4_SMTP_PASSWORD", "")),
-) -> Response:
+) -> Response[str]:
     """Send email to set recipients with subject and body using SMTP server.
 
     Recipient email addresses ('to', 'cc' and 'bcc') can be separated by commas without any spaces.

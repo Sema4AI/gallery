@@ -24,12 +24,13 @@ EXPECTED_DEPS = {
     "sema4ai-actions": ("0.9.1", 1),
     "pydantic": ("2.7.3", 2),
 }
+LOWEST_PRIO = sys.maxsize
 
 
 def inline_dep(dep: str) -> tuple[str, int]:
     # Checks for known common deps that should be inlined in version and position.
     if not dep.strip():
-        return dep, math.inf
+        return dep, LOWEST_PRIO
 
     assert dep.strip().startswith("-"), f"invalid dependency entry {dep!r}"
     indent, dep = dep.split("-", 1)
@@ -38,7 +39,7 @@ def inline_dep(dep: str) -> tuple[str, int]:
     found = EXPECTED_DEPS.get(name)
     if not found:
         # No worries, the dep will preserve its original order if not prioritized.
-        return f"{indent}-{dep}", math.inf
+        return f"{indent}-{dep}", LOWEST_PRIO
 
     ver, priority = found
     return f"{indent}- {name}={ver}", priority
