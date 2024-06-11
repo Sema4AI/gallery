@@ -1,0 +1,37 @@
+name: AI Actions tests
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  run-command:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        # os: [macos-latest, ubuntu-latest, windows-latest]
+        os: [macos-latest]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Build package metadata on *nix OS
+        if: runner.os != 'Windows'
+        run: |
+          for dir in $(find actions -type d -maxdepth 1); do
+            echo "Building metadata over Action Package: $dir"
+            (pushd $dir && pwd && popd)
+          done
+        shell: bash
+
+      # - name: Build package metadata on Windows OS
+      #   if: runner.os == 'Windows'
+      #   run: |
+      #     Get-ChildItem -Directory | ForEach-Object {
+      #       Write-Output "Running command in $($_.FullName)"
+      #       Set-Location -Path $_.FullName
+      #       your-command-here
+      #       Set-Location -Path $Env:GITHUB_WORKSPACE
+      #     }
+      #   shell: pwsh
