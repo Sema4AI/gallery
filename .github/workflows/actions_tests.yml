@@ -46,7 +46,7 @@ jobs:
         if: runner.os == 'Windows'
         run: |
           Write-Output "Downloading latest Action Server..."
-          Invoke-WebRequest -Uri https://cdn.sema4.ai/action-server/releases/latest/windows/action-server.exe -OutFile $Env:TEMP\action-server.exe
+          Invoke-WebRequest -Uri https://cdn.sema4.ai/action-server/releases/latest/windows64/action-server.exe -OutFile $Env:TEMP\action-server.exe
           [Environment]::SetEnvironmentVariable('PATH', $Env:TEMP + ';' + [Environment]::GetEnvironmentVariable('PATH', [EnvironmentVariableTarget]::Process), [EnvironmentVariableTarget]::Process)
           $version = action-server.exe version
           Write-Output "Action Server version: $version"
