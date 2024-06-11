@@ -11,25 +11,28 @@ jobs:
       matrix:
         os: [macos-latest, ubuntu-latest, windows-latest]
     timeout-minutes: 60  # timeouts after 1h
+    # TODO: Enable environment once we get the flows running without review rulesets.
     # environment: staging  # configure it in GH Settings -> Environments
     env:
       # Set it to "latest" if you want the bleeding edge.
       # ACTION_SERVER_VERSION: {{ vars.ACTION_SERVER_VERSION }}
-      ACTION_SERVER_VERSION: "0.12.0"
+      ACTION_SERVER_VERSION: "latest"  # not relying yet on evnironments
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Cache action-server executable on *nix OS
-        if: runner.os != 'Windows'
-        id: cache-action-server-nix
-        uses: actions/cache@v3
-        with:
-          path: /usr/local/bin/action-server
-          key: nix-action-server-${{ env.ACTION_SERVER_VERSION }}
-          restore-keys: |
-            nix-action-server-
+      # TODO: Enable caching once we can invalidate the keys on "latest" or once we can
+      #  take into use set environments without rulesets.
+      # - name: Cache action-server executable on *nix OS
+      #   if: runner.os != 'Windows'
+      #   id: cache-action-server-nix
+      #   uses: actions/cache@v3
+      #   with:
+      #     path: /usr/local/bin/action-server
+      #     key: nix-action-server-${{ env.ACTION_SERVER_VERSION }}
+      #     restore-keys: |
+      #       nix-action-server-
 
       - name: Download Action Server executable for *nix OS
         if: runner.os != 'Windows'
@@ -60,15 +63,17 @@ jobs:
           done
         shell: bash
 
-      - name: Cache action-server executable on Windows OS
-        if: runner.os == 'Windows'
-        id: cache-action-server-windows
-        uses: actions/cache@v3
-        with:
-          path: $Env:TEMP\action-server.exe
-          key: windows-action-server-${{ env.ACTION_SERVER_VERSION }}
-          restore-keys: |
-            windows-action-server-
+      # TODO: Enable caching once we can invalidate the keys on "latest" or once we can
+      #  take into use set environments without rulesets.
+      # - name: Cache action-server executable on Windows OS
+      #   if: runner.os == 'Windows'
+      #   id: cache-action-server-windows
+      #   uses: actions/cache@v3
+      #   with:
+      #     path: $Env:TEMP\action-server.exe
+      #     key: windows-action-server-${{ env.ACTION_SERVER_VERSION }}
+      #     restore-keys: |
+      #       windows-action-server-
 
       - name: Download Action Server executable for Windows OS
         if: runner.os == 'Windows'
@@ -84,6 +89,7 @@ jobs:
         if: runner.os == 'Windows'
         run: |
           Write-Output "Building metadata for every Action Package..."
+          [Environment]::SetEnvironmentVariable('PATH', $Env:TEMP + ';' + [Environment]::GetEnvironmentVariable('PATH', [EnvironmentVariableTarget]::Process), [EnvironmentVariableTarget]::Process)
           Get-ChildItem actions -Directory | ForEach-Object {
             if (-not (Test-Path "$($_.FullName)\package.yaml")) {
               return  # yes, `return`, not `continue` (as it would break the loop)
