@@ -10,7 +10,7 @@ version: 0.1.0
 dependencies:
   conda-forge:
     - python=3.10.14
-    - uv=0.2.10
+    - uv=0.2.6
     - tesseract=5.3.4
     - pdf2image=1.17.0
     - poppler=24.04.0

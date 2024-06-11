@@ -19,7 +19,7 @@ EXPECTED_DEPS = {
     # Conda-forge deps:
     "python": ("3.10.14", 1),
     "python-dotenv": ("1.0.1", 2),
-    "uv": ("0.2.10", 3),
+    "uv": ("0.2.6", 3),
     # PyPI deps:
     "sema4ai-actions": ("0.9.1", 1),
     "pydantic": ("2.7.3", 2),

@@ -11,7 +11,7 @@ dependencies:
   conda-forge:
     - python=3.10.14
     - python-dotenv=1.0.1
-    - uv=0.2.10
+    - uv=0.2.6
   pypi:
     - sema4ai-actions=0.9.1
     - pydantic=2.7.3
