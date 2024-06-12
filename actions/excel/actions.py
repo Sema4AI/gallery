@@ -196,7 +196,7 @@ def add_rows(file_path: str, sheet_name: str, data_table: Table) -> Response[str
         data_table: A 2D matrix containing the sheet cell values.
 
     Returns:
-        How many rows were added in the sheet, excluding the header if given.
+        How many rows were added in the sheet, excluding the header when given.
     """
     header: list[str] = data_table.get_header()
     table = ExcelTable(data=data_table.as_list(), columns=header)
@@ -281,8 +281,8 @@ def get_table(
     """Retrieve the whole content of an already existing worksheet of a workbook.
 
     This action retrieves all the cells found in the sheet and returns them in a table
-    structure. The `has_header` parameter will allow the action to consider the first
-    row in the sheet a header and not a table row.
+    structure. When set truthy, the `has_header` parameter will allow the action to
+    consider the first row in the sheet a header instead of an usual table row.
     Will return an error message if the workbook or worksheet can't be found.
 
     Args:
@@ -291,7 +291,7 @@ def get_table(
         has_header: Instructs the action about the presence of a header in the sheet.
 
     Returns:
-        The value found at the given `row` and `column`.
+        A table structure capturing the entire content from the requested sheet.
     """
     with _open_workbook(file_path, sheet_name, save=False, sheet_required=True) as (
         _,
@@ -299,13 +299,12 @@ def get_table(
     ):
         sheet_table = worksheet.as_table(header=has_header)
 
+    header = Row(cells=sheet_table.columns) if has_header else None
     rows = []
     for sheet_row in sheet_table.iter_lists(with_index=False):
-        row = Row(cells=sheet_row)
-        rows.append(row)
+        rows.append(Row(cells=sheet_row))
 
-    header = Row(cells=sheet_table.columns if has_header else [])
-    return Response(result=Table(rows=rows, header=header))
+    return Response(result=Table(header=header, rows=rows))
 
 
 @action(is_consequential=False)
