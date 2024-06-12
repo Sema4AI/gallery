@@ -32,7 +32,7 @@ def _search_excel_file(file_path: str, is_expected: bool = True) -> Path:
                 # Since the file is expected to exist, we let the caller know that it
                 #  wasn't found.
                 raise FileNotFoundError(
-                    f"No Excel file matching {file_name!r} found in: {search_dir}"
+                    f"no Excel file matching {file_name!r} found in: {search_dir}"
                 )
             else:
                 # Otherwise we just pick a default favoured extension.
@@ -53,7 +53,12 @@ def _capture_error(exc_type: type = Exception):
 
 
 @contextlib.contextmanager
-def _open_workbook(file_path: str, sheet_name: str | None = None, save: bool = True):
+def _open_workbook(
+    file_path: str,
+    sheet_name: str | None = None,
+    save: bool = True,
+    sheet_required: bool = False,
+):
     # Opens a workbook, provides the control to a sheet optionally, then saves the
     #  changes that may have occurred in the caller.
     print(f"Opening workbook with file path: {file_path}")
@@ -66,6 +71,9 @@ def _open_workbook(file_path: str, sheet_name: str | None = None, save: bool = T
         with _capture_error(KeyError):
             worksheet = workbook.worksheet(sheet_name)
         yield workbook, worksheet
+    elif sheet_required:
+        # Ensures the provided name is valid and has content.
+        raise ActionError("a sheet name has to be specified")
     else:
         yield workbook, None
 
@@ -193,7 +201,7 @@ def add_rows(file_path: str, sheet_name: str, data_table: Table) -> Response[str
     effect = f"{len(table)} row(s) to sheet {sheet_name!r}"
 
     print(f"Adding {effect}...")
-    with _open_workbook(file_path, sheet_name) as (_, worksheet):
+    with _open_workbook(file_path, sheet_name, sheet_required=True) as (_, worksheet):
         worksheet.append_rows_to_worksheet(table, header=bool(header))
 
     return Response(result=f"{effect} were added successfully!")
@@ -226,7 +234,7 @@ def set_cell(
     Returns:
         A confirmation with the cell set value given the provided position.
     """
-    with _open_workbook(file_path, sheet_name) as (_, worksheet):
+    with _open_workbook(file_path, sheet_name, sheet_required=True) as (_, worksheet):
         worksheet.set_cell_value(
             _row2index(row, has_header=has_header), column, str(value)
         )
@@ -255,7 +263,10 @@ def get_cell(
     Returns:
         The value found at the given `row` and `column`.
     """
-    with _open_workbook(file_path, sheet_name, save=False) as (_, worksheet):
+    with _open_workbook(file_path, sheet_name, save=False, sheet_required=True) as (
+        _,
+        worksheet,
+    ):
         value = worksheet.get_cell_value(_row2index(row, has_header=has_header), column)
 
     return Response(result=value)
@@ -280,7 +291,10 @@ def get_table(
     Returns:
         The value found at the given `row` and `column`.
     """
-    with _open_workbook(file_path, sheet_name, save=False) as (_, worksheet):
+    with _open_workbook(file_path, sheet_name, save=False, sheet_required=True) as (
+        _,
+        worksheet,
+    ):
         sheet_table = worksheet.as_table(header=has_header)
 
     rows = []
