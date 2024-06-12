@@ -182,11 +182,12 @@ def add_rows(file_path: str, sheet_name: str, data_table: Table) -> Response[str
     """Add rows in an already existing worksheet of a workbook.
 
     This action expects a table (list of lists) structure representing the rows and
-    columns you want to append in the sheet. Optionally, a header can be passed
-    with the first call right in the `data_table` input parameter, so one would be set
-    at the beginning of the sheet if needed. This header is a vector containing the
-    column names you want to have as the first row in the newly filled sheet. Passing
-    a null to it will disregard the header presence.
+    columns you want to append in the sheet. Optionally, a header can be specified
+    right in the `data_table` input parameter, so one would be set at the beginning of
+    the sheet if needed, then the cells within a row can be mapped correctly to their
+    corresponding columns. If not null, this header is a vector containing the column
+    names you want to have as the first row in a newly filled sheet. Passing
+    a null to it will disregard the header presence and will rely on cells' order.
     Will return an error message if the workbook or worksheet can't be found.
 
     Args:
