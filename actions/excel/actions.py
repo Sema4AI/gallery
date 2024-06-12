@@ -175,9 +175,9 @@ def add_rows(file_path: str, sheet_name: str, data_table: Table) -> Response[str
 
     This action expects a table (list of lists) structure representing the rows and
     columns you want to append in the sheet. Optionally, a header can be passed
-    with the first call right in the `data_table`, so one would be set at the beginning
-    of the sheet. This header is a vector containing the column names you want to have
-    as the first row in the newly filled sheet.
+    with the first call right in the `data_table` input parameter, so one would be set
+    at the beginning of the sheet if needed. This header is a vector containing the
+    column names you want to have as the first row in the newly filled sheet.
     Will return an error message if the workbook or worksheet can't be found.
 
     Args:
