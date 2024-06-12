@@ -16,11 +16,11 @@ class Row(BaseModel):
 
 
 class Table(BaseModel):
-    header: Annotated[Row, Field(description="Table header")]
+    header: Annotated[Row | None, Field(None, description="Optional table header")]
     rows: Annotated[list[Row], Field(description="Table rows")]
 
     def get_header(self) -> list[str]:
-        return self.header.as_list()
+        return self.header.as_list() if self.header else []
 
     def as_list(self) -> list[list[str]]:
         return [row.as_list() for row in self.rows]
