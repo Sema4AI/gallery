@@ -9,7 +9,7 @@ class Row(BaseModel):
     def __init__(self, cells: list[str]):
         # NOTE(cmin764): In Sema4.ai Desktop the header is often send as a primitive
         #  list, while in ReMark it fully understands the expected structure.
-        super().__init__(cells=cells)
+        super().__init__(cells=[str(cell) for cell in cells])
 
     def as_list(self) -> list[str]:
         return [str(cell) for cell in self.cells]

@@ -300,12 +300,10 @@ def get_table(
 
     rows = []
     for sheet_row in sheet_table.iter_lists(with_index=False):
-        row = Row(cells=[str(cell) for cell in sheet_row])
+        row = Row(cells=sheet_row)
         rows.append(row)
 
-    header = Row(
-        cells=[str(cell) for cell in sheet_table.columns] if has_header else []
-    )
+    header = Row(cells=sheet_table.columns if has_header else [])
     return Response(result=Table(rows=rows, header=header))
 
 
@@ -334,8 +332,7 @@ def get_workbook_schema(file_path: str) -> Response[Schema]:
             except StopIteration:
                 first_row = []
 
-            cells = [str(cell) for cell in first_row if cell is not None]
-            top_row = Row(cells=cells)
+            top_row = Row(cells=list(filter(lambda cell: cell is not None, first_row)))
             sheet = Sheet(name=sheet_name, top_row=top_row)
             sheets.append(sheet)
 
