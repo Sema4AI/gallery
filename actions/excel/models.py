@@ -6,23 +6,21 @@ from pydantic import BaseModel, Field
 class Row(BaseModel):
     cells: Annotated[list[str], Field(description="Row cells")]
 
+    def __init__(self, cells: list[str]):
+        # NOTE(cmin764): In Sema4.ai Desktop the header is often send as a primitive
+        #  list, while in ReMark it fully understands the expected structure.
+        super().__init__(cells=cells)
+
     def as_list(self) -> list[str]:
         return [str(cell) for cell in self.cells]
 
 
 class Table(BaseModel):
-    # NOTE(cmin764): The `header` would be enough to be just a `Row`, but in Sema4.ai
-    #  Desktop the LLM will always send the header as a plain list, while ReMark will
-    #  understand the expected type.
-    header: Annotated[Row | list[str], Field(description="Table header")]
+    header: Annotated[Row, Field(description="Table header")]
     rows: Annotated[list[Row], Field(description="Table rows")]
 
     def get_header(self) -> list[str]:
-        return (
-            [str(cell) for cell in self.header]
-            if isinstance(self.header, list)
-            else self.header.as_list()
-        )
+        return self.header.as_list()
 
     def as_list(self) -> list[list[str]]:
         return [row.as_list() for row in self.rows]
