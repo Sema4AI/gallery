@@ -28,7 +28,7 @@ class Table(BaseModel):
 
 class Sheet(BaseModel):
     name: Annotated[str, Field(description="Sheet name")]
-    top_row: Annotated[Row, Field(description="First row")]
+    top_row: Annotated[Row, Field(description="First row which may be a header")]
 
 
 class Schema(BaseModel):
