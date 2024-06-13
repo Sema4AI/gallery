@@ -1,7 +1,6 @@
 """Prebuilt AI Actions package that integrates with Slack SDK.
 
-Please check out the base guidance on AI Actions in our main repository readme:
-https://github.com/sema4ai/actions/blob/master/README.md
+The package currently supports channels retrieval, reading and sending messages.
 """
 
 import os
@@ -17,8 +16,8 @@ from typing_extensions import Self
 from conversations import ConversationNotFoundError, get_conversation_id
 from models import Messages, ThreadMessage, ThreadMessages
 
-load_dotenv(Path(__file__).absolute().parent / "devdata" / ".env")
 
+load_dotenv(Path(__file__).absolute().parent / "devdata" / ".env")
 
 DEV_SLACK_ACCESS_TOKEN = Secret.model_validate(os.getenv("DEV_SLACK_ACCESS_TOKEN", ""))
 
