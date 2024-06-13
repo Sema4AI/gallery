@@ -16,7 +16,7 @@ class ConversationNotFoundError(Exception):
 
 
 @log.suppress
-def map_users_id_to_display_name(
+def map_user_ids_to_display_name(
     *user_ids: str, access_token: str, return_only_found: bool = False
 ) -> dict[str, str]:
     cursor = None
@@ -116,7 +116,7 @@ class ConversationsInfo:
     def _fetch_usernames(self):
         # Since we don't always need the usernames, we lazy load them on demand.
         if not self._updated:
-            for user_id, user_name in map_users_id_to_display_name(
+            for user_id, user_name in map_user_ids_to_display_name(
                 *self._user_id_to_conversation_id.keys(),
                 access_token=self._access_token.value,
                 return_only_found=True,

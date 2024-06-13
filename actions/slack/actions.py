@@ -1,5 +1,4 @@
-"""
-Prebuild AI Action package that integrates with Slack SDK.
+"""Prebuilt AI Actions package that integrates with Slack SDK.
 
 Please check out the base guidance on AI Actions in our main repository readme:
 https://github.com/sema4ai/actions/blob/master/README.md
@@ -10,14 +9,13 @@ from datetime import datetime
 from pathlib import Path
 
 from dotenv import load_dotenv
-from sema4ai.actions import Secret, action
+from sema4ai.actions import Response, Secret, action
 from slack_sdk import WebClient as SlackWebClient
 from slack_sdk.errors import SlackApiError
 from typing_extensions import Self
 
 from conversations import ConversationNotFoundError, get_conversation_id
-from models import MessageList
-from sema4ai.actions import Response
+from models import Messages, ThreadMessage, ThreadMessages
 
 load_dotenv(Path(__file__).absolute().parent / "devdata" / ".env")
 
@@ -92,22 +90,44 @@ def send_message_to_channel(
     return error.get_response()
 
 
+def _get_message_replies(
+    message: ThreadMessage, *, client: SlackWebClient
+) -> list[dict]:
+    response = client.conversations_replies(
+        channel=message.channel_id, ts=message.thread_ts
+    ).validate()
+    return list(
+        filter(
+            lambda msg: msg["client_msg_id"] != message.client_msg_id,
+            response.get("messages"),
+        )
+    )
+
+
 @action(is_consequential=False)
 def read_messages_from_channel(
     channel_name: str,
-    message_limit: int = 20,
+    messages_limit: int = 20,
     newer_than: str = "",
     saved_only: bool = False,
+    with_replies: bool = False,
     access_token: Secret = DEV_SLACK_ACCESS_TOKEN,
-) -> Response[MessageList]:
-    """Sends a message to the specified Slack channel.
+) -> Response[ThreadMessages]:
+    """Read a message from a given Slack channel.
+
+    Newer messages than the `newer_than` will be retrieved when this is set, then these
+    are filtered based on their saved status when `saved_only` is enabled. Enabling
+    `with_replies` will additionally provide the reply messages if the original message
+    is part of a thread. Increase the `messages_limit` to a higher number if you want
+    more results.
 
     Args:
         channel_name: The name of the Slack channel to read the messages from.
-        message_limit: The number of messages to read from the channel. Defaults to 20 messages and has a maximum limit of 200 messages.
+        messages_limit: The number of messages to read from the channel. Defaults to 20 messages and has a maximum limit of 200 messages.
         access_token: The Slack application access token.
         newer_than: Get messages newer than the specified date in YYYY-MM-DD format.
-        saved_only: Only the messages you saved would be returned when this is on.
+        saved_only: Set this to `True` to return only the saved messages.
+        with_replies: Set this to `True` to retrieve message thread replies as well.
 
     Returns:
         A structure containing the messages and associated metadata from the specified Slack channel
@@ -122,29 +142,74 @@ def read_messages_from_channel(
 
     with CaptureError() as error:
         access_token = _parse_token(access_token)
+        client = SlackWebClient(token=access_token)
+
+        channel_id = get_conversation_id(channel_name, access_token=access_token)
+        response = client.conversations_history(
+            channel=channel_id,
+            limit=messages_limit,
+            oldest=newer_than_timestamp,
+        ).validate()
+
+        context = {
+            "access_token": access_token,
+            "channel_name": channel_name,
+            "channel_id": channel_id,
+        }
+        messages_result = ThreadMessages.model_validate(
+            response.data, from_attributes=True, context=context
+        )
+        messages = messages_result.messages
+
+        if saved_only:
+            for idx in range(len(messages) - 1, -1, -1):
+                message = messages[idx]
+                is_message = message.type == "message"
+                saved = getattr(message, "saved", {})
+                in_progress = saved.get("state") == "in_progress"
+                if not (is_message and in_progress):
+                    messages.pop(idx)
+
+        if with_replies:
+            for message in messages:
+                if not message.thread_ts:
+                    continue  # not a thread
+
+                replies = _get_message_replies(message, client=client)
+                message.replies = Messages.model_validate(
+                    {"messages": replies}, from_attributes=True, context=context
+                )
+
+        return Response(result=messages_result)
+
+    return error.get_response()
+
+
+@action(is_consequential=False)
+def get_all_channels(
+    channels_limit: int = 100, access_token: Secret = DEV_SLACK_ACCESS_TOKEN
+) -> Response[list[str]]:
+    """Return all the available public or private Slack channels.
+
+    Args:
+        channels_limit: The maximum number of channels that can be returned.
+
+    Returns:
+        A list with all the channel names which can be used with other actions.
+    """
+    with CaptureError() as error:
+        access_token = _parse_token(access_token)
 
         response = (
             SlackWebClient(token=access_token)
-            .conversations_history(
-                channel=get_conversation_id(channel_name, access_token=access_token),
-                limit=message_limit,
-                oldest=newer_than_timestamp,
+            .conversations_list(
+                exclude_archived=True,
+                limit=channels_limit,
+                types=["public_channel", "private_channel"],
             )
             .validate()
         )
-
-        messages_result = MessageList.model_validate(
-            response.data,
-            from_attributes=True,
-            context={"access_token": access_token},
-        )
-        if saved_only:
-            messages = messages_result.messages
-            for idx in range(len(messages) - 1, -1, -1):
-                saved = getattr(messages[idx], "saved", {})
-                if not saved.get("state") == "in_progress":
-                    messages.pop(idx)
-
-        return Response(result=messages_result)
+        channel_names = [channel["name"] for channel in response.data["channels"]]
+        return Response(result=channel_names)
 
     return error.get_response()
