@@ -32,7 +32,7 @@ def _search_excel_file(file_path: str, is_expected: bool = True) -> Path:
                 # Since the file is expected to exist, we let the caller know that it
                 #  wasn't found.
                 raise FileNotFoundError(
-                    f"No Excel file matching {file_name!r} found in: {search_dir}"
+                    f"no Excel file matching {file_name!r} found in: {search_dir}"
                 )
             else:
                 # Otherwise we just pick a default favoured extension.
@@ -53,7 +53,12 @@ def _capture_error(exc_type: type = Exception):
 
 
 @contextlib.contextmanager
-def _open_workbook(file_path: str, sheet_name: str | None = None, save: bool = True):
+def _open_workbook(
+    file_path: str,
+    sheet_name: str | None = None,
+    save: bool = True,
+    sheet_required: bool = False,
+):
     # Opens a workbook, provides the control to a sheet optionally, then saves the
     #  changes that may have occurred in the caller.
     print(f"Opening workbook with file path: {file_path}")
@@ -66,6 +71,9 @@ def _open_workbook(file_path: str, sheet_name: str | None = None, save: bool = T
         with _capture_error(KeyError):
             worksheet = workbook.worksheet(sheet_name)
         yield workbook, worksheet
+    elif sheet_required:
+        # Ensures the provided name is valid and has content.
+        raise ActionError("a sheet name has to be specified")
     else:
         yield workbook, None
 
@@ -174,10 +182,12 @@ def add_rows(file_path: str, sheet_name: str, data_table: Table) -> Response[str
     """Add rows in an already existing worksheet of a workbook.
 
     This action expects a table (list of lists) structure representing the rows and
-    columns you want to append in the sheet. Optionally, a header can be passed
-    with the first call right in the `data_table`, so one would be set at the beginning
-    of the sheet. This header is a vector containing the column names you want to have
-    as the first row in the newly filled sheet.
+    columns you want to append in the sheet. Optionally, a header can be specified
+    right in the `data_table` input parameter, so one would be set at the beginning of
+    the sheet if needed, then the cells within a row can be mapped correctly to their
+    corresponding columns. If not null, this header is a vector containing the column
+    names you want to have as the first row in a newly filled sheet. Passing
+    a null to it will disregard the header presence and will rely on cells' order.
     Will return an error message if the workbook or worksheet can't be found.
 
     Args:
@@ -186,14 +196,14 @@ def add_rows(file_path: str, sheet_name: str, data_table: Table) -> Response[str
         data_table: A 2D matrix containing the sheet cell values.
 
     Returns:
-        How many rows were added in the sheet, excluding the header if given.
+        How many rows were added in the sheet, excluding the header when given.
     """
     header: list[str] = data_table.get_header()
     table = ExcelTable(data=data_table.as_list(), columns=header)
     effect = f"{len(table)} row(s) to sheet {sheet_name!r}"
 
     print(f"Adding {effect}...")
-    with _open_workbook(file_path, sheet_name) as (_, worksheet):
+    with _open_workbook(file_path, sheet_name, sheet_required=True) as (_, worksheet):
         worksheet.append_rows_to_worksheet(table, header=bool(header))
 
     return Response(result=f"{effect} were added successfully!")
@@ -226,7 +236,7 @@ def set_cell(
     Returns:
         A confirmation with the cell set value given the provided position.
     """
-    with _open_workbook(file_path, sheet_name) as (_, worksheet):
+    with _open_workbook(file_path, sheet_name, sheet_required=True) as (_, worksheet):
         worksheet.set_cell_value(
             _row2index(row, has_header=has_header), column, str(value)
         )
@@ -255,7 +265,10 @@ def get_cell(
     Returns:
         The value found at the given `row` and `column`.
     """
-    with _open_workbook(file_path, sheet_name, save=False) as (_, worksheet):
+    with _open_workbook(file_path, sheet_name, save=False, sheet_required=True) as (
+        _,
+        worksheet,
+    ):
         value = worksheet.get_cell_value(_row2index(row, has_header=has_header), column)
 
     return Response(result=value)
@@ -268,8 +281,8 @@ def get_table(
     """Retrieve the whole content of an already existing worksheet of a workbook.
 
     This action retrieves all the cells found in the sheet and returns them in a table
-    structure. The `has_header` parameter will allow the action to consider the first
-    row in the sheet a header and not a table row.
+    structure. When set truthy, the `has_header` parameter will allow the action to
+    consider the first row in the sheet a header instead of an usual table row.
     Will return an error message if the workbook or worksheet can't be found.
 
     Args:
@@ -278,20 +291,20 @@ def get_table(
         has_header: Instructs the action about the presence of a header in the sheet.
 
     Returns:
-        The value found at the given `row` and `column`.
+        A table structure capturing the entire content from the requested sheet.
     """
-    with _open_workbook(file_path, sheet_name, save=False) as (_, worksheet):
+    with _open_workbook(file_path, sheet_name, save=False, sheet_required=True) as (
+        _,
+        worksheet,
+    ):
         sheet_table = worksheet.as_table(header=has_header)
 
+    header = Row(cells=sheet_table.columns) if has_header else None
     rows = []
     for sheet_row in sheet_table.iter_lists(with_index=False):
-        row = Row(cells=[str(cell) for cell in sheet_row])
-        rows.append(row)
+        rows.append(Row(cells=sheet_row))
 
-    header = Row(
-        cells=[str(cell) for cell in sheet_table.columns] if has_header else []
-    )
-    return Response(result=Table(rows=rows, header=header))
+    return Response(result=Table(header=header, rows=rows))
 
 
 @action(is_consequential=False)
@@ -319,8 +332,7 @@ def get_workbook_schema(file_path: str) -> Response[Schema]:
             except StopIteration:
                 first_row = []
 
-            cells = [str(cell) for cell in first_row if cell is not None]
-            top_row = Row(cells=cells)
+            top_row = Row(cells=list(filter(lambda cell: cell is not None, first_row)))
             sheet = Sheet(name=sheet_name, top_row=top_row)
             sheets.append(sheet)
 

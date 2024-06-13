@@ -5,7 +5,7 @@ name: Excel
 description: Operate on local Excel files directly.
 
 # Package version number, recommend using semver.org
-version: 0.1.0
+version: 1.0.0
 
 dependencies:
   conda-forge:
