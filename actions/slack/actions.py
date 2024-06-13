@@ -50,7 +50,7 @@ class CaptureError:
                 # return None to raise the exception
                 return None
 
-        # return True to supress the exception
+        # return True to suppress the exception
         return True
 
 
@@ -70,7 +70,8 @@ def send_message_to_channel(
         access_token: The Slack application access token.
 
     Returns:
-        A structure containing a boolean if the message was successfully sent or an error if it occurred.
+        A structure containing a boolean if the message was successfully sent or an
+        error if it occurred.
     """
 
     with CaptureError() as error:
@@ -123,15 +124,16 @@ def read_messages_from_channel(
 
     Args:
         channel_name: The name of the Slack channel to read the messages from.
-        messages_limit: The number of messages to read from the channel. Defaults to 20 messages and has a maximum limit of 200 messages.
+        messages_limit: The number of messages to read from the channel. Defaults to 20
+            messages and has a maximum limit of 200 messages.
         access_token: The Slack application access token.
         newer_than: Get messages newer than the specified date in YYYY-MM-DD format.
         saved_only: Set this to `True` to return only the saved messages.
         with_replies: Set this to `True` to retrieve message thread replies as well.
 
     Returns:
-        A structure containing the messages and associated metadata from the specified Slack channel
-        or an error if it occurred.
+        A structure containing the messages and associated metadata from the specified
+        Slack channel or an error if it occurred.
     """
 
     if newer_than:

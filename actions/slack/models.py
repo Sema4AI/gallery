@@ -8,16 +8,19 @@ from conversations import map_user_ids_to_display_name
 DataT = TypeVar("DataT")
 
 
-class Message(BaseModel, extra=Extra.allow):
+class Message(BaseModel, extra="allow"):
     type: Annotated[str, Field(description="Type of the message")]
     # FIXME(cmin764): Add back the `alias="user"` param once the AS will support it.
     user: Annotated[str, Field(description="The raw user ID as received")]
     user_id: Annotated[str | None, Field(None, description="The ID of the user")]
     user_name: Annotated[str | None, Field(None, description="Human friendly username")]
     text: Annotated[str, Field(description="Message body")]
-    ts: Annotated[datetime, Field(description="The timestamp when the message was posted")]
+    ts: Annotated[
+        str, Field(description="The timestamp when the message was posted")
+    ]
     thread_ts: Annotated[
-        datetime | None, Field(None, description="The timestamp when the thread was posted")
+        str | None,
+        Field(None, description="The timestamp when the thread was posted"),
     ]
     channel_id: Annotated[
         str, Field(description="Channel ID where the message belongs")
