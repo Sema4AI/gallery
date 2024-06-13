@@ -1,30 +1,31 @@
 # Required: A short name for the action package
 name: Email sending
 
-# Required: A description of what's in the action package.
+# Required: A description of what's in the action package
 description: Base actions needed to send emails using Sema4.ai service.
 
-# Required: A link to where the documentation on the package lives.
-documentation: https://github.com/Sema4AI/prebuilt-actions/blob/main/email/README.md
+# Package version number, recommend using semver.org
+version: 0.1.0
 
 dependencies:
   conda-forge:
     - python=3.10.14
     - python-dotenv=1.0.1
-    - uv=0.1.38
+    - uv=0.2.6
   pypi:
-    - sema4ai-actions=0.6.0
-    - pydantic=2.7.1
+    - sema4ai-actions=0.9.1
+    - pydantic=2.7.3
 
 packaging:
+  # By default, all files and folders in this directory are packaged when uploaded.
+  # Add exclusion rules below (expects glob format: https://docs.python.org/3/library/glob.html)
   exclude:
-    - ".*" # Excludes all hidden files
     - ./.git/**
     - ./.vscode/**
     - ./devdata/**
     - ./output/**
-    - ./.DS_store/**
     - ./venv/**
     - ./.venv/**
+    - ./.DS_store/**
     - ./**/*.pyc
     - ./**/*.zip

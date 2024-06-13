@@ -8,16 +8,16 @@ from conversations import map_user_ids_to_display_name
 DataT = TypeVar("DataT")
 
 
-class Message(BaseModel, extra="allow"):
+class Message(BaseModel, extra=Extra.allow):
     type: Annotated[str, Field(description="Type of the message")]
-    user: Annotated[str, Field(description="Human friendly username")]
+    # FIXME(cmin764): Add back the `alias="user"` param once the AS will support it.
+    user: Annotated[str, Field(description="The raw user ID as received")]
+    user_id: Annotated[str | None, Field(None, description="The ID of the user")]
+    user_name: Annotated[str | None, Field(None, description="Human friendly username")]
     text: Annotated[str, Field(description="Message body")]
     ts: Annotated[datetime, Field(description="The timestamp when the message was posted")]
     thread_ts: Annotated[
         datetime | None, Field(None, description="The timestamp when the thread was posted")
-    ]
-    user_id: Annotated[
-        str, Field(description="The ID of the user", validation_alias="user")
     ]
     channel_id: Annotated[
         str, Field(description="Channel ID where the message belongs")
@@ -57,19 +57,19 @@ class BaseMessages(BaseModel, extra="ignore"):
 
     @model_validator(mode="after")
     def update_user_names(self, info: ValidationInfo):
-        user_ids = [msg.user_id for msg in self.messages if not msg.bot_name]
+        user_ids = [msg.user for msg in self.messages if not msg.bot_name]
         if user_ids:
             users_display_name = map_user_ids_to_display_name(
                 *user_ids, access_token=info.context["access_token"]
             )
         else:
             users_display_name = {}
-
         for message in self.messages:
+            message.user_id = message.user
             if message.bot_name:
-                message.user = message.bot_name
+                message.user_name = message.bot_name
             else:
-                message.user = users_display_name[message.user_id]
+                message.user_name = users_display_name[message.user]
 
         return self
 
