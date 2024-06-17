@@ -127,8 +127,8 @@ def read_messages_from_channel(
             messages and has a maximum limit of 200 messages.
         access_token: The Slack application access token.
         newer_than: Get messages newer than the specified date in YYYY-MM-DD format.
-        saved_only: Set this to `True` to return only the saved messages.
-        with_replies: Set this to `True` to retrieve message thread replies as well.
+        saved_only: Enable this to return only the saved messages.
+        with_replies: Enable this to retrieve message thread replies as well.
 
     Returns:
         A structure containing the messages and associated metadata from the specified

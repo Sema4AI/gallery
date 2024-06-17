@@ -1,5 +1,6 @@
 import re
-from typing import Annotated, TypeVar
+from datetime import datetime, timezone
+from typing import Annotated
 
 from pydantic import BaseModel, Field, ValidationInfo, model_validator
 
@@ -18,11 +19,15 @@ class Message(BaseModel, extra="allow"):
     user_name: Annotated[str | None, Field(None, description="Human friendly username")]
     text: Annotated[str, Field(description="Message body")]
     # NOTE(cmin764): Keeping these timestamps as originally received to query for
-    #  thread replies accurately.
+    #  thread replies accurately using their value as it is.
     ts: Annotated[str, Field(description="The timestamp when the message was posted")]
     thread_ts: Annotated[
         str | None,
-        Field(None, description="The timestamp when the thread was posted"),
+        Field(None, description="The timestamp when the thread was started"),
+    ]
+    date: Annotated[
+        str | None,
+        Field(None, description="The date and time of the posted message in UTC"),
     ]
     channel_id: Annotated[
         str, Field(description="Channel ID where the message belongs")
@@ -52,6 +57,7 @@ class Message(BaseModel, extra="allow"):
     @model_validator(mode="after")
     def refine_user_data(self):
         self.user_id = self.user
+        self.date = datetime.fromtimestamp(float(self.ts), tz=timezone.utc).isoformat()
         return self
 
 
