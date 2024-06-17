@@ -8,6 +8,7 @@ from conversations import map_user_ids_to_display_name
 
 
 RE_USER_ID = re.compile(r"<@U\w+>")  # user ID in text
+USER_ID_NAME_MAP = {}  # cache resolved user IDs into names
 
 
 class Message(BaseModel, extra="allow"):
@@ -64,7 +65,7 @@ class Message(BaseModel, extra="allow"):
 class BaseMessages(BaseModel, extra="ignore"):
     @model_validator(mode="before")
     @classmethod
-    def strip_extra_data(cls, data: dict, info: ValidationInfo) -> dict:
+    def augment_input_data(cls, data: dict, info: ValidationInfo) -> dict:
         for message in data["messages"]:
             for key in ("channel_id", "channel_name"):
                 message[key] = info.context[key]
@@ -79,20 +80,20 @@ class BaseMessages(BaseModel, extra="ignore"):
             user_ids.add(message.user_id)
             for match in RE_USER_ID.finditer(message.text):
                 user_ids.add(match.group().strip("<@>"))
-        if user_ids:
+        user_ids -= set(USER_ID_NAME_MAP)
+        if user_ids:  # retrieve for new IDs only
             users_display_name = map_user_ids_to_display_name(
                 *user_ids, access_token=info.context["access_token"]
             )
-        else:
-            users_display_name = {}
+            USER_ID_NAME_MAP.update(users_display_name)
 
         for message in self.messages:
             if message.bot_name:
                 message.user_name = message.bot_name
             else:
-                message.user_name = users_display_name[message.user_id]
+                message.user_name = USER_ID_NAME_MAP[message.user_id]
             message.text = RE_USER_ID.sub(
-                lambda match: f"@{users_display_name[match.group().strip('<@>')]}",
+                lambda match: f"@{USER_ID_NAME_MAP[match.group().strip('<@>')]}",
                 message.text,
             )
 
