@@ -33,8 +33,7 @@ def _build_api_client(access_token: Secret) -> Generator[SlackWebClient, None, N
         raise ActionError(exc) from exc
     except SlackApiError as exc:
         message = str(exc)
-        error_type = exc.response["error"]
-        if error_type == "not_in_channel":
+        if exc.response["error"] == "not_in_channel":
             message = "slack bot isn't added to the channel"
         raise ActionError(message) from exc
 
@@ -61,8 +60,8 @@ def send_message_to_channel(
     """
     with _build_api_client(access_token) as client:
         response = client.chat_postMessage(
-            channel=get_conversation_id(channel_name, access_token=client.token),
-            text=message,
+            channel=get_conversation_id(channel_name, client=client),
+            text=message
         ).validate()
 
     return Response(result=bool(response.data.get("ok", False)))
@@ -89,7 +88,7 @@ def read_messages_from_channel(
     newer_than: str = "",
     saved_only: bool = False,
     with_replies: bool = False,
-    access_token: Secret = DEV_SLACK_ACCESS_TOKEN,
+    access_token: Secret = DEV_SLACK_ACCESS_TOKEN
 ) -> Response[ThreadMessages]:
     """Read a message from a given Slack channel.
 
@@ -119,7 +118,7 @@ def read_messages_from_channel(
         newer_than_timestamp = None
 
     with _build_api_client(access_token) as client:
-        channel_id = get_conversation_id(channel_name, access_token=client.token)
+        channel_id = get_conversation_id(channel_name, client=client)
         response = client.conversations_history(
             channel=channel_id,
             limit=messages_limit,
@@ -127,7 +126,7 @@ def read_messages_from_channel(
         ).validate()
 
         context = {
-            "access_token": client.token,
+            "client": client,
             "channel_name": channel_name,
             "channel_id": channel_id,
         }

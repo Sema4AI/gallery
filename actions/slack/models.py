@@ -4,7 +4,7 @@ from typing import Annotated
 
 from pydantic import BaseModel, Field, ValidationInfo, model_validator
 
-from conversations import map_user_ids_to_display_name
+from conversations import map_user_ids_to_display_names
 
 
 RE_USER_ID = re.compile(r"<@U\w+>")  # user ID in text
@@ -82,8 +82,8 @@ class BaseMessages(BaseModel, extra="ignore"):
                 user_ids.add(match.group().strip("<@>"))
         user_ids -= set(USER_ID_NAME_MAP)
         if user_ids:  # retrieve for new IDs only
-            users_display_name = map_user_ids_to_display_name(
-                *user_ids, access_token=info.context["access_token"]
+            users_display_name = map_user_ids_to_display_names(
+                *user_ids, client=info.context["client"]
             )
             USER_ID_NAME_MAP.update(users_display_name)
 
