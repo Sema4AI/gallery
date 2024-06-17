@@ -45,9 +45,9 @@ class Message(BaseModel, extra="allow"):
         """Strips down some extra data from the payload to reduce model input."""
 
         data.pop("blocks", None)
-        # The API is a very inconsistent, but if we do get this data, we trim it down
-        #  since we already need to fetch all usernames for the cases where we don't
-        #  have it.
+        # The API is very inconsistent, but if we do get this data, we trim it down
+        #  since we already need to fetch all user names for the cases where we don't
+        #  have them.
         data.pop("user_profile", None)
 
         if bot_profile := data.pop("bot_profile", None):  # type: dict | None
