@@ -3,15 +3,16 @@
 The package currently supports channels retrieval, reading and sending messages.
 """
 
+import contextlib
 import os
 from datetime import datetime
 from pathlib import Path
+from typing import Generator
 
 from dotenv import load_dotenv
-from sema4ai.actions import Response, Secret, action
+from sema4ai.actions import ActionError, Response, Secret, action
 from slack_sdk import WebClient as SlackWebClient
 from slack_sdk.errors import SlackApiError
-from typing_extensions import Self
 
 from conversations import ConversationNotFoundError, get_conversation_id
 from models import Messages, ThreadMessage, ThreadMessages
@@ -22,39 +23,20 @@ load_dotenv(Path(__file__).absolute().parent / "devdata" / ".env")
 DEV_SLACK_ACCESS_TOKEN = Secret.model_validate(os.getenv("DEV_SLACK_ACCESS_TOKEN", ""))
 
 
-class CaptureError:
-    def __init__(self):
-        self._error = "Unknown error"
-
-    def get_response(self) -> Response:
-        return Response(error=self._error)
-
-    def __enter__(self) -> Self:
-        return self
-
-    def __exit__(self, exc_type, exc_val, exc_tb) -> bool | None:
-        if not exc_type:
-            return None
-
-        match exc_val:
-            case ConversationNotFoundError() as e:
-                self._error = str(e)
-            case SlackApiError() as e:
-                err = e.response["error"]
-                if err == "not_in_channel":
-                    self._error = "Slack bot was not added to the channel"
-                else:
-                    self._error = err
-            case _:
-                # return None to raise the exception
-                return None
-
-        # return True to suppress the exception
-        return True
-
-
-def _parse_token(token: Secret) -> str:
-    return token.value or DEV_SLACK_ACCESS_TOKEN.value
+@contextlib.contextmanager
+def _build_api_client(access_token: Secret) -> Generator[SlackWebClient, None, None]:
+    # Offers a Slack API client and treats known errors during its operation.
+    token: str = access_token.value or DEV_SLACK_ACCESS_TOKEN.value
+    try:
+        yield SlackWebClient(token=token)
+    except ConversationNotFoundError as exc:
+        raise ActionError(exc) from exc
+    except SlackApiError as exc:
+        message = str(exc)
+        error_type = exc.response["error"]
+        if error_type == "not_in_channel":
+            message = "slack bot isn't added to the channel"
+        raise ActionError(message) from exc
 
 
 @action(is_consequential=True)
@@ -63,6 +45,11 @@ def send_message_to_channel(
 ) -> Response[bool]:
     """Sends a message to the specified Slack channel.
 
+    Based on how the Slack access token was generated, the message can be sent straight
+    from the bot or on behalf of the user which obtained the token. You can detect a
+    message sent by a bot by observing the values of the `bot_id` and `bot_name` fields
+    under the retrieved message content.
+
     Args:
         channel_name: Slack channel to send the message to.
         message: Message to send on the Slack channel.
@@ -70,24 +57,15 @@ def send_message_to_channel(
 
     Returns:
         A structure containing a boolean if the message was successfully sent or an
-        error if it occurred.
+        error if such occurred.
     """
+    with _build_api_client(access_token) as client:
+        response = client.chat_postMessage(
+            channel=get_conversation_id(channel_name, access_token=client.token),
+            text=message,
+        ).validate()
 
-    with CaptureError() as error:
-        access_token = _parse_token(access_token)
-
-        response = (
-            SlackWebClient(token=access_token)
-            .chat_postMessage(
-                channel=get_conversation_id(channel_name, access_token=access_token),
-                text=message,
-            )
-            .validate()
-        )
-
-        return Response(result=bool(response.data.get("ok", False)))
-
-    return error.get_response()
+    return Response(result=bool(response.data.get("ok", False)))
 
 
 def _get_message_replies(
@@ -125,27 +103,23 @@ def read_messages_from_channel(
         channel_name: The name of the Slack channel to read the messages from.
         messages_limit: The number of messages to read from the channel. Defaults to 20
             messages and has a maximum limit of 200 messages.
-        access_token: The Slack application access token.
         newer_than: Get messages newer than the specified date in YYYY-MM-DD format.
         saved_only: Enable this to return only the saved messages.
         with_replies: Enable this to retrieve message thread replies as well.
+        access_token: The Slack application access token.
 
     Returns:
         A structure containing the messages and associated metadata from the specified
-        Slack channel or an error if it occurred.
+        Slack channel or an error if such occurred.
     """
-
     if newer_than:
         newer_than_date = datetime.strptime(newer_than, "%Y-%m-%d")
         newer_than_timestamp = newer_than_date.timestamp()
     else:
         newer_than_timestamp = None
 
-    with CaptureError() as error:
-        access_token = _parse_token(access_token)
-        client = SlackWebClient(token=access_token)
-
-        channel_id = get_conversation_id(channel_name, access_token=access_token)
+    with _build_api_client(access_token) as client:
+        channel_id = get_conversation_id(channel_name, access_token=client.token)
         response = client.conversations_history(
             channel=channel_id,
             limit=messages_limit,
@@ -153,7 +127,7 @@ def read_messages_from_channel(
         ).validate()
 
         context = {
-            "access_token": access_token,
+            "access_token": client.token,
             "channel_name": channel_name,
             "channel_id": channel_id,
         }
@@ -181,9 +155,7 @@ def read_messages_from_channel(
                     {"messages": replies}, from_attributes=True, context=context
                 )
 
-        return Response(result=messages_result)
-
-    return error.get_response()
+    return Response(result=messages_result)
 
 
 @action(is_consequential=False)
@@ -194,23 +166,17 @@ def get_all_channels(
 
     Args:
         channels_limit: The maximum number of channels that can be returned.
+        access_token: The Slack application access token.
 
     Returns:
         A list with all the channel names which can be used with other actions.
     """
-    with CaptureError() as error:
-        access_token = _parse_token(access_token)
+    with _build_api_client(access_token) as client:
+        response = client.conversations_list(
+            exclude_archived=True,
+            limit=channels_limit,
+            types=["public_channel", "private_channel"],
+        ).validate()
 
-        response = (
-            SlackWebClient(token=access_token)
-            .conversations_list(
-                exclude_archived=True,
-                limit=channels_limit,
-                types=["public_channel", "private_channel"],
-            )
-            .validate()
-        )
-        channel_names = [channel["name"] for channel in response.data["channels"]]
-        return Response(result=channel_names)
-
-    return error.get_response()
+    channel_names = [channel["name"] for channel in response.data["channels"]]
+    return Response(result=channel_names)

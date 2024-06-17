@@ -88,10 +88,7 @@ class BaseMessages(BaseModel, extra="ignore"):
             USER_ID_NAME_MAP.update(users_display_name)
 
         for message in self.messages:
-            if message.bot_name:
-                message.user_name = message.bot_name
-            else:
-                message.user_name = USER_ID_NAME_MAP[message.user_id]
+            message.user_name = USER_ID_NAME_MAP.get(message.user_id, message.bot_name)
             message.text = RE_USER_ID.sub(
                 lambda match: f"@{USER_ID_NAME_MAP[match.group().strip('<@>')]}",
                 message.text,
