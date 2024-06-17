@@ -60,8 +60,7 @@ def send_message_to_channel(
     """
     with _build_api_client(access_token) as client:
         response = client.chat_postMessage(
-            channel=get_conversation_id(channel_name, client=client),
-            text=message
+            channel=get_conversation_id(channel_name, client=client), text=message
         ).validate()
 
     return Response(result=bool(response.data.get("ok", False)))
@@ -88,7 +87,7 @@ def read_messages_from_channel(
     newer_than: str = "",
     saved_only: bool = False,
     with_replies: bool = False,
-    access_token: Secret = DEV_SLACK_ACCESS_TOKEN
+    access_token: Secret = DEV_SLACK_ACCESS_TOKEN,
 ) -> Response[ThreadMessages]:
     """Read a message from a given Slack channel.
 
