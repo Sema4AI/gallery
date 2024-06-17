@@ -105,7 +105,7 @@ class ConversationsInfo:
             for user_id, user_name in map_user_ids_to_display_names(
                 *self._user_id_to_conversation_id.keys(),
                 client=self._client,
-                strict=False
+                strict=False,
             ).items():
                 self._conversation_name_to_id[user_name.lower()] = UserConversationId(
                     self._user_id_to_conversation_id[user_id]

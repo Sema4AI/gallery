@@ -27,7 +27,7 @@ class Message(BaseModel, extra="allow"):
         Field(None, description="The timestamp when the thread was started"),
     ]
     date: Annotated[
-        str | None,
+        datetime | None,
         Field(None, description="The date and time of the posted message in UTC"),
     ]
     channel_id: Annotated[
@@ -58,7 +58,7 @@ class Message(BaseModel, extra="allow"):
     @model_validator(mode="after")
     def refine_user_data(self):
         self.user_id = self.user
-        self.date = datetime.fromtimestamp(float(self.ts), tz=timezone.utc).isoformat()
+        self.date = datetime.fromtimestamp(float(self.ts), tz=timezone.utc)
         return self
 
 
