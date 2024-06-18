@@ -104,10 +104,10 @@ def inline_deps(data: str) -> str:
 def inline_ignore(data: str) -> str:
     ignore = set(data.strip().splitlines())
     if not_ignore := (ignore & NO_IGNORE):
-        print(f"Warning! Detected inappropriate ignore(s): {not_ignore}")
+        print(f"Warning! Detected inappropriate ignore(s): {not_ignore} (removing)")
         ignore -= not_ignore
     ignore |= IGNORE
-    return "\n".join(ignore) + "\n"
+    return "\n".join(sorted(ignore)) + "\n"
 
 
 def main(args):
