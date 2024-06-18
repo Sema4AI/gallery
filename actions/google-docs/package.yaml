@@ -4,6 +4,9 @@ name: Google Documents
 # Required: A description of what's in the action package.
 description: Pre-build actions to read Google Documents in markdown format.
 
+# Package version number, recommend using semver.org
+version: 1.0.0
+
 dependencies:
   conda-forge:
     - python=3.10.14
