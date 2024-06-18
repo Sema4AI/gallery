@@ -17,6 +17,7 @@
 .vscode
 .~lock*
 /venv/
+metadata.json
 output/
 temp/
 testrun/*

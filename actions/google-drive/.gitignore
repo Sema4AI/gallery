@@ -16,6 +16,7 @@
 .virtual_documents/
 .vscode
 .~lock*
+metadata.json
 output/
 temp/
 testrun/*

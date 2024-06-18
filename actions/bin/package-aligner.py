@@ -40,8 +40,9 @@ IGNORE = {
     ".project",
     ".pydevproject",
     ".env",
+    "metadata.json",
 }
-NO_IGNORE = {"metadata.json"}
+NO_IGNORE = set({})
 
 
 def inline_dep(dep: str) -> tuple[str, int]:

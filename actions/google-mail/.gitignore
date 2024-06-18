@@ -19,6 +19,7 @@
 creds.json
 gmail_oauthflow.py
 input_send_email.json
+metadata.json
 output/
 temp/
 testrun/*
