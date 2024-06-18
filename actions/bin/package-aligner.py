@@ -1,20 +1,19 @@
 #! /usr/bin/env python
 
-"""
-Dependency alignment tool to be run over action packages and inline their package.yaml
-files content.
+"""AI Actions package alignment tool to be run over action packages.
+
+It inlines their package.yaml files content, the git-ignored files and more.
 """
 
 
 import itertools
-import math
 import re
 import sys
 from pathlib import Path
 
 
+# package.yaml
 RE_DIRECTIVE = re.compile(r"^\s*\w+:")
-
 EXPECTED_DEPS = {
     # Conda-forge deps:
     "python": ("3.10.14", 1),
@@ -25,6 +24,25 @@ EXPECTED_DEPS = {
     "pydantic": ("2.7.4", 2),
 }
 LOWEST_PRIO = sys.maxsize
+
+# .gitignore
+IGNORE = {
+    "output/",
+    "venv/",
+    ".venv/",
+    "temp/",
+    ".use",
+    ".vscode",
+    ".DS_Store",
+    "*.pyc",
+    "*.zip",
+    ".env",
+    ".project",
+    ".pydevproject",
+    ".env",
+    "metadata.json",
+}
+NO_IGNORE = set({})
 
 
 def inline_dep(dep: str) -> tuple[str, int]:
@@ -84,16 +102,31 @@ def inline_deps(data: str) -> str:
     return "\n".join(itertools.chain(header, deps, footer)) + "\n"
 
 
+def inline_ignore(data: str) -> str:
+    ignore = set(data.strip().splitlines())
+    if not_ignore := (ignore & NO_IGNORE):
+        print(f"Warning! Detected inappropriate ignore(s): {not_ignore} (removing)")
+        ignore -= not_ignore
+    ignore |= IGNORE
+    return "\n".join(sorted(ignore)) + "\n"
+
+
 def main(args):
     if len(args) != 2:
         print(f"Usage: {args[0]} ACTIONS_DIR")
         return
 
+    alignments = {
+        "package.yaml": inline_deps,
+        ".gitignore": inline_ignore,
+    }
     for conf_file in Path(args[1]).rglob("package.yaml"):
-        print(f"Processing file: {conf_file}")
-        conf_data = conf_file.read_text()
-        conf_data = inline_deps(conf_data)
-        conf_file.write_text(conf_data)
+        for source_file, inliner in alignments.items():
+            source_path = conf_file.parent / source_file
+            print(f"Processing file: {source_path}")
+            misaligned_data = source_path.read_text()
+            inlined_data = inliner(misaligned_data)
+            source_path.write_text(inlined_data)
 
 
 if __name__ == "__main__":
