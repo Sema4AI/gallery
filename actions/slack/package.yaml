@@ -14,7 +14,7 @@ dependencies:
     - uv=0.2.6
   pypi:
     - sema4ai-actions=0.9.2
-    - pydantic=2.7.3
+    - pydantic=2.7.4
     - slack_sdk=3.29.0
     - rapidfuzz=3.9.3
 

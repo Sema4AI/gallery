@@ -21,8 +21,8 @@ EXPECTED_DEPS = {
     "python-dotenv": ("1.0.1", 2),
     "uv": ("0.2.6", 3),
     # PyPI deps:
-    "sema4ai-actions": ("0.9.1", 1),
-    "pydantic": ("2.7.3", 2),
+    "sema4ai-actions": ("0.9.2", 1),
+    "pydantic": ("2.7.4", 2),
 }
 LOWEST_PRIO = sys.maxsize
 
