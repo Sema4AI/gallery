@@ -124,6 +124,7 @@ def main(args):
         for source_file, inliner in alignments.items():
             source_path = conf_file.parent / source_file
             print(f"Processing file: {source_path}")
+            source_path.touch()
             misaligned_data = source_path.read_text()
             inlined_data = inliner(misaligned_data)
             source_path.write_text(inlined_data)
