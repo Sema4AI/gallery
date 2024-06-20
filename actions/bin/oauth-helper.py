@@ -10,8 +10,6 @@ import toml
 from requests_oauthlib import OAuth2Session
 
 
-os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"  # allow localhost `http` redirects
-
 CONFIG_FILE = Path.home() / ".sema4ai" / "gallery-oauth.toml"
 DEFAULT_CONFIG = {
     "hubspot": {
@@ -27,6 +25,8 @@ DEFAULT_CONFIG = {
 
 RE_OAUTH_TYPE = re.compile(r"OAuth2Secret\[.+?list\[([^:]+):", re.DOTALL)
 RE_SCOPE = re.compile(r"""Literal\[("|')(?P<scope>[^"']+?)("|')\]""")
+
+os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"  # allow localhost `http` redirects
 
 
 def _save_config(config: dict):
@@ -68,6 +68,7 @@ def make_oauth(pack_path: Path):
     for entry, value in pack_conf.items():
         value = input(f"{entry} (press enter for {value!r} default): ") or value
         pack_conf[entry] = value
+    _save_config(config)
 
     # Gather all the scopes in order to build the auth URL.
     scopes = set()
@@ -77,11 +78,10 @@ def make_oauth(pack_path: Path):
             for scope_match in RE_SCOPE.finditer(oauth_type):
                 scopes.add(scope_match.group("scope"))
     print(f"Gathered the following scopes: {' '.join(scopes)}")
-    _save_config(config)
 
     # Do the flow with the configuration and scopes gathered so far.
     _make_oauth(pack_conf, scopes=scopes)
-    _save_config(config)
+    _save_config(config)  # saves the just set tokens
 
 
 def main(args):
@@ -107,6 +107,7 @@ def main(args):
         print(f"{idx}. {packages[idx]}")
     choice = input("Initialize the OAuth2 flow with (choose number): ")
     package = packages[int(choice)]
+
     make_oauth(actions_dir / package)
 
 
