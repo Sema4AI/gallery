@@ -8,6 +8,7 @@ Currently supporting:
 import os
 from enum import Enum
 from pathlib import Path
+from typing import Literal
 
 from dotenv import load_dotenv
 from hubspot import HubSpot
@@ -16,7 +17,7 @@ from hubspot.crm.contacts import PublicObjectSearchRequest as ContactSearchReque
 from hubspot.crm.deals import PublicObjectSearchRequest as DealSearchRequest
 from hubspot.crm.objects import PublicObjectSearchRequest as ObjectSearchRequest
 from hubspot.crm.tickets import PublicObjectSearchRequest as TicketSearchRequest
-from sema4ai.actions import Response, Secret, action
+from sema4ai.actions import OAuth2Secret, Response, Secret, action
 
 from models import (
     Company,
@@ -30,6 +31,9 @@ from models import (
 load_dotenv(Path(__file__).absolute().parent / "devdata" / ".env")
 
 DEV_ACCESS_TOKEN = Secret.model_validate(os.getenv("DEV_HUBSPOT_ACCESS_TOKEN", ""))
+DEV_OAUTH2_TOKEN = OAuth2Secret.model_validate(
+    {"access_token": os.getenv("DEV_HUBSPOT_ACCESS_TOKEN", "")}
+)
 
 
 class ObjectEnum(Enum):
@@ -47,7 +51,9 @@ OBJECT_MODEL_MAP = {
 def search_companies(
     query: str,
     limit: int = 10,
-    access_token: Secret = DEV_ACCESS_TOKEN,
+    token: OAuth2Secret[
+        Literal["hubspot"], list[Literal["crm.objects.companies.read"]]
+    ] = DEV_OAUTH2_TOKEN,
 ) -> Response[list[Company]]:
     """Search for HubSpot companies based on the provided string query.
 
@@ -59,12 +65,12 @@ def search_companies(
     Args:
         query: String that is searched for in all the company properties for a match.
         limit: The maximum number of results the search can return.
-        access_token: Your app (client) generated access token used to make API calls.
+        token: An OAuth2 Public App (client) token structure used to make API calls.
 
     Returns:
         A structure with a list of companies matching the query.
     """
-    api_client = HubSpot(access_token=access_token.value)
+    api_client = HubSpot(access_token=token.access_token)
     search_request = CompanySearchRequest(query=query, limit=limit)
     response = api_client.crm.companies.search_api.do_search(
         public_object_search_request=search_request
