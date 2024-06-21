@@ -6,7 +6,7 @@ from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import Resource, build
 from sema4ai.actions import OAuth2Secret, Response, action
 
-from models import CalendarList, Event, EventList, UpdateEvent
+from models import CalendarList, Event, EventList, UpdateEvent, CreateEvent
 
 load_dotenv(Path(__file__).absolute().parent / "devdata" / ".env")
 
@@ -24,7 +24,7 @@ def create_event(
         Literal["google"],
         list[Literal["https://www.googleapis.com/auth/calendar.events",]],
     ],
-    event: Event,
+    event: CreateEvent,
     calendar_id="primary",
 ) -> Event:
     """Creates a new event in the specified calendar.
@@ -42,6 +42,8 @@ def create_event(
 
     event_dict = event.model_dump(mode="json")
     event_dict.pop("id", None)
+    event_dict["start"] = {"dateTime": event_dict["start"]}
+    event_dict["end"] = {"dateTime": event_dict["end"]}
 
     event = service.events().insert(calendarId=calendar_id, body=event_dict).execute()
 
@@ -62,6 +64,7 @@ def list_events(
     """List all events in the user's primary calendar between the given dates.
 
     To aggregate all events across calendars, call this method for each calendar returned by list_calendars endpoint.
+    Ideally a start and end date should always be provided, otherwise we will look in the whole future or past.
 
     Args:
         google_credentials: JSON containing Google OAuth2 credentials.
@@ -143,14 +146,17 @@ def update_event(
             Possible keys include 'summary', 'description', 'start', 'end', and 'attendees'.
 
     Returns:
-    - Updated event details.
+        Updated event details.
     """
-
     service = _build_service(google_credentials)
     event = service.events().get(calendarId=calendar_id, eventId=event_id).execute()
 
-    # Update the fields based on provided updates dictionary
-    event.update(updates.model_dump(mode="json", exclude_none=True))
+    updates_dump = updates.model_dump(mode="json", exclude_none=True)
+    updates_dump["start"] = {"dateTime": updates_dump["start"]}
+    updates_dump["end"] = {"dateTime": updates_dump["end"]}
+
+    event.update(updates_dump)
+
     updated_event = (
         service.events()
         .update(calendarId=calendar_id, eventId=event_id, body=event)

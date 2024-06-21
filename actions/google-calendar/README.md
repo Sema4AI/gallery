@@ -1,38 +1,59 @@
-# Template: Python - Actions
+# Google Calendar
 
-This template gets you started in creating Actions for [Sema4.ai Action Server](https://github.com/sema4ai/actions/tree/master/action_server/docs#readme).
+Action Package interacting with Google Calendar resources.
 
-`Actions` and `Action Server` enable you to "give your AI Agents hands" meaning that your AI/LLM Agent can help your users perform distinct actions that get executed based on the LLM discussion.
+Possible actions with this package are:
 
-## Quickstart
+- list the calendars on which the user is subscribed to
+- query events from the user's calendar
+- create a new event
+- update an existing event
 
-👉 Follow the Action Server [Quickstart guide](https://github.com/sema4ai/actions?tab=readme-ov-file#%EF%B8%8F-quickstart) in the main repository.
+## Prompts
+
+```
+Give me all the events from this friday.
+```
+
+> Here are the events from friday:
+> 
+> 1. Home
+>    * Start: June 19, 2024
+>    * End: June 20, 2024
+> 2. #coffee-time Donut
+>    * Start: June 19, 2024, 12:00 PM
+>    * End: June 19, 2024, 12:30 PM
+>    * Attendees:
+>        * Kari (kari@robocorp.com) - Organizer
+>        * Ovidiu (ovidiu@robocorp.com)
+> 3. DevTools Sync
+>    * Location: Zoom Meeting
+>    * Start: June 19, 2024, 1:30 PM
+>    * End: June 19, 2024, 2:00 PM
+>    * Description: Sync meeting for DevTools. Topics are raised in #dev-tools-team channel.
+>    * Attendees:
+>      * Kari, Matti, Mika, Jippo, Cosmin, Cpopa, Fabio, Ovidiu, Vlad, Michal
+>      
+> Let me know if you need more details or any other assistance!
+
+```
+Create a new event for tomorrow at 12 PM with vlad@sema4.ai to have a catch-up discussion.
+```
+
+> The "Catch-up Discussion" event with Vlad has been successfully created for tomorrow at 12 PM. If you need any further adjustments or have more tasks, feel free to let me know!
+
+```
+Update the Catch-up Discussion one hour later and invite cosmin@robocorp.com as well.
+```
+
+> The "Catch-up Discussion" event has been successfully updated to start at 1 PM tomorrow and now includes an additional attendee, Cosmin from robocorp.com. If there's anything else you need, just let me know!
 
 
-## Dependency management
+## Authorization
 
-Dependencies need to be added to [`package.yaml`](package.yaml).
+This action package uses Google OAuth2 flow to authenticate user.
 
-👉 [package.yaml documentation](https://github.com/sema4ai/actions/blob/master/action_server/docs/guides/01-package-yaml.md) in the main repository.
+Scopes in use:
 
-## Actions in VS Code 
-
-👉 Using [Robocorp Code extension for VS Code](https://marketplace.visualstudio.com/items?itemName=robocorp.robocorp-code), you can get everything set up and running in VS Code in no time.
-
-The template has a few files that enable the extension to find and set up your action environment and provide code completion. There is also a side panel where we have and will add some easy-to-use functionalities.
-
-![](docs/vscode.png)
-
-When debugging your Actions Python code, you probably do not want to give the inputs every time you run and always be running the Action Server. `Robocorp Code` integration allows you to run and debug actions from within VSCode, enabling custom input to be specified as `.json` files.
-
-
-## What does the template Action do?
-
-The template is a simple starting point to show how to get started.
-
-The action enables you to get the timezone differences between locations.
-
-We use [pytz](https://pypi.org/project/pytz/) as an example to show that you can leverage the whole Python ecosystem. Sema4.ai provides a [bunch of libraries](https://pypi.org/search/?q=robocorp-); you can make your own. The sky is the limit.
-
-🚀 Now, go get'em
-
+    - https://www.googleapis.com/auth/calendar.events
+    - https://www.googleapis.com/auth/calendar.readonly

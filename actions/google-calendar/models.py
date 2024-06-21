@@ -8,7 +8,7 @@ from typing_extensions import Annotated
 
 class EventDateTime(BaseModel):
     dateTime: Annotated[
-        datetime | None,
+        str | None,
         Field(description="The start or end time of the event"),
     ] = None
     timeZone: Annotated[
@@ -29,7 +29,10 @@ class Attendee(BaseModel):
         bool | None, Field(description="Whether this is an optional attendee")
     ] = None
     responseStatus: Annotated[
-        str | None, Field(description="The response status of the attendee")
+        str, Field(
+            description="The response status of the attendee. "
+            "Possible values: 'needsAction', 'declined', 'tentative', 'accepted'."
+        )
     ] = None
     organizer: Annotated[
         bool | None,
@@ -97,6 +100,16 @@ class Event(BaseModel):
     # reminders: Annotated[Reminder, Field(description="Reminders settings for the event")]
 
 
+class CreateEvent(Event):
+    start: Annotated[
+        str,
+        Field(description="The (inclusive) start time of the event"),
+    ] = None
+    end: Annotated[
+        str | None, Field(description="The (exclusive) end time of the event")
+    ] = None
+
+
 class UpdateEvent(BaseModel):
     summary: Annotated[
         str | None, Field(description="A short summary of the event's purpose")
@@ -108,11 +121,11 @@ class UpdateEvent(BaseModel):
         str | None, Field(description="A more detailed description of the event")
     ] = None
     start: Annotated[
-        EventDateTime | None,
+        str,
         Field(description="The (inclusive) start time of the event"),
     ] = None
     end: Annotated[
-        EventDateTime | None, Field(description="The (exclusive) end time of the event")
+        str | None, Field(description="The (exclusive) end time of the event")
     ] = None
     attendees: Annotated[
         List[Attendee] | None,
