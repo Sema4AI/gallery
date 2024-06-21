@@ -1,35 +1,26 @@
-import json
-import os
 from io import BytesIO
 from pathlib import Path
-from typing import Optional
+from typing import Literal, Optional
 
 from dotenv import load_dotenv
-from google.oauth2 import service_account
+from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import Resource, build
 from googleapiclient.errors import HttpError
 from googleapiclient.http import MediaIoBaseDownload
-from sema4ai.actions import Secret, action
-
 from models import CommentList, File, FileList, Response
+from sema4ai.actions import OAuth2Secret, action
 
 load_dotenv(Path(__file__).absolute().parent / "devdata" / ".env")
 
-DEV_GOOGLE_SERVICE_ACCOUNT = Secret.model_validate(
-    os.getenv("DEV_GOOGLE_SERVICE_ACCOUNT", "")
-)
-SCOPES = ["https://www.googleapis.com/auth/drive"]
 EXPORT_MIMETYPE_MAP = {
     "application/vnd.google-apps.spreadsheet": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     "application/vnd.google-apps.document": "text/plain",
 }
 
 
-def _build_service(credentials: Secret) -> Resource:
+def _build_service(credentials: OAuth2Secret) -> Resource:
     # Create the Google Drive V3 service interface
-    creds = service_account.Credentials.from_service_account_info(
-        json.loads(credentials.value), scopes=SCOPES
-    )
+    creds = Credentials(token=credentials.access_token)
 
     return build("drive", "v3", credentials=creds)
 
@@ -72,13 +63,22 @@ def _get_excel_content(file_content: BytesIO, worksheet: Optional[str] = None) -
 
 @action(is_consequential=False)
 def get_file_by_id(
-    file_id: str, google_credentials: Secret = DEV_GOOGLE_SERVICE_ACCOUNT
+    google_credentials: OAuth2Secret[
+        Literal["google"],
+        list[
+            Literal[
+                "https://www.googleapis.com/auth/drive.readonly",
+                "https://www.googleapis.com/auth/drive.metadata.readonly",
+            ]
+        ],
+    ],
+    file_id: str,
 ) -> Response[File]:
     """Get a file from Google Drive by id.
 
     Args:
+        google_credentials: JSON containing Google OAuth2 credentials.
         file_id: Unique id of the file.
-        google_credentials: JSON containing Google service account credentials.
 
     Returns:
         Message containing the details of the file or error message.
@@ -97,13 +97,22 @@ def get_file_by_id(
 
 @action(is_consequential=False)
 def get_files_by_query(
-    query: str, google_credentials: Secret = DEV_GOOGLE_SERVICE_ACCOUNT
+    google_credentials: OAuth2Secret[
+        Literal["google"],
+        list[
+            Literal[
+                "https://www.googleapis.com/auth/drive.readonly",
+                "https://www.googleapis.com/auth/drive.metadata.readonly",
+            ]
+        ],
+    ],
+    query: str,
 ) -> Response[FileList]:
     """Get all files from Google Drive that match the given query.
 
     Args:
+        google_credentials: JSON containing Google OAuth2 credentials.
         query: Google Drive API V3 query string for search files in the format query_term operator values.
-        google_credentials: JSON containing Google service account credentials.
 
     Returns:
         A list of files or an error message if no files were found.
@@ -122,16 +131,19 @@ def get_files_by_query(
 
 @action(is_consequential=False)
 def get_file_contents(
+    google_credentials: OAuth2Secret[
+        Literal["google"],
+        list[Literal["https://www.googleapis.com/auth/drive.readonly"]],
+    ],
     name: str,
     worksheet: str = "",
-    google_credentials: Secret = DEV_GOOGLE_SERVICE_ACCOUNT,
 ) -> Response:
     """Get the file contents.
 
     Args:
+        google_credentials: JSON containing Google OAuth2 credentials.
         name: Name of the file.
         worksheet: Name of the worksheet in case of Excel files, default is the first sheet.
-        google_credentials: JSON containing Google service account credentials.
 
     Returns:
         The file contents or an error message.
@@ -161,18 +173,21 @@ def get_file_contents(
 
 @action(is_consequential=True)
 def share_document(
+    google_credentials: OAuth2Secret[
+        Literal["google"],
+        list[Literal["https://www.googleapis.com/auth/drive.file"]],
+    ],
     name: str,
     role: str,
     email_address: str,
-    google_credentials: Secret = DEV_GOOGLE_SERVICE_ACCOUNT,
 ) -> Response:
     """Share a document with a specific email address.
 
     Args:
+        google_credentials: JSON containing Google OAuth2 credentials.
         name: Name of the file to be shared.
         role: Assign a specific role. Possible options are: reader, writer, commenter, organizer, fileOrganizer.
         email_address: The email address of the user or group to share the file with.
-        google_credentials: JSON containing Google service account credentials.
 
     Returns:
         Message indicating the success or failure of the operation.
@@ -199,13 +214,17 @@ def share_document(
 
 @action(is_consequential=False)
 def list_file_comments(
-    name: str, google_credentials: Secret = DEV_GOOGLE_SERVICE_ACCOUNT
+    google_credentials: OAuth2Secret[
+        Literal["google"],
+        list[Literal["https://www.googleapis.com/auth/drive.readonly"]],
+    ],
+    name: str,
 ) -> Response[CommentList]:
     """List the comments on a specific file.
 
     Args:
+        google_credentials: JSON containing Google OAuth2 credentials.
         name: Name of the file to read its associated comments.
-        google_credentials: JSON containing Google service account credentials.
 
     Returns:
         List of comments associated with the file.

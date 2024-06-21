@@ -10,9 +10,9 @@ class Owner(BaseModel):
 
 class Permission(BaseModel):
     emailAddress: Annotated[
-        str,
+        Optional[str],
         Field(description="The email address of the person who has permission"),
-    ]
+    ] = None
     role: Annotated[
         str,
         Field(
@@ -24,7 +24,7 @@ class Permission(BaseModel):
         Field(
             description="Indicates whether the account associated with this permission has been deleted"
         ),
-    ]
+    ] = False
 
 
 class File(BaseModel):
@@ -46,14 +46,15 @@ class File(BaseModel):
     owners: Annotated[
         List[Owner], Field(description="A list of owners associated with the file")
     ]
-    size: Annotated[str, Field(description="The file size in bytes")]
+    size: Annotated[str | None, Field(description="The file size in bytes")] = None
     version: Annotated[str, Field(description="The current version of the file")]
     webViewLink: Annotated[
         str, Field(description="A URL for viewing the file in a web browser")
     ]
     permissions: Annotated[
-        List[Permission], Field(description="A list of permissions granted to the file")
-    ]
+        Optional[List[Permission]],
+        Field(description="A list of permissions granted to the file"),
+    ] = None
 
     def is_excel(self) -> bool:
         return self.mimeType == "application/vnd.google-apps.spreadsheet"
