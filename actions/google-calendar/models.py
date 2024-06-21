@@ -97,7 +97,7 @@ class Event(BaseModel):
     attendees: Annotated[
         List[Attendee] | None, Field(description="A list of attendees")
     ] = None
-    # reminders: Annotated[Reminder, Field(description="Reminders settings for the event")]
+    reminders: Annotated[Reminder | None, Field(description="Reminders settings for the event")] = None
 
 
 class CreateEvent(Event):
@@ -121,7 +121,7 @@ class UpdateEvent(BaseModel):
         str | None, Field(description="A more detailed description of the event")
     ] = None
     start: Annotated[
-        str,
+        str | None,
         Field(description="The (inclusive) start time of the event"),
     ] = None
     end: Annotated[
@@ -133,6 +133,7 @@ class UpdateEvent(BaseModel):
             description="A list of attendees consisting in email and whether they are mandatory to participate or not"
         ),
     ] = None
+    reminders: Annotated[Reminder | None, Field(description="Reminders settings for the event")] = None
 
 
 class EventList(BaseModel):

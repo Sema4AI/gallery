@@ -12,7 +12,6 @@ load_dotenv(Path(__file__).absolute().parent / "devdata" / ".env")
 
 
 def _build_service(credentials: OAuth2Secret) -> Resource:
-    # Create the Google Drive V3 service interface
     creds = Credentials(token=credentials.access_token)
 
     return build("calendar", "v3", credentials=creds)
@@ -22,7 +21,7 @@ def _build_service(credentials: OAuth2Secret) -> Resource:
 def create_event(
     google_credentials: OAuth2Secret[
         Literal["google"],
-        list[Literal["https://www.googleapis.com/auth/calendar.events",]],
+        list[Literal["https://www.googleapis.com/auth/calendar.events"]],
     ],
     event: CreateEvent,
     calendar_id="primary",
@@ -54,7 +53,7 @@ def create_event(
 def list_events(
     google_credentials: OAuth2Secret[
         Literal["google"],
-        list[Literal["https://www.googleapis.com/auth/calendar.readonly",]],
+        list[Literal["https://www.googleapis.com/auth/calendar.readonly"]],
     ],
     calendar_id="primary",
     query: str = "",
@@ -105,7 +104,7 @@ def list_events(
 def list_calendars(
     google_credentials: OAuth2Secret[
         Literal["google"],
-        list[Literal["https://www.googleapis.com/auth/calendar.readonly",]],
+        list[Literal["https://www.googleapis.com/auth/calendar.readonly"]],
     ],
 ) -> Response[CalendarList]:
     """List all calendars that the user is subscribed to.
@@ -128,7 +127,7 @@ def list_calendars(
 def update_event(
     google_credentials: OAuth2Secret[
         Literal["google"],
-        list[Literal["https://www.googleapis.com/auth/calendar.events",]],
+        list[Literal["https://www.googleapis.com/auth/calendar.events"]],
     ],
     event_id: str,
     updates: UpdateEvent,
@@ -152,8 +151,11 @@ def update_event(
     event = service.events().get(calendarId=calendar_id, eventId=event_id).execute()
 
     updates_dump = updates.model_dump(mode="json", exclude_none=True)
-    updates_dump["start"] = {"dateTime": updates_dump["start"]}
-    updates_dump["end"] = {"dateTime": updates_dump["end"]}
+
+    if updates.start:
+        updates_dump["start"] = {"dateTime": updates_dump["start"]}
+    if updates.end:
+        updates_dump["end"] = {"dateTime": updates_dump["end"]}
 
     event.update(updates_dump)
 
