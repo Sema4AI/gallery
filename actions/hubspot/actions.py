@@ -30,7 +30,6 @@ from models import (
 
 load_dotenv(Path(__file__).absolute().parent / "devdata" / ".env")
 
-DEV_ACCESS_TOKEN = Secret.model_validate(os.getenv("DEV_HUBSPOT_ACCESS_TOKEN", ""))
 DEV_OAUTH2_TOKEN = OAuth2Secret.model_validate(
     {"access_token": os.getenv("DEV_HUBSPOT_ACCESS_TOKEN", "")}
 )
@@ -87,7 +86,9 @@ def search_companies(
 def search_contacts(
     query: str,
     limit: int = 10,
-    access_token: Secret = DEV_ACCESS_TOKEN,
+    token: OAuth2Secret[
+        Literal["hubspot"], list[Literal["crm.objects.contacts.read"]]
+    ] = DEV_OAUTH2_TOKEN,
 ) -> Response[list[Contact]]:
     """Search for HubSpot contacts based on the provided string query.
 
@@ -99,12 +100,12 @@ def search_contacts(
     Args:
         query: String that is searched for in all the contact properties for a match.
         limit: The maximum number of results the search can return.
-        access_token: Your app (client) generated access token used to make API calls.
+        token: An OAuth2 Public App (client) token structure used to make API calls.
 
     Returns:
         A structure with a list of contacts matching the query.
     """
-    api_client = HubSpot(access_token=access_token.value)
+    api_client = HubSpot(access_token=token.access_token)
     search_request = ContactSearchRequest(query=query, limit=limit)
     response = api_client.crm.contacts.search_api.do_search(
         public_object_search_request=search_request
@@ -121,7 +122,9 @@ def search_contacts(
 def search_deals(
     query: str,
     limit: int = 10,
-    access_token: Secret = DEV_ACCESS_TOKEN,
+    token: OAuth2Secret[
+        Literal["hubspot"], list[Literal["crm.objects.deals.read"]]
+    ] = DEV_OAUTH2_TOKEN,
 ) -> Response[list[Deal]]:
     """Search for HubSpot deals based on the provided string query.
 
@@ -133,12 +136,12 @@ def search_deals(
     Args:
         query: String that is searched for in all the deals properties for a match.
         limit: The maximum number of results the search can return.
-        access_token: Your app (client) generated access token used to make API calls.
+        token: An OAuth2 Public App (client) token structure used to make API calls.
 
     Returns:
         A structure with a list of deals matching the query.
     """
-    api_client = HubSpot(access_token=access_token.value)
+    api_client = HubSpot(access_token=token.access_token)
     search_request = DealSearchRequest(query=query, limit=limit)
     response = api_client.crm.deals.search_api.do_search(
         public_object_search_request=search_request
@@ -153,7 +156,9 @@ def search_deals(
 def search_tickets(
     query: str,
     limit: int = 10,
-    access_token: Secret = DEV_ACCESS_TOKEN,
+    token: OAuth2Secret[
+        Literal["hubspot"], list[Literal["tickets"]]
+    ] = DEV_OAUTH2_TOKEN,
 ) -> Response[list[Ticket]]:
     """Search for HubSpot deals based on the provided string query.
 
@@ -167,12 +172,12 @@ def search_tickets(
     Args:
         query: String that is searched for in all the deals properties for a match.
         limit: The maximum number of results the search can return.
-        access_token: Your app (client) generated access token used to make API calls.
+        token: An OAuth2 Public App (client) token structure used to make API calls.
 
     Returns:
         A structure with a list of deals matching the query.
     """
-    api_client = HubSpot(access_token=access_token.value)
+    api_client = HubSpot(access_token=token.access_token)
     search_request = TicketSearchRequest(query=query, limit=limit)
     response = api_client.crm.tickets.search_api.do_search(
         public_object_search_request=search_request
@@ -188,7 +193,9 @@ def search_objects(
     object_type: str,
     query: str,
     limit: int = 10,
-    access_token: Secret = DEV_ACCESS_TOKEN,
+    token: OAuth2Secret[
+        Literal["hubspot"], list[Literal["crm.objects.custom.read"]]
+    ] = DEV_OAUTH2_TOKEN,
 ) -> Response[list[Task]]:
     """Search for HubSpot objects based on the provided string query.
 
@@ -203,12 +210,12 @@ def search_objects(
         object_type: The kind of object you are searching, currently supporting: tasks.
         query: String that is searched for in all the object properties for a match.
         limit: The maximum number of results the search can return.
-        access_token: Your app (client) generated access token used to make API calls.
+        token: An OAuth2 Public App (client) token structure used to make API calls.
 
     Returns:
         A structure with a list of objects matching the query.
     """
-    api_client = HubSpot(access_token=access_token.value)
+    api_client = HubSpot(access_token=token.access_token)
     object_type = ObjectEnum(object_type)  # normalizes string value to enumeration
     search_api = getattr(api_client.crm.objects, object_type.value).search_api
     ObjectResult = OBJECT_MODEL_MAP[object_type]
