@@ -31,7 +31,7 @@ from models import (
 load_dotenv(Path(__file__).absolute().parent / "devdata" / ".env")
 
 DEV_OAUTH2_TOKEN = OAuth2Secret.model_validate(
-    {"access_token": os.getenv("DEV_HUBSPOT_ACCESS_TOKEN", "")}
+    {"access_token": os.getenv("DEV_HUBSPOT_ACCESS_TOKEN", "not-set-but-required")}
 )
 
 
