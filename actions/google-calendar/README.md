@@ -24,29 +24,29 @@ Give me all the events from this friday.
 >    * Start: June 19, 2024, 12:00 PM
 >    * End: June 19, 2024, 12:30 PM
 >    * Attendees:
->        * Kari (kari@robocorp.com) - Organizer
->        * Ovidiu (ovidiu@robocorp.com)
+>        * John (john@company.com) - Organizer
+>        * Doe (doe@company.com)
 > 3. DevTools Sync
 >    * Location: Zoom Meeting
 >    * Start: June 19, 2024, 1:30 PM
 >    * End: June 19, 2024, 2:00 PM
 >    * Description: Sync meeting for DevTools. Topics are raised in #dev-tools-team channel.
 >    * Attendees:
->      * Kari, Matti, Mika, Jippo, Cosmin, Cpopa, Fabio, Ovidiu, Vlad, Michal
+>      * John, Doe, Albert, Robert
 >      
 > Let me know if you need more details or any other assistance!
 
 ```
-Create a new event for tomorrow at 12 PM with vlad@sema4.ai to have a catch-up discussion.
+Create a new event for tomorrow at 12 PM with robert@company.com to have a catch-up discussion.
 ```
 
-> The "Catch-up Discussion" event with Vlad has been successfully created for tomorrow at 12 PM. If you need any further adjustments or have more tasks, feel free to let me know!
+> The "Catch-up Discussion" event with Robert has been successfully created for tomorrow at 12 PM. If you need any further adjustments or have more tasks, feel free to let me know!
 
 ```
-Update the Catch-up Discussion one hour later and invite cosmin@robocorp.com as well.
+Update the Catch-up Discussion one hour later and invite albert@company.com as well.
 ```
 
-> The "Catch-up Discussion" event has been successfully updated to start at 1 PM tomorrow and now includes an additional attendee, Cosmin from robocorp.com. If there's anything else you need, just let me know!
+> The "Catch-up Discussion" event has been successfully updated to start at 1 PM tomorrow and now includes an additional attendee, Albert from company.com. If there's anything else you need, just let me know!
 
 
 ## Authorization

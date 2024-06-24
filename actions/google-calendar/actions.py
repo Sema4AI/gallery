@@ -6,7 +6,7 @@ from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import Resource, build
 from sema4ai.actions import OAuth2Secret, Response, action
 
-from models import CalendarList, Event, EventList, UpdateEvent, CreateEvent
+from models import CalendarList, CreateEvent, Event, EventList, UpdateEvent
 
 load_dotenv(Path(__file__).absolute().parent / "devdata" / ".env")
 
@@ -39,8 +39,8 @@ def create_event(
     """
     service = _build_service(google_credentials)
 
-    event_dict = event.model_dump(mode="json")
-    event_dict.pop("id", None)
+    event_dict = event.model_dump(mode="json", exclude={"id"})
+
     event_dict["start"] = {"dateTime": event_dict["start"]}
     event_dict["end"] = {"dateTime": event_dict["end"]}
 

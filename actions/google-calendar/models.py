@@ -29,10 +29,11 @@ class Attendee(BaseModel):
         bool | None, Field(description="Whether this is an optional attendee")
     ] = None
     responseStatus: Annotated[
-        str, Field(
+        str,
+        Field(
             description="The response status of the attendee. "
             "Possible values: 'needsAction', 'declined', 'tentative', 'accepted'."
-        )
+        ),
     ] = None
     organizer: Annotated[
         bool | None,
@@ -97,17 +98,14 @@ class Event(BaseModel):
     attendees: Annotated[
         List[Attendee] | None, Field(description="A list of attendees")
     ] = None
-    reminders: Annotated[Reminder | None, Field(description="Reminders settings for the event")] = None
+    reminders: Annotated[
+        Reminder | None, Field(description="Reminders settings for the event")
+    ] = None
 
 
 class CreateEvent(Event):
-    start: Annotated[
-        str,
-        Field(description="The (inclusive) start time of the event"),
-    ] = None
-    end: Annotated[
-        str | None, Field(description="The (exclusive) end time of the event")
-    ] = None
+    start: Annotated[str, Field(description="The (inclusive) start time of the event")]
+    end: Annotated[str, Field(description="The (exclusive) end time of the event")]
 
 
 class UpdateEvent(BaseModel):
@@ -133,7 +131,9 @@ class UpdateEvent(BaseModel):
             description="A list of attendees consisting in email and whether they are mandatory to participate or not"
         ),
     ] = None
-    reminders: Annotated[Reminder | None, Field(description="Reminders settings for the event")] = None
+    reminders: Annotated[
+        Reminder | None, Field(description="Reminders settings for the event")
+    ] = None
 
 
 class EventList(BaseModel):
