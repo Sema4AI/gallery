@@ -3,20 +3,14 @@ from typing import Annotated
 from pydantic import BaseModel, Field
 
 
-class CompanyResult(BaseModel):
+class Company(BaseModel):
     """Company entity data."""
 
     id: Annotated[str, Field(description="Company ID")]
     name: Annotated[str, Field(description="Company name")]
 
 
-class CompaniesResult(BaseModel):
-    """Companies search result object holding the queried information."""
-
-    companies: Annotated[list[CompanyResult], Field(description="Searched companies")]
-
-
-class ContactResult(BaseModel):
+class Contact(BaseModel):
     """Contact entity data."""
 
     id: Annotated[str, Field(description="Contact ID")]
@@ -25,13 +19,7 @@ class ContactResult(BaseModel):
     lastname: Annotated[str | None, Field("", description="Contact last name")]
 
 
-class ContactsResult(BaseModel):
-    """Contacts search result object holding the queried information."""
-
-    contacts: Annotated[list[ContactResult], Field(description="Searched contacts")]
-
-
-class DealResult(BaseModel):
+class Deal(BaseModel):
     """Deal entity data."""
 
     id: Annotated[str, Field(description="Deal ID")]
@@ -41,13 +29,7 @@ class DealResult(BaseModel):
     dealstage: Annotated[str, Field(description="Deal stage")]
 
 
-class DealsResult(BaseModel):
-    """Deals search result object holding the queried information."""
-
-    deals: Annotated[list[DealResult], Field(description="Searched deals")]
-
-
-class TicketResult(BaseModel):
+class Ticket(BaseModel):
     """Ticket entity data."""
 
     id: Annotated[str, Field(description="Ticket ID")]
@@ -58,13 +40,7 @@ class TicketResult(BaseModel):
     hs_pipeline_stage: Annotated[str, Field(description="Ticket status")]
 
 
-class TicketsResult(BaseModel):
-    """Tickets search result object holding the queried information."""
-
-    tickets: Annotated[list[TicketResult], Field(description="Searched tickets")]
-
-
-class ObjectResult(BaseModel):
+class _ObjectResult(BaseModel):
     """Object entity data."""
 
     id: Annotated[str, Field(description="Object ID")]
@@ -75,7 +51,7 @@ class ObjectResult(BaseModel):
         return list(cls.model_fields.keys())
 
 
-class TaskResult(ObjectResult):
+class Task(_ObjectResult):
     """Task object entity data."""
 
     hs_task_subject: Annotated[str, Field(description="Task title")]
@@ -93,9 +69,3 @@ class TaskResult(ObjectResult):
             "Status": self.hs_task_status,
         }
         return " | ".join(f"{prop}: {value}" for prop, value in props.items())
-
-
-class TasksResult(BaseModel):
-    """Tasks search result object holding the queried information."""
-
-    tasks: Annotated[list[TaskResult], Field(description="Searched tasks")]
