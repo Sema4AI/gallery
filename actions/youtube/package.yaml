@@ -1,0 +1,31 @@
+# Required: A short name for the action package
+name: YouTube
+
+# Required: A description of what's in the action package
+description: Search for videos and extract various details from YouTube videos.
+
+# Package version number, recommend using semver.org
+version: 1.0.0
+
+dependencies:
+  conda-forge:
+  - python=3.10.14
+  - uv=0.2.6
+  pypi:
+  - sema4ai-actions=0.9.2
+  - youtube_transcript_api=0.6.2
+  - youtube_search=2.1.2
+
+packaging:
+  # By default, all files and folders in this directory are packaged when uploaded.
+  # Add exclusion rules below (expects glob format: https://docs.python.org/3/library/glob.html)
+  exclude:
+    - ./.git/**
+    - ./.vscode/**
+    - ./devdata/**
+    - ./output/**
+    - ./.DS_store/**
+    - ./venv/**
+    - ./.venv/**
+    - ./**/*.pyc
+    - ./**/*.zip

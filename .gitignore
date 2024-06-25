@@ -1,0 +1,5 @@
+# Temporarily store secrets as env vars.
+.env
+.idea
+.venv
+.vscode

@@ -1,0 +1,47 @@
+{
+    "web_page": {
+        "url": "https://mikahanninen.dev/form-test",
+        "text_content": "  ",
+        "form": {
+            "url": "https://mikahanninen.dev/form-test",
+            "elements": [
+                {
+                    "type": "input",
+                    "placeholder": "Username",
+                    "aria_label": "",
+                    "id": "",
+                    "name": "username",
+                    "class_": "",
+                    "value_type": "text",
+                    "value_to_fill": "hessu",
+                    "options": []
+                },
+                {
+                    "type": "input",
+                    "placeholder": "Email",
+                    "aria_label": "",
+                    "id": "",
+                    "name": "email",
+                    "class_": "",
+                    "value_type": "email",
+                    "value_to_fill": "hessu@hopo.com",
+                    "options": []
+                },
+                {
+                    "type": "input",
+                    "placeholder": "",
+                    "aria_label": "",
+                    "id": "",
+                    "name": "",
+                    "class_": "",
+                    "value_type": "submit",
+                    "value_to_fill": "",
+                    "options": []
+                }
+            ]
+        },
+        "links": {
+            "links": []
+        }
+    }
+}
