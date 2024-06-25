@@ -4,15 +4,15 @@ Action Package interacting with Google Documents.
 
 Possible actions with this package are:
 
-- get document by name. 
-- get document by id.
+- Get Document By Name 
+- Get Document By Id
 
 Please note that the current implementation return the documents in Extended Markdown.
 
 ## Prompts
 
 ``` 
-`Give me a one phrase summary of the Leo document.` 
+Give me a one phrase summary of the Leo document. 
 ```
 
 > It seems there are multiple documents with similar names. Please specify which one you would like a summary of:

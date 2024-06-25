@@ -1,8 +1,8 @@
 # Required: A short name for the action package
-name: Google Documents
+name: Google Docs
 
 # Required: A description of what's in the action package.
-description: Pre-build actions to read Google Documents in markdown format.
+description: Pre-built AI actions to read Google documents in Markdown format
 
 # Package version number, recommend using semver.org
 version: 1.0.0
@@ -13,7 +13,7 @@ dependencies:
     - uv=0.2.6
   pypi:
     - sema4ai-actions=0.9.2
-    - pydantic=2.7.3
+    - pydantic=2.7.4
     - google-api-python-client=2.127.0
     - google-auth-oauthlib=1.2.0
     - google-auth-httplib2=0.2.0
