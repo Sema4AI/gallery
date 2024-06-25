@@ -133,8 +133,7 @@ def update_event(
     updates: UpdateEvent,
     calendar_id: str = "primary",
 ) -> Response[Event]:
-    """
-    Update an existing Google Calendar event with dynamic arguments.
+    """Update an existing Google Calendar event with dynamic arguments.
 
     Args:
         google_credentials: JSON containing Google OAuth2 credentials.
