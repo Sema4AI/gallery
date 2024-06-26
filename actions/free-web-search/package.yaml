@@ -1,0 +1,33 @@
+# Required: A short name for the action package
+name: Free Web Search
+
+# Required: A description of what's in the action package
+description: Web search without credentials using DuckDuckGo API
+
+# Package version number, recommend using semver.org
+version: 1.0.0
+
+dependencies:
+  conda-forge:
+    - python=3.10.14
+    - python-dotenv=1.0.1
+    - uv=0.2.6
+  pypi:
+    - sema4ai-actions=0.9.2
+    - pydantic=2.7.4
+    - requests=2.31.0
+    - duckduckgo-search=6.1.7
+
+packaging:
+  # By default, all files and folders in this directory are packaged when uploaded.
+  # Add exclusion rules below (expects glob format: https://docs.python.org/3/library/glob.html)
+  exclude:
+    - ./.git/**
+    - ./.vscode/**
+    - ./devdata/**
+    - ./output/**
+    - ./venv/**
+    - ./.venv/**
+    - ./.DS_store/**
+    - ./**/*.pyc
+    - ./**/*.zip
