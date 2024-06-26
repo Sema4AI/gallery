@@ -1,0 +1,34 @@
+from enum import Enum
+from pydantic import BaseModel, Field
+from typing import Dict
+
+
+class Location(BaseModel):
+    name: str = Field(description="Name of the location", default="")
+    url: str = Field(description="URL of the location", default="")
+
+
+class File(BaseModel):
+    location: Location = Field(description="Location details")
+    file: Dict = Field(description="File details", default={})
+
+
+class FileList(BaseModel):
+    files: list[File] = Field(description="List of files", default=[])
+
+
+class ColumnType(str, Enum):
+    text = "text"
+    boolean = "boolean"
+    datetime = "dateTime"
+    number = "number"
+
+
+class ListColumn(BaseModel):
+    column_name: str = Field(description="Name of the column", default="")
+    column_type: ColumnType = Field(description="Type of the column", default="")
+
+
+class SharepointList(BaseModel):
+    list_name: str = Field(description="Name of the list", default="")
+    columns: list[ListColumn] = Field(description="List of columns", default=[])
