@@ -9,14 +9,12 @@ Currently supporting:
 - download file
 """
 
-from sema4ai.actions import action, Secret
+from sema4ai.actions import action
 from robocorp import browser
 
 from dotenv import load_dotenv
 
-import asyncio
-import sys
-from duckduckgo_search import DDGS
+
 import os
 from pathlib import Path
 import requests
@@ -28,10 +26,6 @@ from models import (
     Form,
     Links,
     WebPage,
-    PlaceSearchResult,
-    PlaceSearchResultList,
-    SearchResultList,
-    SearchResult,
 )
 from support import (
     _ensure_https,
@@ -44,11 +38,6 @@ from support import (
 load_dotenv(Path(__file__).absolute().parent / "devdata" / ".env")
 
 HEADLESS_BROWSER = not os.getenv("HEADLESS_BROWSER")
-API_KEY_FIELD = "GOOGLE_SEARCH_API_KEY"
-CONTEXT_FIELD = "GOOGLE_SEARCH_CONTEXT"
-
-if sys.platform == "win32":
-    asyncio.set_event_loop_policy(asyncio.WindowsProactorEventLoopPolicy())
 
 
 @action(is_consequential=False)
@@ -151,110 +140,6 @@ def download_file(
     return df
 
 
-@action(is_consequential=False)
-def web_search_places(
-    place: str, city: str = "", country: str = "", radius: int = 10, count: int = 3
-) -> PlaceSearchResultList:
-    """Find places in a map location.
-
-    Returned link can be used to check opening hours for the place if hours
-    are not already included in the results.
-
-    Args:
-        place: place to search for
-        city: city to search on
-        country: country to search on
-        radius: radius to search on (in kilometers)
-        count: count on how many results to retrieve
-
-    Returns:
-        Details on the place search results.
-    """
-    ddgs = DDGS()
-    parameters = {"max_results": count}
-    if city:
-        parameters["city"] = city
-        parameters["radius"] = radius
-    if country:
-        parameters["country"] = country
-        parameters["radius"] = radius
-    results = ddgs.maps(place, **parameters)
-    items = []
-    for r in results:
-        place_result = PlaceSearchResult()
-        print(r)
-        if "title" in r.keys():
-            place_result.title = r["title"]
-        if "address" in r.keys():
-            place_result.address = r["address"]
-        if "phone" in r.keys():
-            place_result.phone = r["phone"]
-        if "desc" in r.keys():
-            place_result.desc = r["desc"]
-        if "source" in r.keys():
-            place_result.source = r["source"]
-        if "latitude" in r.keys():
-            place_result.latitude = str(r["latitude"])
-        if "longitude" in r.keys():
-            place_result.longitude = str(r["longitude"])
-        if "url" in r.keys():
-            place_result.url = r["url"]
-        if "category" in r.keys():
-            place_result.category = r["category"]
-        items.append(place_result)
-    return PlaceSearchResultList(results=items)
-
-
-@action(is_consequential=False)
-def google_search(
-    topic: str,
-    count: int = 3,
-    api_key: Secret = Secret.model_validate(os.getenv(API_KEY_FIELD, "")),
-    context: Secret = Secret.model_validate(os.getenv(CONTEXT_FIELD, "")),
-) -> SearchResultList:
-    """Performs Google Search to find information about a topic.
-
-    Secrets are required. Do not call if they are given.
-
-    To list all possible results use count=0.
-
-    Args:
-        topic: topic to search on
-        count: count on how many results to retrieve
-        api_key: the Google Custom Search API key
-        context: the Custom Search Engine ID
-
-    Returns:
-        Titles and links of the results.
-    """
-    url = "https://www.googleapis.com/customsearch/v1"
-    params = {
-        "key": api_key.value or os.getenv(API_KEY_FIELD, ""),
-        "cx": context.value or os.getenv(CONTEXT_FIELD, ""),
-        "q": topic,
-    }
-    response = requests.get(url, params=params)
-    result = response.json()
-    items = []
-    if "items" in result.keys():
-        for item in result["items"]:
-            items.append(
-                SearchResult(
-                    title=item["title"], link=item["link"], desc=item["snippet"]
-                )
-            )
-
-    message = f"Found {len(items)} results for '{topic}'"
-    if count > 0:
-        message += f" and returning {count} of those."
-    print(message)
-    return (
-        SearchResultList(results=items[:count])
-        if count > 0
-        else SearchResultList(results=items)
-    )
-
-
 @action(is_consequential=True)
 def fill_elements(
     web_page: WebPage,
@@ -308,23 +193,3 @@ def fill_elements(
         page.wait_for_load_state("domcontentloaded")
         page.wait_for_load_state("networkidle")
     return page.locator("//body").inner_text()
-
-
-@action(is_consequential=False)
-def web_search_news(topic: str, count: int = 3) -> SearchResultList:
-    """Performs DuckDuckGo Search to find news about a topic.
-
-    Args:
-        topic: topic to search on
-        count: count on how many results to retrieve
-
-    Returns:
-        Titles and links of the results.
-    """
-    ddgs = DDGS()
-    results = ddgs.news(topic, max_results=count)
-    items = []
-    for r in results:
-        print(r)
-        items.append(SearchResult(title=r["title"], link=r["url"]))
-    return SearchResultList(results=items)
