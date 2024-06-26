@@ -1,11 +1,8 @@
-"""Set of actions for searching and web browsing.
+"""Set of actions for web browsing.
 
 Currently supporting:
-- google search
 - scrape web page content and elements
 - fill form elements
-- search places in a map location
-- search news
 - download file
 """
 
@@ -42,8 +39,9 @@ HEADLESS_BROWSER = not os.getenv("HEADLESS_BROWSER")
 
 @action(is_consequential=False)
 def get_website_content(url: str) -> WebPage:
-    """Gets the text content, form elements, links and other elements of a website
-    if provided URL content-type is "text/html" otherwise returns just URL content.
+    """
+    Gets the text content, form elements, links and other elements of a website.
+    If content-type is not "text/html" then just URL content is returned.
 
     Args:
         url: the URL of the website
@@ -79,7 +77,8 @@ def get_website_content(url: str) -> WebPage:
 def download_file(
     file_url: str, max_filesize_in_megabytes: int = 100, target_folder: str = ""
 ) -> DownloadedFile:
-    """Download a file from the given URL.
+    """
+    Download a file from the given URL.
 
     Args:
         file_url: the URL of the file to download
@@ -144,7 +143,8 @@ def download_file(
 def fill_elements(
     web_page: WebPage,
 ) -> str:
-    """Fill form elements according to input values given in the Form object.
+    """
+    Fill form elements according to input values given in the Form object.
 
     Args:
         web_page:  details on the web page and its form elements
