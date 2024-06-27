@@ -1,0 +1,11 @@
+{
+    "site_name": "filesharing",
+    "token": {
+        "provider": "microsoft",
+        "scopes": [
+            "Sites.Read.All"
+        ],
+        "access_token": "<ACCESS_TOKEN>",
+        "metadata": {}
+    }
+}

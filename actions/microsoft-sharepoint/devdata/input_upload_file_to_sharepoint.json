@@ -1,0 +1,12 @@
+{
+    "location": "filesharing",
+    "filename": "README.md",
+    "token": {
+        "provider": "microsoft",
+        "scopes": [
+            "Files.ReadWrite"
+        ],
+        "access_token": "<ACCESS_TOKEN>",
+        "metadata": {}
+    }
+}

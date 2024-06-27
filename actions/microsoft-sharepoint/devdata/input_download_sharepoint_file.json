@@ -1,0 +1,13 @@
+{
+    "filename": "yaml",
+    "target_folder": "./devdata",
+    "download_all_matching": true,
+    "token": {
+        "provider": "microsoft",
+        "scopes": [
+            "Files.Read"
+        ],
+        "access_token": "<ACCESS_TOKEN>",
+        "metadata": {}
+    }
+}

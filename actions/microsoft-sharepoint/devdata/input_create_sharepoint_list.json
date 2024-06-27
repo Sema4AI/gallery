@@ -1,0 +1,20 @@
+{
+    "site_name": "Communication Site",
+    "sharepoint_list": {
+        "list_name": "Test List2",
+        "columns": [
+            {
+                "column_name": "Description",
+                "column_type": "number"
+            }
+        ]
+    },
+    "token": {
+        "provider": "microsoft",
+        "scopes": [
+            "Sites.Read.All"
+        ],
+        "access_token": "<ACCESS_TOKEN>",
+        "metadata": {}
+    }
+}
