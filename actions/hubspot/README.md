@@ -43,27 +43,6 @@ Show me the tasks in HubSpot matching "prebuilt" and list them by priority pleas
 >    * Created Date: 2024-04-29
 >    * Description: Hey, please take this task and sort it out so it is shown in our Prebuilt Action searching capability.
 
-## Authorization
-
-In order to allow the AI Actions access your resources, you need to supply a mandatory secret called the "access token".  
-This is a long-lived stable token that once generated, never expires, and it should be kept safe and rotated in case it gets leaked. Compared to an API key, this token is tied to a Private App that you need to create and generate the token with.
-
-Follow these steps to obtain a suitable access token:
-
-1. Go to [HubSpot](https://app.hubspot.com/) and select the account you want to give the actions access into.
-2. Click the cog button on the top-right side of the menu bar to get into "Settings" menu.
-   ![settings cog](./docs/images/1-settings-cog.png)
-3. From the left side pane, go to "Integrations" -> "Private Apps" and create such app.
-4. Make sure to add the required scopes. These represent the permissions you give to the actions when operating over the resources.  
-   At least the following permissions are required (used pipe `|` for simplicity):
-   - `crm.objects|schemas.companies|contacts|deals.read`, `crm.export`
-   - `tickets`
-   - `actions`
-
-   ![app scopes config](./docs/images/2-app-scopes-config.png)
-5. With the app created and sufficient scopes set in, you can now retrieve the generated access token and use it in the UI during the action deployment.
-   ![app auth access token](./docs/images/3-app-auth-access-token.png)
-
 ## Caveats
 
 - The search is quite basic, not supporting yet complex queries, nor filtering and sorting the results.
