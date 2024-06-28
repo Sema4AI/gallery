@@ -38,7 +38,7 @@ jobs:
           cd bin/publisher
           ls -la
 
-          aws s3 cp ../version.txt $S3_BASE_URL/version.txt --cache-control max-age=120 --content-type "text/plain"
+          aws s3 cp version.txt $S3_BASE_URL/version.txt --cache-control max-age=120 --content-type "text/plain"
 
           #aws s3 cp manifest.json $S3_BASE_URL/manifest.json --cache-control max-age=120 #--content-type "text/plain"
 
