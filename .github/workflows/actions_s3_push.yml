@@ -19,10 +19,10 @@ jobs:
 
       - name: Generate Gallery structure
         run: |
-          curl -L -o rcc_runner "https://cdn.sema4.ai/rcc/releases/${{ env.RCC_VERSION }}/linux64/rcc"
-          chmod +x rcc_runner
-          ./rcc_runner run -t "Generate the whole gallery"
-        working-directory: ./bin/publisher
+          cd bin
+          curl -L -o rcc "https://cdn.sema4.ai/rcc/releases/${{ env.RCC_VERSION }}/linux64/rcc"
+          chmod +x rcc
+          ./rcc run -r publisher/robot.yaml -t "Generate the whole gallery"
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -37,9 +37,12 @@ jobs:
           cd bin/publisher/gallery
           ls -la
 
-          aws s3 cp manifest.json $S3_BASE_URL/manifest.json --cache-control max-age=120 --content-type "text/plain"
-
-           Copy all subdirectories with cache-control max-age=31536000
+          # Copy the Action Package subdirectories
+          # cache-control max-age=31536000, because these should be immutable
           for dir in */; do
             aws s3 cp "$dir" "$S3_BASE_URL/$dir" --recursive --cache-control max-age=31536000
           done
+
+          # Copy the updated manifest
+          aws s3 cp manifest.json $S3_BASE_URL/manifest.json --cache-control max-age=120 --content-type "text/plain"
+
