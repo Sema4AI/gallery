@@ -11,7 +11,7 @@ import logging
 logging.basicConfig(level=logging.INFO)
 
 base_path = os.path.abspath(".")
-as_version = "0.15.1"
+as_version = "0.15.2"
 rcc_version = "v18.1.1"
 
 def sha256(filepath, hash_type='sha256'):

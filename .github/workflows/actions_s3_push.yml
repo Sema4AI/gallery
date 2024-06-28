@@ -7,7 +7,9 @@ on:
 jobs:
   Publish:
     runs-on: ubuntu-latest
-
+    permissions:
+      id-token: write # required by AWS aws-actions/configure-aws-credentials
+      contents: read
     env:
       RCC_VERSION: v18.1.1
 
@@ -19,7 +21,8 @@ jobs:
         run: |
           curl -L -o rcc_runner "https://cdn.sema4.ai/rcc/releases/${{ env.RCC_VERSION }}/linux64/rcc"
           chmod +x rcc_runner
-          ./rcc_runner run -t "Generate the whole gallery"
+          #./rcc_runner run -t "Generate the whole gallery"
+          ./rcc_runner version > version.txt
         working-directory: ./bin/publisher
 
       - name: Configure AWS credentials
@@ -33,10 +36,12 @@ jobs:
           echo "Initializing Gallery S3"
           S3_BASE_URL="s3://downloads.robocorp.com/gallery/actions"
           
-          aws s3 cp manifest.json $S3_BASE_URL/manifest.json --cache-control max-age=120 --content-type "text/plain"
+          aws s3 cp ../version.txt $S3_BASE_URL/version.txt --cache-control max-age=120 --content-type "text/plain"
+
+          #aws s3 cp manifest.json $S3_BASE_URL/manifest.json --cache-control max-age=120 #--content-type "text/plain"
 
           # Copy all subdirectories with cache-control max-age=31536000
-          for dir in */; do
-            aws s3 cp "$dir" "$S3_BASE_URL/$dir" --recursive --cache-control max-age=31536000
-          done
+          #for dir in */; do
+          #  aws s3 cp "$dir" "$S3_BASE_URL/$dir" --recursive --cache-control max-age=31536000
+          #done
         working-directory: ./bin/publisher/gallery
