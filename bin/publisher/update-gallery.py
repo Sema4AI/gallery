@@ -13,12 +13,11 @@ base_url = "https://cdn.sema4.ai/gallery/actions/"
 
 @task
 def add_single_package_task():
-    # TODO: Figure out how to get this in.. env. variable in GHA..?
-    package_name = 'browsing'
     manifest = download_and_parse_json("https://cdn.sema4.ai/gallery/actions/manifest.json")
-    print(manifest)
-    
     input_folder = os.path.abspath(os.path.join(script_dir, f'../../actions/{package_name}'))
+    # TODO: Determine based on the manifest and the content of input_folder the packages that need an update.
+    package_name = 'browsing'
+
     rcc_path = download_rcc()
     action_server_path = download_action_server()
     
