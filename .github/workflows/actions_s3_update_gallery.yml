@@ -1,4 +1,4 @@
-name: AI Actions S3 Publish
+name: Actions - Update Actions to S3 Gallery
 
 on:
   workflow_dispatch:
@@ -17,12 +17,21 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Check if manifest.json exists
+        run: |
+          if curl --head --silent --fail https://cdn.sema4.ai/gallery/actions/manifest.json; then
+            echo "manifest.json exists. Stopping the workflow."
+            exit 0
+          else
+            echo "manifest.json does not exist. Proceeding with the workflow."
+          fi
+
       - name: Generate Gallery structure
         run: |
           cd bin
           curl -L -o rcc "https://cdn.sema4.ai/rcc/releases/${{ env.RCC_VERSION }}/linux64/rcc"
           chmod +x rcc
-          ./rcc run -r publisher/robot.yaml -t "Generate the whole gallery"
+          ./rcc run -r publisher/robot.yaml -t "Update gallery"
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -37,12 +46,12 @@ jobs:
           cd bin/publisher/gallery
           ls -la
 
+          echo "TBD: what to push and what order"
           # Copy the Action Package subdirectories
           # cache-control max-age=31536000, because these should be immutable
-          for dir in */; do
-            aws s3 cp "$dir" "$S3_BASE_URL/$dir" --recursive --cache-control max-age=31536000
-          done
+          #for dir in */; do
+          #  aws s3 cp "$dir" "$S3_BASE_URL/$dir" --recursive --cache-control max-age=31536000
+          #done
 
           # Copy the updated manifest
-          aws s3 cp manifest.json $S3_BASE_URL/manifest.json --cache-control max-age=120 --content-type "text/plain"
-
+          #aws s3 cp manifest.json $S3_BASE_URL/manifest.json --cache-control max-age=120 --content-type "text/plain"
