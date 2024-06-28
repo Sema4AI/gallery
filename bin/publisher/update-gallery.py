@@ -6,8 +6,8 @@ from extractor import extract_single_zip
 from builder import build_single_package
 
 # Define the input, output, and extracted folders
-zips_folder = os.path.abspath(r".\zips")
-results_folder = os.path.abspath(r".\result")
+zips_folder = os.path.abspath("/zips")
+results_folder = os.path.abspath("/result")
 base_url = "https://cdn.sema4.ai/gallery/actions/"
 script_dir = os.path.dirname(os.path.abspath(__file__))
 
