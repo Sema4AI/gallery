@@ -5,3 +5,5 @@
 .vscode
 .pyc
 __pycache__/
+*.exe
+*.zip
