@@ -17,7 +17,7 @@ from hubspot.crm.contacts import PublicObjectSearchRequest as ContactSearchReque
 from hubspot.crm.deals import PublicObjectSearchRequest as DealSearchRequest
 from hubspot.crm.objects import PublicObjectSearchRequest as ObjectSearchRequest
 from hubspot.crm.tickets import PublicObjectSearchRequest as TicketSearchRequest
-from sema4ai.actions import OAuth2Secret, Response, Secret, action
+from sema4ai.actions import OAuth2Secret, Response, action
 
 from models import (
     Company,
