@@ -23,19 +23,9 @@ def read_metadata_json(metadata_path):
                         actions.append(details['summary'])
     return actions
 
-def compute_directory_hash(directory_path):
-    folder_hash = hashlib.sha256()
-    for filename in os.listdir(directory_path):
-        file_path = os.path.join(directory_path, filename)
-        if os.path.isfile(file_path):
-            with open(file_path, 'rb') as f:
-                for chunk in iter(lambda: f.read(4096), b""):
-                    folder_hash.update(chunk)
-    return folder_hash.digest()
-
 def generate_manifest(gallery_actions_folder, base_url):
     manifest = {'action_packages': []}
-    all_hashes = []
+    all_package_hashes = []
 
     for action_name in os.listdir(gallery_actions_folder):
         action_path = os.path.join(gallery_actions_folder, action_name)
@@ -65,7 +55,8 @@ def generate_manifest(gallery_actions_folder, base_url):
                         'zip_hash': zip_hash
                     }
                     versions_info.append(version_info)
-                    all_hashes.append(compute_directory_hash(version_path))
+                    if zip_hash:
+                        all_package_hashes.append(zip_hash)
 
             if versions_info:
                 action_package = {
@@ -74,10 +65,10 @@ def generate_manifest(gallery_actions_folder, base_url):
                 }
                 manifest['action_packages'].append(action_package)
 
-    # Compute a single hash over all individual folder hashes
+    # Compute a single hash over all the package.hash values
     total_hash = hashlib.sha256()
-    for h in sorted(all_hashes):
-        total_hash.update(h)
+    for package_hash in sorted(all_package_hashes):
+        total_hash.update(package_hash.encode('utf-8'))
     manifest['total_hash'] = total_hash.hexdigest()
 
     # Write manifest to file
