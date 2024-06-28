@@ -6,10 +6,11 @@ from extractor import extract_and_rename
 from builder import build_action_packages
 
 # Define the input, output, and extracted folders
-zips_folder = os.path.abspath("/zips")
-results_folder = os.path.abspath("/result")
-base_url = "https://cdn.sema4.ai/gallery/actions/"
 script_dir = os.path.dirname(os.path.abspath(__file__))
+zips_folder = os.path.join(script_dir, "zips")
+gallery_actions_folder = os.path.join(script_dir, "gallery")
+base_url = "https://cdn.sema4.ai/gallery/actions/"
+
 
 @task
 def main_task():
@@ -18,6 +19,7 @@ def main_task():
     action_server_path = download_action_server()
     clear_folders(zips_folder)
     build_action_packages(input_folder, zips_folder, action_server_path)
-    clear_folders(results_folder)
-    extract_and_rename(zips_folder, results_folder, rcc_path)
-    generate_manifest(results_folder, base_url)
+    clear_folders(gallery_actions_folder)
+    extract_and_rename(zips_folder, gallery_actions_folder, rcc_path)
+    generate_manifest(gallery_actions_folder, base_url)
+    print(f"\n\n-> Gallery generated in: {gallery_actions_folder}")

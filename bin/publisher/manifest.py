@@ -33,12 +33,12 @@ def compute_directory_hash(directory_path):
                     folder_hash.update(chunk)
     return folder_hash.digest()
 
-def generate_manifest(results_folder, base_url):
+def generate_manifest(gallery_actions_folder, base_url):
     manifest = {'action_packages': []}
     all_hashes = []
 
-    for action_name in os.listdir(results_folder):
-        action_path = os.path.join(results_folder, action_name)
+    for action_name in os.listdir(gallery_actions_folder):
+        action_path = os.path.join(gallery_actions_folder, action_name)
         if os.path.isdir(action_path):
             versions_info = []
             for version_dir in os.listdir(action_path):
@@ -81,5 +81,5 @@ def generate_manifest(results_folder, base_url):
     manifest['total_hash'] = total_hash.hexdigest()
 
     # Write manifest to file
-    with open(os.path.join(results_folder, "manifest.json"), 'w') as manifest_file:
+    with open(os.path.join(gallery_actions_folder, "manifest.json"), 'w') as manifest_file:
         json.dump(manifest, manifest_file, indent=2)

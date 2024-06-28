@@ -15,7 +15,7 @@ def build_single_package(sub_folder_path, zips_folder, action_server_path):
     if os.path.isfile(package_yaml_path):
         command = f"\"{action_server_path}\" package build --output-dir {zips_folder} --override"
         try:
-            print(f"\n>>>>>>>> Running: {sub_folder_path}")
+            print(f">>> Running: {sub_folder_path}")
             subprocess.run(command, shell=True, check=True, cwd=sub_folder_path)
         except subprocess.CalledProcessError as e:
             log_error(sub_folder_path, str(e))

@@ -6,10 +6,10 @@ from extractor import extract_single_zip
 from builder import build_single_package
 
 # Define the input, output, and extracted folders
-zips_folder = os.path.abspath("/zips")
-results_folder = os.path.abspath("/result")
-base_url = "https://cdn.sema4.ai/gallery/actions/"
 script_dir = os.path.dirname(os.path.abspath(__file__))
+zips_folder = os.path.join(script_dir, "zips")
+gallery_actions_folder = os.path.join(script_dir, "gallery")
+base_url = "https://cdn.sema4.ai/gallery/actions/"
 
 @task
 def add_single_package_task():
@@ -26,12 +26,13 @@ def add_single_package_task():
     # Extract and rename only for the specified package zip file
     specific_zip_path = os.path.join(zips_folder, f"{package_name}.zip")
     if os.path.exists(specific_zip_path):
-        extract_single_zip(specific_zip_path, results_folder, rcc_path)
+        extract_single_zip(specific_zip_path, gallery_actions_folder, rcc_path)
     else:
         print(f"No zip file found for package '{specific_zip_path}'. Check the build process or package name.")
     
     # Generate manifest for only the newly added package
     # TODO: The manifest.json needs to be done over everything in S3
     #       so we probably need to download all, or have this running in AWS as Lambda or something that reacts to changes
-    generate_manifest(results_folder, base_url)
+    generate_manifest(gallery_actions_folder, base_url)
+ 
 

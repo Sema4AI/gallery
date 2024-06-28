@@ -4,9 +4,9 @@ import subprocess
 import zipfile
 from utils import log_error, sha256, package_yaml_from_zip
 
-def extract_single_zip(zip_path, results_folder, rcc_path):
+def extract_single_zip(zip_path, gallery_actions_folder, rcc_path):
     """Extracts and processes a single zip file using version data from package.yaml."""
-    base_extract_path = os.path.join(results_folder, os.path.splitext(os.path.basename(zip_path))[0])
+    base_extract_path = os.path.join(gallery_actions_folder, os.path.splitext(os.path.basename(zip_path))[0])
     os.makedirs(base_extract_path, exist_ok=True)
 
     # Open the zip file to check contents and extract package.yaml to get the version
@@ -45,12 +45,12 @@ def extract_single_zip(zip_path, results_folder, rcc_path):
             except subprocess.CalledProcessError as e:
                 log_error(versioned_extract_path, f"Failed to run RCC on {package_yaml_path}: {str(e)}")
 
-def extract_and_rename(zips_folder, results_folder, rcc_path):
+def extract_and_rename(zips_folder, gallery_actions_folder, rcc_path):
     """Iterates over all zip files in the directory and processes each one."""
-    if not os.path.exists(results_folder):
-        os.makedirs(results_folder)
+    if not os.path.exists(gallery_actions_folder):
+        os.makedirs(gallery_actions_folder)
 
     for file_name in os.listdir(zips_folder):
         if file_name.endswith(".zip"):
             zip_path = os.path.join(zips_folder, file_name)
-            extract_single_zip(zip_path, results_folder, rcc_path)
+            extract_single_zip(zip_path, gallery_actions_folder, rcc_path)

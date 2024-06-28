@@ -39,4 +39,4 @@ jobs:
           for dir in */; do
             aws s3 cp "$dir" "$S3_BASE_URL/$dir" --recursive --cache-control max-age=31536000
           done
-        working-directory: ./bin/publisher/result
+        working-directory: ./bin/publisher/gallery
