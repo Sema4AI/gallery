@@ -35,7 +35,9 @@ jobs:
         run: |
           echo "Initializing Gallery S3"
           S3_BASE_URL="s3://downloads.robocorp.com/gallery/actions"
-          
+          cd bin/publisher
+          ls -la
+
           aws s3 cp ../version.txt $S3_BASE_URL/version.txt --cache-control max-age=120 --content-type "text/plain"
 
           #aws s3 cp manifest.json $S3_BASE_URL/manifest.json --cache-control max-age=120 #--content-type "text/plain"
@@ -44,4 +46,3 @@ jobs:
           #for dir in */; do
           #  aws s3 cp "$dir" "$S3_BASE_URL/$dir" --recursive --cache-control max-age=31536000
           #done
-        working-directory: ./bin/publisher/gallery
