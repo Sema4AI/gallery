@@ -95,6 +95,12 @@ def get_repo(url, extract_to, exclude_dirs=None):
         url (str): URL to download the zip file.
         extract_to (str): Directory path where the zip file should be extracted.
         exclude_dirs (list, optional): List of directory names to exclude from extraction.
+
+    Example:
+        url = "https://github.com/Sema4AI/gallery/archive/refs/heads/main.zip"
+        extract_to = os.path.abspath('./temp')
+        exclude_dirs = ['gallery-main/agents', 'gallery-main/actions/bin', 'gallery-main/.github']
+        input_folder = os.path.join(get_repo(url, extract_to, exclude_dirs), 'gallery-main/actions')
     """
     # Ensure the extraction path is cleared before extraction
     if os.path.exists(extract_to):
@@ -126,6 +132,12 @@ def get_folder_from_repo(url, extract_to, include_dir):
         url (str): URL to download the zip file.
         extract_to (str): Directory path where the zip file should be extracted.
         include_dir (str): Specific directory to include in extraction.
+
+    Example:
+       url = "https://github.com/Sema4AI/gallery/archive/refs/heads/main.zip"
+       extract_to = os.path.abspath('./temp')
+       package_name = 'browsing'
+       input_folder = get_folder_from_repo(url, extract_to, f'gallery-main/actions/{package_name}')
     """
     # Ensure the extraction path is cleared before extraction
     if os.path.exists(extract_to):
