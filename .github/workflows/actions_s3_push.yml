@@ -5,7 +5,7 @@ on:
     # Enables manual triggering via GitHub Actions
 
 jobs:
-  run-rcc:
+  Publish:
     runs-on: ubuntu-latest
 
     env:
@@ -15,17 +15,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Download RCC executable
+      - name: Generate Gallery structure
         run: |
           curl -L -o rcc "https://cdn.sema4.ai/rcc/releases/${{ env.RCC_VERSION }}/linux64/rcc"
           chmod +x rcc
-
-      - name: Run RCC command
-        run: |
           ./rcc run -t "Generate the whole gallery"
         working-directory: ./bin/publisher
 
-      - name: Configure AWS credentials Dropbox bucket
+      - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-region: eu-west-1
