@@ -17,9 +17,9 @@ jobs:
 
       - name: Generate Gallery structure
         run: |
-          curl -L -o rcc "https://cdn.sema4.ai/rcc/releases/${{ env.RCC_VERSION }}/linux64/rcc"
-          chmod +x rcc
-          ./rcc run -t "Generate the whole gallery"
+          curl -L -o rcc_runner "https://cdn.sema4.ai/rcc/releases/${{ env.RCC_VERSION }}/linux64/rcc"
+          chmod +x rcc_runner
+          ./rcc_runner run -t "Generate the whole gallery"
         working-directory: ./bin/publisher
 
       - name: Configure AWS credentials
