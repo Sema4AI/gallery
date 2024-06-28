@@ -27,7 +27,7 @@ def compute_directory_hash(directory_path):
     folder_hash = hashlib.sha256()
     for filename in os.listdir(directory_path):
         file_path = os.path.join(directory_path, filename)
-        if os.path.isfile(file_path):  # Ensure the path is a file
+        if os.path.isfile(file_path):
             with open(file_path, 'rb') as f:
                 for chunk in iter(lambda: f.read(4096), b""):
                     folder_hash.update(chunk)
@@ -56,6 +56,7 @@ def generate_manifest(gallery_actions_folder, base_url):
 
                     version_info = {
                         'version': package_data.get('version', version_dir),
+                        'description': package_data.get('description', 'No description provided.'),
                         'zip': f"{base_url}{action_name}/{version_dir}/{action_name}.zip",
                         'icon': f"{base_url}{action_name}/{version_dir}/package.png",
                         'metadata': f"{base_url}{action_name}/{version_dir}/metadata.json",
@@ -69,7 +70,6 @@ def generate_manifest(gallery_actions_folder, base_url):
             if versions_info:
                 action_package = {
                     'name': package_data.get('name', action_name),
-                    'description': package_data.get('description', 'No description provided.'),
                     'versions': versions_info
                 }
                 manifest['action_packages'].append(action_package)
