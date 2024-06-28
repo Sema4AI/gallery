@@ -5,6 +5,7 @@ import requests
 import platform
 import yaml
 import zipfile
+import json
 from io import BytesIO
 import logging
 
@@ -213,3 +214,25 @@ def package_yaml_from_zip(zip_ref, extract_path):
         os.remove(yaml_path)  # Clean up the temporary file
         return package_data
     return {}
+
+def download_and_parse_json(url):
+    """
+    Downloads and parses a JSON file from a specified URL.
+
+    Parameters:
+        url (str): The URL from which to download the JSON data.
+
+    Returns:
+        dict: A dictionary containing the parsed JSON data.
+        None: If an error occurs during download or parsing.
+    """
+    try:
+        response = requests.get(url)
+        response.raise_for_status()  # Raises an HTTPError for bad responses
+        json_data = response.json()  # Parses the JSON response into a dictionary
+        return json_data
+    except requests.RequestException as e:
+        print(f"Error downloading data: {e}")
+    except json.JSONDecodeError:
+        print("Failed to parse JSON.")
+    return None

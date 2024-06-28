@@ -1,6 +1,6 @@
 from robocorp.tasks import task
 import os
-from utils import download_action_server, download_rcc
+from utils import download_action_server, download_rcc, download_and_parse_json
 from manifest import generate_manifest
 from extractor import extract_single_zip
 from builder import build_single_package
@@ -15,7 +15,9 @@ base_url = "https://cdn.sema4.ai/gallery/actions/"
 def add_single_package_task():
     # TODO: Figure out how to get this in.. env. variable in GHA..?
     package_name = 'browsing'
-
+    manifest = download_and_parse_json("https://cdn.sema4.ai/gallery/actions/manifest.json")
+    print(manifest)
+    
     input_folder = os.path.abspath(os.path.join(script_dir, f'../../actions/{package_name}'))
     rcc_path = download_rcc()
     action_server_path = download_action_server()
