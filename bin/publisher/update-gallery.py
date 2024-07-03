@@ -13,10 +13,11 @@ base_url = "https://cdn.sema4.ai/gallery/actions/"
 
 @task
 def add_single_package_task():
+    package_name = 'browsing'
+
     manifest = download_and_parse_json("https://cdn.sema4.ai/gallery/actions/manifest.json")
     input_folder = os.path.abspath(os.path.join(script_dir, f'../../actions/{package_name}'))
     # TODO: Determine based on the manifest and the content of input_folder the packages that need an update.
-    package_name = 'browsing'
 
     rcc_path = download_rcc()
     action_server_path = download_action_server()
@@ -33,7 +34,7 @@ def add_single_package_task():
     
     # Generate manifest for only the newly added package
     # TODO: The manifest.json needs to be done over everything in S3
-    #       so we probably need to download all, or have this running in AWS as Lambda or something that reacts to changes
+    # so we probably need to download all, or have this running in AWS as Lambda or something that reacts to changes
     generate_manifest(gallery_actions_folder, base_url)
  
 
