@@ -1,17 +1,12 @@
 import itertools
+from abc import ABC, abstractmethod
 from typing import Annotated, Any, Iterable, Union
+from uuid import uuid4
 
-from pydantic import (
-    AliasPath,
-    BaseModel,
-    Extra,
-    Field,
-    Tag,
-    ValidationInfo,
-    field_validator,
-    model_validator,
-)
+from pydantic import AliasPath, BaseModel, Field, Tag, field_validator, model_validator
+from pydantic_core.core_schema import ValidationInfo
 from typing_extensions import Self
+from utils.template import TemplateVarsType, get_tags_from_str
 
 
 class _MarkdownContext:
@@ -36,33 +31,48 @@ class _UnorderedListId(str):
     pass
 
 
-class _BaseStructuralElement(BaseModel, extra="ignore"):
-    # Every element has a start_index and an end_index,
-    # uncomment the lines bellow to expose them.
-
-    # start_index: Annotated[int | None, Field(validation_alias="startIndex")] = None
-    # end_index: Annotated[int | None, Field(validation_alias="endIndex")] = None
-
+class _DocumentOperationsMixin(ABC):
+    @abstractmethod
     def to_markdown(self, ctx: _MarkdownContext) -> str:
         raise NotImplementedError(f"{self.__class__}.to_markdown()")
 
+    @abstractmethod
+    def get_template_tags(self, template_vars: dict[str, TemplateVarsType]):
+        raise NotImplementedError(f"{self.__class__}.get_template_tags()")
 
-class _TextElementStyle(BaseModel, extra="ignore"):
+    @abstractmethod
+    def apply_template_variables(self, template_vars: dict[str, str]):
+        raise NotImplementedError(f"{self.__class__}.apply_template_variables()")
+
+
+class _BaseStructuralElement(BaseModel, extra="ignore"):
+    start_index: Annotated[int | None, Field(validation_alias="startIndex")] = None
+    end_index: Annotated[int | None, Field(validation_alias="endIndex")] = None
+
+
+class _TextStyleLink(BaseModel):
+    url: str
+
+
+class TextStyle(BaseModel, extra="ignore"):
     bold: bool = False
     italic: bool = False
     strikethrough: bool = False
+    link: _TextStyleLink | None = None
+
+    @classmethod
+    def new_link(cls, url: str):
+        return TextStyle(link=_TextStyleLink(url=url))
 
 
-class TextElementBase(_BaseStructuralElement, extra="ignore"):
+class _TextElementBase(_BaseStructuralElement, extra="ignore"):
     text: Annotated[str, Field(validation_alias=AliasPath("textRun", "content"))]
     link: Annotated[
         str, Field(validation_alias=AliasPath("link", "textStyle", "link"))
     ] = None
     text_style: Annotated[
-        _TextElementStyle,
-        Field(
-            validation_alias="textStyle", default_factory=lambda: _TextElementStyle()
-        ),
+        TextStyle,
+        Field(validation_alias="textStyle", default_factory=lambda: TextStyle()),
     ]
 
     def to_markdown(self, ctx: _MarkdownContext) -> str:
@@ -81,6 +91,9 @@ class TextElementBase(_BaseStructuralElement, extra="ignore"):
             return f"~~{text}~~"
 
         return self.text
+
+    def get_template_tags(self, template_vars: dict[str, TemplateVarsType]):
+        template_vars.update(get_tags_from_str(self.text))
 
 
 class _ImageElementBase(_BaseStructuralElement, extra="ignore"):
@@ -106,13 +119,13 @@ class _ImageElementBase(_BaseStructuralElement, extra="ignore"):
                 raise ValueError("Invalid image element")
 
     def to_markdown(self, ctx: _MarkdownContext) -> str:
-        return f"![{self.title or 'Image'}]({self.image_url})"
+        return f"![{self.title or f'Image {uuid4()}'}]({self.image_url})"
 
 
 class _ParagraphData(
     _BaseStructuralElement, extra="ignore", arbitrary_types_allowed=True
 ):
-    elements: list[TextElementBase | _ImageElementBase]
+    elements: list[_TextElementBase | _ImageElementBase]
     style: Annotated[
         str, Field(validation_alias=AliasPath("paragraphStyle", "namedStyleType"))
     ] = None
@@ -170,12 +183,28 @@ class _ParagraphData(
 
         return body
 
+    def get_template_tags(self, template_vars: dict[str, TemplateVarsType]):
+        for element in self.elements:
+            element.get_template_tags(template_vars)
+
+    def apply_template_variables(self, template_vars: dict[str, str]):
+        new_text = []
+        for element in self.elements:
+            if text := element.substitute_template_tags(template_vars):
+                new_text.append(text)
+
 
 class _Paragraph(_BaseStructuralElement):
     paragraph: _ParagraphData
 
     def to_markdown(self, ctx: _MarkdownContext) -> str:
         return self.paragraph.to_markdown(ctx)
+
+    def get_template_tags(self, template_vars: dict[str, TemplateVarsType]):
+        return self.paragraph.get_template_tags(template_vars)
+
+    def apply_template_variables(self, template_vars: dict[str, str]):
+        self.paragraph.apply_template_variables(template_vars)
 
 
 class _SectionBreak(_BaseStructuralElement):
@@ -189,14 +218,20 @@ class _SectionBreak(_BaseStructuralElement):
 
         return v
 
-    def to_markdown(self, ctx: _MarkdownContext) -> str:
+    def to_markdown(self, _ctx: _MarkdownContext) -> str:
         return "\n---\n"
+
+    def get_template_tags(self, template_vars: dict[str, TemplateVarsType]):
+        pass
+
+    def apply_template_variables(self, template_vars: dict[str, str]):
+        pass
 
 
 class _TableData(_BaseStructuralElement):
     rows: int = 0
     columns: int = 0
-    cells: list[list["_Content"]]
+    data: list[list["_Content"]]
 
     @model_validator(mode="before")
     @classmethod
@@ -212,7 +247,7 @@ class _TableData(_BaseStructuralElement):
         return data
 
     def to_markdown(self, ctx: _MarkdownContext) -> str:
-        rows = iter(self.cells)
+        rows = iter(self.data)
 
         if (table_header := next(rows, None)) is None:
             return ""
@@ -226,6 +261,11 @@ class _TableData(_BaseStructuralElement):
             body += self._build_row(cell.to_markdown(ctx).strip() for cell in row)
 
         return body
+
+    def get_template_tags(self, template_vars: dict[str, TemplateVarsType]):
+        for row in self.data:
+            for cell in row:
+                template_vars.update(cell.get_template_tags(template_vars))
 
     @staticmethod
     def _build_row(items: Iterable[str]) -> str:
@@ -267,35 +307,35 @@ class _Content(BaseModel, extra="ignore"):
     def to_markdown(self, ctx: _MarkdownContext) -> str:
         return "\n".join(c.to_markdown(ctx) for c in self.content)
 
+    def get_template_tags(self, template_vars: dict[str, TemplateVarsType]):
+        for content in self.content:
+            content.get_template_tags(template_vars)
 
-class _Document(BaseModel, extra=Extra.ignore):
-    # Model used to parse the Google API response..
+    def apply_template_variables(self, template_vars: dict[str, str]):
+        for content in self.content:
+            content.apply_template_variables(template_vars)
 
-    title: str
-    document_id: Annotated[
-        str, Field(validation_alias="documentId", serialization_alias="documentId")
+
+class DocumentInfo(BaseModel, extra="ignore", populate_by_name=True):
+    # Model used to structure the action response.
+    title: Annotated[str, Field(description="The title of the document.")]
+    documentId: Annotated[
+        str,
+        Field(
+            description="The ID of the document.",
+            # alias="documentId",
+            # serialization_alias="document_id",
+        ),
     ]
+
+
+class RawDocument(DocumentInfo):
+    # Model used to parse the Google API response..
     body: _Content
 
     @classmethod
     def from_google_response(cls, data: dict) -> Self:
-        return
-
-    def to_markdown(self) -> str:
-        return self.body.to_markdown(_MarkdownContext()).strip()
-
-
-class Document(BaseModel):
-    # Model used to structure the action response.
-    title: Annotated[str, Field(description="The title of the document.")]
-    document_id: Annotated[str, Field(description="The ID of the document.")]
-    body: Annotated[
-        str, Field(description="The body of the document written in Extended Markdown.")
-    ]
-
-    @classmethod
-    def from_google_response(cls, data: dict) -> Self:
-        document = _Document.model_validate(
+        return cls.model_validate(
             data,
             context={
                 "inline_objects": data.get("inlineObjects"),
@@ -303,8 +343,20 @@ class Document(BaseModel):
             },
         )
 
-        return Document(
+    def to_markdown(self) -> str:
+        return self.body.to_markdown(_MarkdownContext()).strip()
+
+
+class MarkdownDocument(DocumentInfo):
+    body: Annotated[
+        str | None,
+        Field(description="The body of the document written in Extended Markdown."),
+    ] = None
+
+    @classmethod
+    def from_raw_document(cls, document: RawDocument) -> Self:
+        return MarkdownDocument(
             title=document.title,
-            document_id=document.document_id,
+            documentId=document.documentId,
             body=document.to_markdown(),
         )

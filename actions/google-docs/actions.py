@@ -9,8 +9,10 @@ from sema4ai.actions import (
     Response,
     action,
 )
+from typing_extensions import Self
 
-from models import Document
+from models.documents import DocumentInfo, MarkdownDocument, RawDocument
+from models.update_operations import BatchUpdateBody
 
 
 class Context:
@@ -36,7 +38,7 @@ class Context:
 
         return self._drive.files()
 
-    def __enter__(self):
+    def __enter__(self) -> Self:
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
@@ -52,13 +54,18 @@ class Context:
 
 @action
 def get_document_by_name(
+    name: str,
     oauth_access_token: OAuth2Secret[
         Literal["google"],
         list[Literal["https://www.googleapis.com/auth/drive.readonly"]],
     ],
-    name: str,
-) -> Response[Document]:
+) -> Response[MarkdownDocument]:
     """Get a Google Document by its name.
+
+    If multiple documents with the same name are found,
+    you need to use the ID of the document to load it.
+    Hint: Copy-pasting the URL of the document in the Agent will allow it to fetch the document by ID
+
     Apostrophes in the title need to be escaped with a backslash.
     The result is the Document formatted using the Extended Markdown Syntax.
 
@@ -70,17 +77,21 @@ def get_document_by_name(
     """
 
     with Context(oauth_access_token) as ctx:
-        return Response(result=_load_document(ctx, _get_document_id(ctx, name)))
+        return Response(
+            result=MarkdownDocument.from_raw_document(
+                _load_raw_document(ctx, _get_document_id(ctx, name))
+            )
+        )
 
 
 @action
 def get_document_by_id(
+    document_id: str,
     oauth_access_token: OAuth2Secret[
         Literal["google"],
         list[Literal["https://www.googleapis.com/auth/documents.readonly"]],
     ],
-    document_id: str,
-) -> Response[Document]:
+) -> Response[MarkdownDocument]:
     """Get a Google Document by its ID. The result is the Document formatted using the Extended Markdown Syntax.
 
     Args:
@@ -89,10 +100,51 @@ def get_document_by_id(
     Returns:
         The Google Document as a markdown formatted string.
     """
-    # oauth_access_token = _load_token()
 
     with Context(oauth_access_token) as ctx:
-        return Response(result=_load_document(ctx, document_id))
+        raw_doc = _load_raw_document(ctx, document_id)
+        doc = MarkdownDocument(
+            title=raw_doc.title,
+            documentId=raw_doc.documentId,
+            body=raw_doc.to_markdown(),
+        )
+
+        return Response(result=doc)
+
+
+@action(is_consequential=True)
+def create_document(
+    title: str,
+    body: str,
+    oauth_access_token: OAuth2Secret[
+        Literal["google"],
+        list[Literal["https://www.googleapis.com/auth/drive.file"]],
+    ],
+) -> Response[DocumentInfo]:
+    """Create a new Google Document from an Extended Markdown string.
+
+     Args:
+        title: The Google Document title
+        body: The Google Document body as an Extended Markdown string.
+        oauth_access_token: The OAuth2 Google access token
+
+    Returns:
+        A structure containing the Document
+    """
+
+    with Context(oauth_access_token) as ctx:
+        doc = _create_document(ctx, title)
+        try:
+            ctx.documents.batchUpdate(
+                documentId=doc.documentId,
+                body=BatchUpdateBody.from_markdown(body).get_body(),
+            ).execute()
+        except Exception:
+            # Clean-up in case of error.
+            ctx.files.delete(fileId=doc.documentId).execute()
+            raise
+
+        return Response(result=doc)
 
 
 def _get_document_id(ctx: Context, name: str) -> str:
@@ -123,8 +175,13 @@ def _get_document_id(ctx: Context, name: str) -> str:
     return response["files"][0]["id"]
 
 
-def _load_document(ctx: Context, document_id: str) -> Document:
+def _load_raw_document(ctx: Context, document_id: str) -> RawDocument:
     document_id = document_id.strip()
     raw_doc = ctx.documents.get(documentId=document_id).execute()
-    doc = Document.from_google_response(raw_doc)
-    return doc
+    return RawDocument.from_google_response(raw_doc)
+
+
+def _create_document(ctx, title: str) -> DocumentInfo:
+    return DocumentInfo.model_validate(
+        ctx.documents.create(body={"title": title}).execute()
+    )
