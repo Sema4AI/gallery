@@ -6,7 +6,6 @@ from uuid import uuid4
 from pydantic import AliasPath, BaseModel, Field, Tag, field_validator, model_validator
 from pydantic_core.core_schema import ValidationInfo
 from typing_extensions import Self
-from utils.template import TemplateVarsType, get_tags_from_str
 
 
 class _MarkdownContext:
@@ -35,14 +34,6 @@ class _DocumentOperationsMixin(ABC):
     @abstractmethod
     def to_markdown(self, ctx: _MarkdownContext) -> str:
         raise NotImplementedError(f"{self.__class__}.to_markdown()")
-
-    @abstractmethod
-    def get_template_tags(self, template_vars: dict[str, TemplateVarsType]):
-        raise NotImplementedError(f"{self.__class__}.get_template_tags()")
-
-    @abstractmethod
-    def apply_template_variables(self, template_vars: dict[str, str]):
-        raise NotImplementedError(f"{self.__class__}.apply_template_variables()")
 
 
 class _BaseStructuralElement(BaseModel, extra="ignore"):
@@ -91,9 +82,6 @@ class _TextElementBase(_BaseStructuralElement, extra="ignore"):
             return f"~~{text}~~"
 
         return self.text
-
-    def get_template_tags(self, template_vars: dict[str, TemplateVarsType]):
-        template_vars.update(get_tags_from_str(self.text))
 
 
 class _ImageElementBase(_BaseStructuralElement, extra="ignore"):
@@ -183,10 +171,6 @@ class _ParagraphData(
 
         return body
 
-    def get_template_tags(self, template_vars: dict[str, TemplateVarsType]):
-        for element in self.elements:
-            element.get_template_tags(template_vars)
-
     def apply_template_variables(self, template_vars: dict[str, str]):
         new_text = []
         for element in self.elements:
@@ -199,9 +183,6 @@ class _Paragraph(_BaseStructuralElement):
 
     def to_markdown(self, ctx: _MarkdownContext) -> str:
         return self.paragraph.to_markdown(ctx)
-
-    def get_template_tags(self, template_vars: dict[str, TemplateVarsType]):
-        return self.paragraph.get_template_tags(template_vars)
 
     def apply_template_variables(self, template_vars: dict[str, str]):
         self.paragraph.apply_template_variables(template_vars)
@@ -220,12 +201,6 @@ class _SectionBreak(_BaseStructuralElement):
 
     def to_markdown(self, _ctx: _MarkdownContext) -> str:
         return "\n---\n"
-
-    def get_template_tags(self, template_vars: dict[str, TemplateVarsType]):
-        pass
-
-    def apply_template_variables(self, template_vars: dict[str, str]):
-        pass
 
 
 class _TableData(_BaseStructuralElement):
@@ -261,11 +236,6 @@ class _TableData(_BaseStructuralElement):
             body += self._build_row(cell.to_markdown(ctx).strip() for cell in row)
 
         return body
-
-    def get_template_tags(self, template_vars: dict[str, TemplateVarsType]):
-        for row in self.data:
-            for cell in row:
-                template_vars.update(cell.get_template_tags(template_vars))
 
     @staticmethod
     def _build_row(items: Iterable[str]) -> str:
@@ -306,10 +276,6 @@ class _Content(BaseModel, extra="ignore"):
 
     def to_markdown(self, ctx: _MarkdownContext) -> str:
         return "\n".join(c.to_markdown(ctx) for c in self.content)
-
-    def get_template_tags(self, template_vars: dict[str, TemplateVarsType]):
-        for content in self.content:
-            content.get_template_tags(template_vars)
 
     def apply_template_variables(self, template_vars: dict[str, str]):
         for content in self.content:
