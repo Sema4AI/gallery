@@ -8,6 +8,8 @@ Contains the implementation of our prebuilt AI Actions available inside Sema4.ai
 | [Email](email/README.md)                               | Send emails with Sema4.ai (free for demos)        | SMTP credentials |
 | [Excel](excel/README.md)                               | Operate on local Excel files                      | N/A              |
 | [Free Web Search](free-web-search/README.md)           | Free alternative for searches with DuckDuckGo API | N/A              |
+| [Google Calendar](google-calendar/README.md)           | Interact with Google Calendar                     | OAuth2           |
+| [Google Docs](google-docs/README.md)                   | Interact with Google Docs                         | OAuth2           |
 | [Google Drive](google-drive/README.md)                 | Interact with Google Drive                        | OAuth2           |
 | [Google Mail](google-mail/README.md)                   | Interact with GMail                               | OAuth2           |
 | [Google Search](google-search/README.md)               | Search for content with Google                    | API key          |
@@ -17,3 +19,4 @@ Contains the implementation of our prebuilt AI Actions available inside Sema4.ai
 | [PDF](pdf/README.md)                                   | Get text from PDF documents                       | N/A              |
 | [Slack](slack/README.md)                               | Read conversations and send messages to channels  | OAuth2           |
 | [YouTube](youtube/README.md)                           | Search videos and get transcriptions              | N/A              |
+

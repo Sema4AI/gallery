@@ -1,0 +1,57 @@
+name: Actions - Update Actions to S3 Gallery
+
+on:
+  workflow_dispatch:
+    # Enables manual triggering via GitHub Actions
+
+jobs:
+  Publish:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write # required by AWS aws-actions/configure-aws-credentials
+      contents: read
+    env:
+      RCC_VERSION: v18.1.1
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check if manifest.json exists
+        run: |
+          if curl --head --silent --fail https://cdn.sema4.ai/gallery/actions/manifest.json; then
+            echo "manifest.json exists. Stopping the workflow."
+            exit 0
+          else
+            echo "manifest.json does not exist. Proceeding with the workflow."
+          fi
+
+      - name: Generate Gallery structure
+        run: |
+          cd bin
+          curl -L -o rcc "https://cdn.sema4.ai/rcc/releases/${{ env.RCC_VERSION }}/linux64/rcc"
+          chmod +x rcc
+          ./rcc run -r publisher/robot.yaml -t "Update gallery with a single pack"
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: eu-west-1
+          role-to-assume: arn:aws:iam::710450854638:role/github-action-gallery
+          
+      - name: AWS S3 copies
+        run: |
+          echo "Initializing Gallery S3"
+          S3_BASE_URL="s3://downloads.robocorp.com/gallery/actions"
+          cd bin/publisher/gallery
+          ls -la
+
+          echo "TBD: what to push and what order"
+          # Copy the Action Package subdirectories
+          # cache-control max-age=31536000, because these should be immutable
+          #for dir in */; do
+          #  aws s3 cp "$dir" "$S3_BASE_URL/$dir" --recursive --cache-control max-age=31536000
+          #done
+
+          # Copy the updated manifest
+          #aws s3 cp manifest.json $S3_BASE_URL/manifest.json --cache-control max-age=120 --content-type "text/plain"
