@@ -171,21 +171,12 @@ class _ParagraphData(
 
         return body
 
-    def apply_template_variables(self, template_vars: dict[str, str]):
-        new_text = []
-        for element in self.elements:
-            if text := element.substitute_template_tags(template_vars):
-                new_text.append(text)
-
 
 class _Paragraph(_BaseStructuralElement):
     paragraph: _ParagraphData
 
     def to_markdown(self, ctx: _MarkdownContext) -> str:
         return self.paragraph.to_markdown(ctx)
-
-    def apply_template_variables(self, template_vars: dict[str, str]):
-        self.paragraph.apply_template_variables(template_vars)
 
 
 class _SectionBreak(_BaseStructuralElement):
@@ -276,10 +267,6 @@ class _Content(BaseModel, extra="ignore"):
 
     def to_markdown(self, ctx: _MarkdownContext) -> str:
         return "\n".join(c.to_markdown(ctx) for c in self.content)
-
-    def apply_template_variables(self, template_vars: dict[str, str]):
-        for content in self.content:
-            content.apply_template_variables(template_vars)
 
 
 class DocumentInfo(BaseModel, extra="ignore", populate_by_name=True):
