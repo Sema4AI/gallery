@@ -7,7 +7,16 @@ from typing import Any, Optional
 import requests
 from sema4ai.actions import ActionError
 
-from models import CommentsResponse, Ticket, TicketResponse, User
+from models import (
+    AddComment,
+    CommentsResponse,
+    Group,
+    Ticket,
+    TicketsResponse,
+    UpdateTicket,
+    User,
+    UsersResponse,
+)
 
 
 @dataclass
@@ -24,7 +33,10 @@ class BaseApi:
         }
         url = urllib.parse.urljoin(self.subdomain, endpoint)
 
-        response = http_method(url, headers=headers, params=params)
+        if http_method == requests.get:
+            response = http_method(url, headers=headers, params=params)
+        else:
+            response = http_method(url, headers=headers, json=params)
 
         if response.status_code == 429:
             sleep(int(response.headers.get("Retry-After", 1)))
@@ -37,11 +49,11 @@ class BaseApi:
         return response
 
 
-class TicketApi(BaseApi):
+class TicketsApi(BaseApi):
     QUERY_OPTIONS = {
         "sort_by": "created_at",
         "sort_order": "asc",
-        "include": "tickets(users)",
+        "include": "tickets(users,groups)",
     }
 
     @staticmethod
@@ -58,13 +70,22 @@ class TicketApi(BaseApi):
 
         return query
 
-    def search(self, query: str) -> TicketResponse:
+    def search(self, query: str) -> TicketsResponse:
         query = self._add_ticket_type(query)
         params = {"query": query, **self.QUERY_OPTIONS}
 
         response = self._call_api(requests.get, "/api/v2/search.json", params).json()
 
-        return TicketResponse.from_response(response)
+        return TicketsResponse.from_response(response)
+
+    def update(self, ticket_id: str, updates: UpdateTicket) -> Ticket:
+        response = self._call_api(
+            requests.put,
+            f"/api/v2/tickets/{ticket_id}.json",
+            updates.to_ticket(),
+        ).json()
+
+        return Ticket.model_validate(response["ticket"])
 
 
 class CommentsApi(BaseApi):
@@ -74,7 +95,7 @@ class CommentsApi(BaseApi):
         "include": "users",
     }
 
-    def get_comments(self, ticket_id: str):
+    def get(self, ticket_id: str):
         response = self._call_api(
             requests.get,
             f"/api/v2/tickets/{ticket_id}/comments",
@@ -82,3 +103,28 @@ class CommentsApi(BaseApi):
         ).json()
 
         return CommentsResponse.from_response(response)
+
+    def create(self, ticket_id: str, comment: AddComment) -> str:
+        response = self._call_api(
+            requests.put,
+            f"/api/v2/tickets/{ticket_id}.json",
+            comment.to_ticket_comment(),
+        )
+
+        return "Successfully created the comment"
+
+
+class UsersApi(BaseApi):
+    def search(self, query: str) -> UsersResponse:
+        response = self._call_api(
+            requests.get, "/api/v2/users/search.json", {"query": query}
+        ).json()
+
+        return UsersResponse.from_response(response)
+
+
+class GroupsApi(BaseApi):
+    def list(self) -> list[Group]:
+        response = self._call_api(requests.get, "/api/v2/groups.json").json()
+
+        return [Group.model_validate(group) for group in response["groups"]]

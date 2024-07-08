@@ -59,6 +59,14 @@ Give me all the comments for this ticket "Gift card expiring" ticket.
 
 > These comments reflect the initial request for extending the expiration date of a gift card and the agent's confirmation of resolving the issue. If you need further details or actions on this ticket, please let me know!
 
+```
+Assign the ticket 25 to the Priority group
+```
+
+> The ticket with ID 25 has been successfully assigned to the Priority group.
+
+
+
 ## Authorization
 
 This action package uses OAuth2 flow to authenticate user.
@@ -66,3 +74,4 @@ This action package uses OAuth2 flow to authenticate user.
 Scopes in use:
     
     - read
+    - tickets:write
