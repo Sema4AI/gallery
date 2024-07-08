@@ -31,7 +31,7 @@ jobs:
           cd bin
           curl -L -o rcc "https://cdn.sema4.ai/rcc/releases/${{ env.RCC_VERSION }}/linux64/rcc"
           chmod +x rcc
-          ./rcc run -r publisher/robot.yaml -t "Update gallery"
+          ./rcc run -r publisher/robot.yaml -t "Update gallery with a single pack"
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4

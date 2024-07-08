@@ -1,0 +1,11 @@
+{
+    "search_text": "filetype:yaml",
+    "token": {
+        "provider": "microsoft",
+        "scopes": [
+            "Files.ReadWrite.All"
+        ],
+        "access_token": "<ACCESS_TOKEN>",
+        "metadata": {}
+    }
+}
