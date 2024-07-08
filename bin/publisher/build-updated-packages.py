@@ -14,8 +14,6 @@ zips_folder = os.path.join(script_dir, "zips")
 gallery_actions_folder = os.path.join(script_dir, "gallery")
 base_url = "https://cdn.sema4.ai/gallery/actions/"
 
-LOCAL_RUN = True
-
 @task
 def build_updated_packages():
     published_manifest_path = os.path.join(working_dir, "published_manifest.json")
@@ -30,8 +28,8 @@ def build_updated_packages():
         log_error("No published manifest available, exiting...")
         return
 
-    rcc_path = '/Users/michalhuras/work/dev/gallery/bin/rcc' if LOCAL_RUN else download_rcc(working_dir)
-    action_server_path = '/Users/michalhuras/work/dev/gallery/bin/action-server' if LOCAL_RUN else download_action_server(working_dir)
+    rcc_path = download_rcc(working_dir)
+    action_server_path = download_action_server(working_dir)
 
     clear_folders(zips_folder)
     clear_folders(gallery_actions_folder)
