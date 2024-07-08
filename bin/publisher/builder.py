@@ -1,7 +1,7 @@
 import os
 import subprocess
 from utils import log_error, read_yaml_file, get_version_strings_from_package_info
-from models import PackageInfo, Manifest
+from models import Manifest
 
 
 def build_single_package(sub_folder_path: str, zips_folder: str, action_server_path: str) -> None:

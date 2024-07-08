@@ -41,6 +41,8 @@ def generate_manifest(gallery_actions_folder: str, base_url: str) -> Manifest:
                         'zip': f"{base_url}{action_package_name}/{version_dir}/{action_package_name}.zip",
                         'icon': f"{base_url}{action_package_name}/{version_dir}/package.png",
                         'metadata': f"{base_url}{action_package_name}/{version_dir}/metadata.json",
+                        'readme': f"{base_url}{action_package_name}/{version_dir}/README.md",
+                        'changelog': f"{base_url}{action_package_name}/{version_dir}/CHANGELOG.md",
                         'actions': actions,
                         'python_env_hash': python_env_hash,
                         'zip_hash': zip_hash

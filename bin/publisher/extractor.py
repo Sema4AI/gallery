@@ -18,7 +18,15 @@ def extract_single_zip(zip_path: str, gallery_actions_folder: str, rcc_path: str
         os.makedirs(versioned_extract_path, exist_ok=True)
 
         # Filter and extract specific files
-        files_to_extract = ["metadata.json", "package.png", "package.yaml", "__action_server_metadata__.json"]
+        files_to_extract = [
+            "metadata.json",
+            "package.png",
+            "package.yaml",
+            "__action_server_metadata__.json",
+            "README.md",
+            "CHANGELOG.md"
+        ]
+
         for item in zip_ref.namelist():
             if any(item.endswith(x) for x in files_to_extract) or item.endswith('.yaml'):
                 zip_ref.extract(item, versioned_extract_path)

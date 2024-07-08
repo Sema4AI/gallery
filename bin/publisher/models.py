@@ -7,6 +7,8 @@ class VersionInfo(TypedDict):
     zip: str
     icon: str
     metadata: str
+    readme: str
+    changelog: str
     actions: list[str]
     python_env_hash: str
     zip_hash: str
