@@ -519,7 +519,7 @@ class _TableLine:
         #   * index +=1 for the start of each row
         #   * index +=2 for the start of each cell
         #   * index +=text.length in each cell
-        #   *, index +=2 for the end of the table
+        #   * index +=2 for the end of the table
 
         # Reference on index calculation for tables:
         # https://gist.github.com/tanaikech/3b5ac06747c8771f70afd3496278b04b?permalink_comment_id=4397902#gistcomment-4397902
@@ -564,7 +564,7 @@ class BatchUpdateBody(_BaseUpdateRequest):
         return cls(requests=[InsertTextRequest.new(text, index=1)])
 
     @classmethod
-    def from_markdown(cls, text: str):
+    def from_markdown(cls, text: str) -> Self:
         text = text.strip()
         current_index = 1
         requests = []

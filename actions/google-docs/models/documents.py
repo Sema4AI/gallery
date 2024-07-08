@@ -272,12 +272,11 @@ class _Content(BaseModel, extra="ignore"):
 class DocumentInfo(BaseModel, extra="ignore", populate_by_name=True):
     # Model used to structure the action response.
     title: Annotated[str, Field(description="The title of the document.")]
-    documentId: Annotated[
+    document_id: Annotated[
         str,
         Field(
             description="The ID of the document.",
-            # alias="documentId",
-            # serialization_alias="document_id",
+            validation_alias="documentId",
         ),
     ]
 
@@ -310,6 +309,6 @@ class MarkdownDocument(DocumentInfo):
     def from_raw_document(cls, document: RawDocument) -> Self:
         return MarkdownDocument(
             title=document.title,
-            documentId=document.documentId,
+            document_id=document.document_id,
             body=document.to_markdown(),
         )
