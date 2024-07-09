@@ -20,18 +20,18 @@ jobs:
       - name: Check if manifest.json exists
         run: |
           if curl --head --silent --fail https://cdn.sema4.ai/gallery/actions/manifest.json; then
-            echo "manifest.json exists. Stopping the workflow."
-            exit 0
+            echo "manifest.json exists. Proceeding with the workflow."
           else
-            echo "manifest.json does not exist. Proceeding with the workflow."
+            echo "manifest.json does not exist. Stopping the workflow."
+          exit 1
           fi
 
-      - name: Generate Gallery structure
+      - name: Build updated packages
         run: |
           cd bin
           curl -L -o rcc "https://cdn.sema4.ai/rcc/releases/${{ env.RCC_VERSION }}/linux64/rcc"
           chmod +x rcc
-          ./rcc run -r publisher/robot.yaml -t "Update gallery with a single pack"
+          ./rcc run -r publisher/robot.yaml -t "Build updated packages"
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -41,17 +41,30 @@ jobs:
           
       - name: AWS S3 copies
         run: |
-          echo "Initializing Gallery S3"
+          echo "Updating Gallery S3"
           S3_BASE_URL="s3://downloads.robocorp.com/gallery/actions"
           cd bin/publisher/gallery
           ls -la
 
-          echo "TBD: what to push and what order"
-          # Copy the Action Package subdirectories
-          # cache-control max-age=31536000, because these should be immutable
-          #for dir in */; do
-          #  aws s3 cp "$dir" "$S3_BASE_URL/$dir" --recursive --cache-control max-age=31536000
-          #done
+          # Copy the Action Package subdirectories. Note that since this is an update workflow,
+          # subdirectories will only contain packages which version's was actually bumped.
+          # cache-control max-age=31536000, because these should be immutable.
+          for dir in */; do
+            aws s3 cp "$dir" "$S3_BASE_URL/$dir" --recursive --cache-control max-age=31536000
+            
+              returnCode=$?
+
+              # If the upload of any package fails, we want to break the workflow, as to not update the manifest,
+              # which should be the only source of truth.
+              # Even if some packages will be uploaded before other one fails, manifest won't include them,
+              # and therefore they won't be available in clients to download, and will be eligible to re-upload
+              # on the next Gallery update run.
+              if [ $returnCode -ne 0 ]; then
+                echo "Upload of '$dir' package failed, exiting..."
+                exit 1
+              fi
+          
+          done
 
           # Copy the updated manifest
-          #aws s3 cp manifest.json $S3_BASE_URL/manifest.json --cache-control max-age=120 --content-type "text/plain"
+          aws s3 cp manifest.json $S3_BASE_URL/manifest.json --cache-control max-age=120 --content-type "text/plain"

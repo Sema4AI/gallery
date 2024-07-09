@@ -2,11 +2,11 @@
 # https://github.com/robocorp/rcc/blob/master/docs/recipes.md#what-is-in-robotyaml
 
 tasks:
-  Generate the whole gallery:
-    shell: python -m robocorp.tasks run init-gallery.py
+  Build all packages:
+    shell: python -m robocorp.tasks run build-all-packages.py
 
-  Update gallery with a single pack:
-    shell: python -m robocorp.tasks run update-gallery.py
+  Build updated packages:
+    shell: python -m robocorp.tasks run build-updated-packages.py
 
 environmentConfigs:
   - environment_windows_amd64_freeze.yaml

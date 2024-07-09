@@ -21,7 +21,7 @@ jobs:
         run: |
           if curl --head --silent --fail https://cdn.sema4.ai/gallery/actions/manifest.json; then
             echo "manifest.json exists. Stopping the workflow."
-            exit 0
+            exit 1
           else
             echo "manifest.json does not exist. Proceeding with the workflow."
           fi
@@ -31,7 +31,7 @@ jobs:
           cd bin
           curl -L -o rcc "https://cdn.sema4.ai/rcc/releases/${{ env.RCC_VERSION }}/linux64/rcc"
           chmod +x rcc
-          ./rcc run -r publisher/robot.yaml -t "Generate the whole gallery"
+          ./rcc run -r publisher/robot.yaml -t "Build all packages"
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -50,6 +50,15 @@ jobs:
           # cache-control max-age=31536000, because these should be immutable
           for dir in */; do
             aws s3 cp "$dir" "$S3_BASE_URL/$dir" --recursive --cache-control max-age=31536000
+          
+            returnCode=$?
+
+            # If the upload of any package fails, we want to break the workflow, as to not upload the manifest,
+            # which should be the only source of truth. This is allow to re-run this workflow if some fails happened.
+            if [ $returnCode -ne 0 ]; then
+              echo "Upload of '$dir' package failed, exiting..."
+              exit 1
+            fi
           done
 
           # Copy the updated manifest
