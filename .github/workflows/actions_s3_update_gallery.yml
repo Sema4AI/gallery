@@ -20,10 +20,10 @@ jobs:
       - name: Check if manifest.json exists
         run: |
           if curl --head --silent --fail https://cdn.sema4.ai/gallery/actions/manifest.json; then
-            echo "manifest.json exists. Stopping the workflow."
-            exit 0
+            echo "manifest.json exists. Proceeding with the workflow."
           else
-            echo "manifest.json does not exist. Proceeding with the workflow."
+            echo "manifest.json does not exist. Stopping the workflow."
+          exit 0
           fi
 
       - name: Build updated packages
