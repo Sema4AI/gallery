@@ -1,5 +1,7 @@
 # Google Search
 
+Make Google Searches using custom search engines. Requires authentication. 
+
 ## Prompts
 
 ```
