@@ -4,8 +4,8 @@ Action Package interacting with Zendesk resources.
 
 Possible actions with this package are:
 
-- search for tickets based on different attributes of the ticket such as status, description, assignee, etc
-- get ticket comments
+- search for the tickets based on different attributes such as status, description, assignee, etc
+- get the ticket comments
 
 ## Prompts
 
