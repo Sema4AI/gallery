@@ -6,8 +6,11 @@ Possible actions with this package are:
 
 - search for the tickets based on different attributes such as status, description, assignee, etc
 - get the ticket comments
+- add a comment to a ticket
 - assign a ticket to a user or a group
 - update the status of the ticket
+- search for users based on different attributes
+- list all available groups
 
 ## Prompts
 
@@ -51,7 +54,7 @@ Give me all the comments for this ticket "Gift card expiring" ticket.
 ```
 
 > Here are the comments for the ticket titled "SAMPLE TICKET: Gift card expiring":
-> 
+>
 > 1. Comment by Luka Jensen (Requester)
 >   * Date: 2024-06-24
 >   * Content: Hey there, I was lucky enough to receive a gift card from a friend as a housewarming gift. Small problem, I’ve been so swamped with the move I totally forgot about it until now and it expires in a week! Can you extend the expiration date? Help, Luka Jensen
@@ -74,6 +77,6 @@ Assign the ticket 25 to the Priority group
 This action package uses OAuth2 flow to authenticate user.
 
 Scopes in use:
-    
+
     - read
     - tickets:write
