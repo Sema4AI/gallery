@@ -5,7 +5,7 @@ name: Microsoft Sharepoint
 description: Microsoft actions for Sharepoint
 
 # Package version number, recommend using semver.org
-version: 0.1.0
+version: 1.0.0
 
 dependencies:
   conda-forge:
