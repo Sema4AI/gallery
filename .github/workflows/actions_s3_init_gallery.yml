@@ -21,7 +21,7 @@ jobs:
         run: |
           if curl --head --silent --fail https://cdn.sema4.ai/gallery/actions/manifest.json; then
             echo "manifest.json exists. Stopping the workflow."
-            exit 0
+            exit 1
           else
             echo "manifest.json does not exist. Proceeding with the workflow."
           fi
