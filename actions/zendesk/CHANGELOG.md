@@ -11,6 +11,8 @@ First version published, changelog tracking starts.
 ### Added
 - Search for the tickets based on different attributes such as status, description, assignee, etc
 - Get the ticket comments
+- Assign a ticket to a user or a group
+- Update the status of the ticket
 
 ### Changed
  

@@ -176,6 +176,9 @@ class UpdateTicket(BaseModel):
     group_id: Annotated[
         str | None, Field(description="The ID of the assigned group")
     ] = None
+    status: Annotated[str | None, Field(description="The new status of the ticket")] = (
+        None
+    )
 
     def to_ticket(self):
         return {"ticket": self.model_dump(mode="json", exclude_none=True)}

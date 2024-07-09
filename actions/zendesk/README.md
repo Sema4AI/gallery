@@ -6,6 +6,8 @@ Possible actions with this package are:
 
 - search for the tickets based on different attributes such as status, description, assignee, etc
 - get the ticket comments
+- assign a ticket to a user or a group
+- update the status of the ticket
 
 ## Prompts
 
