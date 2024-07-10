@@ -3,10 +3,13 @@
 
 tasks:
   Build all packages:
-    shell: python -m robocorp.tasks run build-all-packages.py
+    shell: python -m robocorp.tasks run build_all_packages.py
 
   Build updated packages:
-    shell: python -m robocorp.tasks run build-updated-packages.py
+    shell: python -m robocorp.tasks run build_updated_packages.py
+
+  Build environments:
+    shell: python -m robocorp.tasks run build_environments.py
 
 environmentConfigs:
   - environment_windows_amd64_freeze.yaml

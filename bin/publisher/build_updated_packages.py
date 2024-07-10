@@ -1,12 +1,12 @@
 from robocorp.tasks import task
 import os
-from utils import download_action_server, download_rcc, clear_folders, download_file, read_json_file, is_manifest_empty, log_error
+from utils import get_working_dir, clear_folders, download_file, read_json_file, is_manifest_empty, log_error
+from tools import get_action_server, get_rcc
 from manifest import generate_manifest, save_manifest, generate_consolidated_manifest
 from extractor import extract_all
 from models import Manifest
-from builder import build_action_packages
+from package_builder import build_action_packages
 
-working_dir = os.path.abspath(".")
 
 # Define the input, output, and extracted folders
 script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -16,6 +16,7 @@ base_url = "https://cdn.sema4.ai/gallery/actions/"
 
 @task
 def build_updated_packages():
+    working_dir = get_working_dir()
     published_manifest_path = os.path.join(working_dir, "published_manifest.json")
 
     download_file("https://cdn.sema4.ai/gallery/actions/manifest.json", published_manifest_path)
@@ -28,8 +29,8 @@ def build_updated_packages():
         log_error("No published manifest available, exiting...")
         return
 
-    rcc_path = download_rcc(working_dir)
-    action_server_path = download_action_server(working_dir)
+    rcc_path = get_rcc()
+    action_server_path = get_action_server()
 
     clear_folders(zips_folder)
     clear_folders(gallery_actions_folder)
@@ -52,7 +53,7 @@ def build_updated_packages():
     # We consolidate existing manifest with the updates, getting a manifest including updated packages.
     new_manifest: Manifest = generate_consolidated_manifest(published_manifest, update_manifest)
 
-    # Write manifest to file
+    # Write manifests to file.
     save_manifest(new_manifest, os.path.join(gallery_actions_folder, "manifest.json"))
 
 
