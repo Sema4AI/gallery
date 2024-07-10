@@ -1,12 +1,8 @@
-from dotenv import load_dotenv
-from pathlib import Path
 from typing import Literal
 
-from sema4ai.actions import action, OAuth2Secret, Response, ActionError
+from sema4ai.actions import ActionError, OAuth2Secret, Response, action
 
-from google_mail._support import _get_google_service, _create_draft, _create_message
-
-load_dotenv(Path(__file__).absolute().parent / "devdata" / ".env")
+from google_mail._support import _create_draft, _create_message, _get_google_service
 
 
 @action(is_consequential=True)
@@ -40,6 +36,7 @@ def create_draft(
         raise ActionError(
             "At least one of the parameters must be provided to create a draft."
         )
+
     service = _get_google_service(token)
     result = _create_draft(
         service,

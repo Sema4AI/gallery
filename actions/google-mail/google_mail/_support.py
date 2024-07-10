@@ -1,15 +1,17 @@
 import base64
+import os
+import time
 from email import encoders
 from email.mime.base import MIMEBase
-from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+
+import markdown
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
-from google_mail._models import Email, Attachment, Drafts, Draft
-import markdown
-import os
 from sema4ai.actions import ActionError
-import time
+
+from google_mail._models import Attachment, Draft, Drafts, Email
 
 
 def _create_message(sender, to, subject, body, cc=None, bcc=None, attachments=None):
@@ -28,13 +30,13 @@ def _create_message(sender, to, subject, body, cc=None, bcc=None, attachments=No
         message["bcc"] = bcc
     if body:
         # Convert Markdown to HTML
-        # html_content = markdown.markdown(body)
+        html_content = markdown.markdown(body)
         alternative_part = MIMEMultipart("alternative")
-        part1 = MIMEText(body, "plain")
-        # TODO. Add HTML support later (prelimenary testing results were not the best)
-        # part2 = MIMEText(html_content, "html")
-        alternative_part.attach(part1)
-        # alternative_part.attach(part2)
+        plain_part = MIMEText(body, "plain")
+
+        html_part = MIMEText(html_content, "html")
+        alternative_part.attach(plain_part)
+        alternative_part.attach(html_part)
         message.attach(alternative_part)
     # Attach files
     if attachments:
