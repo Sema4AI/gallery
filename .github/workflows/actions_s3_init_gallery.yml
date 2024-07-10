@@ -115,15 +115,16 @@ jobs:
         if: ${{ matrix.os == 'windows-latest' }}
         run: |
           Set-Location -Path bin
-          Invoke-WebRequest -Uri "https://cdn.sema4.ai/rcc/releases/${{ env.RCC_VERSION }}/${{ matrix.rcc_folder }}/rcc" -OutFile rcc
-          icacls .\rcc /grant Everyone:F
+          Invoke-WebRequest -Uri "https://cdn.sema4.ai/rcc/releases/${{ env.RCC_VERSION }}/${{ matrix.rcc_folder }}/rcc.exe" -OutFile rcc.exe
+          icacls .\rcc.exe /grant Everyone:F
+          Invoke-Expression -Command ".\rcc.exe run -r publisher/robot.yaml -t `"Build environments`""
           .\rcc run -r publisher/robot.yaml -t "Build environments"
 
       - name: Save environments artifact
         uses: actions/upload-artifact@v4
         with:
           name: environments-artifact-${{ matrix.os }}
-          path: bin/publisher/gallery
+          path: bin/publisher/environments
 
 
   publish_environments:
