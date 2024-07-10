@@ -134,7 +134,7 @@ jobs:
           # Copy the environments
           # cache-control max-age=31536000, because these should be immutable
           for file in */; do
-            aws s3 cp "$dir" "$S3_BASE_URL/$file" --cache-control max-age=31536000
+            aws s3 cp "$file" "$S3_BASE_URL/$file" --cache-control max-age=31536000
 
             returnCode=$?
 
