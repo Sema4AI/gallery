@@ -11,6 +11,11 @@ environments_folder = os.path.join(script_dir, "environments")
 def build_environments():
     clear_folders(environments_folder)
 
+    print(os.path.curdir)
+    print(script_dir)
+    print(gallery_actions_folder)
+    print(environments_folder)
+
     build_package_environments(gallery_actions_folder, environments_folder)
 
 
