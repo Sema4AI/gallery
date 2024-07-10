@@ -71,7 +71,7 @@ jobs:
           path: bin/publisher/gallery
 
   publish_environments:
-    needs: publish_packages
+    needs: build_and_publish_packages
     runs-on: ${{ matrix.os }}
     permissions:
       id-token: write # required by AWS aws-actions/configure-aws-credentials
