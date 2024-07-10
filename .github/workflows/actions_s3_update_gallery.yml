@@ -5,7 +5,7 @@ on:
     # Enables manual triggering via GitHub Actions
 
 jobs:
-  publish:
+  publish_packages:
     runs-on: ubuntu-latest
     permissions:
       id-token: write # required by AWS aws-actions/configure-aws-credentials
@@ -76,6 +76,7 @@ jobs:
           path: bin/publisher/gallery
 
   publish_environments:
+    needs: publish_packages
     runs-on: ${{ matrix.os }}
     permissions:
       id-token: write # required by AWS aws-actions/configure-aws-credentials
