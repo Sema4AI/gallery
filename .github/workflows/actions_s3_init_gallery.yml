@@ -103,7 +103,7 @@ jobs:
           path: bin/publisher/gallery
 
       - name: Build Environments [Linux and Mac]
-        if: ${{ matrix.os == 'ubuntu' || matrix.os == 'macos'  }}
+        if: ${{ matrix.os == 'ubuntu-latest' || matrix.os == 'macos-latest'  }}
         run: |
           ls -lh bin/publisher/gallery
           cd bin
@@ -112,7 +112,7 @@ jobs:
           ./rcc run -r publisher/robot.yaml -t "Build environments"
 
       - name: Build Environments [Windows]
-        if: ${{ matrix.os == 'windows' }}
+        if: ${{ matrix.os == 'windows-latest' }}
         run: |
           Set-Location -Path bin
           Invoke-WebRequest -Uri "https://cdn.sema4.ai/rcc/releases/${{ env.RCC_VERSION }}/${{ matrix.rcc_folder }}/rcc" -OutFile rcc
