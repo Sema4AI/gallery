@@ -172,6 +172,7 @@ jobs:
             returnCode=$?
 
             if [ $returnCode -ne 0 ]; then
-              echo "Uploading of '$file' environments failed, skipping..."
+              echo "Uploading of '$file' environments failed, exiting..."
+              exit 1
             fi
           done

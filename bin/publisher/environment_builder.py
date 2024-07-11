@@ -36,11 +36,11 @@ def build_package_environment(version_path: str, environments_folder: str) -> No
     package_yaml_path = os.path.join(version_path, "package.yaml")
     result_zip_path = os.path.join(environments_folder, get_environment_file_name(env_hash))
 
-    print(f">>> Building: {version_path}")
+    print(f"Building: {version_path}")
 
     run_rcc_command(['ht', 'prebuild', package_yaml_path, '--export', result_zip_path])
 
-    print(f">>> Environment built: {result_zip_path}")
+    print(f"Environment built: {result_zip_path}")
 
 
 def build_package_environments(gallery_actions_folder: str, environments_folder: str) -> None:
