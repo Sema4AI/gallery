@@ -4,6 +4,12 @@ on:
   workflow_dispatch:
     # Enables manual triggering via GitHub Actions
 
+  push:
+    branches:
+      - main
+    paths:
+      - 'actions/**'
+
 jobs:
   build_and_publish_packages:
     runs-on: ubuntu-latest
