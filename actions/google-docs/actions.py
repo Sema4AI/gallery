@@ -3,6 +3,7 @@ from typing import Literal
 from google.auth.exceptions import RefreshError
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import Resource, build
+from googleapiclient.errors import HttpError as GoogleApiHttpError
 from sema4ai.actions import (
     ActionError,
     OAuth2Secret,
@@ -50,7 +51,8 @@ class Context:
 
         if isinstance(exc_val, RefreshError):
             raise ActionError("Access token expired") from None
-
+        elif isinstance(exc_val, GoogleApiHttpError):
+            raise ActionError(exc_val.reason) from None
 
 @action
 def get_document_by_name(
