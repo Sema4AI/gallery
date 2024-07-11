@@ -8,6 +8,3 @@ temp/
 *.pyc
 *.zip
 .env
-.project
-.pydevproject
-metadata.json
