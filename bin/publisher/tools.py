@@ -105,6 +105,9 @@ def download_rcc() -> str:
 def run_rcc_command(args: list[str], shell: bool = False) -> subprocess.CompletedProcess[str]:
     executable_path = get_rcc()
 
+    # Gallery is sema4.ai specific, so no need to handle robocorp flag.
+    args.append('--sema4ai')
+
     if not os.path.isfile(executable_path):
         return subprocess.CompletedProcess(returncode=None, stdout=None, stderr=f"{executable_path} not found")
 
