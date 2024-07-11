@@ -1,11 +1,11 @@
 from robocorp.tasks import task
 import os
-from utils import clear_folders, download_action_server, download_rcc
+from utils import clear_folders
+from tools import get_action_server, get_rcc
 from manifest import generate_manifest, save_manifest
 from extractor import extract_all
-from builder import build_action_packages
+from package_builder import build_action_packages
 
-working_dir = os.path.abspath(".")
 
 # Define the input, output, and extracted folders
 script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -18,8 +18,8 @@ base_url = "https://cdn.sema4.ai/gallery/actions/"
 def build_all_packages():
     input_folder = os.path.abspath(os.path.join(script_dir, '../../actions'))
 
-    rcc_path = download_rcc(working_dir)
-    action_server_path = download_action_server(working_dir)
+    rcc_path = get_rcc()
+    action_server_path = get_action_server()
 
     clear_folders(zips_folder)
     clear_folders(gallery_actions_folder)
