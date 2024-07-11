@@ -1,8 +1,8 @@
 import os
 import hashlib
 import json
-from utils import read_file_contents, read_yaml_file, get_version_strings_from_package_info
-from models import VersionInfo, PackageInfo, Manifest
+from utils import read_file_contents, read_yaml_file, get_version_strings_from_package_info, read_json_file
+from models import VersionInfo, PackageInfo, Manifest, ActionInfo
 
 
 def generate_manifest(gallery_actions_folder: str, base_url: str) -> Manifest:
@@ -31,9 +31,11 @@ def generate_manifest(gallery_actions_folder: str, base_url: str) -> Manifest:
                     package_hash_path = os.path.join(version_path, "package.hash")
 
                     package_data = read_yaml_file(package_yaml_path)
-                    actions = read_metadata_json(metadata_path)
+                    actions = get_actions_info(metadata_path)
                     python_env_hash = read_file_contents(env_hash_path)
                     zip_hash = read_file_contents(package_hash_path)
+
+
 
                     version_info: VersionInfo = {
                         'version': package_data.get('version', version_dir),
@@ -104,8 +106,9 @@ def generate_consolidated_manifest(published_manifest: Manifest, update_manifest
     return new_manifest
 
 
-def read_metadata_json(metadata_path: str) -> list[str]:
-    actions: list[str] = []
+def get_actions_info(metadata_path: str) -> list[ActionInfo]:
+    actions_info: list[ActionInfo] = []
+
     if os.path.exists(metadata_path):
         with open(metadata_path, 'r') as file:
             metadata = json.load(file)
@@ -114,8 +117,13 @@ def read_metadata_json(metadata_path: str) -> list[str]:
             for path, operations in paths.items():
                 for method, details in operations.items():
                     if 'summary' in details:
-                        actions.append(details['summary'])
-    return actions
+                        action_info: ActionInfo = {
+                            'name': details['summary'],
+                            'description': details['description'] if details['description'] else ''
+                        }
+
+                        actions_info.append(action_info)
+    return actions_info
 
 
 def generate_total_hash(manifest: Manifest) -> str:
