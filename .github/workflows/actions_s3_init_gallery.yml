@@ -118,7 +118,6 @@ jobs:
           Invoke-WebRequest -Uri "https://cdn.sema4.ai/rcc/releases/${{ env.RCC_VERSION }}/${{ matrix.rcc_folder }}/rcc.exe" -OutFile rcc.exe
           icacls .\rcc.exe /grant Everyone:F
           Invoke-Expression -Command ".\rcc.exe run -r publisher/robot.yaml -t `"Build environments`""
-          .\rcc run -r publisher/robot.yaml -t "Build environments"
 
       - name: Save environments artifact
         uses: actions/upload-artifact@v4
@@ -158,7 +157,7 @@ jobs:
 
           # Copy the environments
           # cache-control max-age=31536000, because these should be immutable
-          for file in */; do
+          for file in *; do
             aws s3 cp "$file" "$S3_BASE_URL/$file" --cache-control max-age=31536000
 
             returnCode=$?
