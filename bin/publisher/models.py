@@ -1,6 +1,11 @@
 from typing import TypedDict
 
 
+class ActionInfo(TypedDict):
+    name: str
+    description: str
+
+
 class VersionInfo(TypedDict):
     version: str
     description: str
@@ -9,7 +14,7 @@ class VersionInfo(TypedDict):
     metadata: str
     readme: str
     changelog: str
-    actions: list[str]
+    actions: list[ActionInfo]
     python_env_hash: str
     zip_hash: str
 
