@@ -5,7 +5,7 @@ name: Browsing
 description: Get information from websites, and interact with them.
 
 # Package version number, recommend using semver.org
-version: 1.0.1
+version: 1.0.2
 
 dependencies:
   conda-forge:
@@ -17,6 +17,7 @@ dependencies:
     - pydantic=2.7.4
     - robocorp-browser=2.3.3
     - requests=2.31.0
+    - robocorp-excel=0.4.4
 
 packaging:
   # By default, all files and folders in this directory are packaged when uploaded.
