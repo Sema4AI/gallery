@@ -57,6 +57,7 @@ jobs:
 
   build_environments:
     needs: build_packages
+    if: ${{ needs.build_packages.outputs.has_packages == 'true' }}
     runs-on: ${{ matrix.os }}
     env:
       RCC_VERSION: v18.1.1
