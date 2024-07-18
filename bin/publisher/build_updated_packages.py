@@ -40,7 +40,13 @@ def build_updated_packages():
     # We use manifest to build all the packages that have a version that is not yet published.
     # We want to skip not updated packages at this point already, as building a package can also take
     # a non-trivial amount of time.
-    build_action_packages(input_folder, zips_folder, action_server_path, published_manifest)
+    built_count = build_action_packages(input_folder, zips_folder, action_server_path, published_manifest)
+
+    # If no packages were built, there is no point in continuing. Manifest won't be created, and the pipeline
+    # will be able to leverage this to skip some of the jobs.
+    if built_count == 0:
+        print(f"\n No packages were built (no updates detected), manifest won't be created.")
+        return
 
     # Then, we extract all information needed to update the manifest from the package eligible for update.
     extract_all(zips_folder, gallery_actions_folder, rcc_path)
