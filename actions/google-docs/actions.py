@@ -3,6 +3,8 @@ from typing import Literal
 from google.auth.exceptions import RefreshError
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import Resource, build
+from googleapiclient.errors import HttpError as GoogleApiHttpError
+from pydantic import ValidationError
 from sema4ai.actions import (
     ActionError,
     OAuth2Secret,
@@ -50,6 +52,8 @@ class Context:
 
         if isinstance(exc_val, RefreshError):
             raise ActionError("Access token expired") from None
+        elif isinstance(exc_val, GoogleApiHttpError):
+            raise ActionError(exc_val.reason) from None
 
 
 @action
@@ -102,14 +106,11 @@ def get_document_by_id(
     """
 
     with Context(oauth_access_token) as ctx:
-        raw_doc = _load_raw_document(ctx, document_id)
-        doc = MarkdownDocument(
-            title=raw_doc.title,
-            documentId=raw_doc.documentId,
-            body=raw_doc.to_markdown(),
+        return Response(
+            result=MarkdownDocument.from_raw_document(
+                _load_raw_document(ctx, document_id)
+            )
         )
-
-        return Response(result=doc)
 
 
 @action(is_consequential=True)
@@ -136,12 +137,12 @@ def create_document(
         doc = _create_document(ctx, title)
         try:
             ctx.documents.batchUpdate(
-                documentId=doc.documentId,
+                documentId=doc.document_id,
                 body=BatchUpdateBody.from_markdown(body).get_body(),
             ).execute()
         except Exception:
             # Clean-up in case of error.
-            ctx.files.delete(fileId=doc.documentId).execute()
+            ctx.files.delete(fileId=doc.document_id).execute()
             raise
 
         return Response(result=doc)
@@ -178,7 +179,11 @@ def _get_document_id(ctx: Context, name: str) -> str:
 def _load_raw_document(ctx: Context, document_id: str) -> RawDocument:
     document_id = document_id.strip()
     raw_doc = ctx.documents.get(documentId=document_id).execute()
-    return RawDocument.from_google_response(raw_doc)
+
+    try:
+        return RawDocument.from_google_response(raw_doc)
+    except ValidationError:
+        raise ActionError("Could not parse document")
 
 
 def _create_document(ctx, title: str) -> DocumentInfo:
