@@ -45,6 +45,7 @@ jobs:
       - name: Check artifacts
         id: check_artifacts
         run: |
+          echo "checking artifacts..."
           if find bin/publisher/gallery -mindepth 1 -maxdepth 1 | read; then
             echo "has_packages=true" >> $GITHUB_OUTPUT
           fi
@@ -79,6 +80,10 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Check outputs
+        run: |
+          echo "${{ needs.build_packages.outputs.has_packages }}"
 
       - name: Download Gallery artifact
         uses: actions/download-artifact@v4
