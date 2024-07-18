@@ -21,7 +21,7 @@ def build_single_package(sub_folder_path: str, zips_folder: str, action_server_p
 
             subprocess.run(command, shell=True, check=True, cwd=sub_folder_path)
         except subprocess.CalledProcessError as e:
-            log_error(sub_folder_path, str(e))
+            log_error(str(e), sub_folder_path)
             print(f"{sub_folder_path} package errored, will not be available to publish")
 
 
@@ -54,7 +54,7 @@ def build_action_packages(input_folder: str, zips_folder: str, action_server_pat
             try:
                 package_data = read_yaml_file(os.path.join(sub_folder_path, "package.yaml"))
             except Exception as e:
-                log_error(f"Reading package.yaml from {sub_folder_path} failed with error {e}, skipping")
+                log_error(f"Reading package.yaml failed with error {e}, skipping", sub_folder_path)
                 continue
 
             published_versions: list[str] = []

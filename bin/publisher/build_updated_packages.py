@@ -20,7 +20,14 @@ def build_updated_packages():
     published_manifest_path = os.path.join(working_dir, "published_manifest.json")
 
     download_file("https://cdn.sema4.ai/gallery/actions/manifest.json", published_manifest_path)
-    published_manifest: Manifest = read_json_file(published_manifest_path)
+
+    published_manifest: Manifest
+
+    try:
+        published_manifest = read_json_file(published_manifest_path)
+    except Exception as e:
+        log_error('Reading published manifest failed, exiting...')
+        return
 
     # When updating the gallery, we assume that some packages has already been published - otherwise, we want to
     # skip the operation. This ensures that if manifest download fails for any reason, we don't end up replacing
