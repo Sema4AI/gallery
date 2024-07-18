@@ -1,7 +1,7 @@
 import os
 import hashlib
 import json
-from utils import read_file_contents, read_yaml_file, get_version_strings_from_package_info, read_json_file
+from utils import read_file_contents, read_yaml_file, get_version_strings_from_package_info
 from models import VersionInfo, PackageInfo, Manifest, ActionInfo
 
 
@@ -30,12 +30,12 @@ def generate_manifest(gallery_actions_folder: str, base_url: str) -> Manifest:
                     env_hash_path = os.path.join(version_path, "env.hash")
                     package_hash_path = os.path.join(version_path, "package.hash")
 
+                    # If reading of any file fails, we want to let it throw,
+                    # so it can be dealt with higher up if needed.
                     package_data = read_yaml_file(package_yaml_path)
                     actions = get_actions_info(metadata_path)
                     python_env_hash = read_file_contents(env_hash_path)
                     zip_hash = read_file_contents(package_hash_path)
-
-
 
                     version_info: VersionInfo = {
                         'version': package_data.get('version', version_dir),
