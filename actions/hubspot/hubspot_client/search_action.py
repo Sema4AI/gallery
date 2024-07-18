@@ -306,7 +306,7 @@ def list_owners(
 
     while has_more:
         response = api_client.crm.owners.owners_api.get_page(
-            limit=2, after=next_page_token
+            limit=200, after=next_page_token
         )
 
         if response.paging:
