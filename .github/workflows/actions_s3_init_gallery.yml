@@ -5,7 +5,7 @@ on:
     # Enables manual triggering via GitHub Actions
 
 jobs:
-  Publish:
+  build_and_publish_packages:
     runs-on: ubuntu-latest
     permissions:
       id-token: write # required by AWS aws-actions/configure-aws-credentials
@@ -63,3 +63,107 @@ jobs:
 
           # Copy the updated manifest
           aws s3 cp manifest.json $S3_BASE_URL/manifest.json --cache-control max-age=120 --content-type "text/plain"
+
+      - name: Save Gallery artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: gallery-artifact
+          path: bin/publisher/gallery
+
+  build_environments:
+    needs: build_and_publish_packages
+    runs-on: ${{ matrix.os }}
+    env:
+      RCC_VERSION: v18.1.1
+    strategy:
+      fail-fast: false
+      matrix:
+        name:
+          - ubuntu
+          - windows
+          - macos
+        include:
+          - name: ubuntu
+            os: ubuntu-latest
+            rcc_folder: linux64
+          - name: windows
+            os: windows-latest
+            rcc_folder: windows64
+          - name: macos
+            os: macos-latest
+            rcc_folder: macos64
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download Gallery artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: gallery-artifact
+          path: bin/publisher/gallery
+
+      - name: Build Environments [Linux and Mac]
+        if: ${{ matrix.os == 'ubuntu-latest' || matrix.os == 'macos-latest'  }}
+        run: |
+          ls -lh bin/publisher/gallery
+          cd bin
+          curl -L -o rcc "https://cdn.sema4.ai/rcc/releases/${{ env.RCC_VERSION }}/${{ matrix.rcc_folder }}/rcc"
+          chmod +x rcc
+          ./rcc run -r publisher/robot.yaml -t "Build environments"
+
+      - name: Build Environments [Windows]
+        if: ${{ matrix.os == 'windows-latest' }}
+        run: |
+          Set-Location -Path bin
+          Invoke-WebRequest -Uri "https://cdn.sema4.ai/rcc/releases/${{ env.RCC_VERSION }}/${{ matrix.rcc_folder }}/rcc.exe" -OutFile rcc.exe
+          icacls .\rcc.exe /grant Everyone:F
+          Invoke-Expression -Command ".\rcc.exe run -r publisher/robot.yaml -t `"Build environments`""
+
+      - name: Save environments artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: environments-artifact-${{ matrix.os }}
+          path: bin/publisher/environments
+
+
+  publish_environments:
+    runs-on: ubuntu-latest
+    needs: build_environments
+    permissions:
+      id-token: write # required by AWS aws-actions/configure-aws-credentials
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download Gallery artifact
+        uses: actions/download-artifact@v4
+        with:
+          pattern: environments-artifact-*
+          path: bin/publisher/environments
+          merge-multiple: true
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: eu-west-1
+          role-to-assume: arn:aws:iam::710450854638:role/github-action-gallery
+
+      - name: AWS S3 copies
+        run: |
+          S3_BASE_URL="s3://downloads.robocorp.com/holotree/sema4ai"
+          cd bin/publisher/environments
+          ls -la
+
+          # Copy the environments
+          # cache-control max-age=31536000, because these should be immutable
+          for file in *; do
+            aws s3 cp "$file" "$S3_BASE_URL/$file" --cache-control max-age=31536000
+
+            returnCode=$?
+
+            if [ $returnCode -ne 0 ]; then
+              echo "Uploading of '$file' environments failed, exiting..."
+              exit 1
+            fi
+          done

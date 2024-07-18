@@ -16,5 +16,6 @@ testrun/*
 .~lock*
 *.pkl
 zips/
-gallery*/
+gallery/
 log.txt
+environments/

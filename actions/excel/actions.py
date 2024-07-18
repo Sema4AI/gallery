@@ -4,7 +4,6 @@ These are currently capable of managing workbooks and their worksheets, while
 retrieving and setting data from/into their cells.
 """
 
-
 import contextlib
 from pathlib import Path
 
@@ -275,7 +274,7 @@ def get_cell(
 
 
 @action(is_consequential=False)
-def get_table(
+def get_sheet_content(
     file_path: str, sheet_name: str, has_header: bool = False
 ) -> Response[Table]:
     """Retrieve the whole content of an already existing worksheet of a workbook.

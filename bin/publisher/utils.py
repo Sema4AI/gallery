@@ -2,7 +2,6 @@ import os
 import hashlib
 import shutil
 import requests
-import platform
 import yaml
 import zipfile
 import json
@@ -12,9 +11,10 @@ from models import PackageInfo, Manifest
 
 logging.basicConfig(level=logging.INFO)
 
-as_version = "0.15.2"
-rcc_version = "v18.1.1"
 
+def get_working_dir() -> str:
+    """ Return the directory current task was run in. """
+    return os.path.abspath(".")
 
 def sha256(filepath: str, hash_type: str = 'sha256') -> str:
     """Calculate the hash of a file using the specified hash algorithm (default is SHA256) and return the hex digest."""
@@ -73,54 +73,13 @@ def download_file(url: str, file_path: str = '') -> str:
     return file_path
 
 
-def download_action_server(executable_directory: str) -> str:
-    system = platform.system().lower()
-    if system == "windows":
-        url = f"https://cdn.sema4.ai/action-server/releases/{as_version}/windows64/action-server.exe"
-        action_server_exe = os.path.join(executable_directory, "action-server.exe")
-    elif system == "darwin":
-        url = f"https://cdn.sema4.ai/action-server/releases/{as_version}/macos64/action-server"
-        action_server_exe = os.path.join(executable_directory, "action-server")
-    elif system == "linux":
-        url = f"https://cdn.sema4.ai/action-server/releases/{as_version}/linux64/action-server"
-        action_server_exe = os.path.join(executable_directory, "action-server")
-    else:
-        raise Exception("Unsupported OS")
+def url_exists(url: str) -> bool:
+    try:
+        result = requests.head(url)
 
-    response = requests.get(url, stream=True)
-    response.raise_for_status()  # Ensure we raise an error for bad status codes
-    with open(action_server_exe, 'wb') as file:
-        shutil.copyfileobj(response.raw, file)
-
-    if system != "windows":
-        os.chmod(action_server_exe, 0o755)
-
-    return action_server_exe
-
-
-def download_rcc(executable_directory: str) -> str:
-    system = platform.system().lower()
-    if system == "windows":
-        url = f"https://cdn.sema4.ai/rcc/releases/{rcc_version}/windows64/rcc.exe"
-        rcc_exe = os.path.join(executable_directory, "rcc.exe")
-    elif system == "darwin":
-        url = f"https://cdn.sema4.ai/rcc/releases/{rcc_version}/macos64/rcc"
-        rcc_exe = os.path.join(executable_directory, "rcc")
-    elif system == "linux":
-        url = f"https://cdn.sema4.ai/rcc/releases/{rcc_version}/linux64/rcc"
-        rcc_exe = os.path.join(executable_directory, "rcc")
-    else:
-        raise Exception("Unsupported OS")
-
-    response = requests.get(url, stream=True)
-    response.raise_for_status()  # Ensure we raise an error for bad status codes
-    with open(rcc_exe, 'wb') as file:
-        shutil.copyfileobj(response.raw, file)
-
-    if system != "windows":
-        os.chmod(rcc_exe, 0o755)
-
-    return rcc_exe
+        return result.status_code == 200
+    except requests.RequestException:
+        return False
 
 
 def package_yaml_from_zip(zip_ref: zipfile.ZipFile, extract_path: str) -> dict[str, Any]:

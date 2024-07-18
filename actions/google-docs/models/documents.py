@@ -57,16 +57,22 @@ class TextStyle(BaseModel, extra="ignore"):
 
 
 class _TextElementBase(_BaseStructuralElement, extra="ignore"):
-    text: Annotated[str, Field(validation_alias=AliasPath("textRun", "content"))]
+    text: Annotated[str, Field(validation_alias=AliasPath("textRun", "content"))] = None
     link: Annotated[
         str, Field(validation_alias=AliasPath("link", "textStyle", "link"))
     ] = None
     text_style: Annotated[
         TextStyle,
-        Field(validation_alias="textStyle", default_factory=lambda: TextStyle()),
+        Field(
+            validation_alias=AliasPath("textRun", "textStyle"),
+            default_factory=lambda: TextStyle(),
+        ),
     ]
 
     def to_markdown(self, ctx: _MarkdownContext) -> str:
+        if self.text is None:
+            return ""
+
         if self.link:
             text = f"[{self.text}]({self.link})"
         else:
@@ -197,7 +203,7 @@ class _SectionBreak(_BaseStructuralElement):
 class _TableData(_BaseStructuralElement):
     rows: int = 0
     columns: int = 0
-    data: list[list["_Content"]]
+    cells: list[list["_Content"]]
 
     @model_validator(mode="before")
     @classmethod
@@ -213,7 +219,7 @@ class _TableData(_BaseStructuralElement):
         return data
 
     def to_markdown(self, ctx: _MarkdownContext) -> str:
-        rows = iter(self.data)
+        rows = iter(self.cells)
 
         if (table_header := next(rows, None)) is None:
             return ""
