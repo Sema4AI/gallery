@@ -133,6 +133,7 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     needs: [build_packages, build_environments]
+    if: ${{ needs.build_packages.outputs.has_packages == 'true' || needs.build_environments.outputs.has_environments }}
     permissions:
       id-token: write # required by AWS aws-actions/configure-aws-credentials
       contents: read
