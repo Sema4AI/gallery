@@ -44,7 +44,9 @@ Show me the tasks in HubSpot matching "prebuilt" and list them by priority pleas
 >    * Description: Hey, please take this task and sort it out so it is shown in our Prebuilt Action searching capability.
 
 
-```Give me all the companies created in the past 10 days.```
+```
+Give me all the companies created in the past 10 days.
+```
 
 > Here are the companies created in the past 10 days:
 >
@@ -56,7 +58,9 @@ Show me the tasks in HubSpot matching "prebuilt" and list them by priority pleas
 >    * ID: 12338224068
 
 
-```Give me all the tickets that were modified in the past 10 days.```
+```
+Give me all the tickets that were modified in the past 10 days.
+```
 
 > Here is the ticket that was modified in the past 15 days:
 >
@@ -67,7 +71,9 @@ Show me the tasks in HubSpot matching "prebuilt" and list them by priority pleas
 >    * Pipeline Stage: 1
 >    * ID: 3613848566
 
-```Create a new Ticket to address the delivery issues for Jaloo, set the priority as Medium and add it to Support```
+```
+Create a new Ticket to address the delivery issues for Jaloo, set the priority as Medium and add it to Support.
+```
 
 > A new ticket has been successfully created to address the delivery issues for Jaloo. Here are the details:
 > 
@@ -76,3 +82,12 @@ Show me the tasks in HubSpot matching "prebuilt" and list them by priority pleas
 > * Priority: MEDIUM
 > * Pipeline Stage: New
 > * Ticket ID: 3613292501
+
+```
+Assign the Delivery Issues for Jaloo ticket to Tommi and make it high priority.
+```
+
+> The ticket Ovidiu-Test-Ticket1 has been successfully updated:
+>
+> Priority: HIGH
+> Assigned to: Tommi
