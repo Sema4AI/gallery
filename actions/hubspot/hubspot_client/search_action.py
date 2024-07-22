@@ -8,6 +8,7 @@ import os
 from enum import Enum
 from typing import Literal
 
+import requests
 from hubspot import HubSpot
 from hubspot.crm.companies import PublicObjectSearchRequest as CompanySearchRequest
 from hubspot.crm.contacts import PublicObjectSearchRequest as ContactSearchRequest
@@ -18,6 +19,8 @@ from hubspot_client.models import (
     Company,
     Contact,
     Deal,
+    EmailStatisticsResponse,
+    MarketingEmailQueryParams,
     Owner,
     Pipeline,
     SearchParams,
@@ -226,9 +229,9 @@ def search_objects(
     Args:
         object_type: The kind of object you are searching, currently supporting: tasks.
         search_params: JSON containing the following search parameters:
-            - query: String that is searched for in all the contact properties for a match.
-            - filter_groups: A list of filters to apply to the search.
-            - limit: The maximum number of results the search can return.
+            - query: String that is searched for in all the contact properties for a match
+            - filter_groups: A list of filters to apply to the search
+            - limit: The maximum number of results the search can return
         token: An OAuth2 Public App (client) token structure used to make API calls.
 
     Returns:
@@ -319,3 +322,38 @@ def list_owners(
     owners_dict = [Owner.model_validate(owner.to_dict()) for owner in owners]
 
     return Response(result=owners_dict)
+
+
+@action(is_consequential=False)
+def get_marketing_email_analytics(
+    query: MarketingEmailQueryParams,
+    token: OAuth2Secret[
+        Literal["hubspot"],
+        list[Literal["content"]],
+    ] = DEV_OAUTH2_TOKEN,
+) -> Response[EmailStatisticsResponse]:
+    """Retrieve marketing email analytics within a specified time interval.
+
+    Args:
+        query: JSON containing the following search parameters:
+            - startTimestamp: Start timestamp
+            - endTimestamp: End timestamp
+        token: An OAuth2 Public App (client) token structure used to make API calls.
+
+    Returns:
+        A list of marketing email analytics.
+    """
+
+    url = "https://api.hubapi.com/marketing/v3/emails/statistics/list"
+    headers = {
+        "accept": "application/json",
+        "authorization": f"Bearer {token.access_token}",
+    }
+
+    response = requests.request("GET", url, headers=headers, params=query.dict())
+
+    response_json = response.json()
+    if response.status_code != 200:
+        return Response(error=response.json())
+
+    return Response(result=EmailStatisticsResponse.model_validate(response.json()))

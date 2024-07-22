@@ -43,9 +43,36 @@ Show me the tasks in HubSpot matching "prebuilt" and list them by priority pleas
 >    * Created Date: 2024-04-29
 >    * Description: Hey, please take this task and sort it out so it is shown in our Prebuilt Action searching capability.
 
-## Caveats
 
-- The search is quite basic, not supporting yet complex queries, nor filtering and sorting the results.
-- The set of actions is currently limited to read-only operations, although it's on the roadmap to enable a broader use, like creating/updating and deleting objects as well.
-- The actions are currently supporting the following object types only:
-  - CRM: companies, contacts, deals, tickets, tasks
+```Give me all the companies created in the past 10 days.```
+
+> Here are the companies created in the past 10 days:
+>
+> 1. Avamm
+>    * Domain: avamm.com
+>    * ID: 12337834190
+> 2. Youbridge
+>    * Domain: youbridge.com
+>    * ID: 12338224068
+
+
+```Give me all the tickets that were modified in the past 10 days.```
+
+> Here is the ticket that was modified in the past 15 days:
+>
+> 1. Test-Ticket
+>    * Content: Testing modified content
+>    * Created Date: July 17, 2024
+>    * Priority: LOW
+>    * Pipeline Stage: 1
+>    * ID: 3613848566
+
+```Create a new Ticket to address the delivery issues for Jaloo, set the priority as Medium and add it to Support```
+
+> A new ticket has been successfully created to address the delivery issues for Jaloo. Here are the details:
+> 
+> * Subject: Delivery Issues for Jaloo
+> * Content: Addressing the delivery issues for Jaloo.
+> * Priority: MEDIUM
+> * Pipeline Stage: New
+> * Ticket ID: 3613292501

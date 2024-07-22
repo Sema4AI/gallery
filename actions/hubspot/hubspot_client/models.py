@@ -239,3 +239,69 @@ class SearchParams(BaseModel):
         ),
     ] = None
     limit: Annotated[int | None, Field(description="Number of results to return")] = 10
+
+
+class Intervals(str, Enum):
+    YEAR = "year"
+    MONTH = "month"
+    QUARTER = "quarter"
+    WEEK = "week"
+    DAY = "day"
+    HOUR = "hour"
+    MINUTE = "minute"
+    SECOND = "second"
+
+
+class MarketingEmailQueryParams(BaseModel):
+    startTimestamp: Annotated[
+        str, Field(description="Start timestamp in ISO8601 format")
+    ]
+    endTimestamp: Annotated[str, Field(description="End timestamp in ISO8601 format")]
+
+
+class Counters(BaseModel):
+    sent: Annotated[int | None, Field(description="Sent emails")] = 0
+    open: Annotated[int | None, Field(description="Opened value")] = 0
+    delivered: Annotated[int | None, Field(description="Delivered emails")] = 0
+    click: Annotated[int | None, Field(description="Clicked emails")] = 0
+    spamreport: Annotated[int | None, Field(description="Spam reported emails")] = 0
+    bounce: Annotated[int | None, Field(description="Bounced emails")] = 0
+    unsubscribed: Annotated[int | None, Field(description="Unsubscribed emails")] = 0
+    notsent: Annotated[int | None, Field(description="Not sent emails")] = 0
+
+
+class Ratios(BaseModel):
+    clickratio: Annotated[float | None, Field(description="Click ratio")] = 0.0
+    deliveredratio: Annotated[float | None, Field(description="Delivered ratio")] = 0.0
+    openratio: Annotated[float | None, Field(description="Open ratio")] = 0.0
+    unsubscribedratio: Annotated[
+        float | None, Field(description="Unsubscribed ratio")
+    ] = 0.0
+    spamreportratio: Annotated[
+        float | None, Field(description="Spam reported ratio")
+    ] = 0.0
+    bounceratio: Annotated[float | None, Field(description="Bounced ratio")] = 0.0
+    notsentratio: Annotated[float | None, Field(description="Not sent ratio")] = 0.0
+
+
+class DeviceBreakdown(BaseModel):
+    open_device_type: Annotated[
+        dict[str, int] | None, Field(description="Device type breakdown for opens")
+    ] = None
+    click_device_type: Annotated[
+        dict[str, int] | None, Field(description="Device type breakdown for clicks")
+    ] = None
+
+
+class Aggregate(BaseModel):
+    counters: Annotated[Counters | None, Field(description="Aggregate counters")] = None
+    deviceBreakdown: Annotated[
+        DeviceBreakdown | None, Field(description="Aggregate device breakdown")
+    ] = None
+    ratios: Annotated[Ratios | None, Field(description="Aggregate ratios")] = None
+
+
+class EmailStatisticsResponse(BaseModel):
+    aggregate: Annotated[
+        Aggregate | None, Field(description="Aggregate statistics")
+    ] = None
