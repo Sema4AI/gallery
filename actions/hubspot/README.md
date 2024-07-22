@@ -2,7 +2,21 @@
 
 Action Package interacting with HubSpot resources.
 
-It is currently capable of searching for and retrieving CRM objects like companies, contacts, deals etc. The search is relying on a basic query string matched against all the properties, while the returned results can be limited.
+The system supports comprehensive management of CRM objects, including companies, contacts, deals, and more. Key functionalities include:
+
+### Search and Retrieval
+
+- **Basic Search**: Perform searches using a basic query string matched against all properties.
+- **Advanced Filters**: Apply advanced filters to refine search results.
+- **Result Limiting**: Limit the number of returned results for efficiency.
+
+### CRUD Operations
+
+- **Create**: Add new CRM objects effortlessly.
+- **Update**: Modify existing CRM objects with ease.
+- **Delete**: Remove CRM objects when no longer needed.
+
+These capabilities ensure efficient and flexible management of CRM data, allowing for tailored searches and seamless object manipulation.
 
 ## Prompts
 
