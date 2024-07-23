@@ -354,6 +354,6 @@ def get_marketing_email_analytics(
 
     response_json = response.json()
     if response.status_code != 200:
-        return Response(error=response.json())
+        return Response(error=response_json)
 
-    return Response(result=EmailStatisticsResponse.model_validate(response.json()))
+    return Response(result=EmailStatisticsResponse.model_validate(response_json))

@@ -270,20 +270,6 @@ class Counters(BaseModel):
     notsent: Annotated[int | None, Field(description="Not sent emails")] = 0
 
 
-class Ratios(BaseModel):
-    clickratio: Annotated[float | None, Field(description="Click ratio")] = 0.0
-    deliveredratio: Annotated[float | None, Field(description="Delivered ratio")] = 0.0
-    openratio: Annotated[float | None, Field(description="Open ratio")] = 0.0
-    unsubscribedratio: Annotated[
-        float | None, Field(description="Unsubscribed ratio")
-    ] = 0.0
-    spamreportratio: Annotated[
-        float | None, Field(description="Spam reported ratio")
-    ] = 0.0
-    bounceratio: Annotated[float | None, Field(description="Bounced ratio")] = 0.0
-    notsentratio: Annotated[float | None, Field(description="Not sent ratio")] = 0.0
-
-
 class DeviceBreakdown(BaseModel):
     open_device_type: Annotated[
         dict[str, int] | None, Field(description="Device type breakdown for opens")
@@ -298,7 +284,6 @@ class Aggregate(BaseModel):
     deviceBreakdown: Annotated[
         DeviceBreakdown | None, Field(description="Aggregate device breakdown")
     ] = None
-    ratios: Annotated[Ratios | None, Field(description="Aggregate ratios")] = None
 
 
 class EmailStatisticsResponse(BaseModel):
