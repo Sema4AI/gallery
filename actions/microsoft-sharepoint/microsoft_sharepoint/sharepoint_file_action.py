@@ -19,6 +19,7 @@ from microsoft_sharepoint.sharepoint_site_action import (
 from microsoft_sharepoint.support import (
     BASE_GRAPH_URL,
     build_headers,
+    send_request,
 )
 
 
@@ -113,14 +114,15 @@ def search_sharepoint_files(
 
     Args:
         location: "me" or "my files" or the id of the Sharepoint site or empty to search in all sites
-        search_text: text to search for
+        search_text: text to search for, use "*" to search for all files
         token: OAuth2 token to use for the operation
 
     Returns:
         List of files matching the search criteria
     """
     headers = build_headers(token)
-    search_url = f"{BASE_GRAPH_URL}/search/query"
+    if len(search_text) == 0:
+        raise ActionError("Search text cannot be empty")
     search_payload = {
         "requests": [
             {
@@ -133,8 +135,9 @@ def search_sharepoint_files(
         search_payload["requests"][0]["scopes"] = ["/me/drive"]
     elif location != "":
         search_payload["requests"][0]["scopes"] = [f"/sites/{location}/drive"]
-    search_r = requests.post(search_url, headers=headers, json=search_payload)
-    search_results = search_r.json()
+    search_results = send_request(
+        "post", "/search/query", "Search files", headers=headers, data=search_payload
+    )
     files = []
     for result in search_results["value"][0]["hitsContainers"][0]["hits"]:
         parent = result["resource"]["parentReference"]
