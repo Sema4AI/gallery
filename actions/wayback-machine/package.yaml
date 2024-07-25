@@ -4,6 +4,9 @@ name: Wayback Machine
 # Required: A description of what's in the action package.
 description: Uses the Wayback Machine to detect changes to websites.
 
+# Package version number, recommend using semver.org
+version: 1.0.0
+
 # Required: A link to where the documentation on the package lives.
 documentation: https://github.com/<path to your markdown>/README.md
 

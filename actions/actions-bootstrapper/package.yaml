@@ -2,6 +2,9 @@ name: Actions Bootstrapper
 
 description: Action packages bootstrapper
 
+# Package version number, recommend using semver.org
+version: 1.0.0
+
 dependencies:
   conda-forge:
   - python=3.10.14
