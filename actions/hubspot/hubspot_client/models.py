@@ -32,9 +32,9 @@ class UpdateCompany(CompanyInfo):
 
 class ContactInfo(BaseModel):
     email: Annotated[str, Field(description="Contact e-mail address")]
-    firstname: Annotated[str | None, Field("", description="Contact first name")]
-    lastname: Annotated[str | None, Field("", description="Contact last name")]
-    phone: Annotated[str | None, Field("", description="Contact phone number")]
+    firstname: Annotated[str | None, Field(description="Contact first name")] = None
+    lastname: Annotated[str | None, Field(description="Contact last name")] = None
+    phone: Annotated[str | None, Field(description="Contact phone number")] = None
 
 
 class UpdateContact(ContactInfo):
