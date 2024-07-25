@@ -5,7 +5,7 @@ name: HubSpot
 description: Atomic actions operating on resources in HubSpot.
 
 # Package version number, recommend using semver.org
-version: 1.0.0
+version: 1.1.0
 
 dependencies:
   conda-forge:
@@ -13,9 +13,10 @@ dependencies:
     - python-dotenv=1.0.1
     - uv=0.2.6
   pypi:
-    - sema4ai-actions=0.9.2
+    - sema4ai-actions=0.10.0
     - pydantic=2.7.4
     - hubspot-api-client=9.0.0
+    - requests=2.32.3
 
 packaging:
   # By default, all files and folders in this directory are packaged when uploaded.
