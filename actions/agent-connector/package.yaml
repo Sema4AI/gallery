@@ -1,0 +1,30 @@
+# Required: A short name for the action package
+name: Agent Connector
+
+# Required: A description of what's in the action package.
+description: Actions to connect agents with each other
+
+# Required: A link to where the documentation on the package lives.
+documentation: https://sema4.ai/
+
+dependencies:
+  conda-forge:
+  - python=3.10.14
+  - uv=0.2.4
+  pypi:
+  - sema4ai-actions=0.9.0
+  - requests=2.32.3
+
+packaging:
+  # By default, all files and folders in this directory are packaged when uploaded.
+  # Add exclusion rules below (expects glob format: https://docs.python.org/3/library/glob.html)
+  exclude:
+    - ./.git/**
+    - ./.vscode/**
+    - ./devdata/**
+    - ./output/**
+    - ./venv/**
+    - ./.venv/**
+    - ./.DS_store/**
+    - ./**/*.pyc
+    - ./**/*.zip

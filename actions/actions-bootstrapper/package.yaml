@@ -1,0 +1,24 @@
+name: Actions Bootstrapper
+
+description: Action packages bootstrapper
+
+dependencies:
+  conda-forge:
+  - python=3.10.14
+  - uv=0.2.4
+  pypi:
+  - sema4ai-actions=0.9.0
+  - requests=2.32.3
+  - black=24.4.2
+
+packaging:
+  exclude:
+    - ./.git/**
+    - ./.vscode/**
+    - ./devdata/**
+    - ./output/**
+    - ./venv/**
+    - ./.venv/**
+    - ./.DS_store/**
+    - ./**/*.pyc
+    - ./**/*.zip

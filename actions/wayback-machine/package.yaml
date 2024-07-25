@@ -1,0 +1,32 @@
+# Required: A short name for the action package
+name: Wayback Machine
+
+# Required: A description of what's in the action package.
+description: Uses the Wayback Machine to detect changes to websites.
+
+# Required: A link to where the documentation on the package lives.
+documentation: https://github.com/<path to your markdown>/README.md
+
+dependencies:
+  conda-forge:
+    - python=3.10.14
+    - uv=0.1.44
+  pypi:
+    - sema4ai-actions=0.6.0
+    - pytz=2024.1
+    - waybackpy=3.0.6
+
+packaging:
+  # This section is optional.
+  # By default all files and folders in this directory are packaged when uploaded.
+  # Add exclusion rules below (expects glob format: https://docs.python.org/3/library/glob.html)
+  exclude:
+    - ./.git/**
+    - ./.vscode/**
+    - ./devdata/**
+    - ./output/**
+    - ./.DS_store/**
+    - ./venv/**
+    - ./.venv/**
+    - ./**/*.pyc
+    - ./**/*.zip

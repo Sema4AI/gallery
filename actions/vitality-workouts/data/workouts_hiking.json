@@ -1,0 +1,388 @@
+[
+  {
+    "totalEnergy": {
+      "units": "kcal",
+      "qty": 2.8620000000000014
+    },
+    "elevation": {
+      "descent": 0,
+      "ascent": 0,
+      "units": "ft"
+    },
+    "intensity": {
+      "qty": 1.7480194739984605,
+      "units": "MET"
+    },
+    "heartRateData": [
+      {
+        "qty": 82.21951281539793,
+        "units": "bpm",
+        "date": "2021-08-14 21:26:32 +0000"
+      }
+    ],
+    "maxHeartRate": {
+      "units": "bpm",
+      "qty": 89
+    },
+    "stepCount": {
+      "units": "steps",
+      "qty": 0
+    },
+    "totalSwimmingStrokeCount": {
+      "qty": 0,
+      "units": "count"
+    },
+    "swimCadence": {
+      "units": "spm",
+      "qty": 0
+    },
+    "end": "2021-08-14 21:27:54 +0000",
+    "name": "Hiking",
+    "speed": {
+      "qty": 0.35079257464003544,
+      "units": "mi/hr"
+    },
+    "activeEnergy": {
+      "units": "kcal",
+      "qty": 0.9880000000000005
+    },
+    "isIndoor": false,
+    "start": "2021-08-14 21:26:32 +0000",
+    "temperature": {
+      "units": "degF",
+      "qty": 0
+    },
+    "heartRateRecovery": [
+      {
+        "date": "2021-08-14 21:27:58 +0000",
+        "units": "bpm",
+        "qty": 69
+      },
+      {
+        "units": "bpm",
+        "date": "2021-08-14 21:28:02 +0000",
+        "qty": 69
+      },
+      {
+        "units": "bpm",
+        "qty": 68,
+        "date": "2021-08-14 21:28:04 +0000"
+      },
+      {
+        "units": "bpm",
+        "qty": 66,
+        "date": "2021-08-14 21:28:10 +0000"
+      },
+      {
+        "units": "bpm",
+        "qty": 69,
+        "date": "2021-08-14 21:28:18 +0000"
+      },
+      {
+        "qty": 69,
+        "units": "bpm",
+        "date": "2021-08-14 21:28:19 +0000"
+      },
+      {
+        "date": "2021-08-14 21:28:24 +0000",
+        "units": "bpm",
+        "qty": 67
+      },
+      {
+        "units": "bpm",
+        "date": "2021-08-14 21:28:33 +0000",
+        "qty": 72
+      },
+      {
+        "qty": 74,
+        "units": "bpm",
+        "date": "2021-08-14 21:28:38 +0000"
+      },
+      {
+        "qty": 74,
+        "units": "bpm",
+        "date": "2021-08-14 21:28:43 +0000"
+      },
+      {
+        "qty": 73,
+        "units": "bpm",
+        "date": "2021-08-14 21:28:46 +0000"
+      },
+      {
+        "units": "bpm",
+        "qty": 72,
+        "date": "2021-08-14 21:28:51 +0000"
+      },
+      {
+        "units": "bpm",
+        "date": "2021-08-14 21:28:57 +0000",
+        "qty": 74
+      },
+      {
+        "date": "2021-08-14 21:29:00 +0000",
+        "units": "bpm",
+        "qty": 75
+      },
+      {
+        "date": "2021-08-14 21:29:07 +0000",
+        "units": "bpm",
+        "qty": 77
+      },
+      {
+        "date": "2021-08-14 21:29:13 +0000",
+        "qty": 76,
+        "units": "bpm"
+      },
+      {
+        "date": "2021-08-14 21:29:14 +0000",
+        "qty": 77,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "qty": 78,
+        "date": "2021-08-14 21:29:19 +0000"
+      },
+      {
+        "units": "bpm",
+        "date": "2021-08-14 21:29:24 +0000",
+        "qty": 78
+      },
+      {
+        "qty": 79,
+        "date": "2021-08-14 21:29:32 +0000",
+        "units": "bpm"
+      },
+      {
+        "date": "2021-08-14 21:29:36 +0000",
+        "qty": 76,
+        "units": "bpm"
+      },
+      {
+        "date": "2021-08-14 21:29:43 +0000",
+        "qty": 75,
+        "units": "bpm"
+      },
+      {
+        "date": "2021-08-14 21:29:44 +0000",
+        "qty": 74,
+        "units": "bpm"
+      },
+      {
+        "date": "2021-08-14 21:29:53 +0000",
+        "units": "bpm",
+        "qty": 71
+      }
+    ],
+    "humidity": {
+      "qty": 0,
+      "units": "%"
+    },
+    "avgHeartRate": {
+      "qty": 82.21951281539793,
+      "units": "bpm"
+    },
+    "stepCadence": {
+      "qty": 0,
+      "units": "spm"
+    },
+    "distance": {
+      "qty": 0.008032734947058579,
+      "units": "mi"
+    },
+    "flightsClimbed": {
+      "units": "count",
+      "qty": 0
+    },
+    "duration": 82.43574094772339,
+    "location": "Outdoor"
+  },
+  {
+    "swimCadence": {
+      "units": "spm",
+      "qty": 0
+    },
+    "duration": 13347.600474834442,
+    "intensity": {
+      "units": "MET",
+      "qty": 3.7201845155869
+    },
+    "elevation": {
+      "ascent": 816.4041994750656,
+      "descent": 0,
+      "units": "ft"
+    },
+    "temperature": {
+      "units": "degF",
+      "qty": 73.39999890327454
+    },
+    "speed": {
+      "qty": 1.6530823161261656,
+      "units": "mi/hr"
+    },
+    "maxHeartRate": {
+      "qty": 101,
+      "units": "bpm"
+    },
+    "end": "2021-08-12 19:44:57 +0000",
+    "avgHeartRate": {
+      "units": "bpm",
+      "qty": 78.71212529676977
+    },
+    "location": "Outdoor",
+    "activeEnergy": {
+      "units": "kcal",
+      "qty": 544.9948774465322
+    },
+    "stepCount": {
+      "units": "steps",
+      "qty": 14215
+    },
+    "totalSwimmingStrokeCount": {
+      "units": "count",
+      "qty": 0
+    },
+    "isIndoor": false,
+    "flightsClimbed": {
+      "units": "count",
+      "qty": 10
+    },
+    "totalEnergy": {
+      "units": "kcal",
+      "qty": 868.478877446547
+    },
+    "start": "2021-08-12 15:33:18 +0000",
+    "distance": {
+      "qty": 6.1290784187961185,
+      "units": "mi"
+    },
+    "stepCadence": {
+      "units": "spm",
+      "qty": 63.899125659930945
+    },
+    "heartRateData": [
+      {
+        "units": "bpm",
+        "date": "2021-08-12 15:33:18 +0000",
+        "qty": 78.71212529676977
+      }
+    ],
+    "heartRateRecovery": [
+      {
+        "date": "2021-08-12 19:45:05 +0000",
+        "units": "bpm",
+        "qty": 79
+      },
+      {
+        "units": "bpm",
+        "qty": 78,
+        "date": "2021-08-12 19:45:08 +0000"
+      },
+      {
+        "date": "2021-08-12 19:45:13 +0000",
+        "units": "bpm",
+        "qty": 77
+      },
+      {
+        "qty": 77,
+        "units": "bpm",
+        "date": "2021-08-12 19:45:19 +0000"
+      },
+      {
+        "units": "bpm",
+        "qty": 79,
+        "date": "2021-08-12 19:45:23 +0000"
+      },
+      {
+        "units": "bpm",
+        "qty": 79,
+        "date": "2021-08-12 19:45:28 +0000"
+      },
+      {
+        "units": "bpm",
+        "date": "2021-08-12 19:45:34 +0000",
+        "qty": 78
+      },
+      {
+        "qty": 77,
+        "units": "bpm",
+        "date": "2021-08-12 19:45:38 +0000"
+      },
+      {
+        "date": "2021-08-12 19:45:42 +0000",
+        "qty": 77,
+        "units": "bpm"
+      },
+      {
+        "date": "2021-08-12 19:45:50 +0000",
+        "units": "bpm",
+        "qty": 78
+      },
+      {
+        "units": "bpm",
+        "qty": 78,
+        "date": "2021-08-12 19:45:53 +0000"
+      },
+      {
+        "date": "2021-08-12 19:45:56 +0000",
+        "units": "bpm",
+        "qty": 78
+      },
+      {
+        "qty": 77,
+        "units": "bpm",
+        "date": "2021-08-12 19:46:04 +0000"
+      },
+      {
+        "date": "2021-08-12 19:46:10 +0000",
+        "qty": 75,
+        "units": "bpm"
+      },
+      {
+        "qty": 74,
+        "date": "2021-08-12 19:46:15 +0000",
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "qty": 76,
+        "date": "2021-08-12 19:46:20 +0000"
+      },
+      {
+        "qty": 77,
+        "date": "2021-08-12 19:46:26 +0000",
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "qty": 73,
+        "date": "2021-08-12 19:46:35 +0000"
+      },
+      {
+        "units": "bpm",
+        "date": "2021-08-12 19:46:39 +0000",
+        "qty": 72
+      },
+      {
+        "units": "bpm",
+        "qty": 70,
+        "date": "2021-08-12 19:46:44 +0000"
+      },
+      {
+        "date": "2021-08-12 19:46:48 +0000",
+        "units": "bpm",
+        "qty": 69
+      },
+      {
+        "qty": 69,
+        "units": "bpm",
+        "date": "2021-08-12 19:46:51 +0000"
+      }
+    ],
+    "humidity": {
+      "qty": 73,
+      "units": "%"
+    },
+    "name": "Hiking"
+  }
+]

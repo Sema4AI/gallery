@@ -1,0 +1,243 @@
+{
+    "metadata": {
+        "name": "Agent Connector",
+        "description": "Actions to connect agents with each other",
+        "secrets": {},
+        "version": 1
+    },
+    "openapi.json": {
+        "openapi": "3.1.0",
+        "info": {
+            "title": "Sema4.ai Action Server",
+            "version": "0.15.1"
+        },
+        "servers": [
+            {
+                "url": "http://localhost:8080"
+            }
+        ],
+        "paths": {
+            "/api/actions/agent-connector/create-test-agent/run": {
+                "post": {
+                    "summary": "Create Test Agent",
+                    "description": "Creates a test agent with the given parameters.",
+                    "operationId": "create_test_agent",
+                    "requestBody": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "agent_name": {
+                                            "type": "string",
+                                            "title": "Agent Name",
+                                            "description": "The name of the agent."
+                                        },
+                                        "action_server_url": {
+                                            "type": "string",
+                                            "title": "Action Server Url",
+                                            "description": "The URL of the action server."
+                                        }
+                                    },
+                                    "type": "object",
+                                    "required": [
+                                        "agent_name",
+                                        "action_server_url"
+                                    ]
+                                }
+                            }
+                        },
+                        "required": true
+                    },
+                    "responses": {
+                        "200": {
+                            "description": "Successful Response",
+                            "content": {
+                                "application/json": {
+                                    "schema": {
+                                        "type": "string",
+                                        "title": "Response for Create Test Agent",
+                                        "description": "The created agent ID, or error message if the call fails."
+                                    }
+                                }
+                            }
+                        },
+                        "422": {
+                            "description": "Validation Error",
+                            "content": {
+                                "application/json": {
+                                    "schema": {
+                                        "$ref": "#/components/schemas/HTTPValidationError"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "/api/actions/agent-connector/create-thread/run": {
+                "post": {
+                    "summary": "Create Thread",
+                    "description": "Creates a new thread for communication with an agent.\nNote: Agent names are pre-defined and must match existing agent names.",
+                    "operationId": "create_thread",
+                    "requestBody": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "agent_name": {
+                                            "type": "string",
+                                            "title": "Agent Name",
+                                            "description": "The name of the pre-defined agent."
+                                        },
+                                        "thread_name": {
+                                            "type": "string",
+                                            "title": "Thread Name",
+                                            "description": "The name of the thread (user-defined)."
+                                        }
+                                    },
+                                    "type": "object",
+                                    "required": [
+                                        "agent_name",
+                                        "thread_name"
+                                    ]
+                                }
+                            }
+                        },
+                        "required": true
+                    },
+                    "responses": {
+                        "200": {
+                            "description": "Successful Response",
+                            "content": {
+                                "application/json": {
+                                    "schema": {
+                                        "type": "string",
+                                        "title": "Response for Create Thread",
+                                        "description": "The thread ID, or error message if the call fails."
+                                    }
+                                }
+                            }
+                        },
+                        "422": {
+                            "description": "Validation Error",
+                            "content": {
+                                "application/json": {
+                                    "schema": {
+                                        "$ref": "#/components/schemas/HTTPValidationError"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "/api/actions/agent-connector/send-message/run": {
+                "post": {
+                    "summary": "Send Message",
+                    "description": "Sends a message within a thread and retrieves the agent's response.\nNote: The thread ID must be obtained from a successful call to `create_thread`.",
+                    "operationId": "send_message",
+                    "requestBody": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "thread_id": {
+                                            "type": "string",
+                                            "title": "Thread Id",
+                                            "description": "The thread ID obtained from `create_thread`."
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "title": "Message",
+                                            "description": "The message content."
+                                        }
+                                    },
+                                    "type": "object",
+                                    "required": [
+                                        "thread_id",
+                                        "message"
+                                    ]
+                                }
+                            }
+                        },
+                        "required": true
+                    },
+                    "responses": {
+                        "200": {
+                            "description": "Successful Response",
+                            "content": {
+                                "application/json": {
+                                    "schema": {
+                                        "type": "string",
+                                        "title": "Response for Send Message",
+                                        "description": "The agent's response, or error message if the call fails."
+                                    }
+                                }
+                            }
+                        },
+                        "422": {
+                            "description": "Validation Error",
+                            "content": {
+                                "application/json": {
+                                    "schema": {
+                                        "$ref": "#/components/schemas/HTTPValidationError"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "components": {
+            "schemas": {
+                "HTTPValidationError": {
+                    "properties": {
+                        "errors": {
+                            "items": {
+                                "$ref": "#/components/schemas/ValidationError"
+                            },
+                            "type": "array",
+                            "title": "Errors"
+                        }
+                    },
+                    "type": "object",
+                    "title": "HTTPValidationError"
+                },
+                "ValidationError": {
+                    "properties": {
+                        "loc": {
+                            "items": {
+                                "anyOf": [
+                                    {
+                                        "type": "string"
+                                    },
+                                    {
+                                        "type": "integer"
+                                    }
+                                ]
+                            },
+                            "type": "array",
+                            "title": "Location"
+                        },
+                        "msg": {
+                            "type": "string",
+                            "title": "Message"
+                        },
+                        "type": {
+                            "type": "string",
+                            "title": "Error Type"
+                        }
+                    },
+                    "type": "object",
+                    "required": [
+                        "loc",
+                        "msg",
+                        "type"
+                    ],
+                    "title": "ValidationError"
+                }
+            }
+        }
+    }
+}
