@@ -74,7 +74,7 @@ def search_companies(
         A structure with a list of companies matching the query.
     """
     api_client = HubSpot(access_token=token.access_token)
-    search_request = CompanySearchRequest(**search_params.dict(exclude_none=True))
+    search_request = CompanySearchRequest(**search_params.model_dump(exclude_none=True))
     response = api_client.crm.companies.search_api.do_search(
         public_object_search_request=search_request
     )
@@ -115,7 +115,7 @@ def search_contacts(
         A structure with a list of contacts matching the query.
     """
     api_client = HubSpot(access_token=token.access_token)
-    search_request = ContactSearchRequest(**search_params.dict(exclude_none=True))
+    search_request = ContactSearchRequest(**search_params.model_dump(exclude_none=True))
     response = api_client.crm.contacts.search_api.do_search(
         public_object_search_request=search_request
     )
@@ -157,7 +157,7 @@ def search_deals(
         A structure with a list of deals matching the query.
     """
     api_client = HubSpot(access_token=token.access_token)
-    search_request = DealSearchRequest(**search_params.dict(exclude_none=True))
+    search_request = DealSearchRequest(**search_params.model_dump(exclude_none=True))
     response = api_client.crm.deals.search_api.do_search(
         public_object_search_request=search_request
     )
@@ -199,7 +199,7 @@ def search_tickets(
         A structure with a list of deals matching the query.
     """
     api_client = HubSpot(access_token=token.access_token)
-    search_request = TicketSearchRequest(**search_params.dict(exclude_none=True))
+    search_request = TicketSearchRequest(**search_params.model_dump(exclude_none=True))
     response = api_client.crm.tickets.search_api.do_search(
         public_object_search_request=search_request
     )
@@ -242,7 +242,7 @@ def search_objects(
     search_api = getattr(api_client.crm.objects, object_type.value).search_api
     ObjectResult = OBJECT_MODEL_MAP[object_type]
     search_request = ObjectSearchRequest(
-        **search_params.dict(exclude_none=True),
+        **search_params.model_dump(exclude_none=True),
         properties=ObjectResult.get_properties(),
     )
     response = search_api.do_search(public_object_search_request=search_request)
@@ -350,7 +350,7 @@ def get_marketing_email_analytics(
         "authorization": f"Bearer {token.access_token}",
     }
 
-    response = requests.request("GET", url, headers=headers, params=query.dict())
+    response = requests.request("GET", url, headers=headers, params=query.model_dump())
 
     response_json = response.json()
     if response.status_code != 200:
