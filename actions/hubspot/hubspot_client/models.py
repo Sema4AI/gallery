@@ -157,26 +157,10 @@ class Task(_ObjectResult):
         return " | ".join(f"{prop}: {value}" for prop, value in props.items())
 
 
-class Operator(str, Enum):
-    LT = "LT"
-    LTE = "LTE"
-    GT = "GT"
-    GTE = "GTE"
-    EQ = "EQ"
-    NEQ = "NEQ"
-    BETWEEN = "BETWEEN"
-    IN = "IN"
-    NOT_IN = "NOT_IN"
-    HAS_PROPERTY = "HAS_PROPERTY"
-    NOT_HAS_PROPERTY = "NOT_HAS_PROPERTY"
-    CONTAINS_TOKEN = "CONTAINS_TOKEN"
-    NOT_CONTAINS_TOKEN = "NOT_CONTAINS_TOKEN"
-
-
 class Filter(BaseModel):
     propertyName: Annotated[str, Field(description="Property name to filter by")]
     operator: Annotated[
-        Operator,
+        str,
         Field(
             description=(
                 "Filter operation value. Possible values include: "
@@ -220,17 +204,10 @@ class Filters(BaseModel):
     filters: Annotated[list[Filter], Field(description="Filter")]
 
 
-class FilterGroups(BaseModel):
-    filterGroups: Annotated[
-        list[Filters],
-        Field(description="Grouped filters in order to simulate AND and OR operators"),
-    ]
-
-
 class SearchParams(BaseModel):
     query: Annotated[str | None, Field(description="Search query")] = None
     filter_groups: Annotated[
-        list[FilterGroups] | None,
+        list[Filters] | None,
         Field(
             description="To include multiple filter criteria, you can group filters within filterGroups: "
             "- to apply AND logic, include a comma separated list of conditions within one set of filters. "
@@ -239,17 +216,6 @@ class SearchParams(BaseModel):
         ),
     ] = None
     limit: Annotated[int | None, Field(description="Number of results to return")] = 10
-
-
-class Intervals(str, Enum):
-    YEAR = "year"
-    MONTH = "month"
-    QUARTER = "quarter"
-    WEEK = "week"
-    DAY = "day"
-    HOUR = "hour"
-    MINUTE = "minute"
-    SECOND = "second"
 
 
 class MarketingEmailQueryParams(BaseModel):

@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.1.1] - 2024-07-26
+ 
+### Fixed
+- Resolved the issue where the search methods were not properly utilizing the filter_groups.
+
 ## [1.1.0] - 2024-07-22
  
 ### Added
