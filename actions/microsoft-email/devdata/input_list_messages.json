@@ -1,0 +1,11 @@
+{
+    "search_query": "Microsoft Store",
+    "token": {
+        "provider": "microsoft",
+        "scopes": [
+            "Mail.Read"
+        ],
+        "access_token": "<ACCESS_TOKEN>",
+        "metadata": {}
+    }
+}
