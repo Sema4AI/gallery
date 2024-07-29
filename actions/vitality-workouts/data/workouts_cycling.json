@@ -1,0 +1,3032 @@
+[
+  {
+    "stepCount": {
+      "qty": 1918,
+      "units": "steps"
+    },
+    "name": "Cycling",
+    "totalEnergy": {
+      "qty": 425.60600000000056,
+      "units": "kcal"
+    },
+    "start": "2015-07-04 13:50:44 +0000",
+    "maxHeartRate": {
+      "qty": 191,
+      "units": "bpm"
+    },
+    "temperature": {
+      "units": "degF",
+      "qty": 0
+    },
+    "heartRateRecovery": [],
+    "stepCadence": {
+      "qty": 26.49576557095279,
+      "units": "spm"
+    },
+    "activeEnergy": {
+      "units": "kcal",
+      "qty": 425.60600000000056
+    },
+    "flightsClimbed": {
+      "qty": 0,
+      "units": "count"
+    },
+    "totalSwimmingStrokeCount": {
+      "units": "count",
+      "qty": 0
+    },
+    "avgHeartRate": {
+      "qty": 85.93172260677892,
+      "units": "bpm"
+    },
+    "swimCadence": {
+      "units": "spm",
+      "qty": 0
+    },
+    "humidity": {
+      "qty": 0,
+      "units": "%"
+    },
+    "end": "2015-07-04 15:03:08 +0000",
+    "speed": {
+      "qty": 0.013139026981404458,
+      "units": "mi/hr"
+    },
+    "location": "",
+    "duration": 4343.335530042648,
+    "heartRateData": [
+      {
+        "units": "bpm",
+        "date": "2015-07-04 13:50:44 +0000",
+        "qty": 85.93172260677892
+      }
+    ],
+    "isIndoor": false,
+    "intensity": {
+      "units": "MET",
+      "qty": 0
+    },
+    "distance": {
+      "units": "mi",
+      "qty": 0.015852000755145274
+    },
+    "elevation": {
+      "units": "ft",
+      "ascent": 0,
+      "descent": 0
+    }
+  },
+  {
+    "end": "2015-06-06 14:11:59 +0000",
+    "start": "2015-06-06 13:47:28 +0000",
+    "totalEnergy": {
+      "qty": 111.42300000000002,
+      "units": "kcal"
+    },
+    "flightsClimbed": {
+      "units": "count",
+      "qty": 0
+    },
+    "swimCadence": {
+      "qty": 0,
+      "units": "spm"
+    },
+    "temperature": {
+      "units": "degF",
+      "qty": 0
+    },
+    "activeEnergy": {
+      "units": "kcal",
+      "qty": 111.42300000000002
+    },
+    "humidity": {
+      "qty": 0,
+      "units": "%"
+    },
+    "totalSwimmingStrokeCount": {
+      "qty": 0,
+      "units": "count"
+    },
+    "heartRateData": [
+      {
+        "qty": 88.24537644210842,
+        "units": "bpm",
+        "date": "2015-06-06 13:47:28 +0000"
+      }
+    ],
+    "stepCadence": {
+      "qty": 16.486896355335887,
+      "units": "spm"
+    },
+    "maxHeartRate": {
+      "qty": 109,
+      "units": "bpm"
+    },
+    "speed": {
+      "qty": 3.5975815696074473,
+      "units": "mi/hr"
+    },
+    "name": "Cycling",
+    "elevation": {
+      "ascent": 0,
+      "descent": 0,
+      "units": "ft"
+    },
+    "intensity": {
+      "qty": 0,
+      "units": "MET"
+    },
+    "stepCount": {
+      "qty": 404,
+      "units": "steps"
+    },
+    "heartRateRecovery": [
+      {
+        "date": "2015-06-06 14:12:06 +0000",
+        "qty": 65,
+        "units": "bpm"
+      },
+      {
+        "date": "2015-06-06 14:12:11 +0000",
+        "units": "bpm",
+        "qty": 77
+      },
+      {
+        "qty": 77,
+        "units": "bpm",
+        "date": "2015-06-06 14:12:16 +0000"
+      },
+      {
+        "qty": 78,
+        "date": "2015-06-06 14:12:21 +0000",
+        "units": "bpm"
+      },
+      {
+        "qty": 77,
+        "date": "2015-06-06 14:12:26 +0000",
+        "units": "bpm"
+      },
+      {
+        "qty": 77,
+        "date": "2015-06-06 14:12:31 +0000",
+        "units": "bpm"
+      }
+    ],
+    "location": "",
+    "isIndoor": false,
+    "distance": {
+      "qty": 1.4692708306001827,
+      "units": "mi"
+    },
+    "duration": 1470.2585300207138,
+    "avgHeartRate": {
+      "units": "bpm",
+      "qty": 88.24537644210842
+    }
+  },
+  {
+    "heartRateData": [
+      {
+        "units": "bpm",
+        "qty": 98.29984003337313,
+        "date": "2015-05-23 17:04:09 +0000"
+      }
+    ],
+    "name": "Cycling",
+    "maxHeartRate": {
+      "qty": 179,
+      "units": "bpm"
+    },
+    "flightsClimbed": {
+      "qty": 0,
+      "units": "count"
+    },
+    "avgHeartRate": {
+      "units": "bpm",
+      "qty": 98.29984003337313
+    },
+    "speed": {
+      "units": "mi/hr",
+      "qty": 2.38867718564001
+    },
+    "stepCadence": {
+      "qty": 24.69000132601439,
+      "units": "spm"
+    },
+    "humidity": {
+      "units": "%",
+      "qty": 0
+    },
+    "end": "2015-05-23 18:21:52 +0000",
+    "stepCount": {
+      "qty": 1919,
+      "units": "steps"
+    },
+    "temperature": {
+      "qty": 0,
+      "units": "degF"
+    },
+    "totalEnergy": {
+      "qty": 381.13899999999853,
+      "units": "kcal"
+    },
+    "swimCadence": {
+      "qty": 0,
+      "units": "spm"
+    },
+    "location": "",
+    "duration": 4663.426238000393,
+    "elevation": {
+      "ascent": 0,
+      "descent": 0,
+      "units": "ft"
+    },
+    "heartRateRecovery": [],
+    "isIndoor": false,
+    "distance": {
+      "units": "mi",
+      "qty": 3.0942832948962664
+    },
+    "start": "2015-05-23 17:04:09 +0000",
+    "intensity": {
+      "units": "MET",
+      "qty": 0
+    },
+    "activeEnergy": {
+      "qty": 381.13899999999853,
+      "units": "kcal"
+    },
+    "totalSwimmingStrokeCount": {
+      "qty": 0,
+      "units": "count"
+    }
+  },
+  {
+    "temperature": {
+      "units": "degF",
+      "qty": 0
+    },
+    "stepCount": {
+      "qty": 834,
+      "units": "steps"
+    },
+    "location": "",
+    "flightsClimbed": {
+      "qty": 0,
+      "units": "count"
+    },
+    "totalEnergy": {
+      "qty": 232.7490000000006,
+      "units": "kcal"
+    },
+    "speed": {
+      "qty": 3.6509752924924737,
+      "units": "mi/hr"
+    },
+    "end": "2015-07-06 00:31:18 +0000",
+    "name": "Cycling",
+    "heartRateRecovery": [],
+    "duration": 2709.6928910017014,
+    "intensity": {
+      "qty": 0,
+      "units": "MET"
+    },
+    "distance": {
+      "units": "mi",
+      "qty": 2.748061609802698
+    },
+    "avgHeartRate": {
+      "units": "bpm",
+      "qty": 80.34554143153915
+    },
+    "activeEnergy": {
+      "qty": 232.7490000000006,
+      "units": "kcal"
+    },
+    "start": "2015-07-05 23:46:08 +0000",
+    "maxHeartRate": {
+      "qty": 98,
+      "units": "bpm"
+    },
+    "isIndoor": false,
+    "elevation": {
+      "units": "ft",
+      "ascent": 0,
+      "descent": 0
+    },
+    "swimCadence": {
+      "qty": 0,
+      "units": "spm"
+    },
+    "stepCadence": {
+      "qty": 18.467037414524693,
+      "units": "spm"
+    },
+    "humidity": {
+      "qty": 0,
+      "units": "%"
+    },
+    "totalSwimmingStrokeCount": {
+      "units": "count",
+      "qty": 0
+    },
+    "heartRateData": [
+      {
+        "units": "bpm",
+        "qty": 80.34554143153915,
+        "date": "2015-07-05 23:46:08 +0000"
+      }
+    ]
+  },
+  {
+    "elevation": {
+      "units": "ft",
+      "ascent": 0,
+      "descent": 0
+    },
+    "distance": {
+      "units": "mi",
+      "qty": 3.9731334827571136
+    },
+    "totalEnergy": {
+      "qty": 570.5199999999993,
+      "units": "kcal"
+    },
+    "end": "2015-07-12 17:12:34 +0000",
+    "location": "",
+    "stepCadence": {
+      "qty": 22.732164026274848,
+      "units": "spm"
+    },
+    "speed": {
+      "units": "mi/hr",
+      "qty": 2.195735543638234
+    },
+    "activeEnergy": {
+      "units": "kcal",
+      "qty": 570.5199999999993
+    },
+    "heartRateRecovery": [
+      {
+        "qty": 73,
+        "date": "2015-07-12 17:12:48 +0000",
+        "units": "bpm"
+      },
+      {
+        "date": "2015-07-12 17:12:53 +0000",
+        "qty": 74,
+        "units": "bpm"
+      },
+      {
+        "date": "2015-07-12 17:12:58 +0000",
+        "qty": 74,
+        "units": "bpm"
+      },
+      {
+        "qty": 76,
+        "units": "bpm",
+        "date": "2015-07-12 17:13:03 +0000"
+      },
+      {
+        "date": "2015-07-12 17:13:08 +0000",
+        "qty": 82,
+        "units": "bpm"
+      }
+    ],
+    "avgHeartRate": {
+      "qty": 76.74766554494272,
+      "units": "bpm"
+    },
+    "intensity": {
+      "units": "MET",
+      "qty": 0
+    },
+    "humidity": {
+      "qty": 0,
+      "units": "%"
+    },
+    "isIndoor": false,
+    "stepCount": {
+      "units": "steps",
+      "qty": 2468
+    },
+    "totalSwimmingStrokeCount": {
+      "qty": 0,
+      "units": "count"
+    },
+    "flightsClimbed": {
+      "qty": 0,
+      "units": "count"
+    },
+    "swimCadence": {
+      "units": "spm",
+      "qty": 0
+    },
+    "temperature": {
+      "units": "degF",
+      "qty": 0
+    },
+    "start": "2015-07-12 15:24:00 +0000",
+    "name": "Cycling",
+    "duration": 6514.1180500388145,
+    "heartRateData": [
+      {
+        "date": "2015-07-12 15:24:00 +0000",
+        "qty": 76.74766554494272,
+        "units": "bpm"
+      }
+    ],
+    "maxHeartRate": {
+      "qty": 94,
+      "units": "bpm"
+    }
+  },
+  {
+    "flightsClimbed": {
+      "units": "count",
+      "qty": 0
+    },
+    "end": "2015-06-18 23:26:51 +0000",
+    "avgHeartRate": {
+      "units": "bpm",
+      "qty": 92.8955084465473
+    },
+    "name": "Cycling",
+    "totalEnergy": {
+      "units": "kcal",
+      "qty": 481.97500000000036
+    },
+    "activeEnergy": {
+      "units": "kcal",
+      "qty": 481.97500000000036
+    },
+    "intensity": {
+      "qty": 0,
+      "units": "MET"
+    },
+    "stepCadence": {
+      "qty": 33.23061581895732,
+      "units": "spm"
+    },
+    "stepCount": {
+      "units": "steps",
+      "qty": 2717
+    },
+    "location": "",
+    "maxHeartRate": {
+      "units": "bpm",
+      "qty": 155
+    },
+    "speed": {
+      "units": "mi/hr",
+      "qty": 4.100849249858648
+    },
+    "duration": 4905.717091977596,
+    "heartRateData": [
+      {
+        "date": "2015-06-18 22:05:05 +0000",
+        "qty": 92.8955084465473,
+        "units": "bpm"
+      }
+    ],
+    "start": "2015-06-18 22:05:05 +0000",
+    "swimCadence": {
+      "units": "spm",
+      "qty": 0
+    },
+    "elevation": {
+      "descent": 0,
+      "units": "ft",
+      "ascent": 0
+    },
+    "temperature": {
+      "units": "degF",
+      "qty": 0
+    },
+    "distance": {
+      "qty": 5.588223960181964,
+      "units": "mi"
+    },
+    "totalSwimmingStrokeCount": {
+      "units": "count",
+      "qty": 0
+    },
+    "heartRateRecovery": [
+      {
+        "date": "2015-06-18 23:26:56 +0000",
+        "units": "bpm",
+        "qty": 85
+      },
+      {
+        "date": "2015-06-18 23:27:01 +0000",
+        "units": "bpm",
+        "qty": 89
+      },
+      {
+        "date": "2015-06-18 23:27:06 +0000",
+        "qty": 89,
+        "units": "bpm"
+      },
+      {
+        "qty": 91,
+        "units": "bpm",
+        "date": "2015-06-18 23:27:11 +0000"
+      }
+    ],
+    "isIndoor": false,
+    "humidity": {
+      "units": "%",
+      "qty": 0
+    }
+  },
+  {
+    "end": "2015-07-23 23:38:46 +0000",
+    "flightsClimbed": {
+      "qty": 0,
+      "units": "count"
+    },
+    "totalEnergy": {
+      "units": "kcal",
+      "qty": 259.0159999999995
+    },
+    "intensity": {
+      "qty": 0,
+      "units": "MET"
+    },
+    "stepCount": {
+      "units": "steps",
+      "qty": 1242
+    },
+    "temperature": {
+      "qty": 0,
+      "units": "degF"
+    },
+    "heartRateData": [
+      {
+        "units": "bpm",
+        "date": "2015-07-23 22:53:54 +0000",
+        "qty": 91.84976867602992
+      }
+    ],
+    "name": "Cycling",
+    "avgHeartRate": {
+      "units": "bpm",
+      "qty": 91.84976867602992
+    },
+    "isIndoor": false,
+    "maxHeartRate": {
+      "qty": 125.00000000000001,
+      "units": "bpm"
+    },
+    "start": "2015-07-23 22:53:54 +0000",
+    "speed": {
+      "units": "mi/hr",
+      "qty": 2.334205000932328
+    },
+    "stepCadence": {
+      "units": "spm",
+      "qty": 27.67869755926931
+    },
+    "swimCadence": {
+      "units": "spm",
+      "qty": 0
+    },
+    "duration": 2692.323215007782,
+    "totalSwimmingStrokeCount": {
+      "qty": 0,
+      "units": "count"
+    },
+    "humidity": {
+      "units": "%",
+      "qty": 0
+    },
+    "heartRateRecovery": [],
+    "location": "",
+    "elevation": {
+      "descent": 0,
+      "units": "ft",
+      "ascent": 0
+    },
+    "distance": {
+      "units": "mi",
+      "qty": 1.7456761979437134
+    },
+    "activeEnergy": {
+      "units": "kcal",
+      "qty": 259.0159999999995
+    }
+  },
+  {
+    "avgHeartRate": {
+      "qty": 81.34973187121736,
+      "units": "bpm"
+    },
+    "flightsClimbed": {
+      "units": "count",
+      "qty": 0
+    },
+    "temperature": {
+      "qty": 0,
+      "units": "degF"
+    },
+    "humidity": {
+      "qty": 0,
+      "units": "%"
+    },
+    "stepCadence": {
+      "units": "spm",
+      "qty": 26.123205351959943
+    },
+    "location": "",
+    "duration": 2990.4446620345116,
+    "swimCadence": {
+      "qty": 0,
+      "units": "spm"
+    },
+    "isIndoor": false,
+    "start": "2015-08-22 15:56:14 +0000",
+    "activeEnergy": {
+      "qty": 264.7249999999997,
+      "units": "kcal"
+    },
+    "elevation": {
+      "units": "ft",
+      "descent": 0,
+      "ascent": 0
+    },
+    "distance": {
+      "units": "mi",
+      "qty": 1.6749017222478344
+    },
+    "end": "2015-08-22 16:46:04 +0000",
+    "heartRateData": [
+      {
+        "units": "bpm",
+        "qty": 81.34973187121736,
+        "date": "2015-08-22 15:56:14 +0000"
+      }
+    ],
+    "intensity": {
+      "qty": 0,
+      "units": "MET"
+    },
+    "speed": {
+      "qty": 2.016304222794081,
+      "units": "mi/hr"
+    },
+    "heartRateRecovery": [],
+    "maxHeartRate": {
+      "qty": 98,
+      "units": "bpm"
+    },
+    "name": "Cycling",
+    "totalSwimmingStrokeCount": {
+      "units": "count",
+      "qty": 0
+    },
+    "totalEnergy": {
+      "qty": 264.7249999999997,
+      "units": "kcal"
+    },
+    "stepCount": {
+      "qty": 1302,
+      "units": "steps"
+    }
+  },
+  {
+    "maxHeartRate": {
+      "qty": 96,
+      "units": "bpm"
+    },
+    "stepCadence": {
+      "units": "spm",
+      "qty": 7.6155814835713445
+    },
+    "isIndoor": false,
+    "speed": {
+      "qty": 3.81507002848057,
+      "units": "mi/hr"
+    },
+    "intensity": {
+      "qty": 0,
+      "units": "MET"
+    },
+    "location": "",
+    "heartRateRecovery": [
+      {
+        "units": "bpm",
+        "date": "2015-11-15 21:52:40 +0000",
+        "qty": 68
+      },
+      {
+        "date": "2015-11-15 21:53:15 +0000",
+        "units": "bpm",
+        "qty": 63
+      }
+    ],
+    "end": "2015-11-15 21:52:32 +0000",
+    "activeEnergy": {
+      "qty": 295.1230000000018,
+      "units": "kcal"
+    },
+    "start": "2015-11-15 20:57:15 +0000",
+    "swimCadence": {
+      "qty": 0,
+      "units": "spm"
+    },
+    "duration": 3316.883950948715,
+    "distance": {
+      "qty": 3.515040152559072,
+      "units": "mi"
+    },
+    "totalSwimmingStrokeCount": {
+      "qty": 0,
+      "units": "count"
+    },
+    "elevation": {
+      "ascent": 0,
+      "descent": 0,
+      "units": "ft"
+    },
+    "totalEnergy": {
+      "qty": 416.0150000000048,
+      "units": "kcal"
+    },
+    "temperature": {
+      "qty": 0,
+      "units": "degF"
+    },
+    "heartRateData": [
+      {
+        "units": "bpm",
+        "date": "2015-11-15 20:57:15 +0000",
+        "qty": 78.94192292618432
+      }
+    ],
+    "humidity": {
+      "units": "%",
+      "qty": 0
+    },
+    "name": "Cycling",
+    "stepCount": {
+      "qty": 421,
+      "units": "steps"
+    },
+    "flightsClimbed": {
+      "qty": 0,
+      "units": "count"
+    },
+    "avgHeartRate": {
+      "qty": 78.94192292618432,
+      "units": "bpm"
+    }
+  },
+  {
+    "avgHeartRate": {
+      "units": "bpm",
+      "qty": 91.24793243004173
+    },
+    "speed": {
+      "units": "mi/hr",
+      "qty": 1.0001416495791737
+    },
+    "isIndoor": false,
+    "stepCadence": {
+      "qty": 7.197263787533222,
+      "units": "spm"
+    },
+    "temperature": {
+      "qty": 0,
+      "units": "degF"
+    },
+    "end": "2016-04-14 23:39:23 +0000",
+    "heartRateRecovery": [],
+    "start": "2016-04-14 22:38:15 +0000",
+    "activeEnergy": {
+      "units": "kcal",
+      "qty": 297.1090000000039
+    },
+    "totalEnergy": {
+      "units": "kcal",
+      "qty": 419.03300000000723
+    },
+    "stepCount": {
+      "units": "steps",
+      "qty": 440
+    },
+    "elevation": {
+      "descent": 0,
+      "ascent": 0,
+      "units": "ft"
+    },
+    "heartRateData": [
+      {
+        "units": "bpm",
+        "qty": 91.24793243004173,
+        "date": "2016-04-14 22:38:15 +0000"
+      }
+    ],
+    "humidity": {
+      "units": "%",
+      "qty": 0
+    },
+    "totalSwimmingStrokeCount": {
+      "qty": 0,
+      "units": "count"
+    },
+    "duration": 3668.060637950897,
+    "maxHeartRate": {
+      "qty": 171,
+      "units": "bpm"
+    },
+    "location": "",
+    "intensity": {
+      "units": "MET",
+      "qty": 0
+    },
+    "flightsClimbed": {
+      "units": "count",
+      "qty": 0
+    },
+    "name": "Cycling",
+    "swimCadence": {
+      "qty": 0,
+      "units": "spm"
+    },
+    "distance": {
+      "qty": 1.019050060332402,
+      "units": "mi"
+    }
+  },
+  {
+    "avgHeartRate": {
+      "units": "bpm",
+      "qty": 75.08227040428952
+    },
+    "intensity": {
+      "qty": 0,
+      "units": "MET"
+    },
+    "heartRateData": [
+      {
+        "qty": 75.08227040428952,
+        "units": "bpm",
+        "date": "2016-04-16 19:52:43 +0000"
+      }
+    ],
+    "maxHeartRate": {
+      "qty": 86,
+      "units": "bpm"
+    },
+    "flightsClimbed": {
+      "units": "count",
+      "qty": 0
+    },
+    "isIndoor": false,
+    "totalSwimmingStrokeCount": {
+      "units": "count",
+      "qty": 0
+    },
+    "heartRateRecovery": [],
+    "end": "2016-04-16 20:33:29 +0000",
+    "stepCadence": {
+      "qty": 25.18611894030854,
+      "units": "spm"
+    },
+    "distance": {
+      "units": "mi",
+      "qty": 0
+    },
+    "elevation": {
+      "descent": 0,
+      "units": "ft",
+      "ascent": 0
+    },
+    "totalEnergy": {
+      "units": "kcal",
+      "qty": 279.0800000000006
+    },
+    "humidity": {
+      "qty": 0,
+      "units": "%"
+    },
+    "speed": {
+      "qty": 0,
+      "units": "mi/hr"
+    },
+    "duration": 2446.585762023926,
+    "activeEnergy": {
+      "qty": 198.27699999999896,
+      "units": "kcal"
+    },
+    "name": "Cycling",
+    "stepCount": {
+      "qty": 1027,
+      "units": "steps"
+    },
+    "temperature": {
+      "qty": 0,
+      "units": "degF"
+    },
+    "swimCadence": {
+      "units": "spm",
+      "qty": 0
+    },
+    "start": "2016-04-16 19:52:43 +0000",
+    "location": ""
+  },
+  {
+    "temperature": {
+      "qty": 0,
+      "units": "degF"
+    },
+    "speed": {
+      "qty": 2.7436062202923432,
+      "units": "mi/hr"
+    },
+    "stepCount": {
+      "qty": 820,
+      "units": "steps"
+    },
+    "activeEnergy": {
+      "qty": 319.75199999999796,
+      "units": "kcal"
+    },
+    "heartRateData": [
+      {
+        "qty": 77.85545416100948,
+        "units": "bpm",
+        "date": "2016-09-17 22:59:02 +0000"
+      }
+    ],
+    "end": "2016-09-18 00:01:27 +0000",
+    "distance": {
+      "qty": 2.854061087499555,
+      "units": "mi"
+    },
+    "flightsClimbed": {
+      "units": "count",
+      "qty": 0
+    },
+    "start": "2016-09-17 22:59:02 +0000",
+    "duration": 3744.9324319958687,
+    "humidity": {
+      "units": "%",
+      "qty": 0
+    },
+    "maxHeartRate": {
+      "qty": 157,
+      "units": "bpm"
+    },
+    "isIndoor": false,
+    "name": "Cycling",
+    "totalSwimmingStrokeCount": {
+      "units": "count",
+      "qty": 0
+    },
+    "swimCadence": {
+      "units": "spm",
+      "qty": 0
+    },
+    "intensity": {
+      "qty": 0,
+      "units": "MET"
+    },
+    "totalEnergy": {
+      "qty": 450.50999999999414,
+      "units": "kcal"
+    },
+    "elevation": {
+      "descent": 0,
+      "ascent": 0,
+      "units": "ft"
+    },
+    "avgHeartRate": {
+      "units": "bpm",
+      "qty": 77.85545416100948
+    },
+    "heartRateRecovery": [],
+    "location": "",
+    "stepCadence": {
+      "qty": 13.137753722776452,
+      "units": "spm"
+    }
+  },
+  {
+    "humidity": {
+      "units": "%",
+      "qty": 0
+    },
+    "maxHeartRate": {
+      "qty": 123.99999999999999,
+      "units": "bpm"
+    },
+    "distance": {
+      "units": "mi",
+      "qty": 8.236961670989132
+    },
+    "elevation": {
+      "descent": 0,
+      "units": "ft",
+      "ascent": 0
+    },
+    "stepCadence": {
+      "units": "spm",
+      "qty": 12.296018276512473
+    },
+    "duration": 4259.915593981743,
+    "name": "Cycling",
+    "speed": {
+      "units": "mi/hr",
+      "qty": 6.96095060133437
+    },
+    "swimCadence": {
+      "qty": 0,
+      "units": "spm"
+    },
+    "intensity": {
+      "units": "MET",
+      "qty": 0
+    },
+    "heartRateData": [
+      {
+        "units": "bpm",
+        "qty": 92.78373888479433,
+        "date": "2016-09-03 20:46:13 +0000"
+      }
+    ],
+    "stepCount": {
+      "qty": 873,
+      "units": "steps"
+    },
+    "isIndoor": false,
+    "totalSwimmingStrokeCount": {
+      "qty": 0,
+      "units": "count"
+    },
+    "totalEnergy": {
+      "qty": 558.4649999999942,
+      "units": "kcal"
+    },
+    "temperature": {
+      "qty": 0,
+      "units": "degF"
+    },
+    "activeEnergy": {
+      "units": "kcal",
+      "qty": 410.460999999999
+    },
+    "location": "",
+    "start": "2016-09-03 20:46:13 +0000",
+    "avgHeartRate": {
+      "units": "bpm",
+      "qty": 92.78373888479433
+    },
+    "end": "2016-09-03 21:57:13 +0000",
+    "flightsClimbed": {
+      "qty": 3,
+      "units": "count"
+    },
+    "heartRateRecovery": [
+      {
+        "qty": 92,
+        "units": "bpm",
+        "date": "2016-09-03 21:57:32 +0000"
+      }
+    ]
+  },
+  {
+    "speed": {
+      "units": "mi/hr",
+      "qty": 4.964694213779246
+    },
+    "name": "Cycling",
+    "totalEnergy": {
+      "units": "kcal",
+      "qty": 136.92000000000004
+    },
+    "swimCadence": {
+      "units": "spm",
+      "qty": 0
+    },
+    "totalSwimmingStrokeCount": {
+      "units": "count",
+      "qty": 0
+    },
+    "stepCadence": {
+      "units": "spm",
+      "qty": 53.68238645301148
+    },
+    "flightsClimbed": {
+      "units": "count",
+      "qty": 0
+    },
+    "temperature": {
+      "qty": 0,
+      "units": "degF"
+    },
+    "avgHeartRate": {
+      "units": "bpm",
+      "qty": 101.92970386007455
+    },
+    "location": "",
+    "end": "2016-08-30 22:39:20 +0000",
+    "activeEnergy": {
+      "qty": 77.03499999999971,
+      "units": "kcal"
+    },
+    "stepCount": {
+      "units": "steps",
+      "qty": 822
+    },
+    "elevation": {
+      "ascent": 0,
+      "descent": 0,
+      "units": "ft"
+    },
+    "duration": 918.7370990514755,
+    "maxHeartRate": {
+      "qty": 198,
+      "units": "bpm"
+    },
+    "humidity": {
+      "units": "%",
+      "qty": 0
+    },
+    "heartRateData": [
+      {
+        "units": "bpm",
+        "date": "2016-08-30 22:09:09 +0000",
+        "qty": 101.92970386007455
+      }
+    ],
+    "isIndoor": false,
+    "start": "2016-08-30 22:09:09 +0000",
+    "distance": {
+      "units": "mi",
+      "qty": 1.267013544345886
+    },
+    "heartRateRecovery": [
+      {
+        "date": "2016-08-30 22:39:24 +0000",
+        "qty": 98,
+        "units": "bpm"
+      },
+      {
+        "qty": 98,
+        "units": "bpm",
+        "date": "2016-08-30 22:39:29 +0000"
+      },
+      {
+        "units": "bpm",
+        "date": "2016-08-30 22:39:34 +0000",
+        "qty": 90
+      },
+      {
+        "qty": 87,
+        "units": "bpm",
+        "date": "2016-08-30 22:39:39 +0000"
+      },
+      {
+        "date": "2016-08-30 22:39:44 +0000",
+        "qty": 99,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "qty": 100,
+        "date": "2016-08-30 22:39:49 +0000"
+      }
+    ],
+    "intensity": {
+      "qty": 0,
+      "units": "MET"
+    }
+  },
+  {
+    "humidity": {
+      "units": "%",
+      "qty": 49
+    },
+    "heartRateRecovery": [
+      {
+        "date": "2017-07-01 17:33:24 +0000",
+        "qty": 94,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "date": "2017-07-01 17:33:29 +0000",
+        "qty": 94
+      },
+      {
+        "date": "2017-07-01 17:33:36 +0000",
+        "units": "bpm",
+        "qty": 95
+      }
+    ],
+    "end": "2017-07-01 17:33:12 +0000",
+    "isIndoor": false,
+    "name": "Cycling",
+    "distance": {
+      "qty": 1.6765430654663147,
+      "units": "mi"
+    },
+    "stepCadence": {
+      "qty": 5.425233556961508,
+      "units": "spm"
+    },
+    "intensity": {
+      "units": "MET",
+      "qty": 0
+    },
+    "totalEnergy": {
+      "units": "kcal",
+      "qty": 88.543
+    },
+    "location": "",
+    "activeEnergy": {
+      "units": "kcal",
+      "qty": 32.553
+    },
+    "avgHeartRate": {
+      "qty": 85.60006545764634,
+      "units": "bpm"
+    },
+    "heartRateData": [
+      {
+        "qty": 85.60006545764634,
+        "date": "2017-07-01 17:00:13 +0000",
+        "units": "bpm"
+      }
+    ],
+    "duration": 1979.6382749676704,
+    "start": "2017-07-01 17:00:13 +0000",
+    "maxHeartRate": {
+      "qty": 108,
+      "units": "bpm"
+    },
+    "speed": {
+      "qty": 3.0488171056287037,
+      "units": "mi/hr"
+    },
+    "stepCount": {
+      "qty": 179,
+      "units": "steps"
+    },
+    "flightsClimbed": {
+      "units": "count",
+      "qty": 0
+    },
+    "totalSwimmingStrokeCount": {
+      "qty": 0,
+      "units": "count"
+    },
+    "swimCadence": {
+      "qty": 0,
+      "units": "spm"
+    },
+    "elevation": {
+      "descent": 0,
+      "units": "ft",
+      "ascent": 0
+    },
+    "temperature": {
+      "qty": 81.00000000000004,
+      "units": "degF"
+    }
+  },
+  {
+    "isIndoor": false,
+    "stepCadence": {
+      "units": "spm",
+      "qty": 32.129744439314706
+    },
+    "start": "2017-04-23 17:23:46 +0000",
+    "heartRateRecovery": [],
+    "activeEnergy": {
+      "qty": 66.07200000000005,
+      "units": "kcal"
+    },
+    "distance": {
+      "qty": 0.04888637666221499,
+      "units": "mi"
+    },
+    "speed": {
+      "units": "mi/hr",
+      "qty": 0.12367769989929499
+    },
+    "location": "",
+    "flightsClimbed": {
+      "qty": 0,
+      "units": "count"
+    },
+    "totalEnergy": {
+      "units": "kcal",
+      "qty": 135.6319999999999
+    },
+    "totalSwimmingStrokeCount": {
+      "qty": 0,
+      "units": "count"
+    },
+    "swimCadence": {
+      "units": "spm",
+      "qty": 0
+    },
+    "temperature": {
+      "units": "degF",
+      "qty": 69.00000000000001
+    },
+    "name": "Cycling",
+    "heartRateData": [
+      {
+        "date": "2017-04-23 17:23:46 +0000",
+        "qty": 92.04204831121588,
+        "units": "bpm"
+      }
+    ],
+    "avgHeartRate": {
+      "qty": 92.04204831121588,
+      "units": "bpm"
+    },
+    "maxHeartRate": {
+      "qty": 110,
+      "units": "bpm"
+    },
+    "elevation": {
+      "descent": 0,
+      "units": "ft",
+      "ascent": 0
+    },
+    "humidity": {
+      "units": "%",
+      "qty": 27
+    },
+    "end": "2017-04-23 18:07:17 +0000",
+    "duration": 1422.980506002903,
+    "stepCount": {
+      "units": "steps",
+      "qty": 762
+    },
+    "intensity": {
+      "units": "MET",
+      "qty": 0
+    }
+  },
+  {
+    "speed": {
+      "units": "mi/hr",
+      "qty": 2.6974791779739067
+    },
+    "heartRateRecovery": [],
+    "temperature": {
+      "qty": 75.99999999999996,
+      "units": "degF"
+    },
+    "duration": 2120.8974680304527,
+    "name": "Cycling",
+    "distance": {
+      "units": "mi",
+      "qty": 1.5891879885082572
+    },
+    "stepCount": {
+      "qty": 476,
+      "units": "steps"
+    },
+    "stepCadence": {
+      "qty": 13.465997498937051,
+      "units": "spm"
+    },
+    "elevation": {
+      "ascent": 0,
+      "descent": 0,
+      "units": "ft"
+    },
+    "intensity": {
+      "qty": 0,
+      "units": "MET"
+    },
+    "totalEnergy": {
+      "qty": 101.61700000000002,
+      "units": "kcal"
+    },
+    "avgHeartRate": {
+      "units": "bpm",
+      "qty": 85.29442193893819
+    },
+    "humidity": {
+      "qty": 78,
+      "units": "%"
+    },
+    "maxHeartRate": {
+      "units": "bpm",
+      "qty": 96
+    },
+    "start": "2017-09-04 19:28:57 +0000",
+    "flightsClimbed": {
+      "units": "count",
+      "qty": 1
+    },
+    "end": "2017-09-04 20:24:59 +0000",
+    "location": "",
+    "swimCadence": {
+      "qty": 0,
+      "units": "spm"
+    },
+    "totalSwimmingStrokeCount": {
+      "units": "count",
+      "qty": 0
+    },
+    "heartRateData": [
+      {
+        "units": "bpm",
+        "qty": 85.29442193893819,
+        "date": "2017-09-04 19:28:57 +0000"
+      }
+    ],
+    "activeEnergy": {
+      "qty": 29.777000000000058,
+      "units": "kcal"
+    },
+    "isIndoor": false
+  },
+  {
+    "isIndoor": false,
+    "start": "2017-09-02 18:20:49 +0000",
+    "stepCadence": {
+      "units": "spm",
+      "qty": 9.511571845037553
+    },
+    "name": "Cycling",
+    "heartRateRecovery": [],
+    "location": "",
+    "activeEnergy": {
+      "qty": 191.5019999999998,
+      "units": "kcal"
+    },
+    "maxHeartRate": {
+      "qty": 114,
+      "units": "bpm"
+    },
+    "flightsClimbed": {
+      "qty": 0,
+      "units": "count"
+    },
+    "swimCadence": {
+      "qty": 0,
+      "units": "spm"
+    },
+    "intensity": {
+      "qty": 0,
+      "units": "MET"
+    },
+    "stepCount": {
+      "qty": 700,
+      "units": "steps"
+    },
+    "humidity": {
+      "units": "%",
+      "qty": 42
+    },
+    "duration": 4415.673947930336,
+    "totalSwimmingStrokeCount": {
+      "qty": 0,
+      "units": "count"
+    },
+    "temperature": {
+      "qty": 72.00000000000004,
+      "units": "degF"
+    },
+    "distance": {
+      "qty": 8.501795356099624,
+      "units": "mi"
+    },
+    "avgHeartRate": {
+      "qty": 91.13123757020303,
+      "units": "bpm"
+    },
+    "speed": {
+      "qty": 6.931323200686988,
+      "units": "mi/hr"
+    },
+    "end": "2017-09-02 20:07:41 +0000",
+    "totalEnergy": {
+      "qty": 330.21600000000285,
+      "units": "kcal"
+    },
+    "elevation": {
+      "units": "ft",
+      "descent": 0,
+      "ascent": 0
+    },
+    "heartRateData": [
+      {
+        "units": "bpm",
+        "qty": 91.13123757020303,
+        "date": "2017-09-02 18:20:49 +0000"
+      }
+    ]
+  },
+  {
+    "location": "",
+    "stepCadence": {
+      "units": "spm",
+      "qty": 16.099998819110187
+    },
+    "intensity": {
+      "units": "MET",
+      "qty": 0
+    },
+    "start": "2018-04-26 23:54:16 +0000",
+    "stepCount": {
+      "units": "steps",
+      "qty": 178
+    },
+    "duration": 663.3540859222412,
+    "name": "Cycling",
+    "swimCadence": {
+      "qty": 0,
+      "units": "spm"
+    },
+    "temperature": {
+      "qty": 65,
+      "units": "degF"
+    },
+    "flightsClimbed": {
+      "units": "count",
+      "qty": 0
+    },
+    "distance": {
+      "qty": 1.2021882079863262,
+      "units": "mi"
+    },
+    "totalSwimmingStrokeCount": {
+      "units": "count",
+      "qty": 0
+    },
+    "humidity": {
+      "units": "%",
+      "qty": 30
+    },
+    "isIndoor": false,
+    "heartRateData": [
+      {
+        "qty": 197,
+        "date": "2018-04-26 23:54:16 +0000",
+        "units": "bpm"
+      }
+    ],
+    "speed": {
+      "qty": 6.524234403009452,
+      "units": "mi/hr"
+    },
+    "elevation": {
+      "units": "ft",
+      "descent": 0,
+      "ascent": 0
+    },
+    "avgHeartRate": {
+      "units": "bpm",
+      "qty": 197
+    },
+    "activeEnergy": {
+      "qty": 23.206,
+      "units": "kcal"
+    },
+    "maxHeartRate": {
+      "units": "bpm",
+      "qty": 197
+    },
+    "totalEnergy": {
+      "units": "kcal",
+      "qty": 47.31899999999996
+    },
+    "end": "2018-04-27 00:05:20 +0000",
+    "heartRateRecovery": [
+      {
+        "units": "bpm",
+        "qty": 106,
+        "date": "2018-04-27 00:05:38 +0000"
+      },
+      {
+        "units": "bpm",
+        "date": "2018-04-27 00:05:43 +0000",
+        "qty": 106
+      },
+      {
+        "units": "bpm",
+        "date": "2018-04-27 00:05:48 +0000",
+        "qty": 106
+      },
+      {
+        "date": "2018-04-27 00:05:54 +0000",
+        "units": "bpm",
+        "qty": 106
+      },
+      {
+        "units": "bpm",
+        "date": "2018-04-27 00:05:59 +0000",
+        "qty": 106
+      },
+      {
+        "qty": 106,
+        "units": "bpm",
+        "date": "2018-04-27 00:06:04 +0000"
+      },
+      {
+        "date": "2018-04-27 00:06:10 +0000",
+        "qty": 105,
+        "units": "bpm"
+      },
+      {
+        "date": "2018-04-27 00:06:15 +0000",
+        "units": "bpm",
+        "qty": 105
+      },
+      {
+        "units": "bpm",
+        "date": "2018-04-27 00:06:20 +0000",
+        "qty": 106
+      },
+      {
+        "qty": 89,
+        "date": "2018-04-27 00:07:01 +0000",
+        "units": "bpm"
+      },
+      {
+        "qty": 76,
+        "units": "bpm",
+        "date": "2018-04-27 00:07:16 +0000"
+      }
+    ]
+  },
+  {
+    "avgHeartRate": {
+      "qty": 76,
+      "units": "bpm"
+    },
+    "isIndoor": false,
+    "totalEnergy": {
+      "units": "kcal",
+      "qty": 49.75999999999996
+    },
+    "speed": {
+      "units": "mi/hr",
+      "qty": 5.996542563969609
+    },
+    "end": "2018-04-26 22:41:15 +0000",
+    "humidity": {
+      "units": "%",
+      "qty": 29
+    },
+    "flightsClimbed": {
+      "qty": 0,
+      "units": "count"
+    },
+    "heartRateRecovery": [
+      {
+        "date": "2018-04-26 22:41:23 +0000",
+        "qty": 87,
+        "units": "bpm"
+      },
+      {
+        "date": "2018-04-26 22:41:43 +0000",
+        "qty": 86,
+        "units": "bpm"
+      }
+    ],
+    "name": "Cycling",
+    "duration": 688.8589119911194,
+    "elevation": {
+      "ascent": 0,
+      "descent": 0,
+      "units": "ft"
+    },
+    "distance": {
+      "units": "mi",
+      "qty": 1.1474366073123727
+    },
+    "intensity": {
+      "units": "MET",
+      "qty": 0
+    },
+    "activeEnergy": {
+      "units": "kcal",
+      "qty": 19.814000000000014
+    },
+    "location": "",
+    "totalSwimmingStrokeCount": {
+      "qty": 0,
+      "units": "count"
+    },
+    "stepCount": {
+      "qty": 429,
+      "units": "steps"
+    },
+    "swimCadence": {
+      "qty": 0,
+      "units": "spm"
+    },
+    "temperature": {
+      "qty": 65,
+      "units": "degF"
+    },
+    "stepCadence": {
+      "qty": 37.36614211116112,
+      "units": "spm"
+    },
+    "start": "2018-04-26 22:29:46 +0000",
+    "maxHeartRate": {
+      "qty": 76,
+      "units": "bpm"
+    },
+    "heartRateData": [
+      {
+        "date": "2018-04-26 22:29:46 +0000",
+        "qty": 76,
+        "units": "bpm"
+      }
+    ]
+  },
+  {
+    "end": "2018-04-03 00:31:27 +0000",
+    "elevation": {
+      "descent": 0,
+      "units": "ft",
+      "ascent": 0
+    },
+    "temperature": {
+      "units": "degF",
+      "qty": 42
+    },
+    "heartRateData": [
+      {
+        "date": "2018-04-02 23:46:12 +0000",
+        "qty": 79.5,
+        "units": "bpm"
+      }
+    ],
+    "speed": {
+      "qty": 1.9753071472241184,
+      "units": "mi/hr"
+    },
+    "maxHeartRate": {
+      "qty": 84,
+      "units": "bpm"
+    },
+    "name": "Cycling",
+    "location": "",
+    "duration": 1921.8775218725204,
+    "totalEnergy": {
+      "units": "kcal",
+      "qty": 111.03500000000005
+    },
+    "start": "2018-04-02 23:46:12 +0000",
+    "intensity": {
+      "units": "MET",
+      "qty": 0
+    },
+    "heartRateRecovery": [],
+    "distance": {
+      "qty": 1.0545273347344906,
+      "units": "mi"
+    },
+    "swimCadence": {
+      "units": "spm",
+      "qty": 0
+    },
+    "humidity": {
+      "qty": 50,
+      "units": "%"
+    },
+    "stepCount": {
+      "units": "steps",
+      "qty": 457
+    },
+    "activeEnergy": {
+      "units": "kcal",
+      "qty": 29.494000000000007
+    },
+    "avgHeartRate": {
+      "units": "bpm",
+      "qty": 79.5
+    },
+    "isIndoor": false,
+    "stepCadence": {
+      "units": "spm",
+      "qty": 14.267298351709838
+    },
+    "flightsClimbed": {
+      "qty": 0,
+      "units": "count"
+    },
+    "totalSwimmingStrokeCount": {
+      "units": "count",
+      "qty": 0
+    }
+  },
+  {
+    "totalSwimmingStrokeCount": {
+      "units": "count",
+      "qty": 0
+    },
+    "stepCadence": {
+      "qty": 1.1724001031849127,
+      "units": "spm"
+    },
+    "temperature": {
+      "qty": 41,
+      "units": "degF"
+    },
+    "avgHeartRate": {
+      "units": "bpm",
+      "qty": 82.5
+    },
+    "distance": {
+      "qty": 1.179535700361676,
+      "units": "mi"
+    },
+    "activeEnergy": {
+      "qty": 18.745000000000008,
+      "units": "kcal"
+    },
+    "swimCadence": {
+      "units": "spm",
+      "qty": 0
+    },
+    "humidity": {
+      "qty": 47,
+      "units": "%"
+    },
+    "end": "2018-03-11 17:50:04 +0000",
+    "totalEnergy": {
+      "qty": 51.76499999999993,
+      "units": "kcal"
+    },
+    "isIndoor": false,
+    "heartRateData": [
+      {
+        "units": "bpm",
+        "date": "2018-03-11 17:34:42 +0000",
+        "qty": 82.5
+      }
+    ],
+    "start": "2018-03-11 17:34:42 +0000",
+    "maxHeartRate": {
+      "units": "bpm",
+      "qty": 94
+    },
+    "speed": {
+      "qty": 4.609625922714391,
+      "units": "mi/hr"
+    },
+    "name": "Cycling",
+    "elevation": {
+      "units": "ft",
+      "descent": 0,
+      "ascent": 0
+    },
+    "duration": 921.1872270107269,
+    "intensity": {
+      "qty": 0,
+      "units": "MET"
+    },
+    "heartRateRecovery": [
+      {
+        "date": "2018-03-11 17:51:23 +0000",
+        "units": "bpm",
+        "qty": 69
+      },
+      {
+        "date": "2018-03-11 17:51:53 +0000",
+        "qty": 78,
+        "units": "bpm"
+      }
+    ],
+    "location": "",
+    "flightsClimbed": {
+      "units": "count",
+      "qty": 0
+    },
+    "stepCount": {
+      "qty": 18,
+      "units": "steps"
+    }
+  },
+  {
+    "location": "",
+    "intensity": {
+      "units": "MET",
+      "qty": 0
+    },
+    "totalEnergy": {
+      "units": "kcal",
+      "qty": 270.3379999999966
+    },
+    "stepCadence": {
+      "units": "spm",
+      "qty": 12.47349198965329
+    },
+    "maxHeartRate": {
+      "qty": 110,
+      "units": "bpm"
+    },
+    "distance": {
+      "qty": 4.451241787646418,
+      "units": "mi"
+    },
+    "totalSwimmingStrokeCount": {
+      "units": "count",
+      "qty": 0
+    },
+    "temperature": {
+      "qty": 71,
+      "units": "degF"
+    },
+    "isIndoor": false,
+    "stepCount": {
+      "units": "steps",
+      "qty": 774
+    },
+    "flightsClimbed": {
+      "qty": 0,
+      "units": "count"
+    },
+    "swimCadence": {
+      "units": "spm",
+      "qty": 0
+    },
+    "activeEnergy": {
+      "qty": 97.95600000000003,
+      "units": "kcal"
+    },
+    "avgHeartRate": {
+      "qty": 76.2319111431181,
+      "units": "bpm"
+    },
+    "elevation": {
+      "ascent": 0,
+      "descent": 0,
+      "units": "ft"
+    },
+    "duration": 3723.0953480005264,
+    "start": "2018-09-23 22:34:25 +0000",
+    "humidity": {
+      "units": "%",
+      "qty": 50
+    },
+    "heartRateRecovery": [
+      {
+        "units": "bpm",
+        "date": "2018-09-24 00:55:44 +0000",
+        "qty": 78
+      },
+      {
+        "date": "2018-09-24 00:55:49 +0000",
+        "units": "bpm",
+        "qty": 79
+      },
+      {
+        "qty": 79,
+        "units": "bpm",
+        "date": "2018-09-24 00:55:50 +0000"
+      },
+      {
+        "date": "2018-09-24 00:55:56 +0000",
+        "qty": 79,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "date": "2018-09-24 00:56:08 +0000",
+        "qty": 79
+      },
+      {
+        "qty": 79,
+        "units": "bpm",
+        "date": "2018-09-24 00:56:11 +0000"
+      },
+      {
+        "qty": 82,
+        "date": "2018-09-24 00:56:17 +0000",
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "date": "2018-09-24 00:56:22 +0000",
+        "qty": 80
+      },
+      {
+        "units": "bpm",
+        "qty": 85,
+        "date": "2018-09-24 00:56:26 +0000"
+      },
+      {
+        "qty": 83,
+        "units": "bpm",
+        "date": "2018-09-24 00:56:31 +0000"
+      },
+      {
+        "date": "2018-09-24 00:56:36 +0000",
+        "qty": 84,
+        "units": "bpm"
+      },
+      {
+        "date": "2018-09-24 00:56:51 +0000",
+        "qty": 92,
+        "units": "bpm"
+      },
+      {
+        "date": "2018-09-24 00:56:55 +0000",
+        "qty": 92,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "date": "2018-09-24 00:57:01 +0000",
+        "qty": 91
+      },
+      {
+        "units": "bpm",
+        "date": "2018-09-24 00:57:06 +0000",
+        "qty": 91
+      },
+      {
+        "date": "2018-09-24 00:57:11 +0000",
+        "qty": 91,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "qty": 91,
+        "date": "2018-09-24 00:57:12 +0000"
+      },
+      {
+        "qty": 91,
+        "units": "bpm",
+        "date": "2018-09-24 00:57:21 +0000"
+      },
+      {
+        "qty": 92,
+        "units": "bpm",
+        "date": "2018-09-24 00:57:26 +0000"
+      },
+      {
+        "units": "bpm",
+        "date": "2018-09-24 00:57:28 +0000",
+        "qty": 92
+      }
+    ],
+    "name": "Cycling",
+    "speed": {
+      "qty": 4.304071998621519,
+      "units": "mi/hr"
+    },
+    "end": "2018-09-24 00:55:41 +0000",
+    "heartRateData": [
+      {
+        "qty": 76.2319111431181,
+        "date": "2018-09-23 22:34:25 +0000",
+        "units": "bpm"
+      }
+    ]
+  },
+  {
+    "temperature": {
+      "qty": 57,
+      "units": "degF"
+    },
+    "speed": {
+      "qty": 6.426587078016204,
+      "units": "mi/hr"
+    },
+    "avgHeartRate": {
+      "qty": 70.58139243902161,
+      "units": "bpm"
+    },
+    "location": "",
+    "start": "2018-09-29 21:47:02 +0000",
+    "stepCount": {
+      "qty": 271,
+      "units": "steps"
+    },
+    "totalEnergy": {
+      "units": "kcal",
+      "qty": 116.77599999999975
+    },
+    "elevation": {
+      "descent": 0,
+      "units": "ft",
+      "ascent": 0
+    },
+    "heartRateData": [
+      {
+        "units": "bpm",
+        "qty": 70.58139243902161,
+        "date": "2018-09-29 21:47:02 +0000"
+      }
+    ],
+    "stepCadence": {
+      "qty": 8.479718095881141,
+      "units": "spm"
+    },
+    "intensity": {
+      "units": "MET",
+      "qty": 0
+    },
+    "maxHeartRate": {
+      "qty": 88,
+      "units": "bpm"
+    },
+    "end": "2018-09-29 22:19:00 +0000",
+    "duration": 1917.5165749788284,
+    "flightsClimbed": {
+      "qty": 0,
+      "units": "count"
+    },
+    "isIndoor": false,
+    "activeEnergy": {
+      "units": "kcal",
+      "qty": 64.51699999999994
+    },
+    "swimCadence": {
+      "qty": 0,
+      "units": "spm"
+    },
+    "name": "Cycling",
+    "humidity": {
+      "units": "%",
+      "qty": 44
+    },
+    "totalSwimmingStrokeCount": {
+      "qty": 0,
+      "units": "count"
+    },
+    "heartRateRecovery": [
+      {
+        "units": "bpm",
+        "qty": 87,
+        "date": "2018-09-29 22:19:01 +0000"
+      },
+      {
+        "units": "bpm",
+        "qty": 86,
+        "date": "2018-09-29 22:19:02 +0000"
+      },
+      {
+        "qty": 86,
+        "units": "bpm",
+        "date": "2018-09-29 22:19:07 +0000"
+      },
+      {
+        "qty": 77,
+        "units": "bpm",
+        "date": "2018-09-29 22:19:16 +0000"
+      },
+      {
+        "units": "bpm",
+        "qty": 77,
+        "date": "2018-09-29 22:19:17 +0000"
+      },
+      {
+        "qty": 77,
+        "units": "bpm",
+        "date": "2018-09-29 22:19:22 +0000"
+      },
+      {
+        "units": "bpm",
+        "qty": 71,
+        "date": "2018-09-29 22:19:41 +0000"
+      },
+      {
+        "qty": 70,
+        "date": "2018-09-29 22:19:43 +0000",
+        "units": "bpm"
+      },
+      {
+        "qty": 70,
+        "date": "2018-09-29 22:19:51 +0000",
+        "units": "bpm"
+      },
+      {
+        "date": "2018-09-29 22:19:56 +0000",
+        "qty": 72,
+        "units": "bpm"
+      },
+      {
+        "date": "2018-09-29 22:20:01 +0000",
+        "qty": 80,
+        "units": "bpm"
+      },
+      {
+        "qty": 81,
+        "date": "2018-09-29 22:20:03 +0000",
+        "units": "bpm"
+      },
+      {
+        "date": "2018-09-29 22:20:12 +0000",
+        "qty": 81,
+        "units": "bpm"
+      },
+      {
+        "date": "2018-09-29 22:20:13 +0000",
+        "units": "bpm",
+        "qty": 81
+      },
+      {
+        "date": "2018-09-29 22:20:22 +0000",
+        "units": "bpm",
+        "qty": 79
+      },
+      {
+        "date": "2018-09-29 22:20:33 +0000",
+        "qty": 79,
+        "units": "bpm"
+      },
+      {
+        "qty": 79,
+        "units": "bpm",
+        "date": "2018-09-29 22:20:38 +0000"
+      },
+      {
+        "qty": 79,
+        "date": "2018-09-29 22:20:40 +0000",
+        "units": "bpm"
+      },
+      {
+        "date": "2018-09-29 22:20:46 +0000",
+        "units": "bpm",
+        "qty": 80
+      },
+      {
+        "qty": 79,
+        "date": "2018-09-29 22:20:49 +0000",
+        "units": "bpm"
+      },
+      {
+        "qty": 79,
+        "date": "2018-09-29 22:20:54 +0000",
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "date": "2018-09-29 22:20:59 +0000",
+        "qty": 79
+      }
+    ],
+    "distance": {
+      "qty": 3.423079789622452,
+      "units": "mi"
+    }
+  },
+  {
+    "activeEnergy": {
+      "qty": 119.66500000000008,
+      "units": "kcal"
+    },
+    "elevation": {
+      "ascent": 0,
+      "units": "ft",
+      "descent": 0
+    },
+    "totalEnergy": {
+      "units": "kcal",
+      "qty": 223.13700000000176
+    },
+    "humidity": {
+      "units": "%",
+      "qty": 64
+    },
+    "temperature": {
+      "units": "degF",
+      "qty": 82
+    },
+    "heartRateData": [
+      {
+        "date": "2018-09-15 17:21:49 +0000",
+        "units": "bpm",
+        "qty": 85.25264947724969
+      }
+    ],
+    "distance": {
+      "qty": 6.000919166730032,
+      "units": "mi"
+    },
+    "flightsClimbed": {
+      "qty": 0,
+      "units": "count"
+    },
+    "stepCount": {
+      "qty": 640,
+      "units": "steps"
+    },
+    "isIndoor": false,
+    "swimCadence": {
+      "units": "spm",
+      "qty": 0
+    },
+    "duration": 4564.182618975639,
+    "start": "2018-09-15 17:21:49 +0000",
+    "name": "Cycling",
+    "speed": {
+      "units": "mi/hr",
+      "qty": 4.7332262540092325
+    },
+    "totalSwimmingStrokeCount": {
+      "qty": 0,
+      "units": "count"
+    },
+    "intensity": {
+      "qty": 0,
+      "units": "MET"
+    },
+    "end": "2018-09-15 18:37:53 +0000",
+    "location": "",
+    "avgHeartRate": {
+      "units": "bpm",
+      "qty": 85.25264947724969
+    },
+    "stepCadence": {
+      "qty": 8.413335575213749,
+      "units": "spm"
+    },
+    "heartRateRecovery": [
+      {
+        "qty": 86,
+        "date": "2018-09-15 18:37:53 +0000",
+        "units": "bpm"
+      },
+      {
+        "qty": 86,
+        "date": "2018-09-15 18:37:58 +0000",
+        "units": "bpm"
+      },
+      {
+        "date": "2018-09-15 18:37:59 +0000",
+        "qty": 86,
+        "units": "bpm"
+      },
+      {
+        "date": "2018-09-15 18:38:04 +0000",
+        "units": "bpm",
+        "qty": 86
+      },
+      {
+        "date": "2018-09-15 18:38:13 +0000",
+        "qty": 86,
+        "units": "bpm"
+      },
+      {
+        "qty": 85,
+        "date": "2018-09-15 18:38:15 +0000",
+        "units": "bpm"
+      },
+      {
+        "date": "2018-09-15 18:38:19 +0000",
+        "units": "bpm",
+        "qty": 85
+      },
+      {
+        "units": "bpm",
+        "date": "2018-09-15 18:38:25 +0000",
+        "qty": 85
+      },
+      {
+        "units": "bpm",
+        "date": "2018-09-15 18:38:33 +0000",
+        "qty": 85
+      },
+      {
+        "qty": 84,
+        "units": "bpm",
+        "date": "2018-09-15 18:38:34 +0000"
+      },
+      {
+        "units": "bpm",
+        "date": "2018-09-15 18:38:39 +0000",
+        "qty": 81
+      },
+      {
+        "date": "2018-09-15 18:39:49 +0000",
+        "units": "bpm",
+        "qty": 71
+      }
+    ],
+    "maxHeartRate": {
+      "units": "bpm",
+      "qty": 109
+    }
+  },
+  {
+    "speed": {
+      "units": "mi/hr",
+      "qty": 6.420206764513363
+    },
+    "heartRateData": [
+      {
+        "date": "2018-09-17 00:58:42 +0000",
+        "qty": 95.11550662441527,
+        "units": "bpm"
+      }
+    ],
+    "maxHeartRate": {
+      "units": "bpm",
+      "qty": 112
+    },
+    "end": "2018-09-17 01:09:55 +0000",
+    "stepCadence": {
+      "qty": 3.8325437736905297,
+      "units": "spm"
+    },
+    "heartRateRecovery": [
+      {
+        "qty": 101,
+        "units": "bpm",
+        "date": "2018-09-17 01:10:10 +0000"
+      },
+      {
+        "units": "bpm",
+        "qty": 101,
+        "date": "2018-09-17 01:10:11 +0000"
+      },
+      {
+        "qty": 101,
+        "units": "bpm",
+        "date": "2018-09-17 01:10:16 +0000"
+      },
+      {
+        "qty": 100,
+        "units": "bpm",
+        "date": "2018-09-17 01:10:22 +0000"
+      },
+      {
+        "qty": 100,
+        "date": "2018-09-17 01:10:31 +0000",
+        "units": "bpm"
+      },
+      {
+        "qty": 101,
+        "date": "2018-09-17 01:10:35 +0000",
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "date": "2018-09-17 01:10:38 +0000",
+        "qty": 101
+      },
+      {
+        "date": "2018-09-17 01:10:46 +0000",
+        "qty": 103,
+        "units": "bpm"
+      },
+      {
+        "date": "2018-09-17 01:10:47 +0000",
+        "qty": 103,
+        "units": "bpm"
+      },
+      {
+        "date": "2018-09-17 01:10:52 +0000",
+        "units": "bpm",
+        "qty": 103
+      },
+      {
+        "qty": 95,
+        "units": "bpm",
+        "date": "2018-09-17 01:11:01 +0000"
+      },
+      {
+        "date": "2018-09-17 01:11:06 +0000",
+        "qty": 91,
+        "units": "bpm"
+      },
+      {
+        "date": "2018-09-17 01:11:09 +0000",
+        "qty": 91,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "qty": 91,
+        "date": "2018-09-17 01:11:12 +0000"
+      },
+      {
+        "date": "2018-09-17 01:11:21 +0000",
+        "units": "bpm",
+        "qty": 89
+      },
+      {
+        "qty": 88,
+        "units": "bpm",
+        "date": "2018-09-17 01:11:26 +0000"
+      },
+      {
+        "units": "bpm",
+        "date": "2018-09-17 01:11:27 +0000",
+        "qty": 88
+      },
+      {
+        "date": "2018-09-17 01:11:36 +0000",
+        "qty": 88,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "qty": 87,
+        "date": "2018-09-17 01:11:43 +0000"
+      },
+      {
+        "date": "2018-09-17 01:11:47 +0000",
+        "qty": 88,
+        "units": "bpm"
+      },
+      {
+        "qty": 88,
+        "units": "bpm",
+        "date": "2018-09-17 01:11:49 +0000"
+      }
+    ],
+    "location": "",
+    "name": "Cycling",
+    "avgHeartRate": {
+      "qty": 95.11550662441527,
+      "units": "bpm"
+    },
+    "stepCount": {
+      "qty": 43,
+      "units": "steps"
+    },
+    "distance": {
+      "qty": 1.2005468046628265,
+      "units": "mi"
+    },
+    "elevation": {
+      "descent": 0,
+      "ascent": 0,
+      "units": "ft"
+    },
+    "temperature": {
+      "qty": 77,
+      "units": "degF"
+    },
+    "humidity": {
+      "qty": 64,
+      "units": "%"
+    },
+    "start": "2018-09-17 00:58:42 +0000",
+    "duration": 673.1821349859238,
+    "isIndoor": false,
+    "activeEnergy": {
+      "qty": 20.181999999999995,
+      "units": "kcal"
+    },
+    "flightsClimbed": {
+      "qty": 0,
+      "units": "count"
+    },
+    "totalSwimmingStrokeCount": {
+      "qty": 0,
+      "units": "count"
+    },
+    "totalEnergy": {
+      "qty": 49.15899999999994,
+      "units": "kcal"
+    },
+    "swimCadence": {
+      "qty": 0,
+      "units": "spm"
+    },
+    "intensity": {
+      "units": "MET",
+      "qty": 0
+    }
+  },
+  {
+    "swimCadence": {
+      "units": "spm",
+      "qty": 0
+    },
+    "duration": 1472.0157109498978,
+    "start": "2018-09-16 23:45:26 +0000",
+    "elevation": {
+      "ascent": 0,
+      "descent": 0,
+      "units": "ft"
+    },
+    "avgHeartRate": {
+      "units": "bpm",
+      "qty": 78.49767502218913
+    },
+    "name": "Cycling",
+    "temperature": {
+      "units": "degF",
+      "qty": 82
+    },
+    "isIndoor": false,
+    "humidity": {
+      "units": "%",
+      "qty": 58
+    },
+    "stepCadence": {
+      "units": "spm",
+      "qty": 9.171097767216354
+    },
+    "speed": {
+      "qty": 4.594365255968711,
+      "units": "mi/hr"
+    },
+    "totalSwimmingStrokeCount": {
+      "units": "count",
+      "qty": 0
+    },
+    "end": "2018-09-17 00:09:58 +0000",
+    "activeEnergy": {
+      "units": "kcal",
+      "qty": 29.076000000000004
+    },
+    "stepCount": {
+      "qty": 225,
+      "units": "steps"
+    },
+    "intensity": {
+      "units": "MET",
+      "qty": 0
+    },
+    "heartRateData": [
+      {
+        "units": "bpm",
+        "date": "2018-09-16 23:45:26 +0000",
+        "qty": 78.49767502218913
+      }
+    ],
+    "heartRateRecovery": [
+      {
+        "date": "2018-09-17 00:11:57 +0000",
+        "units": "bpm",
+        "qty": 77
+      }
+    ],
+    "distance": {
+      "units": "mi",
+      "qty": 1.8786049551745254
+    },
+    "location": "",
+    "totalEnergy": {
+      "units": "kcal",
+      "qty": 68.15899999999992
+    },
+    "maxHeartRate": {
+      "qty": 92,
+      "units": "bpm"
+    },
+    "flightsClimbed": {
+      "units": "count",
+      "qty": 0
+    }
+  },
+  {
+    "flightsClimbed": {
+      "qty": 0,
+      "units": "count"
+    },
+    "intensity": {
+      "qty": 0,
+      "units": "MET"
+    },
+    "stepCount": {
+      "qty": 187,
+      "units": "steps"
+    },
+    "activeEnergy": {
+      "qty": 55.68599999999999,
+      "units": "kcal"
+    },
+    "heartRateRecovery": [
+      {
+        "date": "2018-09-03 02:02:11 +0000",
+        "qty": 83,
+        "units": "bpm"
+      },
+      {
+        "date": "2018-09-03 02:02:14 +0000",
+        "qty": 83,
+        "units": "bpm"
+      },
+      {
+        "date": "2018-09-03 02:02:17 +0000",
+        "qty": 83,
+        "units": "bpm"
+      },
+      {
+        "date": "2018-09-03 02:02:28 +0000",
+        "units": "bpm",
+        "qty": 82
+      },
+      {
+        "date": "2018-09-03 02:02:41 +0000",
+        "qty": 82,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "date": "2018-09-03 02:03:03 +0000",
+        "qty": 77
+      },
+      {
+        "date": "2018-09-03 02:03:06 +0000",
+        "units": "bpm",
+        "qty": 77
+      },
+      {
+        "units": "bpm",
+        "qty": 82,
+        "date": "2018-09-03 02:03:33 +0000"
+      },
+      {
+        "date": "2018-09-03 02:03:38 +0000",
+        "qty": 82,
+        "units": "bpm"
+      },
+      {
+        "qty": 82,
+        "units": "bpm",
+        "date": "2018-09-03 02:03:39 +0000"
+      },
+      {
+        "qty": 83,
+        "units": "bpm",
+        "date": "2018-09-03 02:03:44 +0000"
+      },
+      {
+        "date": "2018-09-03 02:03:57 +0000",
+        "units": "bpm",
+        "qty": 77
+      },
+      {
+        "units": "bpm",
+        "qty": 76,
+        "date": "2018-09-03 02:04:03 +0000"
+      },
+      {
+        "date": "2018-09-03 02:04:06 +0000",
+        "qty": 73,
+        "units": "bpm"
+      }
+    ],
+    "avgHeartRate": {
+      "qty": 75.99310519906201,
+      "units": "bpm"
+    },
+    "elevation": {
+      "ascent": 0,
+      "units": "ft",
+      "descent": 0
+    },
+    "temperature": {
+      "qty": 83,
+      "units": "degF"
+    },
+    "location": "",
+    "totalSwimmingStrokeCount": {
+      "qty": 0,
+      "units": "count"
+    },
+    "totalEnergy": {
+      "units": "kcal",
+      "qty": 175.70600000000206
+    },
+    "maxHeartRate": {
+      "units": "bpm",
+      "qty": 102
+    },
+    "end": "2018-09-03 02:02:07 +0000",
+    "swimCadence": {
+      "qty": 0,
+      "units": "spm"
+    },
+    "humidity": {
+      "qty": 63,
+      "units": "%"
+    },
+    "isIndoor": false,
+    "speed": {
+      "qty": 3.413368859261738,
+      "units": "mi/hr"
+    },
+    "distance": {
+      "qty": 3.6701931443544122,
+      "units": "mi"
+    },
+    "stepCadence": {
+      "qty": 2.898575776880638,
+      "units": "spm"
+    },
+    "start": "2018-09-03 00:32:14 +0000",
+    "heartRateData": [
+      {
+        "units": "bpm",
+        "date": "2018-09-03 00:32:14 +0000",
+        "qty": 75.99310519906201
+      }
+    ],
+    "duration": 3870.866544008255,
+    "name": "Cycling"
+  },
+  {
+    "stepCount": {
+      "units": "steps",
+      "qty": 311
+    },
+    "swimCadence": {
+      "qty": 0,
+      "units": "spm"
+    },
+    "elevation": {
+      "descent": 0,
+      "units": "ft",
+      "ascent": 0
+    },
+    "totalEnergy": {
+      "qty": 149.0740000000005,
+      "units": "kcal"
+    },
+    "heartRateRecovery": [
+      {
+        "units": "bpm",
+        "qty": 89,
+        "date": "2018-09-03 15:44:35 +0000"
+      },
+      {
+        "qty": 89,
+        "units": "bpm",
+        "date": "2018-09-03 15:44:39 +0000"
+      },
+      {
+        "qty": 89,
+        "units": "bpm",
+        "date": "2018-09-03 15:44:42 +0000"
+      },
+      {
+        "units": "bpm",
+        "qty": 88,
+        "date": "2018-09-03 15:44:51 +0000"
+      },
+      {
+        "date": "2018-09-03 15:44:52 +0000",
+        "units": "bpm",
+        "qty": 88
+      },
+      {
+        "units": "bpm",
+        "date": "2018-09-03 15:44:57 +0000",
+        "qty": 89
+      },
+      {
+        "qty": 89,
+        "units": "bpm",
+        "date": "2018-09-03 15:45:07 +0000"
+      },
+      {
+        "date": "2018-09-03 15:45:11 +0000",
+        "units": "bpm",
+        "qty": 89
+      },
+      {
+        "units": "bpm",
+        "qty": 88,
+        "date": "2018-09-03 15:45:17 +0000"
+      },
+      {
+        "date": "2018-09-03 15:45:19 +0000",
+        "qty": 88,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "date": "2018-09-03 15:45:28 +0000",
+        "qty": 81
+      },
+      {
+        "qty": 81,
+        "units": "bpm",
+        "date": "2018-09-03 15:45:29 +0000"
+      },
+      {
+        "qty": 81,
+        "units": "bpm",
+        "date": "2018-09-03 15:45:34 +0000"
+      },
+      {
+        "units": "bpm",
+        "date": "2018-09-03 15:45:43 +0000",
+        "qty": 73
+      },
+      {
+        "qty": 70,
+        "date": "2018-09-03 15:45:48 +0000",
+        "units": "bpm"
+      },
+      {
+        "date": "2018-09-03 15:45:54 +0000",
+        "units": "bpm",
+        "qty": 70
+      },
+      {
+        "qty": 70,
+        "date": "2018-09-03 15:45:55 +0000",
+        "units": "bpm"
+      },
+      {
+        "qty": 70,
+        "date": "2018-09-03 15:46:00 +0000",
+        "units": "bpm"
+      },
+      {
+        "date": "2018-09-03 15:46:05 +0000",
+        "qty": 70,
+        "units": "bpm"
+      },
+      {
+        "qty": 69,
+        "units": "bpm",
+        "date": "2018-09-03 15:46:12 +0000"
+      },
+      {
+        "date": "2018-09-03 15:46:18 +0000",
+        "units": "bpm",
+        "qty": 69
+      },
+      {
+        "date": "2018-09-03 15:46:24 +0000",
+        "qty": 71,
+        "units": "bpm"
+      },
+      {
+        "qty": 71,
+        "date": "2018-09-03 15:46:26 +0000",
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "qty": 71,
+        "date": "2018-09-03 15:46:33 +0000"
+      }
+    ],
+    "totalSwimmingStrokeCount": {
+      "units": "count",
+      "qty": 0
+    },
+    "stepCadence": {
+      "units": "spm",
+      "qty": 7.217775754433097
+    },
+    "humidity": {
+      "units": "%",
+      "qty": 88
+    },
+    "location": "",
+    "distance": {
+      "qty": 3.8540665138739016,
+      "units": "mi"
+    },
+    "temperature": {
+      "units": "degF",
+      "qty": 76
+    },
+    "flightsClimbed": {
+      "qty": 0,
+      "units": "count"
+    },
+    "intensity": {
+      "qty": 0,
+      "units": "MET"
+    },
+    "isIndoor": false,
+    "avgHeartRate": {
+      "units": "bpm",
+      "qty": 78.6847730431305
+    },
+    "activeEnergy": {
+      "units": "kcal",
+      "qty": 61.51000000000003
+    },
+    "start": "2018-09-03 14:43:28 +0000",
+    "name": "Cycling",
+    "end": "2018-09-03 15:44:34 +0000",
+    "heartRateData": [
+      {
+        "date": "2018-09-03 14:43:28 +0000",
+        "qty": 78.6847730431305,
+        "units": "bpm"
+      }
+    ],
+    "duration": 2585.283975958824,
+    "maxHeartRate": {
+      "units": "bpm",
+      "qty": 97
+    },
+    "speed": {
+      "units": "mi/hr",
+      "qty": 5.366775789031165
+    }
+  }
+]

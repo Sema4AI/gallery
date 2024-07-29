@@ -1,0 +1,2589 @@
+[
+  {
+    "start": "2021-07-13 00:04:24 +0000",
+    "totalSwimmingStrokeCount": {
+      "qty": 0,
+      "units": "count"
+    },
+    "swimCadence": {
+      "qty": 0,
+      "units": "spm"
+    },
+    "elevation": {
+      "ascent": 0,
+      "descent": 0,
+      "units": "ft"
+    },
+    "maxHeartRate": {
+      "qty": 114,
+      "units": "bpm"
+    },
+    "stepCount": {
+      "qty": 1901,
+      "units": "steps"
+    },
+    "heartRateRecovery": [],
+    "stepCadence": {
+      "qty": 29.079633267883935,
+      "units": "spm"
+    },
+    "end": "2021-07-13 01:09:47 +0000",
+    "duration": 3922.332821369171,
+    "isIndoor": false,
+    "activeEnergy": {
+      "qty": 229.4018227933518,
+      "units": "kcal"
+    },
+    "intensity": {
+      "qty": 0,
+      "units": "MET"
+    },
+    "speed": {
+      "units": "mi/hr",
+      "qty": 0.9573317060323964
+    },
+    "flightsClimbed": {
+      "units": "count",
+      "qty": 0
+    },
+    "humidity": {
+      "units": "%",
+      "qty": 0
+    },
+    "distance": {
+      "qty": 1.0430482143078363,
+      "units": "mi"
+    },
+    "totalEnergy": {
+      "qty": 369.6648227933525,
+      "units": "kcal"
+    },
+    "avgHeartRate": {
+      "units": "bpm",
+      "qty": 91.9601944077108
+    },
+    "location": "Outdoor",
+    "name": "Tennis",
+    "temperature": {
+      "qty": 0,
+      "units": "degF"
+    },
+    "heartRateData": [
+      {
+        "qty": 91.9601944077108,
+        "date": "2021-07-13 00:04:24 +0000",
+        "units": "bpm"
+      }
+    ]
+  },
+  {
+    "name": "Tennis",
+    "avgHeartRate": {
+      "qty": 102.84736970232566,
+      "units": "bpm"
+    },
+    "totalEnergy": {
+      "units": "kcal",
+      "qty": 401.17262593099184
+    },
+    "speed": {
+      "qty": 1.108660662031915,
+      "units": "mi/hr"
+    },
+    "location": "Outdoor",
+    "swimCadence": {
+      "qty": 0,
+      "units": "spm"
+    },
+    "intensity": {
+      "qty": 7.868557287860928,
+      "units": "MET"
+    },
+    "temperature": {
+      "qty": 85.99999856948853,
+      "units": "degF"
+    },
+    "humidity": {
+      "units": "%",
+      "qty": 62
+    },
+    "isIndoor": false,
+    "stepCount": {
+      "qty": 3062,
+      "units": "steps"
+    },
+    "end": "2021-07-06 01:41:25 +0000",
+    "flightsClimbed": {
+      "units": "count",
+      "qty": 0
+    },
+    "maxHeartRate": {
+      "units": "bpm",
+      "qty": 131
+    },
+    "heartRateData": [
+      {
+        "qty": 102.84736970232566,
+        "date": "2021-07-06 00:09:17 +0000",
+        "units": "bpm"
+      }
+    ],
+    "duration": 4298.066915035248,
+    "heartRateRecovery": [
+      {
+        "date": "2021-07-06 01:41:31 +0000",
+        "units": "bpm",
+        "qty": 75
+      },
+      {
+        "qty": 75,
+        "date": "2021-07-06 01:41:33 +0000",
+        "units": "bpm"
+      },
+      {
+        "date": "2021-07-06 01:41:37 +0000",
+        "qty": 75,
+        "units": "bpm"
+      },
+      {
+        "date": "2021-07-06 01:41:42 +0000",
+        "qty": 76,
+        "units": "bpm"
+      },
+      {
+        "qty": 76,
+        "date": "2021-07-06 01:41:47 +0000",
+        "units": "bpm"
+      },
+      {
+        "date": "2021-07-06 01:41:52 +0000",
+        "qty": 75,
+        "units": "bpm"
+      }
+    ],
+    "stepCadence": {
+      "qty": 42.744797517535474,
+      "units": "spm"
+    },
+    "start": "2021-07-06 00:09:17 +0000",
+    "totalSwimmingStrokeCount": {
+      "qty": 0,
+      "units": "count"
+    },
+    "activeEnergy": {
+      "units": "kcal",
+      "qty": 277.0806259309866
+    },
+    "elevation": {
+      "ascent": 0,
+      "descent": 0,
+      "units": "ft"
+    },
+    "distance": {
+      "units": "mi",
+      "qty": 1.3236382531890134
+    }
+  },
+  {
+    "temperature": {
+      "units": "degF",
+      "qty": 66.1999990940094
+    },
+    "name": "Tennis",
+    "heartRateData": [
+      {
+        "date": "2021-07-03 13:15:50 +0000",
+        "units": "bpm",
+        "qty": 107.5829807261015
+      }
+    ],
+    "isIndoor": false,
+    "heartRateRecovery": [
+      {
+        "date": "2021-07-03 14:41:47 +0000",
+        "qty": 87,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "date": "2021-07-03 14:41:52 +0000",
+        "qty": 81
+      },
+      {
+        "date": "2021-07-03 14:41:54 +0000",
+        "qty": 80,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "qty": 78,
+        "date": "2021-07-03 14:42:02 +0000"
+      },
+      {
+        "date": "2021-07-03 14:42:07 +0000",
+        "qty": 77,
+        "units": "bpm"
+      },
+      {
+        "qty": 77,
+        "units": "bpm",
+        "date": "2021-07-03 14:42:08 +0000"
+      },
+      {
+        "date": "2021-07-03 14:42:13 +0000",
+        "qty": 77,
+        "units": "bpm"
+      },
+      {
+        "qty": 73,
+        "date": "2021-07-03 14:42:22 +0000",
+        "units": "bpm"
+      },
+      {
+        "qty": 73,
+        "units": "bpm",
+        "date": "2021-07-03 14:42:27 +0000"
+      },
+      {
+        "date": "2021-07-03 14:42:32 +0000",
+        "qty": 71,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "date": "2021-07-03 14:42:37 +0000",
+        "qty": 70
+      },
+      {
+        "units": "bpm",
+        "qty": 70,
+        "date": "2021-07-03 14:42:38 +0000"
+      },
+      {
+        "units": "bpm",
+        "date": "2021-07-03 14:42:58 +0000",
+        "qty": 72
+      },
+      {
+        "units": "bpm",
+        "date": "2021-07-03 14:43:02 +0000",
+        "qty": 72
+      },
+      {
+        "qty": 70,
+        "units": "bpm",
+        "date": "2021-07-03 14:43:07 +0000"
+      },
+      {
+        "units": "bpm",
+        "date": "2021-07-03 14:43:09 +0000",
+        "qty": 70
+      },
+      {
+        "units": "bpm",
+        "qty": 71,
+        "date": "2021-07-03 14:43:29 +0000"
+      },
+      {
+        "qty": 71,
+        "units": "bpm",
+        "date": "2021-07-03 14:43:34 +0000"
+      },
+      {
+        "date": "2021-07-03 14:43:36 +0000",
+        "units": "bpm",
+        "qty": 70
+      }
+    ],
+    "activeEnergy": {
+      "units": "kcal",
+      "qty": 325.5039830435482
+    },
+    "intensity": {
+      "units": "MET",
+      "qty": 4.28257378517726
+    },
+    "humidity": {
+      "units": "%",
+      "qty": 70
+    },
+    "maxHeartRate": {
+      "qty": 130,
+      "units": "bpm"
+    },
+    "start": "2021-07-03 13:15:50 +0000",
+    "avgHeartRate": {
+      "qty": 107.5829807261015,
+      "units": "bpm"
+    },
+    "distance": {
+      "qty": 1.3850609851202709,
+      "units": "mi"
+    },
+    "totalEnergy": {
+      "units": "kcal",
+      "qty": 441.4969830435522
+    },
+    "speed": {
+      "units": "mi/hr",
+      "qty": 0.9677300148504009
+    },
+    "end": "2021-07-03 14:41:42 +0000",
+    "flightsClimbed": {
+      "qty": 0,
+      "units": "count"
+    },
+    "totalSwimmingStrokeCount": {
+      "units": "count",
+      "qty": 0
+    },
+    "duration": 5152.4903329610825,
+    "stepCadence": {
+      "qty": 32.966582957640064,
+      "units": "spm"
+    },
+    "swimCadence": {
+      "qty": 0,
+      "units": "spm"
+    },
+    "location": "Outdoor",
+    "stepCount": {
+      "qty": 2831,
+      "units": "steps"
+    },
+    "elevation": {
+      "ascent": 0,
+      "units": "ft",
+      "descent": 0
+    }
+  },
+  {
+    "name": "Tennis",
+    "swimCadence": {
+      "units": "spm",
+      "qty": 0
+    },
+    "avgHeartRate": {
+      "units": "bpm",
+      "qty": 97.43779743853449
+    },
+    "location": "Outdoor",
+    "heartRateRecovery": [
+      {
+        "date": "2021-07-27 01:51:28 +0000",
+        "qty": 91,
+        "units": "bpm"
+      },
+      {
+        "qty": 87,
+        "units": "bpm",
+        "date": "2021-07-27 01:52:14 +0000"
+      },
+      {
+        "units": "bpm",
+        "date": "2021-07-27 01:52:23 +0000",
+        "qty": 86
+      },
+      {
+        "qty": 91,
+        "units": "bpm",
+        "date": "2021-07-27 01:52:28 +0000"
+      },
+      {
+        "qty": 92,
+        "units": "bpm",
+        "date": "2021-07-27 01:52:33 +0000"
+      },
+      {
+        "units": "bpm",
+        "qty": 97,
+        "date": "2021-07-27 01:53:25 +0000"
+      }
+    ],
+    "maxHeartRate": {
+      "qty": 121,
+      "units": "bpm"
+    },
+    "start": "2021-07-27 00:06:59 +0000",
+    "activeEnergy": {
+      "qty": 328.466838316871,
+      "units": "kcal"
+    },
+    "end": "2021-07-27 01:51:26 +0000",
+    "speed": {
+      "units": "mi/hr",
+      "qty": 1.080923813073637
+    },
+    "stepCadence": {
+      "units": "spm",
+      "qty": 40.26942648336832
+    },
+    "totalSwimmingStrokeCount": {
+      "qty": 0,
+      "units": "count"
+    },
+    "totalEnergy": {
+      "units": "kcal",
+      "qty": 467.55783831687813
+    },
+    "temperature": {
+      "qty": 84.19999861717224,
+      "units": "degF"
+    },
+    "flightsClimbed": {
+      "units": "count",
+      "qty": 0
+    },
+    "humidity": {
+      "qty": 56,
+      "units": "%"
+    },
+    "duration": 5518.827045917511,
+    "heartRateData": [
+      {
+        "date": "2021-07-27 00:06:59 +0000",
+        "qty": 97.43779743853449,
+        "units": "bpm"
+      }
+    ],
+    "stepCount": {
+      "units": "steps",
+      "qty": 3704
+    },
+    "isIndoor": false,
+    "distance": {
+      "qty": 1.65706432615752,
+      "units": "mi"
+    },
+    "elevation": {
+      "units": "ft",
+      "ascent": 0,
+      "descent": 0
+    },
+    "intensity": {
+      "qty": 4.017477176111735,
+      "units": "MET"
+    }
+  },
+  {
+    "temperature": {
+      "qty": 80.59999871253967,
+      "units": "degF"
+    },
+    "elevation": {
+      "descent": 0,
+      "ascent": 0,
+      "units": "ft"
+    },
+    "speed": {
+      "qty": 1.1599665200627898,
+      "units": "mi/hr"
+    },
+    "start": "2021-07-20 00:05:11 +0000",
+    "totalEnergy": {
+      "units": "kcal",
+      "qty": 513.8903093476963
+    },
+    "activeEnergy": {
+      "units": "kcal",
+      "qty": 391.60030934768923
+    },
+    "duration": 6325.0537539720535,
+    "name": "Tennis",
+    "isIndoor": false,
+    "distance": {
+      "qty": 2.038014053390291,
+      "units": "mi"
+    },
+    "flightsClimbed": {
+      "qty": 0,
+      "units": "count"
+    },
+    "humidity": {
+      "qty": 62,
+      "units": "%"
+    },
+    "heartRateRecovery": [
+      {
+        "units": "bpm",
+        "date": "2021-07-20 01:50:40 +0000",
+        "qty": 95
+      },
+      {
+        "units": "bpm",
+        "date": "2021-07-20 01:50:57 +0000",
+        "qty": 100
+      },
+      {
+        "units": "bpm",
+        "date": "2021-07-20 01:50:58 +0000",
+        "qty": 99
+      },
+      {
+        "qty": 100,
+        "date": "2021-07-20 01:52:07 +0000",
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "date": "2021-07-20 01:52:11 +0000",
+        "qty": 95
+      },
+      {
+        "units": "bpm",
+        "date": "2021-07-20 01:52:13 +0000",
+        "qty": 94
+      },
+      {
+        "date": "2021-07-20 01:52:22 +0000",
+        "qty": 96,
+        "units": "bpm"
+      },
+      {
+        "qty": 96,
+        "units": "bpm",
+        "date": "2021-07-20 01:52:24 +0000"
+      },
+      {
+        "units": "bpm",
+        "date": "2021-07-20 01:52:28 +0000",
+        "qty": 94
+      }
+    ],
+    "swimCadence": {
+      "qty": 0,
+      "units": "spm"
+    },
+    "location": "Outdoor",
+    "end": "2021-07-20 01:50:36 +0000",
+    "totalSwimmingStrokeCount": {
+      "units": "count",
+      "qty": 0
+    },
+    "intensity": {
+      "qty": 4.289607833422772,
+      "units": "MET"
+    },
+    "avgHeartRate": {
+      "qty": 96.15742414386057,
+      "units": "bpm"
+    },
+    "heartRateData": [
+      {
+        "units": "bpm",
+        "date": "2021-07-20 00:05:11 +0000",
+        "qty": 96.15742414386057
+      }
+    ],
+    "maxHeartRate": {
+      "units": "bpm",
+      "qty": 130
+    },
+    "stepCadence": {
+      "qty": 36.559373089087856,
+      "units": "spm"
+    },
+    "stepCount": {
+      "units": "steps",
+      "qty": 3854
+    }
+  },
+  {
+    "swimCadence": {
+      "units": "spm",
+      "qty": 0
+    },
+    "end": "2021-07-12 23:27:07 +0000",
+    "isIndoor": false,
+    "heartRateData": [
+      {
+        "date": "2021-07-12 22:32:19 +0000",
+        "units": "bpm",
+        "qty": 81.96903182372112
+      }
+    ],
+    "name": "Tennis",
+    "heartRateRecovery": [
+      {
+        "date": "2021-07-12 23:27:09 +0000",
+        "qty": 84,
+        "units": "bpm"
+      },
+      {
+        "qty": 82,
+        "units": "bpm",
+        "date": "2021-07-12 23:27:15 +0000"
+      },
+      {
+        "date": "2021-07-12 23:27:17 +0000",
+        "qty": 82,
+        "units": "bpm"
+      },
+      {
+        "date": "2021-07-12 23:27:25 +0000",
+        "qty": 83,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "date": "2021-07-12 23:27:29 +0000",
+        "qty": 82
+      },
+      {
+        "date": "2021-07-12 23:27:31 +0000",
+        "qty": 83,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "date": "2021-07-12 23:27:40 +0000",
+        "qty": 85
+      },
+      {
+        "date": "2021-07-12 23:27:45 +0000",
+        "units": "bpm",
+        "qty": 86
+      },
+      {
+        "date": "2021-07-12 23:27:50 +0000",
+        "qty": 86,
+        "units": "bpm"
+      },
+      {
+        "date": "2021-07-12 23:27:52 +0000",
+        "qty": 86,
+        "units": "bpm"
+      },
+      {
+        "qty": 88,
+        "units": "bpm",
+        "date": "2021-07-12 23:27:58 +0000"
+      },
+      {
+        "date": "2021-07-12 23:28:05 +0000",
+        "units": "bpm",
+        "qty": 82
+      },
+      {
+        "units": "bpm",
+        "date": "2021-07-12 23:28:08 +0000",
+        "qty": 81
+      },
+      {
+        "qty": 80,
+        "date": "2021-07-12 23:28:11 +0000",
+        "units": "bpm"
+      },
+      {
+        "qty": 81,
+        "date": "2021-07-12 23:28:16 +0000",
+        "units": "bpm"
+      },
+      {
+        "qty": 81,
+        "units": "bpm",
+        "date": "2021-07-12 23:28:25 +0000"
+      },
+      {
+        "date": "2021-07-12 23:28:29 +0000",
+        "units": "bpm",
+        "qty": 78
+      },
+      {
+        "qty": 78,
+        "units": "bpm",
+        "date": "2021-07-12 23:28:32 +0000"
+      },
+      {
+        "date": "2021-07-12 23:28:36 +0000",
+        "units": "bpm",
+        "qty": 78
+      },
+      {
+        "date": "2021-07-12 23:28:43 +0000",
+        "qty": 80,
+        "units": "bpm"
+      },
+      {
+        "date": "2021-07-12 23:28:50 +0000",
+        "qty": 81,
+        "units": "bpm"
+      },
+      {
+        "date": "2021-07-12 23:28:53 +0000",
+        "qty": 82,
+        "units": "bpm"
+      },
+      {
+        "date": "2021-07-12 23:28:56 +0000",
+        "qty": 82,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "date": "2021-07-12 23:29:05 +0000",
+        "qty": 84
+      }
+    ],
+    "activeEnergy": {
+      "units": "kcal",
+      "qty": 188.05417321474783
+    },
+    "stepCadence": {
+      "qty": 33.02040538506903,
+      "units": "spm"
+    },
+    "intensity": {
+      "qty": 3.8181706888438645,
+      "units": "MET"
+    },
+    "speed": {
+      "units": "mi/hr",
+      "qty": 0.9503248776092171
+    },
+    "humidity": {
+      "qty": 84,
+      "units": "%"
+    },
+    "stepCount": {
+      "units": "steps",
+      "qty": 1809
+    },
+    "avgHeartRate": {
+      "qty": 81.96903182372112,
+      "units": "bpm"
+    },
+    "flightsClimbed": {
+      "units": "count",
+      "qty": 0
+    },
+    "start": "2021-07-12 22:32:19 +0000",
+    "distance": {
+      "units": "mi",
+      "qty": 0.8677148183309014
+    },
+    "duration": 3287.0583729743958,
+    "totalSwimmingStrokeCount": {
+      "units": "count",
+      "qty": 0
+    },
+    "elevation": {
+      "units": "ft",
+      "descent": 0,
+      "ascent": 0
+    },
+    "temperature": {
+      "units": "degF",
+      "qty": 73.39999890327454
+    },
+    "totalEnergy": {
+      "qty": 266.85317321474747,
+      "units": "kcal"
+    },
+    "maxHeartRate": {
+      "units": "bpm",
+      "qty": 101
+    },
+    "location": "Outdoor"
+  },
+  {
+    "duration": 871.713299036026,
+    "heartRateRecovery": [
+      {
+        "qty": 64,
+        "units": "bpm",
+        "date": "2021-07-03 12:57:03 +0000"
+      },
+      {
+        "units": "bpm",
+        "date": "2021-07-03 12:57:09 +0000",
+        "qty": 64
+      },
+      {
+        "qty": 65,
+        "units": "bpm",
+        "date": "2021-07-03 12:57:10 +0000"
+      },
+      {
+        "date": "2021-07-03 12:57:15 +0000",
+        "qty": 65,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "qty": 65,
+        "date": "2021-07-03 12:57:24 +0000"
+      },
+      {
+        "units": "bpm",
+        "date": "2021-07-03 12:57:25 +0000",
+        "qty": 66
+      },
+      {
+        "date": "2021-07-03 12:57:30 +0000",
+        "qty": 66,
+        "units": "bpm"
+      },
+      {
+        "qty": 68,
+        "units": "bpm",
+        "date": "2021-07-03 12:57:35 +0000"
+      },
+      {
+        "qty": 72,
+        "units": "bpm",
+        "date": "2021-07-03 12:57:40 +0000"
+      },
+      {
+        "qty": 73,
+        "units": "bpm",
+        "date": "2021-07-03 12:57:49 +0000"
+      },
+      {
+        "units": "bpm",
+        "date": "2021-07-03 12:57:51 +0000",
+        "qty": 73
+      },
+      {
+        "date": "2021-07-03 12:57:55 +0000",
+        "qty": 75,
+        "units": "bpm"
+      },
+      {
+        "date": "2021-07-03 12:58:04 +0000",
+        "units": "bpm",
+        "qty": 74
+      },
+      {
+        "units": "bpm",
+        "date": "2021-07-03 12:58:06 +0000",
+        "qty": 74
+      },
+      {
+        "date": "2021-07-03 12:58:10 +0000",
+        "units": "bpm",
+        "qty": 75
+      },
+      {
+        "units": "bpm",
+        "date": "2021-07-03 12:58:17 +0000",
+        "qty": 80
+      },
+      {
+        "date": "2021-07-03 12:58:23 +0000",
+        "qty": 86,
+        "units": "bpm"
+      },
+      {
+        "date": "2021-07-03 12:58:29 +0000",
+        "qty": 81,
+        "units": "bpm"
+      },
+      {
+        "qty": 81,
+        "units": "bpm",
+        "date": "2021-07-03 12:58:31 +0000"
+      },
+      {
+        "units": "bpm",
+        "date": "2021-07-03 12:58:36 +0000",
+        "qty": 80
+      },
+      {
+        "units": "bpm",
+        "qty": 80,
+        "date": "2021-07-03 12:58:40 +0000"
+      },
+      {
+        "qty": 78,
+        "units": "bpm",
+        "date": "2021-07-03 12:58:48 +0000"
+      },
+      {
+        "units": "bpm",
+        "date": "2021-07-03 12:58:52 +0000",
+        "qty": 76
+      }
+    ],
+    "heartRateData": [
+      {
+        "date": "2021-07-03 12:42:24 +0000",
+        "qty": 82.58028180647659,
+        "units": "bpm"
+      }
+    ],
+    "speed": {
+      "qty": 1.1395875269254607,
+      "units": "mi/hr"
+    },
+    "name": "Tennis",
+    "stepCadence": {
+      "qty": 19.823031286902342,
+      "units": "spm"
+    },
+    "start": "2021-07-03 12:42:24 +0000",
+    "activeEnergy": {
+      "qty": 52.96363153096313,
+      "units": "kcal"
+    },
+    "flightsClimbed": {
+      "units": "count",
+      "qty": 0
+    },
+    "totalSwimmingStrokeCount": {
+      "qty": 0,
+      "units": "count"
+    },
+    "intensity": {
+      "qty": 4.108266772989584,
+      "units": "MET"
+    },
+    "avgHeartRate": {
+      "qty": 82.58028180647659,
+      "units": "bpm"
+    },
+    "totalEnergy": {
+      "units": "kcal",
+      "qty": 82.4326315309631
+    },
+    "end": "2021-07-03 12:56:56 +0000",
+    "temperature": {
+      "qty": 62.59999918937683,
+      "units": "degF"
+    },
+    "distance": {
+      "qty": 0.2759426673990276,
+      "units": "mi"
+    },
+    "stepCount": {
+      "qty": 288,
+      "units": "steps"
+    },
+    "humidity": {
+      "units": "%",
+      "qty": 77
+    },
+    "maxHeartRate": {
+      "units": "bpm",
+      "qty": 105
+    },
+    "swimCadence": {
+      "units": "spm",
+      "qty": 0
+    },
+    "elevation": {
+      "ascent": 0,
+      "units": "ft",
+      "descent": 0
+    },
+    "isIndoor": false,
+    "location": "Outdoor"
+  },
+  {
+    "activeEnergy": {
+      "units": "kcal",
+      "qty": 142.69299999999927
+    },
+    "stepCount": {
+      "qty": 1996,
+      "units": "steps"
+    },
+    "intensity": {
+      "units": "MET",
+      "qty": 4.610053794507456
+    },
+    "temperature": {
+      "qty": 85.99999856948853,
+      "units": "degF"
+    },
+    "flightsClimbed": {
+      "qty": 0,
+      "units": "count"
+    },
+    "speed": {
+      "qty": 1.5184616949297036,
+      "units": "mi/hr"
+    },
+    "end": "2021-08-07 22:43:17 +0000",
+    "totalSwimmingStrokeCount": {
+      "units": "count",
+      "qty": 0
+    },
+    "duration": 2345.650405049324,
+    "avgHeartRate": {
+      "units": "bpm",
+      "qty": 95.88246590973837
+    },
+    "heartRateData": [
+      {
+        "date": "2021-08-07 22:04:12 +0000",
+        "units": "bpm",
+        "qty": 95.88246590973837
+      }
+    ],
+    "location": "Outdoor",
+    "totalEnergy": {
+      "units": "kcal",
+      "qty": 184.13699999999898
+    },
+    "isIndoor": false,
+    "distance": {
+      "units": "mi",
+      "qty": 0.9893834138232618
+    },
+    "name": "Tennis",
+    "start": "2021-08-07 22:04:12 +0000",
+    "stepCadence": {
+      "units": "spm",
+      "qty": 51.05620161563748
+    },
+    "humidity": {
+      "qty": 63,
+      "units": "%"
+    },
+    "swimCadence": {
+      "units": "spm",
+      "qty": 0
+    },
+    "elevation": {
+      "ascent": 0,
+      "descent": 0,
+      "units": "ft"
+    },
+    "maxHeartRate": {
+      "units": "bpm",
+      "qty": 119
+    },
+    "heartRateRecovery": [
+      {
+        "qty": 107,
+        "units": "bpm",
+        "date": "2021-08-07 22:43:23 +0000"
+      },
+      {
+        "date": "2021-08-07 22:43:27 +0000",
+        "units": "bpm",
+        "qty": 105
+      },
+      {
+        "units": "bpm",
+        "date": "2021-08-07 22:43:29 +0000",
+        "qty": 103
+      },
+      {
+        "qty": 101,
+        "units": "bpm",
+        "date": "2021-08-07 22:43:38 +0000"
+      },
+      {
+        "units": "bpm",
+        "qty": 98,
+        "date": "2021-08-07 22:43:42 +0000"
+      },
+      {
+        "qty": 97,
+        "date": "2021-08-07 22:43:48 +0000",
+        "units": "bpm"
+      },
+      {
+        "date": "2021-08-07 22:43:53 +0000",
+        "qty": 97,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "qty": 95,
+        "date": "2021-08-07 22:43:58 +0000"
+      },
+      {
+        "qty": 95,
+        "date": "2021-08-07 22:44:03 +0000",
+        "units": "bpm"
+      },
+      {
+        "date": "2021-08-07 22:44:08 +0000",
+        "qty": 95,
+        "units": "bpm"
+      },
+      {
+        "qty": 93,
+        "date": "2021-08-07 22:44:13 +0000",
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "date": "2021-08-07 22:44:16 +0000",
+        "qty": 93
+      },
+      {
+        "date": "2021-08-07 22:44:19 +0000",
+        "qty": 93,
+        "units": "bpm"
+      },
+      {
+        "date": "2021-08-07 22:44:28 +0000",
+        "units": "bpm",
+        "qty": 87
+      },
+      {
+        "units": "bpm",
+        "date": "2021-08-07 22:44:46 +0000",
+        "qty": 89
+      },
+      {
+        "qty": 91,
+        "date": "2021-08-07 22:44:51 +0000",
+        "units": "bpm"
+      },
+      {
+        "date": "2021-08-07 22:45:11 +0000",
+        "units": "bpm",
+        "qty": 93
+      },
+      {
+        "units": "bpm",
+        "date": "2021-08-07 22:45:16 +0000",
+        "qty": 95
+      }
+    ]
+  },
+  {
+    "end": "2023-07-11 20:34:30 +0000",
+    "elevation": {
+      "units": "ft",
+      "ascent": 0,
+      "descent": 0
+    },
+    "name": "Tennis",
+    "distance": {
+      "qty": 0.517318603877744,
+      "units": "mi"
+    },
+    "speed": {
+      "units": "mi/hr",
+      "qty": 1.4175147160782955
+    },
+    "activeEnergy": {
+      "units": "kcal",
+      "qty": 118.75935050860026
+    },
+    "isIndoor": false,
+    "stepCadence": {
+      "qty": 43.111211090788046,
+      "units": "spm"
+    },
+    "flightsClimbed": {
+      "units": "count",
+      "qty": 0
+    },
+    "heartRateData": [
+      {
+        "date": "2023-07-11 20:12:36 +0000",
+        "units": "bpm",
+        "qty": 90.95515105852836
+      }
+    ],
+    "heartRateRecovery": [
+      {
+        "qty": 77.00000000000001,
+        "date": "2023-07-11 20:34:37 +0000",
+        "units": "bpm"
+      },
+      {
+        "qty": 77.00000000000001,
+        "date": "2023-07-11 20:34:45 +0000",
+        "units": "bpm"
+      },
+      {
+        "date": "2023-07-11 20:34:51 +0000",
+        "qty": 77.00000000000001,
+        "units": "bpm"
+      },
+      {
+        "date": "2023-07-11 20:34:56 +0000",
+        "units": "bpm",
+        "qty": 75
+      },
+      {
+        "date": "2023-07-11 20:34:59 +0000",
+        "qty": 74,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "qty": 72,
+        "date": "2023-07-11 20:35:06 +0000"
+      },
+      {
+        "date": "2023-07-11 20:35:11 +0000",
+        "units": "bpm",
+        "qty": 72
+      },
+      {
+        "units": "bpm",
+        "qty": 72,
+        "date": "2023-07-11 20:35:16 +0000"
+      },
+      {
+        "units": "bpm",
+        "date": "2023-07-11 20:35:25 +0000",
+        "qty": 72
+      },
+      {
+        "date": "2023-07-11 20:35:27 +0000",
+        "qty": 71,
+        "units": "bpm"
+      },
+      {
+        "date": "2023-07-11 20:35:32 +0000",
+        "qty": 71,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "qty": 71,
+        "date": "2023-07-11 20:35:41 +0000"
+      },
+      {
+        "date": "2023-07-11 20:35:45 +0000",
+        "qty": 71,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "date": "2023-07-11 20:35:51 +0000",
+        "qty": 70
+      },
+      {
+        "date": "2023-07-11 20:35:53 +0000",
+        "qty": 71,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "qty": 72,
+        "date": "2023-07-11 20:36:01 +0000"
+      },
+      {
+        "units": "bpm",
+        "qty": 72,
+        "date": "2023-07-11 20:36:02 +0000"
+      },
+      {
+        "units": "bpm",
+        "qty": 71,
+        "date": "2023-07-11 20:36:07 +0000"
+      },
+      {
+        "qty": 72,
+        "units": "bpm",
+        "date": "2023-07-11 20:36:16 +0000"
+      },
+      {
+        "qty": 71,
+        "units": "bpm",
+        "date": "2023-07-11 20:36:20 +0000"
+      },
+      {
+        "date": "2023-07-11 20:36:23 +0000",
+        "qty": 71,
+        "units": "bpm"
+      }
+    ],
+    "temperature": {
+      "units": "degF",
+      "qty": 83.87599999999557
+    },
+    "duration": 1313.8113861083984,
+    "intensity": {
+      "units": "MET",
+      "qty": 4.098599733854992
+    },
+    "totalSwimmingStrokeCount": {
+      "qty": 0,
+      "units": "count"
+    },
+    "totalEnergy": {
+      "units": "kcal",
+      "qty": 174.68135050859996
+    },
+    "humidity": {
+      "qty": 63,
+      "units": "%"
+    },
+    "start": "2023-07-11 20:12:36 +0000",
+    "avgHeartRate": {
+      "qty": 90.95515105852836,
+      "units": "bpm"
+    },
+    "maxHeartRate": {
+      "units": "bpm",
+      "qty": 114
+    },
+    "stepCount": {
+      "units": "steps",
+      "qty": 944
+    },
+    "location": "Outdoor",
+    "swimCadence": {
+      "qty": 0,
+      "units": "spm"
+    }
+  },
+  {
+    "start": "2023-07-29 19:17:42 +0000",
+    "elevation": {
+      "descent": 0,
+      "units": "ft",
+      "ascent": 0
+    },
+    "location": "Outdoor",
+    "distance": {
+      "units": "mi",
+      "qty": 1.1905618861406333
+    },
+    "maxHeartRate": {
+      "qty": 101,
+      "units": "bpm"
+    },
+    "flightsClimbed": {
+      "qty": 0,
+      "units": "count"
+    },
+    "name": "Tennis",
+    "heartRateData": [
+      {
+        "qty": 86.17685589507295,
+        "units": "bpm",
+        "date": "2023-07-29 19:17:42 +0000"
+      }
+    ],
+    "speed": {
+      "units": "mi/hr",
+      "qty": 1.3523310287343482
+    },
+    "stepCount": {
+      "qty": 2180,
+      "units": "steps"
+    },
+    "duration": 3169.359202027321,
+    "totalSwimmingStrokeCount": {
+      "units": "count",
+      "qty": 0
+    },
+    "temperature": {
+      "units": "degF",
+      "qty": 81.28399999999559
+    },
+    "stepCadence": {
+      "units": "spm",
+      "qty": 41.27017219011721
+    },
+    "intensity": {
+      "qty": 4.04680527391833,
+      "units": "MET"
+    },
+    "isIndoor": false,
+    "humidity": {
+      "units": "%",
+      "qty": 63
+    },
+    "heartRateRecovery": [
+      {
+        "units": "bpm",
+        "date": "2023-07-29 20:10:32 +0000",
+        "qty": 80
+      },
+      {
+        "units": "bpm",
+        "date": "2023-07-29 20:10:40 +0000",
+        "qty": 86
+      },
+      {
+        "qty": 85,
+        "units": "bpm",
+        "date": "2023-07-29 20:10:42 +0000"
+      },
+      {
+        "qty": 83,
+        "units": "bpm",
+        "date": "2023-07-29 20:10:47 +0000"
+      },
+      {
+        "qty": 78,
+        "date": "2023-07-29 20:11:06 +0000",
+        "units": "bpm"
+      },
+      {
+        "qty": 78,
+        "units": "bpm",
+        "date": "2023-07-29 20:11:10 +0000"
+      },
+      {
+        "qty": 84,
+        "date": "2023-07-29 20:11:16 +0000",
+        "units": "bpm"
+      },
+      {
+        "date": "2023-07-29 20:11:21 +0000",
+        "qty": 84,
+        "units": "bpm"
+      },
+      {
+        "qty": 84,
+        "units": "bpm",
+        "date": "2023-07-29 20:11:22 +0000"
+      },
+      {
+        "qty": 80,
+        "date": "2023-07-29 20:11:31 +0000",
+        "units": "bpm"
+      },
+      {
+        "qty": 81,
+        "date": "2023-07-29 20:11:34 +0000",
+        "units": "bpm"
+      },
+      {
+        "date": "2023-07-29 20:11:37 +0000",
+        "qty": 81,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "date": "2023-07-29 20:11:44 +0000",
+        "qty": 82
+      },
+      {
+        "date": "2023-07-29 20:11:51 +0000",
+        "qty": 86,
+        "units": "bpm"
+      },
+      {
+        "qty": 85,
+        "units": "bpm",
+        "date": "2023-07-29 20:11:54 +0000"
+      },
+      {
+        "units": "bpm",
+        "qty": 85,
+        "date": "2023-07-29 20:12:01 +0000"
+      },
+      {
+        "date": "2023-07-29 20:12:02 +0000",
+        "qty": 86,
+        "units": "bpm"
+      },
+      {
+        "qty": 86,
+        "date": "2023-07-29 20:12:11 +0000",
+        "units": "bpm"
+      },
+      {
+        "date": "2023-07-29 20:12:14 +0000",
+        "qty": 85,
+        "units": "bpm"
+      },
+      {
+        "qty": 85,
+        "date": "2023-07-29 20:12:17 +0000",
+        "units": "bpm"
+      },
+      {
+        "date": "2023-07-29 20:12:22 +0000",
+        "units": "bpm",
+        "qty": 85
+      }
+    ],
+    "activeEnergy": {
+      "units": "kcal",
+      "qty": 283.3981084759951
+    },
+    "avgHeartRate": {
+      "units": "bpm",
+      "qty": 86.17685589507295
+    },
+    "totalEnergy": {
+      "units": "kcal",
+      "qty": 377.77210847599366
+    },
+    "swimCadence": {
+      "qty": 0,
+      "units": "spm"
+    },
+    "end": "2023-07-29 20:10:31 +0000"
+  },
+  {
+    "flightsClimbed": {
+      "units": "count",
+      "qty": 0
+    },
+    "intensity": {
+      "qty": 4.377372274215211,
+      "units": "MET"
+    },
+    "maxHeartRate": {
+      "qty": 127,
+      "units": "bpm"
+    },
+    "swimCadence": {
+      "units": "spm",
+      "qty": 0
+    },
+    "temperature": {
+      "qty": 91.88599999999548,
+      "units": "degF"
+    },
+    "activeEnergy": {
+      "units": "kcal",
+      "qty": 453.6169523915259
+    },
+    "stepCount": {
+      "units": "steps",
+      "qty": 3200
+    },
+    "location": "Outdoor",
+    "duration": 4652.868345975876,
+    "totalSwimmingStrokeCount": {
+      "qty": 0,
+      "units": "count"
+    },
+    "elevation": {
+      "units": "ft",
+      "ascent": 0,
+      "descent": 0
+    },
+    "avgHeartRate": {
+      "qty": 110.25809269719481,
+      "units": "bpm"
+    },
+    "name": "Tennis",
+    "end": "2023-07-27 20:06:18 +0000",
+    "stepCadence": {
+      "units": "spm",
+      "qty": 41.26486840446602
+    },
+    "humidity": {
+      "qty": 52,
+      "units": "%"
+    },
+    "heartRateData": [
+      {
+        "qty": 110.25809269719481,
+        "date": "2023-07-27 18:48:45 +0000",
+        "units": "bpm"
+      }
+    ],
+    "heartRateRecovery": [
+      {
+        "qty": 107.00000000000001,
+        "units": "bpm",
+        "date": "2023-07-27 20:06:32 +0000"
+      },
+      {
+        "units": "bpm",
+        "qty": 104,
+        "date": "2023-07-27 20:06:37 +0000"
+      },
+      {
+        "date": "2023-07-27 20:06:38 +0000",
+        "qty": 103,
+        "units": "bpm"
+      },
+      {
+        "qty": 92.00000000000001,
+        "date": "2023-07-27 20:06:47 +0000",
+        "units": "bpm"
+      },
+      {
+        "date": "2023-07-27 20:06:48 +0000",
+        "qty": 93,
+        "units": "bpm"
+      },
+      {
+        "qty": 92.00000000000001,
+        "date": "2023-07-27 20:06:57 +0000",
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "date": "2023-07-27 20:06:58 +0000",
+        "qty": 92.00000000000001
+      },
+      {
+        "qty": 93,
+        "date": "2023-07-27 20:07:07 +0000",
+        "units": "bpm"
+      },
+      {
+        "date": "2023-07-27 20:07:09 +0000",
+        "qty": 93,
+        "units": "bpm"
+      },
+      {
+        "date": "2023-07-27 20:07:15 +0000",
+        "qty": 93,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "date": "2023-07-27 20:07:21 +0000",
+        "qty": 90
+      },
+      {
+        "date": "2023-07-27 20:07:23 +0000",
+        "qty": 91,
+        "units": "bpm"
+      },
+      {
+        "date": "2023-07-27 20:07:32 +0000",
+        "units": "bpm",
+        "qty": 91
+      },
+      {
+        "date": "2023-07-27 20:07:34 +0000",
+        "qty": 91,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "date": "2023-07-27 20:07:39 +0000",
+        "qty": 90
+      },
+      {
+        "date": "2023-07-27 20:07:43 +0000",
+        "units": "bpm",
+        "qty": 92.00000000000001
+      },
+      {
+        "units": "bpm",
+        "qty": 96,
+        "date": "2023-07-27 20:07:52 +0000"
+      },
+      {
+        "units": "bpm",
+        "qty": 97,
+        "date": "2023-07-27 20:07:53 +0000"
+      },
+      {
+        "qty": 105,
+        "units": "bpm",
+        "date": "2023-07-27 20:08:11 +0000"
+      },
+      {
+        "date": "2023-07-27 20:08:17 +0000",
+        "units": "bpm",
+        "qty": 105
+      }
+    ],
+    "totalEnergy": {
+      "units": "kcal",
+      "qty": 611.3059523915235
+    },
+    "start": "2023-07-27 18:48:45 +0000",
+    "isIndoor": false,
+    "distance": {
+      "qty": 1.7130810091423467,
+      "units": "mi"
+    },
+    "speed": {
+      "units": "mi/hr",
+      "qty": 1.3254386701584149
+    }
+  },
+  {
+    "totalEnergy": {
+      "units": "kcal",
+      "qty": 525.86
+    },
+    "distance": {
+      "units": "mi",
+      "qty": 1.4209027246307293
+    },
+    "maxHeartRate": {
+      "units": "bpm",
+      "qty": 119
+    },
+    "humidity": {
+      "qty": 0,
+      "units": "%"
+    },
+    "location": "Outdoor",
+    "activeEnergy": {
+      "qty": 381.819000000002,
+      "units": "kcal"
+    },
+    "speed": {
+      "qty": 1.2668962006892728,
+      "units": "mi/hr"
+    },
+    "isIndoor": false,
+    "flightsClimbed": {
+      "qty": 0,
+      "units": "count"
+    },
+    "intensity": {
+      "units": "MET",
+      "qty": 4.433106837091988
+    },
+    "name": "Tennis",
+    "avgHeartRate": {
+      "qty": 97.34973012829255,
+      "units": "bpm"
+    },
+    "stepCadence": {
+      "qty": 41.326290592628986,
+      "units": "spm"
+    },
+    "swimCadence": {
+      "qty": 0,
+      "units": "spm"
+    },
+    "duration": 4037.6234500408173,
+    "elevation": {
+      "ascent": 0,
+      "descent": 0,
+      "units": "ft"
+    },
+    "temperature": {
+      "qty": 0,
+      "units": "degF"
+    },
+    "start": "2023-07-20 23:52:38 +0000",
+    "end": "2023-07-21 00:59:56 +0000",
+    "stepCount": {
+      "qty": 2781,
+      "units": "steps"
+    },
+    "heartRateData": [
+      {
+        "units": "bpm",
+        "qty": 97.34973012829255,
+        "date": "2023-07-20 23:52:38 +0000"
+      }
+    ],
+    "heartRateRecovery": [
+      {
+        "qty": 74,
+        "date": "2023-07-21 00:59:56 +0000",
+        "units": "bpm"
+      },
+      {
+        "qty": 74,
+        "date": "2023-07-21 00:59:57 +0000",
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "qty": 74,
+        "date": "2023-07-21 01:00:12 +0000"
+      },
+      {
+        "qty": 72,
+        "units": "bpm",
+        "date": "2023-07-21 01:00:26 +0000"
+      },
+      {
+        "date": "2023-07-21 01:00:31 +0000",
+        "units": "bpm",
+        "qty": 71
+      },
+      {
+        "units": "bpm",
+        "date": "2023-07-21 01:00:32 +0000",
+        "qty": 71
+      },
+      {
+        "date": "2023-07-21 01:00:37 +0000",
+        "qty": 72,
+        "units": "bpm"
+      },
+      {
+        "date": "2023-07-21 01:00:42 +0000",
+        "qty": 73,
+        "units": "bpm"
+      },
+      {
+        "qty": 75,
+        "units": "bpm",
+        "date": "2023-07-21 01:00:47 +0000"
+      },
+      {
+        "date": "2023-07-21 01:00:56 +0000",
+        "qty": 75,
+        "units": "bpm"
+      },
+      {
+        "date": "2023-07-21 01:00:59 +0000",
+        "qty": 75,
+        "units": "bpm"
+      },
+      {
+        "date": "2023-07-21 01:01:06 +0000",
+        "units": "bpm",
+        "qty": 74
+      },
+      {
+        "qty": 74,
+        "date": "2023-07-21 01:01:12 +0000",
+        "units": "bpm"
+      },
+      {
+        "date": "2023-07-21 01:01:21 +0000",
+        "qty": 71,
+        "units": "bpm"
+      },
+      {
+        "date": "2023-07-21 01:01:26 +0000",
+        "qty": 68,
+        "units": "bpm"
+      },
+      {
+        "qty": 70,
+        "date": "2023-07-21 01:01:31 +0000",
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "date": "2023-07-21 01:01:34 +0000",
+        "qty": 70
+      },
+      {
+        "date": "2023-07-21 01:01:40 +0000",
+        "qty": 67,
+        "units": "bpm"
+      },
+      {
+        "date": "2023-07-21 01:01:42 +0000",
+        "units": "bpm",
+        "qty": 67
+      },
+      {
+        "units": "bpm",
+        "date": "2023-07-21 01:01:51 +0000",
+        "qty": 69
+      },
+      {
+        "qty": 69,
+        "date": "2023-07-21 01:01:52 +0000",
+        "units": "bpm"
+      }
+    ],
+    "totalSwimmingStrokeCount": {
+      "qty": 0,
+      "units": "count"
+    }
+  },
+  {
+    "location": "Outdoor",
+    "name": "Tennis",
+    "distance": {
+      "qty": 0.9644962963782397,
+      "units": "mi"
+    },
+    "totalSwimmingStrokeCount": {
+      "qty": 0,
+      "units": "count"
+    },
+    "speed": {
+      "qty": 1.624669300075527,
+      "units": "mi/hr"
+    },
+    "stepCadence": {
+      "qty": 53.818956415211176,
+      "units": "spm"
+    },
+    "activeEnergy": {
+      "qty": 212.32952996944243,
+      "units": "kcal"
+    },
+    "humidity": {
+      "units": "%",
+      "qty": 64
+    },
+    "start": "2023-07-13 21:48:20 +0000",
+    "isIndoor": false,
+    "end": "2023-07-13 22:23:57 +0000",
+    "stepCount": {
+      "qty": 1917,
+      "units": "steps"
+    },
+    "totalEnergy": {
+      "units": "kcal",
+      "qty": 272.4225299694416
+    },
+    "intensity": {
+      "qty": 4.9069252529276195,
+      "units": "MET"
+    },
+    "elevation": {
+      "ascent": 0,
+      "descent": 0,
+      "units": "ft"
+    },
+    "flightsClimbed": {
+      "units": "count",
+      "qty": 0
+    },
+    "maxHeartRate": {
+      "units": "bpm",
+      "qty": 113
+    },
+    "duration": 2137.165186047554,
+    "avgHeartRate": {
+      "qty": 96.99119318568016,
+      "units": "bpm"
+    },
+    "temperature": {
+      "qty": 77.95399999999557,
+      "units": "degF"
+    },
+    "swimCadence": {
+      "units": "spm",
+      "qty": 0
+    },
+    "heartRateData": [
+      {
+        "units": "bpm",
+        "qty": 96.99119318568016,
+        "date": "2023-07-13 21:48:20 +0000"
+      }
+    ],
+    "heartRateRecovery": [
+      {
+        "date": "2023-07-13 22:23:58 +0000",
+        "qty": 77.00000000000001,
+        "units": "bpm"
+      },
+      {
+        "qty": 76,
+        "units": "bpm",
+        "date": "2023-07-13 22:24:17 +0000"
+      },
+      {
+        "qty": 75,
+        "units": "bpm",
+        "date": "2023-07-13 22:24:20 +0000"
+      },
+      {
+        "qty": 73,
+        "units": "bpm",
+        "date": "2023-07-13 22:24:29 +0000"
+      },
+      {
+        "units": "bpm",
+        "date": "2023-07-13 22:24:31 +0000",
+        "qty": 73
+      },
+      {
+        "date": "2023-07-13 22:24:35 +0000",
+        "qty": 74,
+        "units": "bpm"
+      },
+      {
+        "date": "2023-07-13 22:24:59 +0000",
+        "qty": 74,
+        "units": "bpm"
+      },
+      {
+        "date": "2023-07-13 22:25:04 +0000",
+        "qty": 72,
+        "units": "bpm"
+      },
+      {
+        "date": "2023-07-13 22:25:12 +0000",
+        "qty": 70,
+        "units": "bpm"
+      },
+      {
+        "qty": 70,
+        "date": "2023-07-13 22:25:20 +0000",
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "date": "2023-07-13 22:25:24 +0000",
+        "qty": 69
+      },
+      {
+        "qty": 70,
+        "units": "bpm",
+        "date": "2023-07-13 22:25:28 +0000"
+      },
+      {
+        "date": "2023-07-13 22:25:35 +0000",
+        "units": "bpm",
+        "qty": 69
+      },
+      {
+        "qty": 71,
+        "units": "bpm",
+        "date": "2023-07-13 22:25:45 +0000"
+      },
+      {
+        "date": "2023-07-13 22:25:47 +0000",
+        "qty": 71,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "qty": 70,
+        "date": "2023-07-13 22:25:55 +0000"
+      },
+      {
+        "date": "2023-07-13 22:25:56 +0000",
+        "units": "bpm",
+        "qty": 70
+      }
+    ]
+  },
+  {
+    "stepCount": {
+      "qty": 1459,
+      "units": "steps"
+    },
+    "name": "Tennis",
+    "activeEnergy": {
+      "units": "kcal",
+      "qty": 226.060247425022
+    },
+    "location": "Outdoor",
+    "heartRateData": [
+      {
+        "date": "2023-08-15 14:43:13 +0000",
+        "units": "bpm",
+        "qty": 83.8952007274665
+      }
+    ],
+    "heartRateRecovery": [
+      {
+        "qty": 75,
+        "units": "bpm",
+        "date": "2023-08-15 15:24:30 +0000"
+      },
+      {
+        "qty": 76,
+        "units": "bpm",
+        "date": "2023-08-15 15:24:39 +0000"
+      },
+      {
+        "qty": 75,
+        "units": "bpm",
+        "date": "2023-08-15 15:24:43 +0000"
+      },
+      {
+        "units": "bpm",
+        "date": "2023-08-15 15:24:45 +0000",
+        "qty": 75
+      },
+      {
+        "units": "bpm",
+        "qty": 79,
+        "date": "2023-08-15 15:25:14 +0000"
+      },
+      {
+        "date": "2023-08-15 15:25:19 +0000",
+        "units": "bpm",
+        "qty": 79
+      },
+      {
+        "date": "2023-08-15 15:25:24 +0000",
+        "units": "bpm",
+        "qty": 80
+      },
+      {
+        "date": "2023-08-15 15:25:25 +0000",
+        "qty": 80,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "date": "2023-08-15 15:25:34 +0000",
+        "qty": 80
+      },
+      {
+        "date": "2023-08-15 15:25:39 +0000",
+        "qty": 76,
+        "units": "bpm"
+      },
+      {
+        "date": "2023-08-15 15:25:41 +0000",
+        "units": "bpm",
+        "qty": 75
+      },
+      {
+        "units": "bpm",
+        "qty": 75,
+        "date": "2023-08-15 15:25:45 +0000"
+      },
+      {
+        "date": "2023-08-15 15:25:50 +0000",
+        "qty": 75,
+        "units": "bpm"
+      },
+      {
+        "qty": 76,
+        "units": "bpm",
+        "date": "2023-08-15 15:25:55 +0000"
+      },
+      {
+        "date": "2023-08-15 15:26:04 +0000",
+        "units": "bpm",
+        "qty": 75
+      },
+      {
+        "qty": 73,
+        "units": "bpm",
+        "date": "2023-08-15 15:26:09 +0000"
+      },
+      {
+        "date": "2023-08-15 15:26:10 +0000",
+        "units": "bpm",
+        "qty": 73
+      },
+      {
+        "date": "2023-08-15 15:26:19 +0000",
+        "qty": 74,
+        "units": "bpm"
+      }
+    ],
+    "totalEnergy": {
+      "units": "kcal",
+      "qty": 322.25824742502095
+    },
+    "flightsClimbed": {
+      "qty": 0,
+      "units": "count"
+    },
+    "temperature": {
+      "qty": 65.98399999999572,
+      "units": "degF"
+    },
+    "swimCadence": {
+      "units": "spm",
+      "qty": 0
+    },
+    "intensity": {
+      "qty": 4.150774956576151,
+      "units": "MET"
+    },
+    "maxHeartRate": {
+      "qty": 118,
+      "units": "bpm"
+    },
+    "duration": 2467.120095014572,
+    "start": "2023-08-15 14:43:13 +0000",
+    "isIndoor": false,
+    "stepCadence": {
+      "qty": 35.48266668367554,
+      "units": "spm"
+    },
+    "elevation": {
+      "units": "ft",
+      "descent": 0,
+      "ascent": 0
+    },
+    "end": "2023-08-15 15:24:20 +0000",
+    "distance": {
+      "qty": 0.8421775089665251,
+      "units": "mi"
+    },
+    "totalSwimmingStrokeCount": {
+      "qty": 0,
+      "units": "count"
+    },
+    "speed": {
+      "units": "mi/hr",
+      "qty": 1.2288980331383432
+    },
+    "humidity": {
+      "units": "%",
+      "qty": 81
+    },
+    "avgHeartRate": {
+      "units": "bpm",
+      "qty": 83.8952007274665
+    }
+  },
+  {
+    "elevation": {
+      "descent": 0,
+      "ascent": 0,
+      "units": "ft"
+    },
+    "intensity": {
+      "qty": 5.042199656585774,
+      "units": "MET"
+    },
+    "maxHeartRate": {
+      "units": "bpm",
+      "qty": 93
+    },
+    "totalSwimmingStrokeCount": {
+      "qty": 0,
+      "units": "count"
+    },
+    "stepCount": {
+      "qty": 2886,
+      "units": "steps"
+    },
+    "end": "2023-09-05 15:12:21 +0000",
+    "heartRateData": [
+      {
+        "qty": 78.33458043844345,
+        "units": "bpm",
+        "date": "2023-09-05 14:10:40 +0000"
+      }
+    ],
+    "stepCadence": {
+      "units": "spm",
+      "qty": 46.7849687342929
+    },
+    "duration": 3701.188751101494,
+    "name": "Tennis",
+    "heartRateRecovery": [
+      {
+        "qty": 74,
+        "date": "2023-09-05 15:12:27 +0000",
+        "units": "bpm"
+      },
+      {
+        "qty": 75,
+        "units": "bpm",
+        "date": "2023-09-05 15:12:29 +0000"
+      },
+      {
+        "qty": 74,
+        "date": "2023-09-05 15:12:33 +0000",
+        "units": "bpm"
+      },
+      {
+        "qty": 73,
+        "date": "2023-09-05 15:12:38 +0000",
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "date": "2023-09-05 15:12:45 +0000",
+        "qty": 70
+      },
+      {
+        "date": "2023-09-05 15:12:48 +0000",
+        "qty": 69,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "qty": 70,
+        "date": "2023-09-05 15:12:57 +0000"
+      },
+      {
+        "date": "2023-09-05 15:13:02 +0000",
+        "units": "bpm",
+        "qty": 70
+      },
+      {
+        "qty": 70,
+        "units": "bpm",
+        "date": "2023-09-05 15:13:03 +0000"
+      },
+      {
+        "units": "bpm",
+        "qty": 70,
+        "date": "2023-09-05 15:13:08 +0000"
+      },
+      {
+        "units": "bpm",
+        "qty": 70,
+        "date": "2023-09-05 15:13:14 +0000"
+      },
+      {
+        "qty": 70,
+        "date": "2023-09-05 15:13:23 +0000",
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "qty": 69,
+        "date": "2023-09-05 15:13:30 +0000"
+      },
+      {
+        "units": "bpm",
+        "date": "2023-09-05 15:13:37 +0000",
+        "qty": 71
+      },
+      {
+        "units": "bpm",
+        "qty": 72,
+        "date": "2023-09-05 15:13:42 +0000"
+      },
+      {
+        "units": "bpm",
+        "qty": 73,
+        "date": "2023-09-05 15:13:45 +0000"
+      },
+      {
+        "units": "bpm",
+        "date": "2023-09-05 15:13:48 +0000",
+        "qty": 73
+      },
+      {
+        "qty": 73,
+        "units": "bpm",
+        "date": "2023-09-05 15:13:57 +0000"
+      },
+      {
+        "qty": 73,
+        "date": "2023-09-05 15:13:58 +0000",
+        "units": "bpm"
+      },
+      {
+        "qty": 73,
+        "date": "2023-09-05 15:14:07 +0000",
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "date": "2023-09-05 15:14:09 +0000",
+        "qty": 73
+      },
+      {
+        "qty": 72,
+        "units": "bpm",
+        "date": "2023-09-05 15:14:13 +0000"
+      }
+    ],
+    "isIndoor": false,
+    "humidity": {
+      "qty": 79,
+      "units": "%"
+    },
+    "avgHeartRate": {
+      "qty": 78.33458043844345,
+      "units": "bpm"
+    },
+    "swimCadence": {
+      "units": "spm",
+      "qty": 0
+    },
+    "speed": {
+      "qty": 1.355477013162935,
+      "units": "mi/hr"
+    },
+    "start": "2023-09-05 14:10:40 +0000",
+    "temperature": {
+      "qty": 76.85599999999566,
+      "units": "degF"
+    },
+    "activeEnergy": {
+      "qty": 422.3078640660123,
+      "units": "kcal"
+    },
+    "location": "Outdoor",
+    "totalEnergy": {
+      "units": "kcal",
+      "qty": 557.4008640660105
+    },
+    "distance": {
+      "units": "mi",
+      "qty": 1.3935767426375851
+    },
+    "flightsClimbed": {
+      "units": "count",
+      "qty": 0
+    }
+  },
+  {
+    "flightsClimbed": {
+      "units": "count",
+      "qty": 0
+    },
+    "heartRateRecovery": [
+      {
+        "units": "bpm",
+        "date": "2023-08-08 23:57:31 +0000",
+        "qty": 84
+      },
+      {
+        "date": "2023-08-08 23:57:36 +0000",
+        "units": "bpm",
+        "qty": 81
+      },
+      {
+        "qty": 80,
+        "units": "bpm",
+        "date": "2023-08-08 23:57:38 +0000"
+      },
+      {
+        "qty": 76,
+        "date": "2023-08-08 23:57:47 +0000",
+        "units": "bpm"
+      },
+      {
+        "qty": 73,
+        "units": "bpm",
+        "date": "2023-08-08 23:57:52 +0000"
+      },
+      {
+        "date": "2023-08-08 23:58:03 +0000",
+        "units": "bpm",
+        "qty": 75
+      },
+      {
+        "units": "bpm",
+        "qty": 77.00000000000001,
+        "date": "2023-08-08 23:58:08 +0000"
+      },
+      {
+        "qty": 77.00000000000001,
+        "units": "bpm",
+        "date": "2023-08-08 23:58:15 +0000"
+      },
+      {
+        "qty": 78,
+        "date": "2023-08-08 23:58:20 +0000",
+        "units": "bpm"
+      },
+      {
+        "date": "2023-08-08 23:58:27 +0000",
+        "qty": 74,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "date": "2023-08-08 23:58:32 +0000",
+        "qty": 71
+      },
+      {
+        "qty": 68,
+        "date": "2023-08-08 23:58:37 +0000",
+        "units": "bpm"
+      },
+      {
+        "date": "2023-08-08 23:58:42 +0000",
+        "qty": 68,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "date": "2023-08-08 23:58:46 +0000",
+        "qty": 68
+      },
+      {
+        "qty": 66,
+        "units": "bpm",
+        "date": "2023-08-08 23:58:52 +0000"
+      },
+      {
+        "qty": 66,
+        "date": "2023-08-08 23:58:57 +0000",
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "date": "2023-08-08 23:58:58 +0000",
+        "qty": 67
+      },
+      {
+        "qty": 67,
+        "units": "bpm",
+        "date": "2023-08-08 23:59:06 +0000"
+      },
+      {
+        "units": "bpm",
+        "date": "2023-08-08 23:59:12 +0000",
+        "qty": 67
+      },
+      {
+        "date": "2023-08-08 23:59:17 +0000",
+        "qty": 67,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "qty": 66,
+        "date": "2023-08-08 23:59:22 +0000"
+      },
+      {
+        "qty": 66,
+        "units": "bpm",
+        "date": "2023-08-08 23:59:26 +0000"
+      },
+      {
+        "qty": 66,
+        "date": "2023-08-08 23:59:28 +0000",
+        "units": "bpm"
+      }
+    ],
+    "avgHeartRate": {
+      "units": "bpm",
+      "qty": 86.88524967925142
+    },
+    "totalSwimmingStrokeCount": {
+      "qty": 0,
+      "units": "count"
+    },
+    "isIndoor": false,
+    "end": "2023-08-08 23:57:29 +0000",
+    "speed": {
+      "qty": 1.2413751699143214,
+      "units": "mi/hr"
+    },
+    "name": "Tennis",
+    "start": "2023-08-08 22:54:24 +0000",
+    "humidity": {
+      "qty": 62,
+      "units": "%"
+    },
+    "location": "Outdoor",
+    "stepCadence": {
+      "units": "spm",
+      "qty": 40.52783726841816
+    },
+    "totalEnergy": {
+      "units": "kcal",
+      "qty": 483.92683490135084
+    },
+    "distance": {
+      "qty": 1.305356401678529,
+      "units": "mi"
+    },
+    "swimCadence": {
+      "qty": 0,
+      "units": "spm"
+    },
+    "maxHeartRate": {
+      "qty": 106,
+      "units": "bpm"
+    },
+    "intensity": {
+      "qty": 3.9286245147486696,
+      "units": "MET"
+    },
+    "elevation": {
+      "descent": 0,
+      "units": "ft",
+      "ascent": 0
+    },
+    "temperature": {
+      "qty": 76.38799999999569,
+      "units": "degF"
+    },
+    "activeEnergy": {
+      "qty": 345.1228349013527,
+      "units": "kcal"
+    },
+    "duration": 3785.5461909770966,
+    "heartRateData": [
+      {
+        "date": "2023-08-08 22:54:24 +0000",
+        "qty": 86.88524967925142,
+        "units": "bpm"
+      }
+    ],
+    "stepCount": {
+      "units": "steps",
+      "qty": 2557
+    }
+  }
+]
