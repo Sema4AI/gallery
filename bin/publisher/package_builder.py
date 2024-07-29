@@ -21,11 +21,11 @@ def build_single_package(sub_folder_path: str, zips_folder: str, action_server_p
 
             subprocess.run(command, shell=True, check=True, cwd=sub_folder_path)
         except subprocess.CalledProcessError as e:
-            log_error(sub_folder_path, str(e))
+            log_error(str(e), sub_folder_path)
             print(f"{sub_folder_path} package errored, will not be available to publish")
 
 
-def build_action_packages(input_folder: str, zips_folder: str, action_server_path: str, manifest: Manifest = None) -> None:
+def build_action_packages(input_folder: str, zips_folder: str, action_server_path: str, manifest: Manifest = None) -> int:
     """
     Iterates over all sub-folders in the input folder and builds action packages where package.yaml is found.
 
@@ -35,11 +35,16 @@ def build_action_packages(input_folder: str, zips_folder: str, action_server_pat
         action_server_path (str): The path to the action server executable.
         manifest (Manifest): The package manifest. If provided, versions already existing in the manifest
             will be skipped.
+
+    Returns:
+        built_count: number of built packages.
     """
 
     # Ensure the output directory exists
     if not os.path.exists(zips_folder):
         os.makedirs(zips_folder)
+
+    built_count = 0
 
     # Process each sub-folder in the main input folder
     for sub_folder_name in os.listdir(input_folder):
@@ -49,7 +54,7 @@ def build_action_packages(input_folder: str, zips_folder: str, action_server_pat
             try:
                 package_data = read_yaml_file(os.path.join(sub_folder_path, "package.yaml"))
             except Exception as e:
-                log_error(f"Reading package.yaml from {sub_folder_path} failed with error {e}, skipping")
+                log_error(f"Reading package.yaml failed with error {e}, skipping", sub_folder_path)
                 continue
 
             published_versions: list[str] = []
@@ -70,3 +75,6 @@ def build_action_packages(input_folder: str, zips_folder: str, action_server_pat
             # only then we build a package.
             if len(published_versions) == 0 or package_version not in published_versions:
                 build_single_package(sub_folder_path, zips_folder, action_server_path)
+                built_count += 1
+
+    return built_count
