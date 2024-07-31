@@ -2,10 +2,10 @@
 name: Microsoft Sharepoint
 
 # Required: A description of what's in the action package.
-description: Microsoft actions for Sharepoint
+description: Work with Sharepoint sites, lists and files.
 
 # Package version number, recommend using semver.org
-version: 1.0.0
+version: 1.0.1
 
 dependencies:
   conda-forge:

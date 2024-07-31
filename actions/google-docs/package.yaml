@@ -2,10 +2,10 @@
 name: Google Docs
 
 # Required: A description of what's in the action package.
-description: Pre-built AI actions to read Google documents in Markdown format
+description: Get contents of Google Docs as Markdown
 
 # Package version number, recommend using semver.org
-version: 1.2.0
+version: 1.2.1
 
 dependencies:
   conda-forge:
