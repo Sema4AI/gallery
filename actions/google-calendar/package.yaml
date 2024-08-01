@@ -2,10 +2,10 @@
 name: Google Calendar
 
 # Required: A description of what's in the action package.
-description: Atomic actions operating with Google Calendar.
+description: List calendars and search, create and update events in your Google Calendar.
 
 # Package version number, recommend using semver.org
-version: 1.0.0
+version: 1.0.1
 
 dependencies:
   conda-forge:

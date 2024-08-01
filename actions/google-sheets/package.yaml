@@ -2,10 +2,10 @@
 name: Google Sheets
 
 # Required: A description of what's in the action package
-description: Atomic actions operating with Google Sheets.
+description: Create and read spreadsheets. Add/update rows.
 
 # Package version number, recommend using semver.org
-version: 1.0.0
+version: 1.0.1
 
 dependencies:
   conda-forge:

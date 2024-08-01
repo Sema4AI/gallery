@@ -3,10 +3,10 @@
 name: Zendesk
 
 # Required: A description of what's in the action package.
-description: Atomic actions operating with Zendesk.
+description: Operate Zendesk tickets, assignments and comments with Agents.
 
 # Package version number, recommend using semver.org
-version: 1.0.0
+version: 1.0.1
 
 dependencies:
   conda-forge:
