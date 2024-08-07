@@ -37,7 +37,7 @@ def create_event(
 
     url = "https://graph.microsoft.com/v1.0/me/calendar/events"
     if calendar_id:
-        url = "https://graph.microsoft.com/v1.0/me/calendars/{id}/events"
+        url = f"https://graph.microsoft.com/v1.0/me/calendars/{calendar_id}/events"
 
     response = requests.post(
         url,
