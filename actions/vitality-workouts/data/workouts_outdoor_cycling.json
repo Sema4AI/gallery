@@ -1,0 +1,6412 @@
+[
+  {
+    "totalSwimmingStrokeCount": {
+      "units": "count",
+      "qty": 0
+    },
+    "humidity": {
+      "qty": 65,
+      "units": "%"
+    },
+    "speed": {
+      "qty": 4.532812085024746,
+      "units": "mi/hr"
+    },
+    "heartRateRecovery": [
+      {
+        "qty": 78,
+        "date": "2019-07-06 17:26:48 +0000",
+        "units": "bpm"
+      },
+      {
+        "qty": 75,
+        "units": "bpm",
+        "date": "2019-07-06 17:26:53 +0000"
+      },
+      {
+        "units": "bpm",
+        "date": "2019-07-06 17:26:58 +0000",
+        "qty": 72
+      },
+      {
+        "date": "2019-07-06 17:27:01 +0000",
+        "qty": 72,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "qty": 73,
+        "date": "2019-07-06 17:27:04 +0000"
+      },
+      {
+        "date": "2019-07-06 17:27:13 +0000",
+        "units": "bpm",
+        "qty": 74
+      },
+      {
+        "date": "2019-07-06 17:27:14 +0000",
+        "qty": 74,
+        "units": "bpm"
+      },
+      {
+        "date": "2019-07-06 17:27:23 +0000",
+        "qty": 74,
+        "units": "bpm"
+      },
+      {
+        "date": "2019-07-06 17:27:26 +0000",
+        "units": "bpm",
+        "qty": 75
+      },
+      {
+        "date": "2019-07-06 17:27:33 +0000",
+        "qty": 74,
+        "units": "bpm"
+      },
+      {
+        "date": "2019-07-06 17:27:36 +0000",
+        "qty": 75,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "date": "2019-07-06 17:27:43 +0000",
+        "qty": 76
+      },
+      {
+        "qty": 75,
+        "date": "2019-07-06 17:27:44 +0000",
+        "units": "bpm"
+      },
+      {
+        "date": "2019-07-06 17:27:52 +0000",
+        "qty": 76,
+        "units": "bpm"
+      },
+      {
+        "qty": 74,
+        "date": "2019-07-06 17:27:58 +0000",
+        "units": "bpm"
+      },
+      {
+        "date": "2019-07-06 17:27:59 +0000",
+        "units": "bpm",
+        "qty": 74
+      },
+      {
+        "date": "2019-07-06 17:28:05 +0000",
+        "units": "bpm",
+        "qty": 73
+      },
+      {
+        "date": "2019-07-06 17:28:13 +0000",
+        "units": "bpm",
+        "qty": 74
+      },
+      {
+        "date": "2019-07-06 17:28:14 +0000",
+        "units": "bpm",
+        "qty": 75
+      },
+      {
+        "date": "2019-07-06 17:28:23 +0000",
+        "qty": 74,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "date": "2019-07-06 17:28:28 +0000",
+        "qty": 73
+      },
+      {
+        "date": "2019-07-06 17:28:29 +0000",
+        "qty": 73,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "date": "2019-07-06 17:28:35 +0000",
+        "qty": 75
+      },
+      {
+        "date": "2019-07-06 17:28:42 +0000",
+        "units": "bpm",
+        "qty": 72
+      },
+      {
+        "units": "bpm",
+        "date": "2019-07-06 17:28:46 +0000",
+        "qty": 72
+      }
+    ],
+    "swimCadence": {
+      "qty": 0,
+      "units": "spm"
+    },
+    "avgHeartRate": {
+      "units": "bpm",
+      "qty": 84.71060701561449
+    },
+    "start": "2019-07-06 15:55:22 +0000",
+    "totalEnergy": {
+      "qty": 257.75893564890106,
+      "units": "kcal"
+    },
+    "intensity": {
+      "units": "MET",
+      "qty": 0
+    },
+    "distance": {
+      "qty": 6.906961962657204,
+      "units": "mi"
+    },
+    "temperature": {
+      "units": "degF",
+      "qty": 86
+    },
+    "heartRateData": [
+      {
+        "qty": 84.71060701561449,
+        "units": "bpm",
+        "date": "2019-07-06 15:55:22 +0000"
+      }
+    ],
+    "duration": 5485.571119904518,
+    "location": "Outdoor",
+    "stepCount": {
+      "qty": 531,
+      "units": "steps"
+    },
+    "stepCadence": {
+      "units": "spm",
+      "qty": 5.807964075863546
+    },
+    "end": "2019-07-06 17:26:47 +0000",
+    "maxHeartRate": {
+      "units": "bpm",
+      "qty": 117
+    },
+    "name": "Outdoor Cycling",
+    "flightsClimbed": {
+      "qty": 0,
+      "units": "count"
+    },
+    "elevation": {
+      "ascent": 100.45931758530183,
+      "descent": 0,
+      "units": "ft"
+    },
+    "activeEnergy": {
+      "qty": 156.2969356488994,
+      "units": "kcal"
+    },
+    "isIndoor": false
+  },
+  {
+    "totalEnergy": {
+      "qty": 248.69531211378768,
+      "units": "kcal"
+    },
+    "totalSwimmingStrokeCount": {
+      "qty": 0,
+      "units": "count"
+    },
+    "stepCadence": {
+      "units": "spm",
+      "qty": 4.508299931950052
+    },
+    "heartRateRecovery": [
+      {
+        "date": "2019-06-29 16:48:39 +0000",
+        "qty": 91,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "date": "2019-06-29 16:48:41 +0000",
+        "qty": 92
+      },
+      {
+        "qty": 93,
+        "units": "bpm",
+        "date": "2019-06-29 16:48:46 +0000"
+      },
+      {
+        "qty": 94,
+        "units": "bpm",
+        "date": "2019-06-29 16:48:52 +0000"
+      },
+      {
+        "qty": 94,
+        "date": "2019-06-29 16:48:56 +0000",
+        "units": "bpm"
+      },
+      {
+        "qty": 93,
+        "date": "2019-06-29 16:49:01 +0000",
+        "units": "bpm"
+      },
+      {
+        "qty": 92,
+        "date": "2019-06-29 16:49:10 +0000",
+        "units": "bpm"
+      },
+      {
+        "date": "2019-06-29 16:49:14 +0000",
+        "qty": 93,
+        "units": "bpm"
+      },
+      {
+        "qty": 92,
+        "date": "2019-06-29 16:49:16 +0000",
+        "units": "bpm"
+      },
+      {
+        "qty": 90,
+        "date": "2019-06-29 16:49:21 +0000",
+        "units": "bpm"
+      },
+      {
+        "date": "2019-06-29 16:49:30 +0000",
+        "units": "bpm",
+        "qty": 87
+      },
+      {
+        "qty": 87,
+        "units": "bpm",
+        "date": "2019-06-29 16:49:33 +0000"
+      },
+      {
+        "qty": 82,
+        "units": "bpm",
+        "date": "2019-06-29 16:49:39 +0000"
+      },
+      {
+        "date": "2019-06-29 16:49:41 +0000",
+        "qty": 81,
+        "units": "bpm"
+      },
+      {
+        "date": "2019-06-29 16:49:50 +0000",
+        "qty": 82,
+        "units": "bpm"
+      },
+      {
+        "date": "2019-06-29 16:49:54 +0000",
+        "units": "bpm",
+        "qty": 82
+      },
+      {
+        "qty": 82,
+        "units": "bpm",
+        "date": "2019-06-29 16:49:57 +0000"
+      },
+      {
+        "date": "2019-06-29 16:50:01 +0000",
+        "qty": 83,
+        "units": "bpm"
+      },
+      {
+        "qty": 84,
+        "date": "2019-06-29 16:50:10 +0000",
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "qty": 83,
+        "date": "2019-06-29 16:50:11 +0000"
+      },
+      {
+        "units": "bpm",
+        "qty": 84,
+        "date": "2019-06-29 16:50:16 +0000"
+      },
+      {
+        "qty": 72,
+        "units": "bpm",
+        "date": "2019-06-29 16:50:25 +0000"
+      },
+      {
+        "qty": 74,
+        "units": "bpm",
+        "date": "2019-06-29 16:50:27 +0000"
+      },
+      {
+        "units": "bpm",
+        "qty": 77,
+        "date": "2019-06-29 16:50:31 +0000"
+      }
+    ],
+    "temperature": {
+      "units": "degF",
+      "qty": 83
+    },
+    "stepCount": {
+      "units": "steps",
+      "qty": 285
+    },
+    "heartRateData": [
+      {
+        "date": "2019-06-29 15:45:23 +0000",
+        "units": "bpm",
+        "qty": 91.92399202351777
+      }
+    ],
+    "duration": 3793.0040720701218,
+    "elevation": {
+      "ascent": 108.7270341207349,
+      "descent": 0,
+      "units": "ft"
+    },
+    "name": "Outdoor Cycling",
+    "flightsClimbed": {
+      "qty": 0,
+      "units": "count"
+    },
+    "end": "2019-06-29 16:48:36 +0000",
+    "activeEnergy": {
+      "units": "kcal",
+      "qty": 173.52131211378804
+    },
+    "start": "2019-06-29 15:45:23 +0000",
+    "isIndoor": false,
+    "distance": {
+      "units": "mi",
+      "qty": 7.0561390929546715
+    },
+    "swimCadence": {
+      "units": "spm",
+      "qty": 0
+    },
+    "location": "Outdoor",
+    "intensity": {
+      "units": "MET",
+      "qty": 0
+    },
+    "speed": {
+      "qty": 6.697092924757399,
+      "units": "mi/hr"
+    },
+    "avgHeartRate": {
+      "units": "bpm",
+      "qty": 91.92399202351777
+    },
+    "maxHeartRate": {
+      "units": "bpm",
+      "qty": 117
+    },
+    "humidity": {
+      "qty": 63,
+      "units": "%"
+    }
+  },
+  {
+    "end": "2019-06-26 01:00:59 +0000",
+    "name": "Outdoor Cycling",
+    "speed": {
+      "qty": 3.9754620302838157,
+      "units": "mi/hr"
+    },
+    "duration": 3507.2612500190735,
+    "isIndoor": false,
+    "stepCadence": {
+      "qty": 7.800958653950062,
+      "units": "spm"
+    },
+    "elevation": {
+      "descent": 0,
+      "units": "ft",
+      "ascent": 27.460629921259844
+    },
+    "humidity": {
+      "qty": 50,
+      "units": "%"
+    },
+    "avgHeartRate": {
+      "qty": 84.80384496953535,
+      "units": "bpm"
+    },
+    "swimCadence": {
+      "units": "spm",
+      "qty": 0
+    },
+    "location": "Outdoor",
+    "totalEnergy": {
+      "qty": 155.8201254761217,
+      "units": "kcal"
+    },
+    "flightsClimbed": {
+      "qty": 0,
+      "units": "count"
+    },
+    "start": "2019-06-25 23:46:19 +0000",
+    "totalSwimmingStrokeCount": {
+      "qty": 0,
+      "units": "count"
+    },
+    "distance": {
+      "qty": 3.8730510915934944,
+      "units": "mi"
+    },
+    "activeEnergy": {
+      "qty": 74.52812547612179,
+      "units": "kcal"
+    },
+    "intensity": {
+      "qty": 0,
+      "units": "MET"
+    },
+    "heartRateData": [
+      {
+        "date": "2019-06-25 23:46:19 +0000",
+        "units": "bpm",
+        "qty": 84.80384496953535
+      }
+    ],
+    "maxHeartRate": {
+      "units": "bpm",
+      "qty": 107
+    },
+    "temperature": {
+      "qty": 84,
+      "units": "degF"
+    },
+    "heartRateRecovery": [
+      {
+        "units": "bpm",
+        "date": "2019-06-26 01:01:00 +0000",
+        "qty": 97
+      },
+      {
+        "date": "2019-06-26 01:01:03 +0000",
+        "qty": 97,
+        "units": "bpm"
+      },
+      {
+        "qty": 98,
+        "units": "bpm",
+        "date": "2019-06-26 01:01:12 +0000"
+      },
+      {
+        "date": "2019-06-26 01:01:16 +0000",
+        "units": "bpm",
+        "qty": 97
+      },
+      {
+        "units": "bpm",
+        "date": "2019-06-26 01:01:19 +0000",
+        "qty": 97
+      },
+      {
+        "qty": 97,
+        "date": "2019-06-26 01:01:23 +0000",
+        "units": "bpm"
+      },
+      {
+        "date": "2019-06-26 01:01:29 +0000",
+        "units": "bpm",
+        "qty": 97
+      },
+      {
+        "date": "2019-06-26 01:01:34 +0000",
+        "qty": 95,
+        "units": "bpm"
+      },
+      {
+        "qty": 91,
+        "units": "bpm",
+        "date": "2019-06-26 01:01:39 +0000"
+      },
+      {
+        "units": "bpm",
+        "date": "2019-06-26 01:01:44 +0000",
+        "qty": 88
+      },
+      {
+        "date": "2019-06-26 01:01:52 +0000",
+        "qty": 88,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "date": "2019-06-26 01:01:55 +0000",
+        "qty": 87
+      },
+      {
+        "date": "2019-06-26 01:02:00 +0000",
+        "qty": 84,
+        "units": "bpm"
+      },
+      {
+        "qty": 84,
+        "date": "2019-06-26 01:02:03 +0000",
+        "units": "bpm"
+      },
+      {
+        "date": "2019-06-26 01:02:11 +0000",
+        "qty": 81,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "date": "2019-06-26 01:02:17 +0000",
+        "qty": 80
+      },
+      {
+        "qty": 80,
+        "units": "bpm",
+        "date": "2019-06-26 01:02:18 +0000"
+      },
+      {
+        "qty": 83,
+        "units": "bpm",
+        "date": "2019-06-26 01:02:23 +0000"
+      },
+      {
+        "date": "2019-06-26 01:02:32 +0000",
+        "qty": 79,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "qty": 79,
+        "date": "2019-06-26 01:02:37 +0000"
+      },
+      {
+        "date": "2019-06-26 01:02:42 +0000",
+        "qty": 80,
+        "units": "bpm"
+      },
+      {
+        "qty": 80,
+        "units": "bpm",
+        "date": "2019-06-26 01:02:44 +0000"
+      },
+      {
+        "qty": 82,
+        "units": "bpm",
+        "date": "2019-06-26 01:02:52 +0000"
+      },
+      {
+        "qty": 81,
+        "date": "2019-06-26 01:02:55 +0000",
+        "units": "bpm"
+      }
+    ],
+    "stepCount": {
+      "units": "steps",
+      "qty": 456
+    }
+  },
+  {
+    "maxHeartRate": {
+      "qty": 100,
+      "units": "bpm"
+    },
+    "location": "Outdoor",
+    "humidity": {
+      "units": "%",
+      "qty": 36
+    },
+    "stepCadence": {
+      "qty": 21.458336649788457,
+      "units": "spm"
+    },
+    "name": "Outdoor Cycling",
+    "swimCadence": {
+      "units": "spm",
+      "qty": 0
+    },
+    "temperature": {
+      "units": "degF",
+      "qty": 65
+    },
+    "totalSwimmingStrokeCount": {
+      "units": "count",
+      "qty": 0
+    },
+    "heartRateRecovery": [
+      {
+        "qty": 67,
+        "date": "2019-03-22 12:22:07 +0000",
+        "units": "bpm"
+      },
+      {
+        "date": "2019-03-22 12:22:08 +0000",
+        "units": "bpm",
+        "qty": 67
+      },
+      {
+        "qty": 67,
+        "units": "bpm",
+        "date": "2019-03-22 12:22:15 +0000"
+      },
+      {
+        "qty": 66,
+        "date": "2019-03-22 12:22:22 +0000",
+        "units": "bpm"
+      },
+      {
+        "qty": 67,
+        "date": "2019-03-22 12:22:23 +0000",
+        "units": "bpm"
+      },
+      {
+        "date": "2019-03-22 12:22:32 +0000",
+        "qty": 69,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "date": "2019-03-22 12:22:33 +0000",
+        "qty": 69
+      },
+      {
+        "date": "2019-03-22 12:22:41 +0000",
+        "qty": 66,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "qty": 67,
+        "date": "2019-03-22 12:22:52 +0000"
+      },
+      {
+        "qty": 67,
+        "date": "2019-03-22 12:22:57 +0000",
+        "units": "bpm"
+      },
+      {
+        "date": "2019-03-22 12:23:01 +0000",
+        "units": "bpm",
+        "qty": 66
+      },
+      {
+        "qty": 66,
+        "units": "bpm",
+        "date": "2019-03-22 12:23:07 +0000"
+      },
+      {
+        "units": "bpm",
+        "qty": 66,
+        "date": "2019-03-22 12:23:09 +0000"
+      },
+      {
+        "units": "bpm",
+        "date": "2019-03-22 12:23:18 +0000",
+        "qty": 66
+      },
+      {
+        "qty": 68,
+        "date": "2019-03-22 12:23:23 +0000",
+        "units": "bpm"
+      },
+      {
+        "qty": 68,
+        "date": "2019-03-22 12:23:28 +0000",
+        "units": "bpm"
+      },
+      {
+        "date": "2019-03-22 12:23:29 +0000",
+        "qty": 67,
+        "units": "bpm"
+      },
+      {
+        "qty": 67,
+        "date": "2019-03-22 12:23:36 +0000",
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "date": "2019-03-22 12:23:40 +0000",
+        "qty": 68
+      },
+      {
+        "units": "bpm",
+        "date": "2019-03-22 12:23:50 +0000",
+        "qty": 66
+      },
+      {
+        "date": "2019-03-22 12:23:56 +0000",
+        "units": "bpm",
+        "qty": 68
+      }
+    ],
+    "intensity": {
+      "units": "MET",
+      "qty": 0
+    },
+    "start": "2019-03-22 10:45:20 +0000",
+    "totalEnergy": {
+      "units": "kcal",
+      "qty": 119.89642323727391
+    },
+    "avgHeartRate": {
+      "units": "bpm",
+      "qty": 71.17706347065375
+    },
+    "distance": {
+      "qty": 2.199201752099381,
+      "units": "mi"
+    },
+    "isIndoor": false,
+    "speed": {
+      "qty": 1.7752179896182998,
+      "units": "mi/hr"
+    },
+    "stepCount": {
+      "units": "steps",
+      "qty": 1595
+    },
+    "elevation": {
+      "ascent": 36.384514435695536,
+      "descent": 0,
+      "units": "ft"
+    },
+    "flightsClimbed": {
+      "qty": 4,
+      "units": "count"
+    },
+    "activeEnergy": {
+      "units": "kcal",
+      "qty": 33.88842323727381
+    },
+    "heartRateData": [
+      {
+        "qty": 71.17706347065375,
+        "units": "bpm",
+        "date": "2019-03-22 10:45:20 +0000"
+      }
+    ],
+    "end": "2019-03-22 12:21:59 +0000",
+    "duration": 4459.805135965347
+  },
+  {
+    "stepCadence": {
+      "qty": 27.695172693799833,
+      "units": "spm"
+    },
+    "start": "2019-03-29 18:30:10 +0000",
+    "avgHeartRate": {
+      "qty": 84.41377447075068,
+      "units": "bpm"
+    },
+    "intensity": {
+      "units": "MET",
+      "qty": 0
+    },
+    "end": "2019-03-29 19:14:20 +0000",
+    "isIndoor": false,
+    "stepCount": {
+      "qty": 1066,
+      "units": "steps"
+    },
+    "heartRateData": [
+      {
+        "date": "2019-03-29 18:30:10 +0000",
+        "qty": 84.41377447075068,
+        "units": "bpm"
+      }
+    ],
+    "distance": {
+      "qty": 1.7842277568856988,
+      "units": "mi"
+    },
+    "duration": 2309.4277369976044,
+    "totalSwimmingStrokeCount": {
+      "units": "count",
+      "qty": 0
+    },
+    "activeEnergy": {
+      "units": "kcal",
+      "qty": 41.29455558190223
+    },
+    "swimCadence": {
+      "qty": 0,
+      "units": "spm"
+    },
+    "heartRateRecovery": [
+      {
+        "qty": 104,
+        "units": "bpm",
+        "date": "2019-03-29 19:14:20 +0000"
+      },
+      {
+        "qty": 99,
+        "units": "bpm",
+        "date": "2019-03-29 19:14:28 +0000"
+      },
+      {
+        "units": "bpm",
+        "date": "2019-03-29 19:14:30 +0000",
+        "qty": 98
+      },
+      {
+        "qty": 93,
+        "units": "bpm",
+        "date": "2019-03-29 19:14:39 +0000"
+      },
+      {
+        "date": "2019-03-29 19:14:40 +0000",
+        "qty": 93,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "date": "2019-03-29 19:14:45 +0000",
+        "qty": 91
+      },
+      {
+        "qty": 91,
+        "units": "bpm",
+        "date": "2019-03-29 19:14:50 +0000"
+      },
+      {
+        "date": "2019-03-29 19:14:56 +0000",
+        "qty": 99,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "qty": 104,
+        "date": "2019-03-29 19:15:04 +0000"
+      },
+      {
+        "date": "2019-03-29 19:15:19 +0000",
+        "qty": 106,
+        "units": "bpm"
+      },
+      {
+        "date": "2019-03-29 19:15:21 +0000",
+        "qty": 105,
+        "units": "bpm"
+      },
+      {
+        "date": "2019-03-29 19:15:29 +0000",
+        "units": "bpm",
+        "qty": 102
+      },
+      {
+        "units": "bpm",
+        "qty": 96,
+        "date": "2019-03-29 19:15:44 +0000"
+      },
+      {
+        "date": "2019-03-29 19:15:49 +0000",
+        "qty": 95,
+        "units": "bpm"
+      },
+      {
+        "date": "2019-03-29 19:15:51 +0000",
+        "qty": 93,
+        "units": "bpm"
+      },
+      {
+        "date": "2019-03-29 19:15:57 +0000",
+        "qty": 88,
+        "units": "bpm"
+      },
+      {
+        "date": "2019-03-29 19:16:05 +0000",
+        "qty": 81,
+        "units": "bpm"
+      },
+      {
+        "date": "2019-03-29 19:16:06 +0000",
+        "qty": 81,
+        "units": "bpm"
+      },
+      {
+        "qty": 86,
+        "units": "bpm",
+        "date": "2019-03-29 19:16:11 +0000"
+      },
+      {
+        "units": "bpm",
+        "date": "2019-03-29 19:16:16 +0000",
+        "qty": 96
+      }
+    ],
+    "name": "Outdoor Cycling",
+    "maxHeartRate": {
+      "qty": 108,
+      "units": "bpm"
+    },
+    "location": "Outdoor",
+    "speed": {
+      "qty": 2.7813037064927135,
+      "units": "mi/hr"
+    },
+    "totalEnergy": {
+      "qty": 63.06855558190218,
+      "units": "kcal"
+    },
+    "flightsClimbed": {
+      "qty": 0,
+      "units": "count"
+    },
+    "elevation": {
+      "descent": 0,
+      "units": "ft",
+      "ascent": 0
+    },
+    "temperature": {
+      "qty": 57,
+      "units": "degF"
+    },
+    "humidity": {
+      "qty": 38,
+      "units": "%"
+    }
+  },
+  {
+    "humidity": {
+      "qty": 0,
+      "units": "%"
+    },
+    "stepCadence": {
+      "qty": 24.80468508079804,
+      "units": "spm"
+    },
+    "location": "Outdoor",
+    "swimCadence": {
+      "qty": 0,
+      "units": "spm"
+    },
+    "avgHeartRate": {
+      "units": "bpm",
+      "qty": 91.4643107460973
+    },
+    "elevation": {
+      "ascent": 22.14566929133858,
+      "units": "ft",
+      "descent": 0
+    },
+    "totalSwimmingStrokeCount": {
+      "qty": 0,
+      "units": "count"
+    },
+    "heartRateRecovery": [
+      {
+        "date": "2019-04-06 20:55:11 +0000",
+        "qty": 94,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "qty": 94,
+        "date": "2019-04-06 20:55:13 +0000"
+      },
+      {
+        "qty": 94,
+        "date": "2019-04-06 20:55:17 +0000",
+        "units": "bpm"
+      },
+      {
+        "qty": 92,
+        "units": "bpm",
+        "date": "2019-04-06 20:55:22 +0000"
+      },
+      {
+        "date": "2019-04-06 20:55:31 +0000",
+        "qty": 92,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "qty": 92,
+        "date": "2019-04-06 20:55:33 +0000"
+      },
+      {
+        "date": "2019-04-06 20:55:38 +0000",
+        "qty": 92,
+        "units": "bpm"
+      },
+      {
+        "date": "2019-04-06 20:55:42 +0000",
+        "qty": 91,
+        "units": "bpm"
+      },
+      {
+        "qty": 90,
+        "units": "bpm",
+        "date": "2019-04-06 20:55:48 +0000"
+      },
+      {
+        "date": "2019-04-06 20:55:53 +0000",
+        "qty": 88,
+        "units": "bpm"
+      },
+      {
+        "date": "2019-04-06 20:56:01 +0000",
+        "qty": 88,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "date": "2019-04-06 20:56:06 +0000",
+        "qty": 86
+      },
+      {
+        "qty": 86,
+        "date": "2019-04-06 20:56:07 +0000",
+        "units": "bpm"
+      },
+      {
+        "qty": 86,
+        "date": "2019-04-06 20:56:12 +0000",
+        "units": "bpm"
+      },
+      {
+        "qty": 86,
+        "date": "2019-04-06 20:56:18 +0000",
+        "units": "bpm"
+      },
+      {
+        "qty": 86,
+        "units": "bpm",
+        "date": "2019-04-06 20:56:22 +0000"
+      },
+      {
+        "date": "2019-04-06 20:56:31 +0000",
+        "qty": 85,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "qty": 83,
+        "date": "2019-04-06 20:56:35 +0000"
+      },
+      {
+        "qty": 78,
+        "units": "bpm",
+        "date": "2019-04-06 20:56:41 +0000"
+      },
+      {
+        "date": "2019-04-06 20:56:44 +0000",
+        "qty": 78,
+        "units": "bpm"
+      },
+      {
+        "qty": 79,
+        "units": "bpm",
+        "date": "2019-04-06 20:56:47 +0000"
+      },
+      {
+        "units": "bpm",
+        "qty": 81,
+        "date": "2019-04-06 20:56:56 +0000"
+      },
+      {
+        "date": "2019-04-06 20:56:58 +0000",
+        "qty": 82,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "date": "2019-04-06 20:57:02 +0000",
+        "qty": 80
+      }
+    ],
+    "distance": {
+      "units": "mi",
+      "qty": 1.7070365348528886
+    },
+    "maxHeartRate": {
+      "units": "bpm",
+      "qty": 102
+    },
+    "temperature": {
+      "qty": 0,
+      "units": "degF"
+    },
+    "intensity": {
+      "qty": 0,
+      "units": "MET"
+    },
+    "stepCount": {
+      "qty": 403,
+      "units": "steps"
+    },
+    "flightsClimbed": {
+      "qty": 0,
+      "units": "count"
+    },
+    "end": "2019-04-06 20:55:05 +0000",
+    "start": "2019-04-06 20:31:45 +0000",
+    "activeEnergy": {
+      "qty": 33.86163339571183,
+      "units": "kcal"
+    },
+    "speed": {
+      "qty": 6.304094838974089,
+      "units": "mi/hr"
+    },
+    "name": "Outdoor Cycling",
+    "isIndoor": false,
+    "duration": 974.8158431053162,
+    "totalEnergy": {
+      "qty": 67.9126333957118,
+      "units": "kcal"
+    },
+    "heartRateData": [
+      {
+        "units": "bpm",
+        "date": "2019-04-06 20:31:45 +0000",
+        "qty": 91.4643107460973
+      }
+    ]
+  },
+  {
+    "distance": {
+      "units": "mi",
+      "qty": 4.562850765279242
+    },
+    "start": "2019-03-22 13:09:25 +0000",
+    "maxHeartRate": {
+      "qty": 105,
+      "units": "bpm"
+    },
+    "speed": {
+      "units": "mi/hr",
+      "qty": 4.06441859454423
+    },
+    "flightsClimbed": {
+      "qty": 0,
+      "units": "count"
+    },
+    "stepCount": {
+      "qty": 1014,
+      "units": "steps"
+    },
+    "totalSwimmingStrokeCount": {
+      "units": "count",
+      "qty": 0
+    },
+    "stepCadence": {
+      "units": "spm",
+      "qty": 15.053894545594197
+    },
+    "swimCadence": {
+      "qty": 0,
+      "units": "spm"
+    },
+    "avgHeartRate": {
+      "units": "bpm",
+      "qty": 80.62209190032921
+    },
+    "totalEnergy": {
+      "qty": 161.51988376194657,
+      "units": "kcal"
+    },
+    "isIndoor": false,
+    "humidity": {
+      "units": "%",
+      "qty": 40
+    },
+    "heartRateData": [
+      {
+        "qty": 80.62209190032921,
+        "date": "2019-03-22 13:09:25 +0000",
+        "units": "bpm"
+      }
+    ],
+    "activeEnergy": {
+      "qty": 76.15888376194665,
+      "units": "kcal"
+    },
+    "intensity": {
+      "qty": 0,
+      "units": "MET"
+    },
+    "name": "Outdoor Cycling",
+    "duration": 4041.4790880680084,
+    "elevation": {
+      "ascent": 62.237532808398946,
+      "descent": 0,
+      "units": "ft"
+    },
+    "location": "Outdoor",
+    "temperature": {
+      "qty": 65,
+      "units": "degF"
+    },
+    "heartRateRecovery": [
+      {
+        "qty": 82,
+        "units": "bpm",
+        "date": "2019-03-22 14:16:48 +0000"
+      },
+      {
+        "qty": 82,
+        "units": "bpm",
+        "date": "2019-03-22 14:16:54 +0000"
+      },
+      {
+        "units": "bpm",
+        "date": "2019-03-22 14:17:02 +0000",
+        "qty": 80
+      },
+      {
+        "qty": 78,
+        "date": "2019-03-22 14:17:07 +0000",
+        "units": "bpm"
+      },
+      {
+        "qty": 78,
+        "units": "bpm",
+        "date": "2019-03-22 14:17:12 +0000"
+      },
+      {
+        "units": "bpm",
+        "date": "2019-03-22 14:17:13 +0000",
+        "qty": 77
+      },
+      {
+        "qty": 74,
+        "units": "bpm",
+        "date": "2019-03-22 14:17:18 +0000"
+      },
+      {
+        "qty": 70,
+        "date": "2019-03-22 14:17:27 +0000",
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "date": "2019-03-22 14:17:32 +0000",
+        "qty": 70
+      },
+      {
+        "date": "2019-03-22 14:17:37 +0000",
+        "units": "bpm",
+        "qty": 69
+      },
+      {
+        "units": "bpm",
+        "date": "2019-03-22 14:17:42 +0000",
+        "qty": 68
+      },
+      {
+        "qty": 68,
+        "units": "bpm",
+        "date": "2019-03-22 14:17:50 +0000"
+      },
+      {
+        "qty": 66,
+        "units": "bpm",
+        "date": "2019-03-22 14:17:57 +0000"
+      },
+      {
+        "qty": 68,
+        "date": "2019-03-22 14:18:02 +0000",
+        "units": "bpm"
+      },
+      {
+        "qty": 69,
+        "units": "bpm",
+        "date": "2019-03-22 14:18:05 +0000"
+      },
+      {
+        "date": "2019-03-22 14:18:08 +0000",
+        "qty": 69,
+        "units": "bpm"
+      },
+      {
+        "date": "2019-03-22 14:18:14 +0000",
+        "qty": 69,
+        "units": "bpm"
+      },
+      {
+        "date": "2019-03-22 14:18:18 +0000",
+        "qty": 70,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "date": "2019-03-22 14:18:23 +0000",
+        "qty": 72
+      },
+      {
+        "units": "bpm",
+        "qty": 75,
+        "date": "2019-03-22 14:18:28 +0000"
+      },
+      {
+        "qty": 76,
+        "date": "2019-03-22 14:18:33 +0000",
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "date": "2019-03-22 14:18:38 +0000",
+        "qty": 76
+      },
+      {
+        "date": "2019-03-22 14:18:43 +0000",
+        "units": "bpm",
+        "qty": 78
+      }
+    ],
+    "end": "2019-03-22 14:16:47 +0000"
+  },
+  {
+    "totalSwimmingStrokeCount": {
+      "units": "count",
+      "qty": 0
+    },
+    "start": "2019-04-06 18:54:38 +0000",
+    "speed": {
+      "units": "mi/hr",
+      "qty": 5.876236498761652
+    },
+    "intensity": {
+      "qty": 0,
+      "units": "MET"
+    },
+    "humidity": {
+      "units": "%",
+      "qty": 0
+    },
+    "heartRateData": [
+      {
+        "qty": 81.54868462695579,
+        "date": "2019-04-06 18:54:38 +0000",
+        "units": "bpm"
+      }
+    ],
+    "heartRateRecovery": [
+      {
+        "date": "2019-04-06 19:16:54 +0000",
+        "units": "bpm",
+        "qty": 73
+      },
+      {
+        "date": "2019-04-06 19:16:57 +0000",
+        "qty": 72,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "qty": 72,
+        "date": "2019-04-06 19:17:03 +0000"
+      },
+      {
+        "units": "bpm",
+        "date": "2019-04-06 19:17:05 +0000",
+        "qty": 71
+      },
+      {
+        "date": "2019-04-06 19:17:13 +0000",
+        "qty": 67,
+        "units": "bpm"
+      },
+      {
+        "date": "2019-04-06 19:17:19 +0000",
+        "units": "bpm",
+        "qty": 69
+      },
+      {
+        "date": "2019-04-06 19:17:23 +0000",
+        "qty": 70,
+        "units": "bpm"
+      },
+      {
+        "date": "2019-04-06 19:17:29 +0000",
+        "units": "bpm",
+        "qty": 73
+      },
+      {
+        "date": "2019-04-06 19:17:30 +0000",
+        "qty": 72,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "date": "2019-04-06 19:17:35 +0000",
+        "qty": 69
+      },
+      {
+        "date": "2019-04-06 19:17:41 +0000",
+        "qty": 69,
+        "units": "bpm"
+      },
+      {
+        "date": "2019-04-06 19:17:45 +0000",
+        "qty": 72,
+        "units": "bpm"
+      },
+      {
+        "date": "2019-04-06 19:17:50 +0000",
+        "units": "bpm",
+        "qty": 83
+      },
+      {
+        "date": "2019-04-06 19:18:22 +0000",
+        "units": "bpm",
+        "qty": 118
+      }
+    ],
+    "stepCadence": {
+      "qty": 2.8389133298786904,
+      "units": "spm"
+    },
+    "location": "Outdoor",
+    "isIndoor": false,
+    "activeEnergy": {
+      "qty": 38.90181648406172,
+      "units": "kcal"
+    },
+    "stepCount": {
+      "units": "steps",
+      "qty": 63
+    },
+    "duration": 1331.495386004448,
+    "flightsClimbed": {
+      "qty": 0,
+      "units": "count"
+    },
+    "elevation": {
+      "descent": 0,
+      "ascent": 0,
+      "units": "ft"
+    },
+    "totalEnergy": {
+      "qty": 57.13381648406164,
+      "units": "kcal"
+    },
+    "swimCadence": {
+      "qty": 0,
+      "units": "spm"
+    },
+    "temperature": {
+      "units": "degF",
+      "qty": 0
+    },
+    "maxHeartRate": {
+      "qty": 100,
+      "units": "bpm"
+    },
+    "distance": {
+      "qty": 2.173383829214464,
+      "units": "mi"
+    },
+    "avgHeartRate": {
+      "qty": 81.54868462695579,
+      "units": "bpm"
+    },
+    "name": "Outdoor Cycling",
+    "end": "2019-04-06 19:16:50 +0000"
+  },
+  {
+    "stepCount": {
+      "qty": 615,
+      "units": "steps"
+    },
+    "start": "2019-06-02 23:14:30 +0000",
+    "end": "2019-06-03 00:14:36 +0000",
+    "totalSwimmingStrokeCount": {
+      "qty": 0,
+      "units": "count"
+    },
+    "heartRateData": [
+      {
+        "units": "bpm",
+        "date": "2019-06-02 23:14:30 +0000",
+        "qty": 93.47710613333784
+      }
+    ],
+    "duration": 3605.4936670064926,
+    "activeEnergy": {
+      "qty": 165.5264003345027,
+      "units": "kcal"
+    },
+    "location": "Outdoor",
+    "distance": {
+      "units": "mi",
+      "qty": 6.656653404408393
+    },
+    "elevation": {
+      "descent": 0,
+      "ascent": 121.29265091863516,
+      "units": "ft"
+    },
+    "isIndoor": false,
+    "speed": {
+      "qty": 6.6465107053610755,
+      "units": "mi/hr"
+    },
+    "swimCadence": {
+      "qty": 0,
+      "units": "spm"
+    },
+    "flightsClimbed": {
+      "qty": 0,
+      "units": "count"
+    },
+    "maxHeartRate": {
+      "units": "bpm",
+      "qty": 120
+    },
+    "stepCadence": {
+      "units": "spm",
+      "qty": 10.23438214235908
+    },
+    "totalEnergy": {
+      "units": "kcal",
+      "qty": 242.0554003345024
+    },
+    "intensity": {
+      "qty": 0,
+      "units": "MET"
+    },
+    "name": "Outdoor Cycling",
+    "temperature": {
+      "qty": 71,
+      "units": "degF"
+    },
+    "humidity": {
+      "units": "%",
+      "qty": 38
+    },
+    "heartRateRecovery": [
+      {
+        "units": "bpm",
+        "date": "2019-06-03 00:14:37 +0000",
+        "qty": 78
+      },
+      {
+        "units": "bpm",
+        "qty": 79,
+        "date": "2019-06-03 00:14:46 +0000"
+      },
+      {
+        "date": "2019-06-03 00:14:51 +0000",
+        "units": "bpm",
+        "qty": 80
+      },
+      {
+        "date": "2019-06-03 00:14:52 +0000",
+        "qty": 81,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "date": "2019-06-03 00:15:01 +0000",
+        "qty": 79
+      },
+      {
+        "date": "2019-06-03 00:15:06 +0000",
+        "qty": 79,
+        "units": "bpm"
+      },
+      {
+        "qty": 79,
+        "units": "bpm",
+        "date": "2019-06-03 00:15:08 +0000"
+      },
+      {
+        "qty": 79,
+        "units": "bpm",
+        "date": "2019-06-03 00:15:15 +0000"
+      },
+      {
+        "qty": 79,
+        "date": "2019-06-03 00:15:17 +0000",
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "date": "2019-06-03 00:15:22 +0000",
+        "qty": 76
+      },
+      {
+        "date": "2019-06-03 00:15:31 +0000",
+        "units": "bpm",
+        "qty": 78
+      },
+      {
+        "date": "2019-06-03 00:15:34 +0000",
+        "qty": 78,
+        "units": "bpm"
+      },
+      {
+        "date": "2019-06-03 00:15:40 +0000",
+        "qty": 79,
+        "units": "bpm"
+      },
+      {
+        "date": "2019-06-03 00:15:42 +0000",
+        "qty": 79,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "date": "2019-06-03 00:15:47 +0000",
+        "qty": 81
+      },
+      {
+        "date": "2019-06-03 00:15:53 +0000",
+        "qty": 80,
+        "units": "bpm"
+      },
+      {
+        "date": "2019-06-03 00:16:01 +0000",
+        "qty": 83,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "date": "2019-06-03 00:16:03 +0000",
+        "qty": 83
+      },
+      {
+        "units": "bpm",
+        "qty": 82,
+        "date": "2019-06-03 00:16:07 +0000"
+      },
+      {
+        "date": "2019-06-03 00:16:16 +0000",
+        "units": "bpm",
+        "qty": 82
+      },
+      {
+        "units": "bpm",
+        "date": "2019-06-03 00:16:17 +0000",
+        "qty": 81
+      },
+      {
+        "date": "2019-06-03 00:16:22 +0000",
+        "units": "bpm",
+        "qty": 82
+      },
+      {
+        "date": "2019-06-03 00:16:31 +0000",
+        "qty": 82,
+        "units": "bpm"
+      },
+      {
+        "date": "2019-06-03 00:16:33 +0000",
+        "qty": 81,
+        "units": "bpm"
+      }
+    ],
+    "avgHeartRate": {
+      "units": "bpm",
+      "qty": 93.47710613333784
+    }
+  },
+  {
+    "avgHeartRate": {
+      "units": "bpm",
+      "qty": 84.38509547884397
+    },
+    "heartRateData": [
+      {
+        "units": "bpm",
+        "date": "2019-06-06 01:22:43 +0000",
+        "qty": 84.38509547884397
+      }
+    ],
+    "heartRateRecovery": [
+      {
+        "units": "bpm",
+        "date": "2019-06-06 02:15:19 +0000",
+        "qty": 99
+      },
+      {
+        "date": "2019-06-06 02:15:22 +0000",
+        "qty": 99,
+        "units": "bpm"
+      },
+      {
+        "date": "2019-06-06 02:15:27 +0000",
+        "qty": 97,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "date": "2019-06-06 02:15:31 +0000",
+        "qty": 97
+      },
+      {
+        "units": "bpm",
+        "date": "2019-06-06 02:15:35 +0000",
+        "qty": 97
+      },
+      {
+        "units": "bpm",
+        "qty": 97,
+        "date": "2019-06-06 02:15:44 +0000"
+      },
+      {
+        "units": "bpm",
+        "date": "2019-06-06 02:15:46 +0000",
+        "qty": 96
+      },
+      {
+        "units": "bpm",
+        "date": "2019-06-06 02:15:50 +0000",
+        "qty": 98
+      },
+      {
+        "units": "bpm",
+        "date": "2019-06-06 02:15:56 +0000",
+        "qty": 95
+      },
+      {
+        "date": "2019-06-06 02:16:04 +0000",
+        "qty": 95,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "qty": 95,
+        "date": "2019-06-06 02:16:05 +0000"
+      },
+      {
+        "qty": 91,
+        "date": "2019-06-06 02:16:10 +0000",
+        "units": "bpm"
+      },
+      {
+        "date": "2019-06-06 02:16:15 +0000",
+        "qty": 90,
+        "units": "bpm"
+      },
+      {
+        "qty": 85,
+        "units": "bpm",
+        "date": "2019-06-06 02:16:24 +0000"
+      },
+      {
+        "qty": 85,
+        "units": "bpm",
+        "date": "2019-06-06 02:16:26 +0000"
+      },
+      {
+        "date": "2019-06-06 02:16:33 +0000",
+        "qty": 84,
+        "units": "bpm"
+      },
+      {
+        "qty": 84,
+        "date": "2019-06-06 02:16:36 +0000",
+        "units": "bpm"
+      },
+      {
+        "date": "2019-06-06 02:16:41 +0000",
+        "units": "bpm",
+        "qty": 85
+      },
+      {
+        "date": "2019-06-06 02:16:46 +0000",
+        "qty": 86,
+        "units": "bpm"
+      },
+      {
+        "qty": 85,
+        "date": "2019-06-06 02:16:50 +0000",
+        "units": "bpm"
+      },
+      {
+        "qty": 82,
+        "date": "2019-06-06 02:16:58 +0000",
+        "units": "bpm"
+      },
+      {
+        "date": "2019-06-06 02:17:02 +0000",
+        "units": "bpm",
+        "qty": 81
+      },
+      {
+        "date": "2019-06-06 02:17:05 +0000",
+        "qty": 80,
+        "units": "bpm"
+      },
+      {
+        "date": "2019-06-06 02:17:14 +0000",
+        "qty": 80,
+        "units": "bpm"
+      }
+    ],
+    "temperature": {
+      "units": "degF",
+      "qty": 73
+    },
+    "flightsClimbed": {
+      "units": "count",
+      "qty": 0
+    },
+    "swimCadence": {
+      "qty": 0,
+      "units": "spm"
+    },
+    "isIndoor": false,
+    "stepCadence": {
+      "qty": 7.498656567712296,
+      "units": "spm"
+    },
+    "totalSwimmingStrokeCount": {
+      "units": "count",
+      "qty": 0
+    },
+    "stepCount": {
+      "qty": 394,
+      "units": "steps"
+    },
+    "activeEnergy": {
+      "units": "kcal",
+      "qty": 52.41518517779108
+    },
+    "maxHeartRate": {
+      "qty": 107,
+      "units": "bpm"
+    },
+    "speed": {
+      "units": "mi/hr",
+      "qty": 3.742415016074249
+    },
+    "end": "2019-06-06 02:15:15 +0000",
+    "start": "2019-06-06 01:22:43 +0000",
+    "elevation": {
+      "descent": 0,
+      "units": "ft",
+      "ascent": 16.601049868766406
+    },
+    "intensity": {
+      "qty": 0,
+      "units": "MET"
+    },
+    "totalEnergy": {
+      "qty": 124.46418517779097,
+      "units": "kcal"
+    },
+    "duration": 3152.564700961113,
+    "name": "Outdoor Cycling",
+    "distance": {
+      "qty": 3.277279298895137,
+      "units": "mi"
+    },
+    "humidity": {
+      "units": "%",
+      "qty": 70
+    },
+    "location": "Outdoor"
+  },
+  {
+    "totalSwimmingStrokeCount": {
+      "qty": 0,
+      "units": "count"
+    },
+    "isIndoor": false,
+    "heartRateRecovery": [
+      {
+        "qty": 92,
+        "units": "bpm",
+        "date": "2019-03-29 20:11:38 +0000"
+      },
+      {
+        "date": "2019-03-29 20:11:41 +0000",
+        "qty": 90,
+        "units": "bpm"
+      },
+      {
+        "qty": 87,
+        "date": "2019-03-29 20:11:48 +0000",
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "date": "2019-03-29 20:11:53 +0000",
+        "qty": 86
+      },
+      {
+        "qty": 86,
+        "date": "2019-03-29 20:11:54 +0000",
+        "units": "bpm"
+      },
+      {
+        "date": "2019-03-29 20:11:59 +0000",
+        "units": "bpm",
+        "qty": 89
+      },
+      {
+        "date": "2019-03-29 20:12:08 +0000",
+        "qty": 86,
+        "units": "bpm"
+      },
+      {
+        "qty": 82,
+        "units": "bpm",
+        "date": "2019-03-29 20:12:13 +0000"
+      },
+      {
+        "units": "bpm",
+        "date": "2019-03-29 20:12:14 +0000",
+        "qty": 81
+      },
+      {
+        "qty": 76,
+        "units": "bpm",
+        "date": "2019-03-29 20:12:21 +0000"
+      },
+      {
+        "date": "2019-03-29 20:12:28 +0000",
+        "qty": 75,
+        "units": "bpm"
+      },
+      {
+        "date": "2019-03-29 20:12:31 +0000",
+        "units": "bpm",
+        "qty": 75
+      },
+      {
+        "date": "2019-03-29 20:12:34 +0000",
+        "qty": 75,
+        "units": "bpm"
+      },
+      {
+        "date": "2019-03-29 20:12:39 +0000",
+        "qty": 78,
+        "units": "bpm"
+      },
+      {
+        "qty": 80,
+        "units": "bpm",
+        "date": "2019-03-29 20:12:44 +0000"
+      },
+      {
+        "qty": 79,
+        "units": "bpm",
+        "date": "2019-03-29 20:12:49 +0000"
+      },
+      {
+        "units": "bpm",
+        "date": "2019-03-29 20:12:55 +0000",
+        "qty": 77
+      },
+      {
+        "date": "2019-03-29 20:13:00 +0000",
+        "qty": 73,
+        "units": "bpm"
+      },
+      {
+        "date": "2019-03-29 20:13:08 +0000",
+        "qty": 71,
+        "units": "bpm"
+      },
+      {
+        "date": "2019-03-29 20:13:13 +0000",
+        "qty": 70,
+        "units": "bpm"
+      },
+      {
+        "date": "2019-03-29 20:13:16 +0000",
+        "units": "bpm",
+        "qty": 70
+      },
+      {
+        "qty": 72,
+        "units": "bpm",
+        "date": "2019-03-29 20:13:19 +0000"
+      },
+      {
+        "units": "bpm",
+        "date": "2019-03-29 20:13:24 +0000",
+        "qty": 72
+      },
+      {
+        "units": "bpm",
+        "qty": 77,
+        "date": "2019-03-29 20:13:32 +0000"
+      }
+    ],
+    "totalEnergy": {
+      "qty": 58.00981683502181,
+      "units": "kcal"
+    },
+    "stepCadence": {
+      "qty": 0.38380439568501984,
+      "units": "spm"
+    },
+    "avgHeartRate": {
+      "units": "bpm",
+      "qty": 92.21316001939086
+    },
+    "elevation": {
+      "ascent": 27.066929133858267,
+      "descent": 0,
+      "units": "ft"
+    },
+    "activeEnergy": {
+      "qty": 29.739816835021823,
+      "units": "kcal"
+    },
+    "end": "2019-03-29 20:11:35 +0000",
+    "start": "2019-03-29 19:55:57 +0000",
+    "intensity": {
+      "qty": 0,
+      "units": "MET"
+    },
+    "heartRateData": [
+      {
+        "qty": 92.21316001939086,
+        "units": "bpm",
+        "date": "2019-03-29 19:55:57 +0000"
+      }
+    ],
+    "swimCadence": {
+      "qty": 0,
+      "units": "spm"
+    },
+    "name": "Outdoor Cycling",
+    "stepCount": {
+      "units": "steps",
+      "qty": 6
+    },
+    "location": "Outdoor",
+    "speed": {
+      "qty": 6.63873788916822,
+      "units": "mi/hr"
+    },
+    "distance": {
+      "qty": 1.7297190870675938,
+      "units": "mi"
+    },
+    "flightsClimbed": {
+      "qty": 0,
+      "units": "count"
+    },
+    "duration": 937.9777929782867,
+    "maxHeartRate": {
+      "units": "bpm",
+      "qty": 101
+    },
+    "humidity": {
+      "qty": 37,
+      "units": "%"
+    },
+    "temperature": {
+      "units": "degF",
+      "qty": 59
+    }
+  },
+  {
+    "intensity": {
+      "qty": 3.833844850637214,
+      "units": "MET"
+    },
+    "speed": {
+      "qty": 6.31149412904781,
+      "units": "mi/hr"
+    },
+    "maxHeartRate": {
+      "units": "bpm",
+      "qty": 114
+    },
+    "isIndoor": false,
+    "elevation": {
+      "descent": 0,
+      "units": "ft",
+      "ascent": 195.50524934383202
+    },
+    "stepCadence": {
+      "units": "spm",
+      "qty": 6.336623976323667
+    },
+    "avgHeartRate": {
+      "qty": 85.98620967743283,
+      "units": "bpm"
+    },
+    "totalEnergy": {
+      "qty": 422.0152954568323,
+      "units": "kcal"
+    },
+    "duration": 6694.416483998299,
+    "end": "2019-12-26 20:49:06 +0000",
+    "distance": {
+      "qty": 11.736602871154485,
+      "units": "mi"
+    },
+    "name": "Outdoor Cycling",
+    "start": "2019-12-26 18:42:30 +0000",
+    "stepCount": {
+      "qty": 707,
+      "units": "steps"
+    },
+    "flightsClimbed": {
+      "units": "count",
+      "qty": 0
+    },
+    "temperature": {
+      "qty": 61,
+      "units": "degF"
+    },
+    "humidity": {
+      "qty": 70,
+      "units": "%"
+    },
+    "location": "Outdoor",
+    "heartRateData": [
+      {
+        "units": "bpm",
+        "date": "2019-12-26 18:42:30 +0000",
+        "qty": 85.98620967743283
+      }
+    ],
+    "heartRateRecovery": [
+      {
+        "date": "2019-12-26 20:49:09 +0000",
+        "units": "bpm",
+        "qty": 82
+      },
+      {
+        "qty": 81,
+        "units": "bpm",
+        "date": "2019-12-26 20:49:14 +0000"
+      },
+      {
+        "units": "bpm",
+        "date": "2019-12-26 20:49:15 +0000",
+        "qty": 81
+      },
+      {
+        "units": "bpm",
+        "date": "2019-12-26 20:49:20 +0000",
+        "qty": 81
+      },
+      {
+        "qty": 80,
+        "units": "bpm",
+        "date": "2019-12-26 20:49:27 +0000"
+      },
+      {
+        "units": "bpm",
+        "qty": 80,
+        "date": "2019-12-26 20:49:30 +0000"
+      },
+      {
+        "units": "bpm",
+        "date": "2019-12-26 20:49:35 +0000",
+        "qty": 81
+      },
+      {
+        "units": "bpm",
+        "qty": 83,
+        "date": "2019-12-26 20:49:41 +0000"
+      },
+      {
+        "date": "2019-12-26 20:49:49 +0000",
+        "qty": 80,
+        "units": "bpm"
+      },
+      {
+        "date": "2019-12-26 20:50:00 +0000",
+        "qty": 80,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "date": "2019-12-26 20:50:09 +0000",
+        "qty": 82
+      },
+      {
+        "qty": 81,
+        "units": "bpm",
+        "date": "2019-12-26 20:50:14 +0000"
+      },
+      {
+        "qty": 79,
+        "date": "2019-12-26 20:50:19 +0000",
+        "units": "bpm"
+      },
+      {
+        "qty": 77,
+        "units": "bpm",
+        "date": "2019-12-26 20:50:24 +0000"
+      },
+      {
+        "qty": 77,
+        "units": "bpm",
+        "date": "2019-12-26 20:50:26 +0000"
+      },
+      {
+        "date": "2019-12-26 20:50:30 +0000",
+        "units": "bpm",
+        "qty": 81
+      },
+      {
+        "qty": 81,
+        "date": "2019-12-26 20:50:35 +0000",
+        "units": "bpm"
+      },
+      {
+        "date": "2019-12-26 20:50:44 +0000",
+        "units": "bpm",
+        "qty": 78
+      },
+      {
+        "date": "2019-12-26 20:50:49 +0000",
+        "qty": 78,
+        "units": "bpm"
+      },
+      {
+        "qty": 78,
+        "date": "2019-12-26 20:50:50 +0000",
+        "units": "bpm"
+      },
+      {
+        "qty": 80,
+        "date": "2019-12-26 20:50:58 +0000",
+        "units": "bpm"
+      },
+      {
+        "date": "2019-12-26 20:51:00 +0000",
+        "qty": 82,
+        "units": "bpm"
+      },
+      {
+        "date": "2019-12-26 20:51:05 +0000",
+        "qty": 84,
+        "units": "bpm"
+      }
+    ],
+    "totalSwimmingStrokeCount": {
+      "qty": 0,
+      "units": "count"
+    },
+    "swimCadence": {
+      "qty": 0,
+      "units": "spm"
+    },
+    "activeEnergy": {
+      "qty": 262.51329545682864,
+      "units": "kcal"
+    }
+  },
+  {
+    "name": "Outdoor Cycling",
+    "heartRateRecovery": [
+      {
+        "units": "bpm",
+        "date": "2019-08-11 18:07:57 +0000",
+        "qty": 78
+      },
+      {
+        "date": "2019-08-11 18:07:58 +0000",
+        "units": "bpm",
+        "qty": 77
+      },
+      {
+        "date": "2019-08-11 18:08:06 +0000",
+        "qty": 74,
+        "units": "bpm"
+      },
+      {
+        "qty": 77,
+        "date": "2019-08-11 18:08:12 +0000",
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "qty": 78,
+        "date": "2019-08-11 18:08:13 +0000"
+      },
+      {
+        "qty": 78,
+        "units": "bpm",
+        "date": "2019-08-11 18:08:19 +0000"
+      },
+      {
+        "qty": 78,
+        "date": "2019-08-11 18:08:24 +0000",
+        "units": "bpm"
+      },
+      {
+        "date": "2019-08-11 18:08:32 +0000",
+        "qty": 78,
+        "units": "bpm"
+      },
+      {
+        "qty": 79,
+        "units": "bpm",
+        "date": "2019-08-11 18:08:36 +0000"
+      },
+      {
+        "units": "bpm",
+        "date": "2019-08-11 18:08:39 +0000",
+        "qty": 78
+      },
+      {
+        "units": "bpm",
+        "date": "2019-08-11 18:08:47 +0000",
+        "qty": 76
+      },
+      {
+        "date": "2019-08-11 18:08:51 +0000",
+        "units": "bpm",
+        "qty": 74
+      },
+      {
+        "qty": 73,
+        "units": "bpm",
+        "date": "2019-08-11 18:08:57 +0000"
+      },
+      {
+        "date": "2019-08-11 18:09:01 +0000",
+        "qty": 73,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "qty": 72,
+        "date": "2019-08-11 18:09:03 +0000"
+      },
+      {
+        "date": "2019-08-11 18:09:08 +0000",
+        "qty": 73,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "date": "2019-08-11 18:09:17 +0000",
+        "qty": 75
+      },
+      {
+        "units": "bpm",
+        "date": "2019-08-11 18:09:22 +0000",
+        "qty": 76
+      },
+      {
+        "units": "bpm",
+        "qty": 75,
+        "date": "2019-08-11 18:09:27 +0000"
+      },
+      {
+        "date": "2019-08-11 18:09:28 +0000",
+        "qty": 74,
+        "units": "bpm"
+      },
+      {
+        "date": "2019-08-11 18:09:33 +0000",
+        "qty": 73,
+        "units": "bpm"
+      },
+      {
+        "date": "2019-08-11 18:09:38 +0000",
+        "qty": 74,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "qty": 73,
+        "date": "2019-08-11 18:09:43 +0000"
+      },
+      {
+        "units": "bpm",
+        "date": "2019-08-11 18:09:48 +0000",
+        "qty": 74
+      }
+    ],
+    "duration": 2453.6599069833755,
+    "intensity": {
+      "units": "MET",
+      "qty": 0
+    },
+    "heartRateData": [
+      {
+        "qty": 86.41743694678395,
+        "date": "2019-08-11 17:26:58 +0000",
+        "units": "bpm"
+      }
+    ],
+    "start": "2019-08-11 17:26:58 +0000",
+    "elevation": {
+      "ascent": 81.2992125984252,
+      "descent": 0,
+      "units": "ft"
+    },
+    "avgHeartRate": {
+      "units": "bpm",
+      "qty": 86.41743694678395
+    },
+    "flightsClimbed": {
+      "qty": 0,
+      "units": "count"
+    },
+    "end": "2019-08-11 18:07:52 +0000",
+    "totalSwimmingStrokeCount": {
+      "qty": 0,
+      "units": "count"
+    },
+    "swimCadence": {
+      "units": "spm",
+      "qty": 0
+    },
+    "totalEnergy": {
+      "qty": 142.67552060902625,
+      "units": "kcal"
+    },
+    "speed": {
+      "qty": 5.497092626616327,
+      "units": "mi/hr"
+    },
+    "activeEnergy": {
+      "units": "kcal",
+      "qty": 83.2945206090264
+    },
+    "distance": {
+      "units": "mi",
+      "qty": 3.7466654952506713
+    },
+    "maxHeartRate": {
+      "qty": 185,
+      "units": "bpm"
+    },
+    "stepCadence": {
+      "qty": 9.781306664258343,
+      "units": "spm"
+    },
+    "isIndoor": false,
+    "temperature": {
+      "qty": 77,
+      "units": "degF"
+    },
+    "humidity": {
+      "qty": 66,
+      "units": "%"
+    },
+    "location": "Outdoor",
+    "stepCount": {
+      "qty": 400,
+      "units": "steps"
+    }
+  },
+  {
+    "swimCadence": {
+      "units": "spm",
+      "qty": 0
+    },
+    "maxHeartRate": {
+      "units": "bpm",
+      "qty": 101
+    },
+    "stepCount": {
+      "units": "steps",
+      "qty": 288
+    },
+    "activeEnergy": {
+      "qty": 77.07532909167858,
+      "units": "kcal"
+    },
+    "location": "Outdoor",
+    "heartRateRecovery": [
+      {
+        "date": "2019-12-26 18:36:48 +0000",
+        "qty": 69,
+        "units": "bpm"
+      },
+      {
+        "qty": 69,
+        "units": "bpm",
+        "date": "2019-12-26 18:36:49 +0000"
+      },
+      {
+        "units": "bpm",
+        "date": "2019-12-26 18:36:55 +0000",
+        "qty": 69
+      },
+      {
+        "date": "2019-12-26 18:37:03 +0000",
+        "qty": 66,
+        "units": "bpm"
+      },
+      {
+        "qty": 70,
+        "units": "bpm",
+        "date": "2019-12-26 18:37:08 +0000"
+      },
+      {
+        "date": "2019-12-26 18:37:09 +0000",
+        "qty": 69,
+        "units": "bpm"
+      },
+      {
+        "qty": 64,
+        "units": "bpm",
+        "date": "2019-12-26 18:37:18 +0000"
+      },
+      {
+        "units": "bpm",
+        "date": "2019-12-26 18:37:19 +0000",
+        "qty": 65
+      },
+      {
+        "date": "2019-12-26 18:37:24 +0000",
+        "qty": 66,
+        "units": "bpm"
+      },
+      {
+        "date": "2019-12-26 18:37:33 +0000",
+        "qty": 69,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "qty": 66,
+        "date": "2019-12-26 18:37:38 +0000"
+      },
+      {
+        "date": "2019-12-26 18:37:43 +0000",
+        "qty": 65,
+        "units": "bpm"
+      },
+      {
+        "qty": 63,
+        "units": "bpm",
+        "date": "2019-12-26 18:37:48 +0000"
+      },
+      {
+        "units": "bpm",
+        "date": "2019-12-26 18:37:51 +0000",
+        "qty": 61.99999999999999
+      },
+      {
+        "qty": 61.99999999999999,
+        "date": "2019-12-26 18:37:54 +0000",
+        "units": "bpm"
+      },
+      {
+        "qty": 67,
+        "date": "2019-12-26 18:38:03 +0000",
+        "units": "bpm"
+      },
+      {
+        "date": "2019-12-26 18:38:06 +0000",
+        "qty": 65,
+        "units": "bpm"
+      },
+      {
+        "qty": 65,
+        "date": "2019-12-26 18:38:13 +0000",
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "date": "2019-12-26 18:38:18 +0000",
+        "qty": 66
+      },
+      {
+        "qty": 65,
+        "units": "bpm",
+        "date": "2019-12-26 18:38:20 +0000"
+      },
+      {
+        "date": "2019-12-26 18:38:28 +0000",
+        "units": "bpm",
+        "qty": 65
+      },
+      {
+        "date": "2019-12-26 18:38:31 +0000",
+        "units": "bpm",
+        "qty": 66
+      },
+      {
+        "date": "2019-12-26 18:38:34 +0000",
+        "units": "bpm",
+        "qty": 68
+      }
+    ],
+    "distance": {
+      "qty": 3.410861710379672,
+      "units": "mi"
+    },
+    "isIndoor": false,
+    "totalEnergy": {
+      "qty": 105.33932909167845,
+      "units": "kcal"
+    },
+    "stepCadence": {
+      "qty": 9.64636859856448,
+      "units": "spm"
+    },
+    "end": "2019-12-26 18:36:42 +0000",
+    "elevation": {
+      "descent": 0,
+      "units": "ft",
+      "ascent": 24.671916010498688
+    },
+    "intensity": {
+      "units": "MET",
+      "qty": 4.463450440546898
+    },
+    "temperature": {
+      "qty": 60,
+      "units": "degF"
+    },
+    "humidity": {
+      "qty": 74,
+      "units": "%"
+    },
+    "heartRateData": [
+      {
+        "qty": 81.68084007168609,
+        "units": "bpm",
+        "date": "2019-12-26 18:06:51 +0000"
+      }
+    ],
+    "start": "2019-12-26 18:06:51 +0000",
+    "avgHeartRate": {
+      "units": "bpm",
+      "qty": 81.68084007168609
+    },
+    "name": "Outdoor Cycling",
+    "speed": {
+      "units": "mi/hr",
+      "qty": 6.854672770219252
+    },
+    "flightsClimbed": {
+      "qty": 0,
+      "units": "count"
+    },
+    "duration": 1791.3476790189743,
+    "totalSwimmingStrokeCount": {
+      "units": "count",
+      "qty": 0
+    }
+  },
+  {
+    "name": "Outdoor Cycling",
+    "start": "2019-08-03 15:44:06 +0000",
+    "activeEnergy": {
+      "units": "kcal",
+      "qty": 56.82386070448952
+    },
+    "flightsClimbed": {
+      "units": "count",
+      "qty": 0
+    },
+    "humidity": {
+      "units": "%",
+      "qty": 44
+    },
+    "totalSwimmingStrokeCount": {
+      "qty": 0,
+      "units": "count"
+    },
+    "elevation": {
+      "ascent": 21.78477690288714,
+      "units": "ft",
+      "descent": 0
+    },
+    "heartRateData": [
+      {
+        "units": "bpm",
+        "qty": 94.9680463257233,
+        "date": "2019-08-03 15:44:06 +0000"
+      }
+    ],
+    "end": "2019-08-03 15:57:06 +0000",
+    "stepCadence": {
+      "qty": 3.152716462699281,
+      "units": "spm"
+    },
+    "intensity": {
+      "qty": 0,
+      "units": "MET"
+    },
+    "temperature": {
+      "units": "degF",
+      "qty": 83
+    },
+    "heartRateRecovery": [
+      {
+        "units": "bpm",
+        "date": "2019-08-03 15:57:13 +0000",
+        "qty": 93
+      },
+      {
+        "units": "bpm",
+        "qty": 93,
+        "date": "2019-08-03 15:57:27 +0000"
+      },
+      {
+        "qty": 92,
+        "units": "bpm",
+        "date": "2019-08-03 15:57:29 +0000"
+      },
+      {
+        "qty": 89,
+        "units": "bpm",
+        "date": "2019-08-03 15:57:37 +0000"
+      },
+      {
+        "units": "bpm",
+        "qty": 87,
+        "date": "2019-08-03 15:57:43 +0000"
+      },
+      {
+        "units": "bpm",
+        "qty": 86,
+        "date": "2019-08-03 15:57:46 +0000"
+      },
+      {
+        "date": "2019-08-03 15:57:49 +0000",
+        "qty": 87,
+        "units": "bpm"
+      },
+      {
+        "qty": 85,
+        "units": "bpm",
+        "date": "2019-08-03 15:57:54 +0000"
+      },
+      {
+        "qty": 83,
+        "date": "2019-08-03 15:58:00 +0000",
+        "units": "bpm"
+      },
+      {
+        "date": "2019-08-03 15:58:04 +0000",
+        "qty": 84,
+        "units": "bpm"
+      },
+      {
+        "qty": 82,
+        "date": "2019-08-03 15:58:09 +0000",
+        "units": "bpm"
+      },
+      {
+        "date": "2019-08-03 15:58:18 +0000",
+        "units": "bpm",
+        "qty": 79
+      },
+      {
+        "units": "bpm",
+        "date": "2019-08-03 15:58:19 +0000",
+        "qty": 78
+      },
+      {
+        "date": "2019-08-03 15:58:28 +0000",
+        "units": "bpm",
+        "qty": 79
+      },
+      {
+        "date": "2019-08-03 15:58:31 +0000",
+        "qty": 79,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "date": "2019-08-03 15:58:34 +0000",
+        "qty": 78
+      },
+      {
+        "qty": 79,
+        "units": "bpm",
+        "date": "2019-08-03 15:58:42 +0000"
+      },
+      {
+        "qty": 79,
+        "date": "2019-08-03 15:58:44 +0000",
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "date": "2019-08-03 15:58:53 +0000",
+        "qty": 80
+      },
+      {
+        "qty": 78,
+        "units": "bpm",
+        "date": "2019-08-03 15:58:58 +0000"
+      },
+      {
+        "units": "bpm",
+        "qty": 78,
+        "date": "2019-08-03 15:59:01 +0000"
+      },
+      {
+        "date": "2019-08-03 15:59:04 +0000",
+        "qty": 78,
+        "units": "bpm"
+      }
+    ],
+    "swimCadence": {
+      "qty": 0,
+      "units": "spm"
+    },
+    "totalEnergy": {
+      "units": "kcal",
+      "qty": 82.72386070448951
+    },
+    "avgHeartRate": {
+      "units": "bpm",
+      "qty": 94.9680463257233
+    },
+    "location": "Outdoor",
+    "stepCount": {
+      "qty": 41,
+      "units": "steps"
+    },
+    "maxHeartRate": {
+      "qty": 103,
+      "units": "bpm"
+    },
+    "isIndoor": false,
+    "distance": {
+      "qty": 2.0739546212823443,
+      "units": "mi"
+    },
+    "duration": 780.279492020607,
+    "speed": {
+      "qty": 9.56866957669478,
+      "units": "mi/hr"
+    }
+  },
+  {
+    "start": "2019-08-03 14:22:41 +0000",
+    "humidity": {
+      "units": "%",
+      "qty": 61
+    },
+    "elevation": {
+      "ascent": 45.8989501312336,
+      "descent": 0,
+      "units": "ft"
+    },
+    "speed": {
+      "units": "mi/hr",
+      "qty": 7.234761694229501
+    },
+    "location": "Outdoor",
+    "isIndoor": false,
+    "maxHeartRate": {
+      "units": "bpm",
+      "qty": 115
+    },
+    "heartRateData": [
+      {
+        "units": "bpm",
+        "qty": 100.59985154608898,
+        "date": "2019-08-03 14:22:41 +0000"
+      }
+    ],
+    "duration": 669.8739529848099,
+    "activeEnergy": {
+      "units": "kcal",
+      "qty": 40.33672689663358
+    },
+    "end": "2019-08-03 14:33:51 +0000",
+    "avgHeartRate": {
+      "qty": 100.59985154608898,
+      "units": "bpm"
+    },
+    "distance": {
+      "units": "mi",
+      "qty": 1.346216226393499
+    },
+    "name": "Outdoor Cycling",
+    "stepCadence": {
+      "units": "spm",
+      "qty": 6.986388975339252
+    },
+    "heartRateRecovery": [
+      {
+        "date": "2019-08-03 14:33:52 +0000",
+        "qty": 104,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "date": "2019-08-03 14:33:54 +0000",
+        "qty": 104
+      },
+      {
+        "date": "2019-08-03 14:34:02 +0000",
+        "qty": 101,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "date": "2019-08-03 14:34:07 +0000",
+        "qty": 103
+      },
+      {
+        "qty": 103,
+        "units": "bpm",
+        "date": "2019-08-03 14:34:10 +0000"
+      },
+      {
+        "date": "2019-08-03 14:34:14 +0000",
+        "qty": 103,
+        "units": "bpm"
+      },
+      {
+        "date": "2019-08-03 14:34:23 +0000",
+        "qty": 101,
+        "units": "bpm"
+      },
+      {
+        "qty": 101,
+        "units": "bpm",
+        "date": "2019-08-03 14:34:25 +0000"
+      },
+      {
+        "date": "2019-08-03 14:34:32 +0000",
+        "qty": 99,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "date": "2019-08-03 14:34:48 +0000",
+        "qty": 98
+      },
+      {
+        "date": "2019-08-03 14:34:50 +0000",
+        "qty": 97,
+        "units": "bpm"
+      },
+      {
+        "qty": 97,
+        "units": "bpm",
+        "date": "2019-08-03 14:34:58 +0000"
+      },
+      {
+        "date": "2019-08-03 14:35:03 +0000",
+        "qty": 96,
+        "units": "bpm"
+      },
+      {
+        "date": "2019-08-03 14:35:06 +0000",
+        "qty": 96,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "date": "2019-08-03 14:35:13 +0000",
+        "qty": 96
+      },
+      {
+        "date": "2019-08-03 14:35:14 +0000",
+        "qty": 96,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "date": "2019-08-03 14:35:21 +0000",
+        "qty": 96
+      },
+      {
+        "date": "2019-08-03 14:35:24 +0000",
+        "units": "bpm",
+        "qty": 96
+      },
+      {
+        "units": "bpm",
+        "date": "2019-08-03 14:35:32 +0000",
+        "qty": 97
+      },
+      {
+        "date": "2019-08-03 14:35:38 +0000",
+        "qty": 97,
+        "units": "bpm"
+      },
+      {
+        "qty": 95,
+        "units": "bpm",
+        "date": "2019-08-03 14:35:43 +0000"
+      },
+      {
+        "date": "2019-08-03 14:35:48 +0000",
+        "units": "bpm",
+        "qty": 94
+      }
+    ],
+    "totalEnergy": {
+      "units": "kcal",
+      "qty": 47.74772689663356
+    },
+    "stepCount": {
+      "qty": 78,
+      "units": "steps"
+    },
+    "swimCadence": {
+      "qty": 0,
+      "units": "spm"
+    },
+    "intensity": {
+      "qty": 0,
+      "units": "MET"
+    },
+    "temperature": {
+      "qty": 76,
+      "units": "degF"
+    },
+    "totalSwimmingStrokeCount": {
+      "qty": 0,
+      "units": "count"
+    },
+    "flightsClimbed": {
+      "qty": 0,
+      "units": "count"
+    }
+  },
+  {
+    "isIndoor": false,
+    "maxHeartRate": {
+      "units": "bpm",
+      "qty": 101
+    },
+    "distance": {
+      "units": "mi",
+      "qty": 6.481380420967495
+    },
+    "temperature": {
+      "units": "degF",
+      "qty": 74
+    },
+    "location": "Outdoor",
+    "start": "2019-08-11 16:21:52 +0000",
+    "stepCount": {
+      "units": "steps",
+      "qty": 150
+    },
+    "flightsClimbed": {
+      "qty": 0,
+      "units": "count"
+    },
+    "elevation": {
+      "descent": 0,
+      "ascent": 106.7257217847769,
+      "units": "ft"
+    },
+    "heartRateData": [
+      {
+        "units": "bpm",
+        "date": "2019-08-11 16:21:52 +0000",
+        "qty": 83.48542247328011
+      }
+    ],
+    "avgHeartRate": {
+      "units": "bpm",
+      "qty": 83.48542247328011
+    },
+    "duration": 3798.430766940117,
+    "activeEnergy": {
+      "qty": 138.36602324074784,
+      "units": "kcal"
+    },
+    "speed": {
+      "units": "mi/hr",
+      "qty": 6.1427918388201155
+    },
+    "stepCadence": {
+      "units": "spm",
+      "qty": 2.3693995105378964
+    },
+    "swimCadence": {
+      "qty": 0,
+      "units": "spm"
+    },
+    "humidity": {
+      "qty": 73,
+      "units": "%"
+    },
+    "heartRateRecovery": [
+      {
+        "date": "2019-08-11 17:25:12 +0000",
+        "qty": 80,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "date": "2019-08-11 17:25:14 +0000",
+        "qty": 79
+      },
+      {
+        "units": "bpm",
+        "qty": 78,
+        "date": "2019-08-11 17:25:23 +0000"
+      },
+      {
+        "units": "bpm",
+        "date": "2019-08-11 17:25:27 +0000",
+        "qty": 79
+      },
+      {
+        "units": "bpm",
+        "date": "2019-08-11 17:25:29 +0000",
+        "qty": 80
+      },
+      {
+        "date": "2019-08-11 17:25:37 +0000",
+        "qty": 76,
+        "units": "bpm"
+      },
+      {
+        "date": "2019-08-11 17:25:39 +0000",
+        "qty": 76,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "date": "2019-08-11 17:25:47 +0000",
+        "qty": 71
+      },
+      {
+        "date": "2019-08-11 17:25:53 +0000",
+        "qty": 70,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "date": "2019-08-11 17:25:57 +0000",
+        "qty": 72
+      },
+      {
+        "units": "bpm",
+        "date": "2019-08-11 17:25:59 +0000",
+        "qty": 72
+      },
+      {
+        "qty": 70,
+        "date": "2019-08-11 17:26:04 +0000",
+        "units": "bpm"
+      },
+      {
+        "qty": 70,
+        "units": "bpm",
+        "date": "2019-08-11 17:26:11 +0000"
+      },
+      {
+        "date": "2019-08-11 17:26:14 +0000",
+        "qty": 73,
+        "units": "bpm"
+      },
+      {
+        "date": "2019-08-11 17:26:19 +0000",
+        "units": "bpm",
+        "qty": 77
+      },
+      {
+        "date": "2019-08-11 17:26:38 +0000",
+        "units": "bpm",
+        "qty": 78
+      },
+      {
+        "date": "2019-08-11 17:26:39 +0000",
+        "units": "bpm",
+        "qty": 79
+      },
+      {
+        "units": "bpm",
+        "date": "2019-08-11 17:26:44 +0000",
+        "qty": 79
+      },
+      {
+        "units": "bpm",
+        "date": "2019-08-11 17:27:09 +0000",
+        "qty": 88
+      }
+    ],
+    "totalSwimmingStrokeCount": {
+      "qty": 0,
+      "units": "count"
+    },
+    "totalEnergy": {
+      "qty": 206.79402324074783,
+      "units": "kcal"
+    },
+    "end": "2019-08-11 17:25:10 +0000",
+    "intensity": {
+      "qty": 0,
+      "units": "MET"
+    },
+    "name": "Outdoor Cycling"
+  },
+  {
+    "duration": 1648.0717289447784,
+    "isIndoor": false,
+    "totalEnergy": {
+      "units": "kcal",
+      "qty": 119.13477788558475
+    },
+    "temperature": {
+      "qty": 74,
+      "units": "degF"
+    },
+    "swimCadence": {
+      "units": "spm",
+      "qty": 0
+    },
+    "humidity": {
+      "qty": 68,
+      "units": "%"
+    },
+    "stepCount": {
+      "qty": 284,
+      "units": "steps"
+    },
+    "end": "2019-08-03 14:21:02 +0000",
+    "maxHeartRate": {
+      "qty": 114,
+      "units": "bpm"
+    },
+    "name": "Outdoor Cycling",
+    "avgHeartRate": {
+      "units": "bpm",
+      "qty": 97.69355008010908
+    },
+    "stepCadence": {
+      "units": "spm",
+      "qty": 10.339355806382477
+    },
+    "flightsClimbed": {
+      "units": "count",
+      "qty": 0
+    },
+    "intensity": {
+      "units": "MET",
+      "qty": 0
+    },
+    "heartRateData": [
+      {
+        "units": "bpm",
+        "date": "2019-08-03 13:53:33 +0000",
+        "qty": 97.69355008010908
+      }
+    ],
+    "totalSwimmingStrokeCount": {
+      "qty": 0,
+      "units": "count"
+    },
+    "heartRateRecovery": [
+      {
+        "date": "2019-08-03 14:21:03 +0000",
+        "qty": 89,
+        "units": "bpm"
+      },
+      {
+        "qty": 86,
+        "date": "2019-08-03 14:21:10 +0000",
+        "units": "bpm"
+      },
+      {
+        "qty": 85,
+        "date": "2019-08-03 14:21:11 +0000",
+        "units": "bpm"
+      },
+      {
+        "date": "2019-08-03 14:21:20 +0000",
+        "units": "bpm",
+        "qty": 85
+      },
+      {
+        "units": "bpm",
+        "date": "2019-08-03 14:21:23 +0000",
+        "qty": 86
+      },
+      {
+        "date": "2019-08-03 14:21:29 +0000",
+        "qty": 84,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "date": "2019-08-03 14:21:32 +0000",
+        "qty": 84
+      },
+      {
+        "qty": 84,
+        "units": "bpm",
+        "date": "2019-08-03 14:21:38 +0000"
+      },
+      {
+        "date": "2019-08-03 14:21:45 +0000",
+        "qty": 82,
+        "units": "bpm"
+      },
+      {
+        "qty": 82,
+        "date": "2019-08-03 14:21:49 +0000",
+        "units": "bpm"
+      },
+      {
+        "qty": 81,
+        "date": "2019-08-03 14:21:53 +0000",
+        "units": "bpm"
+      },
+      {
+        "date": "2019-08-03 14:21:56 +0000",
+        "units": "bpm",
+        "qty": 81
+      },
+      {
+        "units": "bpm",
+        "date": "2019-08-03 14:22:05 +0000",
+        "qty": 80
+      },
+      {
+        "date": "2019-08-03 14:22:08 +0000",
+        "qty": 81,
+        "units": "bpm"
+      },
+      {
+        "date": "2019-08-03 14:22:17 +0000",
+        "units": "bpm",
+        "qty": 81
+      },
+      {
+        "date": "2019-08-03 14:22:26 +0000",
+        "units": "bpm",
+        "qty": 84
+      },
+      {
+        "qty": 86,
+        "units": "bpm",
+        "date": "2019-08-03 14:22:29 +0000"
+      },
+      {
+        "units": "bpm",
+        "qty": 87,
+        "date": "2019-08-03 14:22:32 +0000"
+      },
+      {
+        "qty": 89,
+        "units": "bpm",
+        "date": "2019-08-03 14:22:52 +0000"
+      },
+      {
+        "units": "bpm",
+        "date": "2019-08-03 14:22:53 +0000",
+        "qty": 87
+      },
+      {
+        "units": "bpm",
+        "qty": 84,
+        "date": "2019-08-03 14:23:00 +0000"
+      }
+    ],
+    "start": "2019-08-03 13:53:33 +0000",
+    "activeEnergy": {
+      "qty": 92.13477788558492,
+      "units": "kcal"
+    },
+    "location": "Outdoor",
+    "distance": {
+      "qty": 3.6397941299172505,
+      "units": "mi"
+    },
+    "speed": {
+      "units": "mi/hr",
+      "qty": 7.950660543210586
+    },
+    "elevation": {
+      "units": "ft",
+      "ascent": 20.374015748031496,
+      "descent": 0
+    }
+  },
+  {
+    "maxHeartRate": {
+      "qty": 164,
+      "units": "bpm"
+    },
+    "stepCadence": {
+      "units": "spm",
+      "qty": 5.6568056209388855
+    },
+    "avgHeartRate": {
+      "qty": 84.23191810878808,
+      "units": "bpm"
+    },
+    "elevation": {
+      "units": "ft",
+      "descent": 0,
+      "ascent": 17.61811023622047
+    },
+    "distance": {
+      "qty": 3.048203360905635,
+      "units": "mi"
+    },
+    "end": "2019-08-11 16:19:54 +0000",
+    "totalEnergy": {
+      "qty": 89.84195788112385,
+      "units": "kcal"
+    },
+    "flightsClimbed": {
+      "qty": 0,
+      "units": "count"
+    },
+    "intensity": {
+      "units": "MET",
+      "qty": 0
+    },
+    "heartRateData": [
+      {
+        "units": "bpm",
+        "qty": 84.23191810878808,
+        "date": "2019-08-11 15:52:30 +0000"
+      }
+    ],
+    "heartRateRecovery": [
+      {
+        "qty": 75,
+        "units": "bpm",
+        "date": "2019-08-11 16:19:57 +0000"
+      },
+      {
+        "date": "2019-08-11 16:20:02 +0000",
+        "units": "bpm",
+        "qty": 72
+      },
+      {
+        "date": "2019-08-11 16:20:15 +0000",
+        "units": "bpm",
+        "qty": 72
+      },
+      {
+        "qty": 73,
+        "date": "2019-08-11 16:20:20 +0000",
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "qty": 74,
+        "date": "2019-08-11 16:20:27 +0000"
+      },
+      {
+        "qty": 71,
+        "date": "2019-08-11 16:20:30 +0000",
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "qty": 71,
+        "date": "2019-08-11 16:20:34 +0000"
+      },
+      {
+        "qty": 70,
+        "units": "bpm",
+        "date": "2019-08-11 16:20:41 +0000"
+      },
+      {
+        "date": "2019-08-11 16:20:43 +0000",
+        "qty": 70,
+        "units": "bpm"
+      },
+      {
+        "qty": 72,
+        "date": "2019-08-11 16:20:52 +0000",
+        "units": "bpm"
+      },
+      {
+        "date": "2019-08-11 16:20:57 +0000",
+        "qty": 72,
+        "units": "bpm"
+      },
+      {
+        "qty": 71,
+        "date": "2019-08-11 16:21:02 +0000",
+        "units": "bpm"
+      },
+      {
+        "date": "2019-08-11 16:21:04 +0000",
+        "units": "bpm",
+        "qty": 72
+      },
+      {
+        "date": "2019-08-11 16:21:19 +0000",
+        "qty": 72,
+        "units": "bpm"
+      },
+      {
+        "qty": 75,
+        "units": "bpm",
+        "date": "2019-08-11 16:21:23 +0000"
+      },
+      {
+        "date": "2019-08-11 16:21:32 +0000",
+        "units": "bpm",
+        "qty": 68
+      },
+      {
+        "units": "bpm",
+        "qty": 68,
+        "date": "2019-08-11 16:21:34 +0000"
+      }
+    ],
+    "activeEnergy": {
+      "units": "kcal",
+      "qty": 65.90095788112397
+    },
+    "stepCount": {
+      "qty": 155,
+      "units": "steps"
+    },
+    "totalSwimmingStrokeCount": {
+      "qty": 0,
+      "units": "count"
+    },
+    "temperature": {
+      "units": "degF",
+      "qty": 70
+    },
+    "location": "Outdoor",
+    "name": "Outdoor Cycling",
+    "duration": 1644.0373990535736,
+    "start": "2019-08-11 15:52:30 +0000",
+    "swimCadence": {
+      "units": "spm",
+      "qty": 0
+    },
+    "humidity": {
+      "qty": 86,
+      "units": "%"
+    },
+    "speed": {
+      "units": "mi/hr",
+      "qty": 6.67474602802676
+    },
+    "isIndoor": false
+  },
+  {
+    "distance": {
+      "qty": 3.747642116928375,
+      "units": "mi"
+    },
+    "heartRateRecovery": [
+      {
+        "qty": 86,
+        "date": "2020-07-12 21:18:55 +0000",
+        "units": "bpm"
+      },
+      {
+        "qty": 86,
+        "date": "2020-07-12 21:19:00 +0000",
+        "units": "bpm"
+      },
+      {
+        "date": "2020-07-12 21:19:05 +0000",
+        "qty": 87,
+        "units": "bpm"
+      },
+      {
+        "date": "2020-07-12 21:19:06 +0000",
+        "qty": 86,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "date": "2020-07-12 21:19:14 +0000",
+        "qty": 86
+      },
+      {
+        "date": "2020-07-12 21:19:16 +0000",
+        "qty": 87,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "date": "2020-07-12 21:19:22 +0000",
+        "qty": 87
+      },
+      {
+        "date": "2020-07-12 21:19:27 +0000",
+        "units": "bpm",
+        "qty": 87
+      },
+      {
+        "units": "bpm",
+        "date": "2020-07-12 21:19:34 +0000",
+        "qty": 84
+      },
+      {
+        "qty": 84,
+        "units": "bpm",
+        "date": "2020-07-12 21:19:38 +0000"
+      },
+      {
+        "units": "bpm",
+        "date": "2020-07-12 21:19:42 +0000",
+        "qty": 83
+      },
+      {
+        "qty": 83,
+        "units": "bpm",
+        "date": "2020-07-12 21:19:46 +0000"
+      },
+      {
+        "qty": 82,
+        "units": "bpm",
+        "date": "2020-07-12 21:19:55 +0000"
+      },
+      {
+        "qty": 82,
+        "units": "bpm",
+        "date": "2020-07-12 21:19:57 +0000"
+      },
+      {
+        "units": "bpm",
+        "date": "2020-07-12 21:20:05 +0000",
+        "qty": 83
+      },
+      {
+        "date": "2020-07-12 21:20:09 +0000",
+        "qty": 82,
+        "units": "bpm"
+      },
+      {
+        "qty": 82,
+        "date": "2020-07-12 21:20:11 +0000",
+        "units": "bpm"
+      },
+      {
+        "qty": 80,
+        "units": "bpm",
+        "date": "2020-07-12 21:20:16 +0000"
+      },
+      {
+        "units": "bpm",
+        "date": "2020-07-12 21:20:25 +0000",
+        "qty": 82
+      },
+      {
+        "date": "2020-07-12 21:20:27 +0000",
+        "qty": 82,
+        "units": "bpm"
+      },
+      {
+        "qty": 81,
+        "units": "bpm",
+        "date": "2020-07-12 21:20:35 +0000"
+      },
+      {
+        "qty": 81,
+        "date": "2020-07-12 21:20:36 +0000",
+        "units": "bpm"
+      },
+      {
+        "date": "2020-07-12 21:20:45 +0000",
+        "qty": 80,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "qty": 81,
+        "date": "2020-07-12 21:20:49 +0000"
+      },
+      {
+        "units": "bpm",
+        "qty": 82,
+        "date": "2020-07-12 21:20:53 +0000"
+      }
+    ],
+    "location": "Outdoor",
+    "temperature": {
+      "units": "degF",
+      "qty": 79
+    },
+    "stepCount": {
+      "qty": 825,
+      "units": "steps"
+    },
+    "heartRateData": [
+      {
+        "date": "2020-07-12 19:57:42 +0000",
+        "units": "bpm",
+        "qty": 76.88567686223743
+      }
+    ],
+    "speed": {
+      "qty": 3.976906761720063,
+      "units": "mi/hr"
+    },
+    "maxHeartRate": {
+      "qty": 94,
+      "units": "bpm"
+    },
+    "swimCadence": {
+      "units": "spm",
+      "qty": 0
+    },
+    "activeEnergy": {
+      "units": "kcal",
+      "qty": 65.08790858563681
+    },
+    "totalEnergy": {
+      "qty": 153.30990858563774,
+      "units": "kcal"
+    },
+    "isIndoor": false,
+    "start": "2020-07-12 19:57:42 +0000",
+    "stepCadence": {
+      "units": "spm",
+      "qty": 14.591165929811213
+    },
+    "totalSwimmingStrokeCount": {
+      "qty": 0,
+      "units": "count"
+    },
+    "intensity": {
+      "qty": 3.3585069281589126,
+      "units": "MET"
+    },
+    "end": "2020-07-12 21:18:55 +0000",
+    "humidity": {
+      "units": "%",
+      "qty": 56
+    },
+    "duration": 3392.463648080826,
+    "elevation": {
+      "ascent": 15.780839895013123,
+      "units": "ft",
+      "descent": 0
+    },
+    "flightsClimbed": {
+      "units": "count",
+      "qty": 0
+    },
+    "avgHeartRate": {
+      "qty": 76.88567686223743,
+      "units": "bpm"
+    },
+    "name": "Outdoor Cycling"
+  },
+  {
+    "totalSwimmingStrokeCount": {
+      "qty": 0,
+      "units": "count"
+    },
+    "elevation": {
+      "units": "ft",
+      "ascent": 566.4370078740158,
+      "descent": 0
+    },
+    "intensity": {
+      "units": "MET",
+      "qty": 5.367130967982588
+    },
+    "stepCadence": {
+      "qty": 15.364465448003346,
+      "units": "spm"
+    },
+    "maxHeartRate": {
+      "units": "bpm",
+      "qty": 111
+    },
+    "heartRateData": [
+      {
+        "date": "2020-03-26 13:46:33 +0000",
+        "qty": 88.36891746062564,
+        "units": "bpm"
+      }
+    ],
+    "location": "Outdoor",
+    "speed": {
+      "qty": 9.592224631419091,
+      "units": "mi/hr"
+    },
+    "end": "2020-03-26 18:25:47 +0000",
+    "distance": {
+      "units": "mi",
+      "qty": 40.28895321106155
+    },
+    "avgHeartRate": {
+      "qty": 88.36891746062564,
+      "units": "bpm"
+    },
+    "totalEnergy": {
+      "units": "kcal",
+      "qty": 1295.5251959977531
+    },
+    "name": "Outdoor Cycling",
+    "heartRateRecovery": [
+      {
+        "units": "bpm",
+        "date": "2020-03-26 18:25:49 +0000",
+        "qty": 72
+      },
+      {
+        "qty": 75,
+        "units": "bpm",
+        "date": "2020-03-26 18:25:58 +0000"
+      },
+      {
+        "units": "bpm",
+        "date": "2020-03-26 18:25:59 +0000",
+        "qty": 75
+      },
+      {
+        "date": "2020-03-26 18:26:08 +0000",
+        "units": "bpm",
+        "qty": 75
+      },
+      {
+        "units": "bpm",
+        "date": "2020-03-26 18:26:11 +0000",
+        "qty": 74
+      },
+      {
+        "date": "2020-03-26 18:26:14 +0000",
+        "qty": 74,
+        "units": "bpm"
+      },
+      {
+        "date": "2020-03-26 18:26:19 +0000",
+        "qty": 72,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "date": "2020-03-26 18:26:28 +0000",
+        "qty": 70
+      },
+      {
+        "qty": 68,
+        "units": "bpm",
+        "date": "2020-03-26 18:26:33 +0000"
+      },
+      {
+        "qty": 65,
+        "units": "bpm",
+        "date": "2020-03-26 18:26:38 +0000"
+      },
+      {
+        "date": "2020-03-26 18:26:43 +0000",
+        "units": "bpm",
+        "qty": 67
+      },
+      {
+        "units": "bpm",
+        "qty": 67,
+        "date": "2020-03-26 18:26:44 +0000"
+      },
+      {
+        "units": "bpm",
+        "qty": 70,
+        "date": "2020-03-26 18:26:49 +0000"
+      },
+      {
+        "qty": 72,
+        "units": "bpm",
+        "date": "2020-03-26 18:26:58 +0000"
+      },
+      {
+        "qty": 71,
+        "units": "bpm",
+        "date": "2020-03-26 18:27:03 +0000"
+      },
+      {
+        "units": "bpm",
+        "qty": 70,
+        "date": "2020-03-26 18:27:05 +0000"
+      },
+      {
+        "qty": 70,
+        "units": "bpm",
+        "date": "2020-03-26 18:27:12 +0000"
+      },
+      {
+        "units": "bpm",
+        "date": "2020-03-26 18:27:17 +0000",
+        "qty": 71
+      },
+      {
+        "qty": 71,
+        "units": "bpm",
+        "date": "2020-03-26 18:27:19 +0000"
+      },
+      {
+        "qty": 72,
+        "date": "2020-03-26 18:27:25 +0000",
+        "units": "bpm"
+      },
+      {
+        "qty": 73,
+        "date": "2020-03-26 18:27:29 +0000",
+        "units": "bpm"
+      },
+      {
+        "date": "2020-03-26 18:27:34 +0000",
+        "qty": 71,
+        "units": "bpm"
+      },
+      {
+        "date": "2020-03-26 18:27:41 +0000",
+        "qty": 74,
+        "units": "bpm"
+      },
+      {
+        "qty": 74,
+        "units": "bpm",
+        "date": "2020-03-26 18:27:44 +0000"
+      }
+    ],
+    "isIndoor": false,
+    "temperature": {
+      "qty": 46,
+      "units": "degF"
+    },
+    "flightsClimbed": {
+      "units": "count",
+      "qty": 0
+    },
+    "activeEnergy": {
+      "qty": 966.8681959977329,
+      "units": "kcal"
+    },
+    "stepCount": {
+      "qty": 3872,
+      "units": "steps"
+    },
+    "swimCadence": {
+      "qty": 0,
+      "units": "spm"
+    },
+    "start": "2020-03-26 13:46:33 +0000",
+    "humidity": {
+      "units": "%",
+      "qty": 93
+    },
+    "duration": 15120.604148983955
+  },
+  {
+    "name": "Outdoor Cycling",
+    "elevation": {
+      "descent": 0,
+      "units": "ft",
+      "ascent": 7.6443569553805775
+    },
+    "end": "2020-06-24 00:51:15 +0000",
+    "stepCount": {
+      "qty": 46,
+      "units": "steps"
+    },
+    "intensity": {
+      "units": "MET",
+      "qty": 3.4645493049819054
+    },
+    "stepCadence": {
+      "units": "spm",
+      "qty": 3.4499194917765488
+    },
+    "humidity": {
+      "qty": 50,
+      "units": "%"
+    },
+    "maxHeartRate": {
+      "qty": 99,
+      "units": "bpm"
+    },
+    "isIndoor": false,
+    "totalEnergy": {
+      "qty": 54.46434247535339,
+      "units": "kcal"
+    },
+    "speed": {
+      "units": "mi/hr",
+      "qty": 6.411799892406825
+    },
+    "location": "Outdoor",
+    "temperature": {
+      "units": "degF",
+      "qty": 73
+    },
+    "heartRateData": [
+      {
+        "qty": 84.18193236358229,
+        "units": "bpm",
+        "date": "2020-06-24 00:37:55 +0000"
+      }
+    ],
+    "avgHeartRate": {
+      "qty": 84.18193236358229,
+      "units": "bpm"
+    },
+    "swimCadence": {
+      "qty": 0,
+      "units": "spm"
+    },
+    "start": "2020-06-24 00:37:55 +0000",
+    "duration": 800.0186690092087,
+    "flightsClimbed": {
+      "qty": 0,
+      "units": "count"
+    },
+    "totalSwimmingStrokeCount": {
+      "qty": 0,
+      "units": "count"
+    },
+    "activeEnergy": {
+      "units": "kcal",
+      "qty": 26.96434247535339
+    },
+    "heartRateRecovery": [
+      {
+        "qty": 79,
+        "units": "bpm",
+        "date": "2020-06-24 00:51:15 +0000"
+      },
+      {
+        "units": "bpm",
+        "date": "2020-06-24 00:51:23 +0000",
+        "qty": 80
+      },
+      {
+        "units": "bpm",
+        "qty": 86,
+        "date": "2020-06-24 00:51:28 +0000"
+      },
+      {
+        "units": "bpm",
+        "date": "2020-06-24 00:51:33 +0000",
+        "qty": 87
+      },
+      {
+        "units": "bpm",
+        "date": "2020-06-24 00:51:37 +0000",
+        "qty": 87
+      },
+      {
+        "units": "bpm",
+        "date": "2020-06-24 00:51:39 +0000",
+        "qty": 87
+      },
+      {
+        "units": "bpm",
+        "date": "2020-06-24 00:51:46 +0000",
+        "qty": 87
+      },
+      {
+        "units": "bpm",
+        "qty": 86,
+        "date": "2020-06-24 00:51:49 +0000"
+      },
+      {
+        "qty": 83,
+        "units": "bpm",
+        "date": "2020-06-24 00:51:58 +0000"
+      },
+      {
+        "units": "bpm",
+        "qty": 81,
+        "date": "2020-06-24 00:52:02 +0000"
+      },
+      {
+        "date": "2020-06-24 00:52:04 +0000",
+        "qty": 81,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "date": "2020-06-24 00:52:13 +0000",
+        "qty": 79
+      },
+      {
+        "units": "bpm",
+        "date": "2020-06-24 00:52:18 +0000",
+        "qty": 81
+      },
+      {
+        "date": "2020-06-24 00:52:19 +0000",
+        "qty": 81,
+        "units": "bpm"
+      },
+      {
+        "date": "2020-06-24 00:52:24 +0000",
+        "units": "bpm",
+        "qty": 81
+      },
+      {
+        "units": "bpm",
+        "qty": 81,
+        "date": "2020-06-24 00:52:33 +0000"
+      },
+      {
+        "date": "2020-06-24 00:52:34 +0000",
+        "units": "bpm",
+        "qty": 81
+      },
+      {
+        "date": "2020-06-24 00:52:39 +0000",
+        "qty": 78,
+        "units": "bpm"
+      },
+      {
+        "date": "2020-06-24 00:52:44 +0000",
+        "qty": 80,
+        "units": "bpm"
+      },
+      {
+        "date": "2020-06-24 00:52:53 +0000",
+        "qty": 80,
+        "units": "bpm"
+      },
+      {
+        "date": "2020-06-24 00:52:58 +0000",
+        "units": "bpm",
+        "qty": 80
+      },
+      {
+        "units": "bpm",
+        "qty": 80,
+        "date": "2020-06-24 00:52:59 +0000"
+      },
+      {
+        "units": "bpm",
+        "date": "2020-06-24 00:53:04 +0000",
+        "qty": 77
+      },
+      {
+        "date": "2020-06-24 00:53:09 +0000",
+        "qty": 76,
+        "units": "bpm"
+      }
+    ],
+    "distance": {
+      "qty": 1.42487767107686,
+      "units": "mi"
+    }
+  },
+  {
+    "activeEnergy": {
+      "units": "kcal",
+      "qty": 46.449443886151755
+    },
+    "flightsClimbed": {
+      "units": "count",
+      "qty": 0
+    },
+    "speed": {
+      "units": "mi/hr",
+      "qty": 3.042528593219026
+    },
+    "intensity": {
+      "units": "MET",
+      "qty": 2.77187686121094
+    },
+    "isIndoor": false,
+    "stepCadence": {
+      "qty": 13.30325321926324,
+      "units": "spm"
+    },
+    "heartRateRecovery": [
+      {
+        "date": "2020-06-07 19:32:42 +0000",
+        "qty": 90,
+        "units": "bpm"
+      },
+      {
+        "date": "2020-06-07 19:32:49 +0000",
+        "qty": 89,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "qty": 89,
+        "date": "2020-06-07 19:32:55 +0000"
+      },
+      {
+        "units": "bpm",
+        "qty": 89,
+        "date": "2020-06-07 19:33:08 +0000"
+      },
+      {
+        "date": "2020-06-07 19:33:14 +0000",
+        "qty": 88,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "qty": 88,
+        "date": "2020-06-07 19:33:48 +0000"
+      },
+      {
+        "units": "bpm",
+        "date": "2020-06-07 19:34:00 +0000",
+        "qty": 87
+      },
+      {
+        "date": "2020-06-07 19:34:04 +0000",
+        "qty": 86,
+        "units": "bpm"
+      },
+      {
+        "date": "2020-06-07 19:34:09 +0000",
+        "qty": 86,
+        "units": "bpm"
+      },
+      {
+        "date": "2020-06-07 19:34:14 +0000",
+        "qty": 87,
+        "units": "bpm"
+      },
+      {
+        "qty": 86,
+        "date": "2020-06-07 19:34:20 +0000",
+        "units": "bpm"
+      }
+    ],
+    "totalEnergy": {
+      "units": "kcal",
+      "qty": 103.46444388615157
+    },
+    "location": "Outdoor",
+    "maxHeartRate": {
+      "units": "bpm",
+      "qty": 92
+    },
+    "end": "2020-06-07 19:32:26 +0000",
+    "start": "2020-06-07 18:36:17 +0000",
+    "duration": 3369.1007200479507,
+    "elevation": {
+      "units": "ft",
+      "descent": 0,
+      "ascent": 13.353018372703412
+    },
+    "humidity": {
+      "units": "%",
+      "qty": 44
+    },
+    "name": "Outdoor Cycling",
+    "avgHeartRate": {
+      "qty": 79.3199737705677,
+      "units": "bpm"
+    },
+    "temperature": {
+      "units": "degF",
+      "qty": 81
+    },
+    "swimCadence": {
+      "qty": 0,
+      "units": "spm"
+    },
+    "heartRateData": [
+      {
+        "qty": 79.3199737705677,
+        "units": "bpm",
+        "date": "2020-06-07 18:36:17 +0000"
+      }
+    ],
+    "totalSwimmingStrokeCount": {
+      "units": "count",
+      "qty": 0
+    },
+    "stepCount": {
+      "units": "steps",
+      "qty": 747
+    },
+    "distance": {
+      "units": "mi",
+      "qty": 2.847384798383527
+    }
+  },
+  {
+    "stepCount": {
+      "units": "steps",
+      "qty": 300
+    },
+    "elevation": {
+      "ascent": 21.751968503937007,
+      "units": "ft",
+      "descent": 0
+    },
+    "maxHeartRate": {
+      "units": "bpm",
+      "qty": 101
+    },
+    "isIndoor": false,
+    "name": "Outdoor Cycling",
+    "start": "2020-08-23 18:14:29 +0000",
+    "stepCadence": {
+      "units": "spm",
+      "qty": 5.882338692928039
+    },
+    "temperature": {
+      "qty": 85,
+      "units": "degF"
+    },
+    "location": "Outdoor",
+    "intensity": {
+      "qty": 3.106043868081518,
+      "units": "MET"
+    },
+    "totalEnergy": {
+      "units": "kcal",
+      "qty": 131.16268558589243
+    },
+    "activeEnergy": {
+      "units": "kcal",
+      "qty": 66.71968558589259
+    },
+    "distance": {
+      "qty": 3.6464666815275915,
+      "units": "mi"
+    },
+    "swimCadence": {
+      "qty": 0,
+      "units": "spm"
+    },
+    "duration": 3060.007411956787,
+    "heartRateRecovery": [
+      {
+        "qty": 71,
+        "units": "bpm",
+        "date": "2020-08-23 19:05:41 +0000"
+      },
+      {
+        "units": "bpm",
+        "date": "2020-08-23 19:05:44 +0000",
+        "qty": 71
+      },
+      {
+        "qty": 71,
+        "units": "bpm",
+        "date": "2020-08-23 19:05:49 +0000"
+      },
+      {
+        "units": "bpm",
+        "qty": 71,
+        "date": "2020-08-23 19:05:53 +0000"
+      },
+      {
+        "qty": 70,
+        "units": "bpm",
+        "date": "2020-08-23 19:06:02 +0000"
+      },
+      {
+        "qty": 71,
+        "units": "bpm",
+        "date": "2020-08-23 19:06:07 +0000"
+      },
+      {
+        "date": "2020-08-23 19:06:12 +0000",
+        "units": "bpm",
+        "qty": 72
+      },
+      {
+        "units": "bpm",
+        "qty": 73,
+        "date": "2020-08-23 19:06:17 +0000"
+      },
+      {
+        "date": "2020-08-23 19:06:18 +0000",
+        "qty": 74,
+        "units": "bpm"
+      },
+      {
+        "qty": 70,
+        "units": "bpm",
+        "date": "2020-08-23 19:06:27 +0000"
+      },
+      {
+        "date": "2020-08-23 19:06:32 +0000",
+        "units": "bpm",
+        "qty": 71
+      },
+      {
+        "units": "bpm",
+        "date": "2020-08-23 19:06:37 +0000",
+        "qty": 72
+      },
+      {
+        "units": "bpm",
+        "date": "2020-08-23 19:06:38 +0000",
+        "qty": 71
+      },
+      {
+        "units": "bpm",
+        "date": "2020-08-23 19:06:43 +0000",
+        "qty": 70
+      },
+      {
+        "qty": 71,
+        "units": "bpm",
+        "date": "2020-08-23 19:06:48 +0000"
+      },
+      {
+        "qty": 74,
+        "units": "bpm",
+        "date": "2020-08-23 19:07:04 +0000"
+      },
+      {
+        "qty": 74,
+        "date": "2020-08-23 19:07:13 +0000",
+        "units": "bpm"
+      },
+      {
+        "qty": 75,
+        "units": "bpm",
+        "date": "2020-08-23 19:07:17 +0000"
+      },
+      {
+        "date": "2020-08-23 19:07:23 +0000",
+        "units": "bpm",
+        "qty": 76
+      },
+      {
+        "units": "bpm",
+        "qty": 77,
+        "date": "2020-08-23 19:07:26 +0000"
+      }
+    ],
+    "avgHeartRate": {
+      "units": "bpm",
+      "qty": 76.78522095796863
+    },
+    "flightsClimbed": {
+      "qty": 0,
+      "units": "count"
+    },
+    "humidity": {
+      "units": "%",
+      "qty": 54
+    },
+    "heartRateData": [
+      {
+        "date": "2020-08-23 18:14:29 +0000",
+        "units": "bpm",
+        "qty": 76.78522095796863
+      }
+    ],
+    "speed": {
+      "qty": 4.289950410644532,
+      "units": "mi/hr"
+    },
+    "totalSwimmingStrokeCount": {
+      "units": "count",
+      "qty": 0
+    },
+    "end": "2020-08-23 19:05:29 +0000"
+  },
+  {
+    "location": "Outdoor",
+    "flightsClimbed": {
+      "units": "count",
+      "qty": 0
+    },
+    "avgHeartRate": {
+      "qty": 84.52967707885676,
+      "units": "bpm"
+    },
+    "totalEnergy": {
+      "units": "kcal",
+      "qty": 93.86073750384931
+    },
+    "end": "2020-08-23 20:38:52 +0000",
+    "stepCadence": {
+      "qty": 2.4392363598496973,
+      "units": "spm"
+    },
+    "humidity": {
+      "units": "%",
+      "qty": 51
+    },
+    "isIndoor": false,
+    "temperature": {
+      "qty": 88,
+      "units": "degF"
+    },
+    "start": "2020-08-23 19:57:52 +0000",
+    "maxHeartRate": {
+      "units": "bpm",
+      "qty": 169
+    },
+    "stepCount": {
+      "qty": 100,
+      "units": "steps"
+    },
+    "heartRateData": [
+      {
+        "units": "bpm",
+        "qty": 84.52967707885676,
+        "date": "2020-08-23 19:57:52 +0000"
+      }
+    ],
+    "speed": {
+      "units": "mi/hr",
+      "qty": 5.156975387166687
+    },
+    "distance": {
+      "units": "mi",
+      "qty": 3.523626951486061
+    },
+    "totalSwimmingStrokeCount": {
+      "units": "count",
+      "qty": 0
+    },
+    "intensity": {
+      "units": "MET",
+      "qty": 2.795414358760223
+    },
+    "elevation": {
+      "descent": 0,
+      "units": "ft",
+      "ascent": 80.38057742782152
+    },
+    "swimCadence": {
+      "qty": 0,
+      "units": "spm"
+    },
+    "activeEnergy": {
+      "qty": 41.09273750384949,
+      "units": "kcal"
+    },
+    "heartRateRecovery": [
+      {
+        "units": "bpm",
+        "date": "2020-08-23 20:38:52 +0000",
+        "qty": 76
+      },
+      {
+        "qty": 76,
+        "units": "bpm",
+        "date": "2020-08-23 20:38:56 +0000"
+      },
+      {
+        "units": "bpm",
+        "qty": 79,
+        "date": "2020-08-23 20:39:13 +0000"
+      },
+      {
+        "units": "bpm",
+        "qty": 80,
+        "date": "2020-08-23 20:39:20 +0000"
+      },
+      {
+        "date": "2020-08-23 20:39:21 +0000",
+        "units": "bpm",
+        "qty": 80
+      },
+      {
+        "date": "2020-08-23 20:39:30 +0000",
+        "qty": 82,
+        "units": "bpm"
+      },
+      {
+        "qty": 81,
+        "date": "2020-08-23 20:39:33 +0000",
+        "units": "bpm"
+      },
+      {
+        "date": "2020-08-23 20:39:40 +0000",
+        "qty": 82,
+        "units": "bpm"
+      },
+      {
+        "date": "2020-08-23 20:39:41 +0000",
+        "qty": 82,
+        "units": "bpm"
+      },
+      {
+        "date": "2020-08-23 20:39:47 +0000",
+        "qty": 81,
+        "units": "bpm"
+      },
+      {
+        "date": "2020-08-23 20:39:51 +0000",
+        "qty": 80,
+        "units": "bpm"
+      },
+      {
+        "qty": 78,
+        "units": "bpm",
+        "date": "2020-08-23 20:39:56 +0000"
+      },
+      {
+        "units": "bpm",
+        "qty": 82,
+        "date": "2020-08-23 20:40:05 +0000"
+      },
+      {
+        "units": "bpm",
+        "date": "2020-08-23 20:40:06 +0000",
+        "qty": 83
+      },
+      {
+        "date": "2020-08-23 20:40:14 +0000",
+        "units": "bpm",
+        "qty": 84
+      },
+      {
+        "date": "2020-08-23 20:40:16 +0000",
+        "qty": 85,
+        "units": "bpm"
+      },
+      {
+        "qty": 83,
+        "date": "2020-08-23 20:40:22 +0000",
+        "units": "bpm"
+      },
+      {
+        "qty": 80,
+        "date": "2020-08-23 20:40:28 +0000",
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "date": "2020-08-23 20:40:31 +0000",
+        "qty": 82
+      },
+      {
+        "date": "2020-08-23 20:40:38 +0000",
+        "units": "bpm",
+        "qty": 80
+      },
+      {
+        "date": "2020-08-23 20:40:43 +0000",
+        "qty": 77,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "qty": 78,
+        "date": "2020-08-23 20:40:49 +0000"
+      }
+    ],
+    "name": "Outdoor Cycling",
+    "duration": 2459.7862260341644
+  },
+  {
+    "stepCadence": {
+      "units": "spm",
+      "qty": 3.6432977009365315
+    },
+    "start": "2021-06-30 14:57:48 +0000",
+    "end": "2021-06-30 16:55:21 +0000",
+    "totalEnergy": {
+      "qty": 539.0101790138624,
+      "units": "kcal"
+    },
+    "totalSwimmingStrokeCount": {
+      "qty": 0,
+      "units": "count"
+    },
+    "heartRateData": [
+      {
+        "date": "2021-06-30 14:57:48 +0000",
+        "qty": 93.97016117225645,
+        "units": "bpm"
+      }
+    ],
+    "distance": {
+      "qty": 15.261607616389545,
+      "units": "mi"
+    },
+    "maxHeartRate": {
+      "units": "bpm",
+      "qty": 121
+    },
+    "elevation": {
+      "units": "ft",
+      "descent": 0,
+      "ascent": 342.5853018372703
+    },
+    "flightsClimbed": {
+      "units": "count",
+      "qty": 0
+    },
+    "isIndoor": false,
+    "stepCount": {
+      "qty": 399,
+      "units": "steps"
+    },
+    "temperature": {
+      "qty": 75.19999885559082,
+      "units": "degF"
+    },
+    "humidity": {
+      "units": "%",
+      "qty": 85
+    },
+    "duration": 6570.970029115677,
+    "location": "Outdoor",
+    "intensity": {
+      "qty": 5.025420310187701,
+      "units": "MET"
+    },
+    "speed": {
+      "qty": 8.361290216749998,
+      "units": "mi/hr"
+    },
+    "name": "Outdoor Cycling",
+    "heartRateRecovery": [
+      {
+        "units": "bpm",
+        "date": "2021-06-30 16:55:24 +0000",
+        "qty": 95
+      },
+      {
+        "date": "2021-06-30 16:55:29 +0000",
+        "units": "bpm",
+        "qty": 97
+      },
+      {
+        "qty": 97,
+        "date": "2021-06-30 16:55:31 +0000",
+        "units": "bpm"
+      },
+      {
+        "date": "2021-06-30 16:55:39 +0000",
+        "qty": 98,
+        "units": "bpm"
+      },
+      {
+        "date": "2021-06-30 16:55:40 +0000",
+        "units": "bpm",
+        "qty": 98
+      },
+      {
+        "qty": 97,
+        "date": "2021-06-30 16:55:45 +0000",
+        "units": "bpm"
+      },
+      {
+        "date": "2021-06-30 16:55:50 +0000",
+        "qty": 97,
+        "units": "bpm"
+      },
+      {
+        "date": "2021-06-30 16:55:55 +0000",
+        "qty": 96,
+        "units": "bpm"
+      },
+      {
+        "date": "2021-06-30 16:56:03 +0000",
+        "qty": 94,
+        "units": "bpm"
+      },
+      {
+        "qty": 93,
+        "date": "2021-06-30 16:56:09 +0000",
+        "units": "bpm"
+      },
+      {
+        "date": "2021-06-30 16:56:14 +0000",
+        "qty": 93,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "date": "2021-06-30 16:56:18 +0000",
+        "qty": 93
+      },
+      {
+        "date": "2021-06-30 16:56:20 +0000",
+        "units": "bpm",
+        "qty": 93
+      },
+      {
+        "date": "2021-06-30 16:56:28 +0000",
+        "qty": 92,
+        "units": "bpm"
+      },
+      {
+        "date": "2021-06-30 16:56:34 +0000",
+        "units": "bpm",
+        "qty": 92
+      },
+      {
+        "date": "2021-06-30 16:56:37 +0000",
+        "qty": 92,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "date": "2021-06-30 16:56:40 +0000",
+        "qty": 92
+      },
+      {
+        "date": "2021-06-30 16:56:45 +0000",
+        "qty": 90,
+        "units": "bpm"
+      },
+      {
+        "date": "2021-06-30 16:56:54 +0000",
+        "units": "bpm",
+        "qty": 89
+      },
+      {
+        "units": "bpm",
+        "qty": 88,
+        "date": "2021-06-30 16:56:59 +0000"
+      },
+      {
+        "date": "2021-06-30 16:57:04 +0000",
+        "qty": 88,
+        "units": "bpm"
+      },
+      {
+        "date": "2021-06-30 16:57:07 +0000",
+        "units": "bpm",
+        "qty": 87
+      },
+      {
+        "qty": 88,
+        "units": "bpm",
+        "date": "2021-06-30 16:57:14 +0000"
+      },
+      {
+        "units": "bpm",
+        "qty": 89,
+        "date": "2021-06-30 16:57:19 +0000"
+      }
+    ],
+    "swimCadence": {
+      "units": "spm",
+      "qty": 0
+    },
+    "avgHeartRate": {
+      "qty": 93.97016117225645,
+      "units": "bpm"
+    },
+    "activeEnergy": {
+      "qty": 388.55717901385725,
+      "units": "kcal"
+    }
+  },
+  {
+    "distance": {
+      "qty": 7.2192828230022545,
+      "units": "mi"
+    },
+    "isIndoor": false,
+    "duration": 6040.948786973953,
+    "stepCadence": {
+      "units": "spm",
+      "qty": 20.30144673042877
+    },
+    "name": "Outdoor Cycling",
+    "start": "2021-04-25 16:40:11 +0000",
+    "swimCadence": {
+      "qty": 0,
+      "units": "spm"
+    },
+    "elevation": {
+      "ascent": 63.25459317585302,
+      "descent": 0,
+      "units": "ft"
+    },
+    "temperature": {
+      "units": "degF",
+      "qty": 48.19999957084656
+    },
+    "activeEnergy": {
+      "qty": 122.43912159027062,
+      "units": "kcal"
+    },
+    "intensity": {
+      "units": "MET",
+      "qty": 2.297246118308807
+    },
+    "heartRateData": [
+      {
+        "date": "2021-04-25 16:40:11 +0000",
+        "units": "bpm",
+        "qty": 80.29702827876505
+      }
+    ],
+    "speed": {
+      "qty": 4.302207994023866,
+      "units": "mi/hr"
+    },
+    "maxHeartRate": {
+      "units": "bpm",
+      "qty": 104
+    },
+    "avgHeartRate": {
+      "units": "bpm",
+      "qty": 80.29702827876505
+    },
+    "location": "Outdoor",
+    "totalSwimmingStrokeCount": {
+      "qty": 0,
+      "units": "count"
+    },
+    "heartRateRecovery": [
+      {
+        "units": "bpm",
+        "date": "2021-04-25 19:29:35 +0000",
+        "qty": 72
+      },
+      {
+        "qty": 72,
+        "units": "bpm",
+        "date": "2021-04-25 19:29:36 +0000"
+      },
+      {
+        "date": "2021-04-25 19:29:41 +0000",
+        "units": "bpm",
+        "qty": 73
+      },
+      {
+        "qty": 74,
+        "date": "2021-04-25 19:29:46 +0000",
+        "units": "bpm"
+      },
+      {
+        "date": "2021-04-25 19:29:51 +0000",
+        "units": "bpm",
+        "qty": 76
+      },
+      {
+        "date": "2021-04-25 19:29:56 +0000",
+        "units": "bpm",
+        "qty": 77
+      },
+      {
+        "date": "2021-04-25 19:30:03 +0000",
+        "qty": 77,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "qty": 71,
+        "date": "2021-04-25 19:30:10 +0000"
+      },
+      {
+        "qty": 67,
+        "units": "bpm",
+        "date": "2021-04-25 19:30:15 +0000"
+      },
+      {
+        "date": "2021-04-25 19:30:20 +0000",
+        "units": "bpm",
+        "qty": 66
+      },
+      {
+        "units": "bpm",
+        "date": "2021-04-25 19:30:24 +0000",
+        "qty": 66
+      },
+      {
+        "date": "2021-04-25 19:30:26 +0000",
+        "qty": 66,
+        "units": "bpm"
+      },
+      {
+        "date": "2021-04-25 19:30:31 +0000",
+        "qty": 68,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "qty": 66,
+        "date": "2021-04-25 19:30:40 +0000"
+      },
+      {
+        "date": "2021-04-25 19:30:44 +0000",
+        "units": "bpm",
+        "qty": 66
+      },
+      {
+        "units": "bpm",
+        "qty": 66,
+        "date": "2021-04-25 19:30:46 +0000"
+      },
+      {
+        "qty": 66,
+        "units": "bpm",
+        "date": "2021-04-25 19:30:51 +0000"
+      },
+      {
+        "qty": 67,
+        "date": "2021-04-25 19:30:58 +0000",
+        "units": "bpm"
+      },
+      {
+        "qty": 67,
+        "date": "2021-04-25 19:31:02 +0000",
+        "units": "bpm"
+      },
+      {
+        "qty": 65,
+        "units": "bpm",
+        "date": "2021-04-25 19:31:10 +0000"
+      },
+      {
+        "qty": 64,
+        "date": "2021-04-25 19:31:14 +0000",
+        "units": "bpm"
+      },
+      {
+        "date": "2021-04-25 19:31:16 +0000",
+        "units": "bpm",
+        "qty": 65
+      },
+      {
+        "date": "2021-04-25 19:31:25 +0000",
+        "qty": 65,
+        "units": "bpm"
+      },
+      {
+        "date": "2021-04-25 19:31:30 +0000",
+        "qty": 66,
+        "units": "bpm"
+      }
+    ],
+    "end": "2021-04-25 19:29:31 +0000",
+    "totalEnergy": {
+      "units": "kcal",
+      "qty": 330.4491215902645
+    },
+    "stepCount": {
+      "qty": 2044,
+      "units": "steps"
+    },
+    "humidity": {
+      "units": "%",
+      "qty": 50
+    },
+    "flightsClimbed": {
+      "qty": 4,
+      "units": "count"
+    }
+  },
+  {
+    "end": "2021-04-18 18:23:48 +0000",
+    "maxHeartRate": {
+      "qty": 97,
+      "units": "bpm"
+    },
+    "stepCount": {
+      "qty": 1882,
+      "units": "steps"
+    },
+    "temperature": {
+      "qty": 57.19999933242798,
+      "units": "degF"
+    },
+    "heartRateRecovery": [
+      {
+        "qty": 77,
+        "date": "2021-04-18 18:23:51 +0000",
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "qty": 78,
+        "date": "2021-04-18 18:23:57 +0000"
+      },
+      {
+        "qty": 73,
+        "date": "2021-04-18 18:24:05 +0000",
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "date": "2021-04-18 18:24:10 +0000",
+        "qty": 70
+      },
+      {
+        "date": "2021-04-18 18:24:11 +0000",
+        "units": "bpm",
+        "qty": 71
+      },
+      {
+        "units": "bpm",
+        "qty": 73,
+        "date": "2021-04-18 18:24:18 +0000"
+      },
+      {
+        "qty": 73,
+        "units": "bpm",
+        "date": "2021-04-18 18:24:25 +0000"
+      },
+      {
+        "date": "2021-04-18 18:24:30 +0000",
+        "qty": 73,
+        "units": "bpm"
+      },
+      {
+        "date": "2021-04-18 18:24:32 +0000",
+        "qty": 74,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "qty": 73,
+        "date": "2021-04-18 18:24:40 +0000"
+      },
+      {
+        "units": "bpm",
+        "date": "2021-04-18 18:24:41 +0000",
+        "qty": 74
+      },
+      {
+        "units": "bpm",
+        "date": "2021-04-18 18:24:46 +0000",
+        "qty": 75
+      },
+      {
+        "units": "bpm",
+        "qty": 75,
+        "date": "2021-04-18 18:24:55 +0000"
+      },
+      {
+        "units": "bpm",
+        "qty": 75,
+        "date": "2021-04-18 18:24:57 +0000"
+      },
+      {
+        "units": "bpm",
+        "qty": 75,
+        "date": "2021-04-18 18:25:04 +0000"
+      },
+      {
+        "units": "bpm",
+        "qty": 74,
+        "date": "2021-04-18 18:25:08 +0000"
+      },
+      {
+        "qty": 75,
+        "units": "bpm",
+        "date": "2021-04-18 18:25:12 +0000"
+      },
+      {
+        "date": "2021-04-18 18:25:16 +0000",
+        "units": "bpm",
+        "qty": 76
+      },
+      {
+        "date": "2021-04-18 18:25:21 +0000",
+        "qty": 76,
+        "units": "bpm"
+      },
+      {
+        "qty": 76,
+        "date": "2021-04-18 18:25:29 +0000",
+        "units": "bpm"
+      },
+      {
+        "qty": 75,
+        "units": "bpm",
+        "date": "2021-04-18 18:25:33 +0000"
+      },
+      {
+        "units": "bpm",
+        "date": "2021-04-18 18:25:38 +0000",
+        "qty": 76
+      },
+      {
+        "qty": 76,
+        "units": "bpm",
+        "date": "2021-04-18 18:25:44 +0000"
+      }
+    ],
+    "intensity": {
+      "units": "MET",
+      "qty": 5.167647584912399
+    },
+    "location": "Outdoor",
+    "isIndoor": false,
+    "heartRateData": [
+      {
+        "units": "bpm",
+        "qty": 72.78810367614619,
+        "date": "2021-04-18 16:23:49 +0000"
+      }
+    ],
+    "start": "2021-04-18 16:23:49 +0000",
+    "name": "Outdoor Cycling",
+    "duration": 2872.279842019081,
+    "avgHeartRate": {
+      "qty": 72.78810367614619,
+      "units": "bpm"
+    },
+    "humidity": {
+      "qty": 43,
+      "units": "%"
+    },
+    "activeEnergy": {
+      "qty": 35.84702783533917,
+      "units": "kcal"
+    },
+    "speed": {
+      "units": "mi/hr",
+      "qty": 3.537674006338825
+    },
+    "flightsClimbed": {
+      "units": "count",
+      "qty": 0
+    },
+    "totalEnergy": {
+      "qty": 183.58802783533886,
+      "units": "kcal"
+    },
+    "stepCadence": {
+      "qty": 39.31371809531707,
+      "units": "spm"
+    },
+    "swimCadence": {
+      "qty": 0,
+      "units": "spm"
+    },
+    "totalSwimmingStrokeCount": {
+      "units": "count",
+      "qty": 0
+    },
+    "elevation": {
+      "descent": 0,
+      "units": "ft",
+      "ascent": 30.97112860892388
+    },
+    "distance": {
+      "units": "mi",
+      "qty": 2.8225527044560805
+    }
+  },
+  {
+    "maxHeartRate": {
+      "units": "bpm",
+      "qty": 125.00000000000001
+    },
+    "avgHeartRate": {
+      "qty": 63.27434329360786,
+      "units": "bpm"
+    },
+    "speed": {
+      "units": "mi/hr",
+      "qty": 2.432653110943851
+    },
+    "heartRateData": [
+      {
+        "date": "2022-05-30 15:39:03 +0000",
+        "qty": 63.27434329360786,
+        "units": "bpm"
+      }
+    ],
+    "end": "2022-05-30 18:21:25 +0000",
+    "swimCadence": {
+      "qty": 0,
+      "units": "spm"
+    },
+    "name": "Outdoor Cycling",
+    "isIndoor": false,
+    "humidity": {
+      "qty": 61,
+      "units": "%"
+    },
+    "elevation": {
+      "ascent": 28.70734908136483,
+      "descent": 0,
+      "units": "ft"
+    },
+    "start": "2022-05-30 15:39:03 +0000",
+    "distance": {
+      "qty": 4.142029598202286,
+      "units": "mi"
+    },
+    "duration": 6129.647702932358,
+    "stepCadence": {
+      "units": "spm",
+      "qty": 6.17653767962687
+    },
+    "intensity": {
+      "qty": 3.5281065576947794,
+      "units": "MET"
+    },
+    "temperature": {
+      "qty": 78.79999876022339,
+      "units": "degF"
+    },
+    "totalSwimmingStrokeCount": {
+      "units": "count",
+      "qty": 0
+    },
+    "location": "Outdoor",
+    "stepCount": {
+      "qty": 631,
+      "units": "steps"
+    },
+    "heartRateRecovery": [
+      {
+        "units": "bpm",
+        "date": "2022-05-30 18:21:28 +0000",
+        "qty": 70
+      },
+      {
+        "date": "2022-05-30 18:21:37 +0000",
+        "units": "bpm",
+        "qty": 72
+      },
+      {
+        "units": "bpm",
+        "date": "2022-05-30 18:21:40 +0000",
+        "qty": 71
+      },
+      {
+        "date": "2022-05-30 18:21:45 +0000",
+        "qty": 70,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "date": "2022-05-30 18:22:24 +0000",
+        "qty": 68
+      },
+      {
+        "date": "2022-05-30 18:22:32 +0000",
+        "qty": 70,
+        "units": "bpm"
+      },
+      {
+        "qty": 70,
+        "units": "bpm",
+        "date": "2022-05-30 18:22:37 +0000"
+      },
+      {
+        "units": "bpm",
+        "date": "2022-05-30 18:23:02 +0000",
+        "qty": 70
+      }
+    ],
+    "activeEnergy": {
+      "units": "kcal",
+      "qty": 93.39936194080254
+    },
+    "flightsClimbed": {
+      "qty": 0,
+      "units": "count"
+    },
+    "totalEnergy": {
+      "qty": 360.97836194080145,
+      "units": "kcal"
+    }
+  },
+  {
+    "stepCount": {
+      "units": "steps",
+      "qty": 35
+    },
+    "swimCadence": {
+      "units": "spm",
+      "qty": 0
+    },
+    "elevation": {
+      "units": "ft",
+      "ascent": 18.307086614173226,
+      "descent": 0
+    },
+    "stepCadence": {
+      "qty": 1.3976732914507686,
+      "units": "spm"
+    },
+    "activeEnergy": {
+      "qty": 111.35200000000002,
+      "units": "kcal"
+    },
+    "temperature": {
+      "units": "degF",
+      "qty": 58.99999928474426
+    },
+    "location": "Outdoor",
+    "totalSwimmingStrokeCount": {
+      "units": "count",
+      "qty": 0
+    },
+    "end": "2022-09-26 21:28:29 +0000",
+    "start": "2022-09-26 21:03:26 +0000",
+    "flightsClimbed": {
+      "qty": 0,
+      "units": "count"
+    },
+    "intensity": {
+      "qty": 5.111015317042445,
+      "units": "MET"
+    },
+    "totalEnergy": {
+      "units": "kcal",
+      "qty": 155.6259999999997
+    },
+    "maxHeartRate": {
+      "qty": 0,
+      "units": "bpm"
+    },
+    "duration": 1502.4970519542694,
+    "speed": {
+      "units": "mi/hr",
+      "qty": 7.864739014984387
+    },
+    "humidity": {
+      "qty": 54,
+      "units": "%"
+    },
+    "isIndoor": false,
+    "heartRateRecovery": [],
+    "distance": {
+      "units": "mi",
+      "qty": 3.2824297734454904
+    },
+    "name": "Outdoor Cycling",
+    "heartRateData": [],
+    "avgHeartRate": {
+      "units": "bpm",
+      "qty": 0
+    }
+  },
+  {
+    "distance": {
+      "units": "mi",
+      "qty": 5.8971791573068755
+    },
+    "isIndoor": false,
+    "flightsClimbed": {
+      "qty": 0,
+      "units": "count"
+    },
+    "heartRateRecovery": [],
+    "avgHeartRate": {
+      "qty": 64.79309486385736,
+      "units": "bpm"
+    },
+    "speed": {
+      "qty": 6.31111855094642,
+      "units": "mi/hr"
+    },
+    "totalSwimmingStrokeCount": {
+      "units": "count",
+      "qty": 0
+    },
+    "duration": 3363.8799200057983,
+    "maxHeartRate": {
+      "qty": 111,
+      "units": "bpm"
+    },
+    "start": "2022-09-26 17:23:50 +0000",
+    "swimCadence": {
+      "qty": 0,
+      "units": "spm"
+    },
+    "elevation": {
+      "descent": 0,
+      "ascent": 119.58661417322836,
+      "units": "ft"
+    },
+    "stepCadence": {
+      "units": "spm",
+      "qty": 19.459672032492517
+    },
+    "name": "Outdoor Cycling",
+    "humidity": {
+      "qty": 57,
+      "units": "%"
+    },
+    "location": "Outdoor",
+    "intensity": {
+      "qty": 3.9939243044701125,
+      "units": "MET"
+    },
+    "stepCount": {
+      "qty": 1091,
+      "units": "steps"
+    },
+    "activeEnergy": {
+      "units": "kcal",
+      "qty": 195.28076167649525
+    },
+    "end": "2022-09-26 21:03:20 +0000",
+    "heartRateData": [
+      {
+        "units": "bpm",
+        "date": "2022-09-26 17:23:50 +0000",
+        "qty": 64.79309486385736
+      }
+    ],
+    "totalEnergy": {
+      "units": "kcal",
+      "qty": 555.823761676492
+    },
+    "temperature": {
+      "qty": 58.99999928474426,
+      "units": "degF"
+    }
+  },
+  {
+    "totalEnergy": {
+      "units": "kcal",
+      "qty": 456.5479925551399
+    },
+    "heartRateRecovery": [
+      {
+        "qty": 71,
+        "date": "2022-08-04 19:14:34 +0000",
+        "units": "bpm"
+      },
+      {
+        "date": "2022-08-04 19:14:36 +0000",
+        "qty": 71,
+        "units": "bpm"
+      },
+      {
+        "date": "2022-08-04 19:15:10 +0000",
+        "qty": 71,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "qty": 70,
+        "date": "2022-08-04 19:15:15 +0000"
+      },
+      {
+        "qty": 70,
+        "date": "2022-08-04 19:15:19 +0000",
+        "units": "bpm"
+      },
+      {
+        "qty": 69,
+        "units": "bpm",
+        "date": "2022-08-04 19:15:25 +0000"
+      },
+      {
+        "qty": 67,
+        "date": "2022-08-04 19:15:30 +0000",
+        "units": "bpm"
+      }
+    ],
+    "end": "2022-08-04 19:13:34 +0000",
+    "name": "Outdoor Cycling",
+    "start": "2022-08-04 17:22:21 +0000",
+    "activeEnergy": {
+      "qty": 263.8509925551419,
+      "units": "kcal"
+    },
+    "humidity": {
+      "units": "%",
+      "qty": 75
+    },
+    "totalSwimmingStrokeCount": {
+      "qty": 0,
+      "units": "count"
+    },
+    "elevation": {
+      "descent": 0,
+      "ascent": 147.24409448818898,
+      "units": "ft"
+    },
+    "isIndoor": false,
+    "speed": {
+      "units": "mi/hr",
+      "qty": 5.248847070614746
+    },
+    "duration": 6491.024569034576,
+    "distance": {
+      "units": "mi",
+      "qty": 9.463998692907078
+    },
+    "stepCount": {
+      "units": "steps",
+      "qty": 1095
+    },
+    "swimCadence": {
+      "units": "spm",
+      "qty": 0
+    },
+    "intensity": {
+      "qty": 3.076901543134426,
+      "units": "MET"
+    },
+    "heartRateData": [
+      {
+        "date": "2022-08-04 17:22:21 +0000",
+        "qty": 71.86214811842476,
+        "units": "bpm"
+      }
+    ],
+    "avgHeartRate": {
+      "units": "bpm",
+      "qty": 71.86214811842476
+    },
+    "location": "Outdoor",
+    "stepCadence": {
+      "units": "spm",
+      "qty": 10.121668667443004
+    },
+    "maxHeartRate": {
+      "units": "bpm",
+      "qty": 83
+    },
+    "flightsClimbed": {
+      "qty": 0,
+      "units": "count"
+    },
+    "temperature": {
+      "units": "degF",
+      "qty": 60.79999923706055
+    }
+  },
+  {
+    "heartRateRecovery": [
+      {
+        "date": "2023-07-16 19:21:43 +0000",
+        "qty": 88,
+        "units": "bpm"
+      },
+      {
+        "qty": 88,
+        "units": "bpm",
+        "date": "2023-07-16 19:21:48 +0000"
+      },
+      {
+        "date": "2023-07-16 19:21:51 +0000",
+        "units": "bpm",
+        "qty": 87
+      },
+      {
+        "date": "2023-07-16 19:21:55 +0000",
+        "units": "bpm",
+        "qty": 86
+      },
+      {
+        "units": "bpm",
+        "qty": 86,
+        "date": "2023-07-16 19:22:03 +0000"
+      },
+      {
+        "units": "bpm",
+        "date": "2023-07-16 19:22:13 +0000",
+        "qty": 84
+      },
+      {
+        "qty": 82,
+        "units": "bpm",
+        "date": "2023-07-16 19:22:18 +0000"
+      },
+      {
+        "date": "2023-07-16 19:22:19 +0000",
+        "units": "bpm",
+        "qty": 83
+      },
+      {
+        "date": "2023-07-16 19:22:24 +0000",
+        "qty": 84,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "qty": 83,
+        "date": "2023-07-16 19:22:30 +0000"
+      },
+      {
+        "date": "2023-07-16 19:22:38 +0000",
+        "units": "bpm",
+        "qty": 80
+      },
+      {
+        "units": "bpm",
+        "date": "2023-07-16 19:22:43 +0000",
+        "qty": 78
+      },
+      {
+        "qty": 78,
+        "date": "2023-07-16 19:22:46 +0000",
+        "units": "bpm"
+      },
+      {
+        "qty": 83,
+        "units": "bpm",
+        "date": "2023-07-16 19:22:49 +0000"
+      },
+      {
+        "date": "2023-07-16 19:22:54 +0000",
+        "units": "bpm",
+        "qty": 87
+      },
+      {
+        "date": "2023-07-16 19:23:03 +0000",
+        "qty": 79,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "qty": 78,
+        "date": "2023-07-16 19:23:08 +0000"
+      },
+      {
+        "units": "bpm",
+        "qty": 79,
+        "date": "2023-07-16 19:23:13 +0000"
+      },
+      {
+        "units": "bpm",
+        "qty": 78,
+        "date": "2023-07-16 19:23:15 +0000"
+      },
+      {
+        "date": "2023-07-16 19:23:19 +0000",
+        "qty": 77.00000000000001,
+        "units": "bpm"
+      },
+      {
+        "date": "2023-07-16 19:23:24 +0000",
+        "qty": 79,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "qty": 77.00000000000001,
+        "date": "2023-07-16 19:23:33 +0000"
+      }
+    ],
+    "distance": {
+      "qty": 9.777590085740394,
+      "units": "mi"
+    },
+    "swimCadence": {
+      "qty": 0,
+      "units": "spm"
+    },
+    "totalEnergy": {
+      "qty": 494.52031947639466,
+      "units": "kcal"
+    },
+    "heartRateData": [
+      {
+        "units": "bpm",
+        "date": "2023-07-16 17:07:36 +0000",
+        "qty": 75.05477591570059
+      }
+    ],
+    "name": "Outdoor Cycling",
+    "end": "2023-07-16 19:21:38 +0000",
+    "location": "Outdoor",
+    "temperature": {
+      "qty": 78.06199999999558,
+      "units": "degF"
+    },
+    "speed": {
+      "units": "mi/hr",
+      "qty": 5.116473822961989
+    },
+    "isIndoor": false,
+    "stepCadence": {
+      "qty": 4.247336221455376,
+      "units": "spm"
+    },
+    "elevation": {
+      "ascent": 104.23228346456692,
+      "units": "ft",
+      "descent": 0
+    },
+    "intensity": {
+      "qty": 2.9410384139668233,
+      "units": "MET"
+    },
+    "totalSwimmingStrokeCount": {
+      "qty": 0,
+      "units": "count"
+    },
+    "duration": 6879.6060581207275,
+    "activeEnergy": {
+      "qty": 265.1833194763969,
+      "units": "kcal"
+    },
+    "avgHeartRate": {
+      "qty": 75.05477591570059,
+      "units": "bpm"
+    },
+    "maxHeartRate": {
+      "qty": 97,
+      "units": "bpm"
+    },
+    "start": "2023-07-16 17:07:36 +0000",
+    "flightsClimbed": {
+      "qty": 0,
+      "units": "count"
+    },
+    "humidity": {
+      "qty": 54,
+      "units": "%"
+    },
+    "stepCount": {
+      "qty": 487,
+      "units": "steps"
+    }
+  },
+  {
+    "intensity": {
+      "qty": 4.564595574318538,
+      "units": "MET"
+    },
+    "temperature": {
+      "units": "degF",
+      "qty": 65.73199999999574
+    },
+    "location": "Outdoor",
+    "maxHeartRate": {
+      "qty": 122.99999999999999,
+      "units": "bpm"
+    },
+    "swimCadence": {
+      "units": "spm",
+      "qty": 0
+    },
+    "elevation": {
+      "ascent": 1309.9409448818897,
+      "descent": 0,
+      "units": "ft"
+    },
+    "humidity": {
+      "units": "%",
+      "qty": 21
+    },
+    "heartRateRecovery": [
+      {
+        "date": "2023-09-23 19:25:15 +0000",
+        "qty": 56,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "qty": 56,
+        "date": "2023-09-23 19:25:19 +0000"
+      },
+      {
+        "units": "bpm",
+        "qty": 56,
+        "date": "2023-09-23 19:25:21 +0000"
+      },
+      {
+        "qty": 55,
+        "date": "2023-09-23 19:25:30 +0000",
+        "units": "bpm"
+      },
+      {
+        "date": "2023-09-23 19:25:33 +0000",
+        "units": "bpm",
+        "qty": 55
+      },
+      {
+        "date": "2023-09-23 19:25:37 +0000",
+        "units": "bpm",
+        "qty": 55
+      },
+      {
+        "units": "bpm",
+        "date": "2023-09-23 19:25:41 +0000",
+        "qty": 57
+      },
+      {
+        "units": "bpm",
+        "qty": 60,
+        "date": "2023-09-23 19:25:46 +0000"
+      },
+      {
+        "units": "bpm",
+        "qty": 64,
+        "date": "2023-09-23 19:25:55 +0000"
+      },
+      {
+        "date": "2023-09-23 19:26:00 +0000",
+        "units": "bpm",
+        "qty": 58
+      },
+      {
+        "date": "2023-09-23 19:26:01 +0000",
+        "units": "bpm",
+        "qty": 58
+      },
+      {
+        "date": "2023-09-23 19:26:06 +0000",
+        "qty": 59,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "date": "2023-09-23 19:26:12 +0000",
+        "qty": 61
+      },
+      {
+        "date": "2023-09-23 19:26:20 +0000",
+        "units": "bpm",
+        "qty": 61
+      },
+      {
+        "units": "bpm",
+        "date": "2023-09-23 19:26:24 +0000",
+        "qty": 58
+      },
+      {
+        "qty": 56,
+        "units": "bpm",
+        "date": "2023-09-23 19:26:30 +0000"
+      },
+      {
+        "units": "bpm",
+        "date": "2023-09-23 19:26:32 +0000",
+        "qty": 56
+      },
+      {
+        "qty": 56,
+        "date": "2023-09-23 19:26:36 +0000",
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "qty": 56,
+        "date": "2023-09-23 19:26:45 +0000"
+      },
+      {
+        "units": "bpm",
+        "date": "2023-09-23 19:26:46 +0000",
+        "qty": 56
+      },
+      {
+        "units": "bpm",
+        "qty": 57,
+        "date": "2023-09-23 19:26:55 +0000"
+      },
+      {
+        "date": "2023-09-23 19:26:56 +0000",
+        "qty": 57,
+        "units": "bpm"
+      },
+      {
+        "date": "2023-09-23 19:27:05 +0000",
+        "qty": 58,
+        "units": "bpm"
+      },
+      {
+        "date": "2023-09-23 19:27:07 +0000",
+        "units": "bpm",
+        "qty": 58
+      }
+    ],
+    "speed": {
+      "units": "mi/hr",
+      "qty": 5.210340986734002
+    },
+    "totalEnergy": {
+      "qty": 725.8251029290033,
+      "units": "kcal"
+    },
+    "end": "2023-09-23 19:25:08 +0000",
+    "activeEnergy": {
+      "units": "kcal",
+      "qty": 487.0321029290057
+    },
+    "start": "2023-09-23 16:40:11 +0000",
+    "stepCount": {
+      "units": "steps",
+      "qty": 814
+    },
+    "duration": 9415.49330508709,
+    "isIndoor": false,
+    "heartRateData": [
+      {
+        "units": "bpm",
+        "date": "2023-09-23 16:40:11 +0000",
+        "qty": 67.76856242926388
+      }
+    ],
+    "name": "Outdoor Cycling",
+    "totalSwimmingStrokeCount": {
+      "units": "count",
+      "qty": 0
+    },
+    "flightsClimbed": {
+      "qty": 0,
+      "units": "count"
+    },
+    "avgHeartRate": {
+      "qty": 67.76856242926388,
+      "units": "bpm"
+    },
+    "stepCadence": {
+      "units": "spm",
+      "qty": 5.18719502180648
+    },
+    "distance": {
+      "qty": 13.62720296605968,
+      "units": "mi"
+    }
+  },
+  {
+    "speed": {
+      "qty": 5.6904283552144515,
+      "units": "mi/hr"
+    },
+    "totalEnergy": {
+      "qty": 774.0806472064676,
+      "units": "kcal"
+    },
+    "distance": {
+      "qty": 11.571060163330609,
+      "units": "mi"
+    },
+    "avgHeartRate": {
+      "qty": 71.759262338613,
+      "units": "bpm"
+    },
+    "flightsClimbed": {
+      "qty": 0,
+      "units": "count"
+    },
+    "location": "Outdoor",
+    "maxHeartRate": {
+      "units": "bpm",
+      "qty": 103
+    },
+    "totalSwimmingStrokeCount": {
+      "qty": 0,
+      "units": "count"
+    },
+    "heartRateData": [
+      {
+        "date": "2023-08-22 18:07:30 +0000",
+        "qty": 71.759262338613,
+        "units": "bpm"
+      }
+    ],
+    "name": "Outdoor Cycling",
+    "isIndoor": false,
+    "duration": 7320.330559968948,
+    "intensity": {
+      "qty": 3.0021307880958292,
+      "units": "MET"
+    },
+    "humidity": {
+      "qty": 60,
+      "units": "%"
+    },
+    "heartRateRecovery": [
+      {
+        "qty": 85,
+        "units": "bpm",
+        "date": "2023-08-22 21:57:47 +0000"
+      },
+      {
+        "units": "bpm",
+        "date": "2023-08-22 21:57:51 +0000",
+        "qty": 85
+      },
+      {
+        "units": "bpm",
+        "qty": 83,
+        "date": "2023-08-22 21:57:56 +0000"
+      },
+      {
+        "date": "2023-08-22 21:58:05 +0000",
+        "qty": 83,
+        "units": "bpm"
+      },
+      {
+        "date": "2023-08-22 21:58:08 +0000",
+        "units": "bpm",
+        "qty": 82
+      },
+      {
+        "qty": 82,
+        "date": "2023-08-22 21:58:11 +0000",
+        "units": "bpm"
+      },
+      {
+        "qty": 82,
+        "date": "2023-08-22 21:58:16 +0000",
+        "units": "bpm"
+      },
+      {
+        "date": "2023-08-22 21:58:25 +0000",
+        "qty": 81,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "qty": 84,
+        "date": "2023-08-22 21:58:30 +0000"
+      },
+      {
+        "units": "bpm",
+        "date": "2023-08-22 21:58:31 +0000",
+        "qty": 84
+      },
+      {
+        "date": "2023-08-22 21:58:36 +0000",
+        "qty": 83,
+        "units": "bpm"
+      },
+      {
+        "date": "2023-08-22 21:58:41 +0000",
+        "units": "bpm",
+        "qty": 81
+      },
+      {
+        "units": "bpm",
+        "qty": 80,
+        "date": "2023-08-22 21:58:49 +0000"
+      },
+      {
+        "qty": 77.00000000000001,
+        "date": "2023-08-22 21:58:55 +0000",
+        "units": "bpm"
+      },
+      {
+        "date": "2023-08-22 21:59:00 +0000",
+        "units": "bpm",
+        "qty": 76
+      },
+      {
+        "qty": 76,
+        "date": "2023-08-22 21:59:03 +0000",
+        "units": "bpm"
+      },
+      {
+        "qty": 75,
+        "units": "bpm",
+        "date": "2023-08-22 21:59:09 +0000"
+      },
+      {
+        "date": "2023-08-22 21:59:11 +0000",
+        "qty": 76,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "date": "2023-08-22 21:59:17 +0000",
+        "qty": 76
+      },
+      {
+        "qty": 80,
+        "date": "2023-08-22 21:59:21 +0000",
+        "units": "bpm"
+      },
+      {
+        "qty": 80,
+        "date": "2023-08-22 21:59:28 +0000",
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "date": "2023-08-22 21:59:33 +0000",
+        "qty": 79
+      },
+      {
+        "date": "2023-08-22 21:59:40 +0000",
+        "units": "bpm",
+        "qty": 81
+      }
+    ],
+    "end": "2023-08-22 21:57:43 +0000",
+    "activeEnergy": {
+      "units": "kcal",
+      "qty": 370.49164720645047
+    },
+    "stepCadence": {
+      "qty": 16.212382627773493,
+      "units": "spm"
+    },
+    "start": "2023-08-22 18:07:30 +0000",
+    "swimCadence": {
+      "qty": 0,
+      "units": "spm"
+    },
+    "elevation": {
+      "ascent": 179.56036745406826,
+      "descent": 0,
+      "units": "ft"
+    },
+    "temperature": {
+      "units": "degF",
+      "qty": 87.78199999999556
+    },
+    "stepCount": {
+      "qty": 1978,
+      "units": "steps"
+    }
+  },
+  {
+    "stepCadence": {
+      "qty": 18.676803235112132,
+      "units": "spm"
+    },
+    "stepCount": {
+      "units": "steps",
+      "qty": 82
+    },
+    "activeEnergy": {
+      "qty": 0.0038675767564877485,
+      "units": "kcal"
+    },
+    "intensity": {
+      "qty": 0,
+      "units": "MET"
+    },
+    "name": "Outdoor Cycling",
+    "location": "Outdoor",
+    "totalEnergy": {
+      "qty": 6.2218675767564875,
+      "units": "kcal"
+    },
+    "speed": {
+      "qty": 0.756997808613535,
+      "units": "mi/hr"
+    },
+    "isIndoor": false,
+    "duration": 263.4283789396286,
+    "swimCadence": {
+      "units": "spm",
+      "qty": 0
+    },
+    "elevation": {
+      "units": "ft",
+      "descent": 0,
+      "ascent": 0
+    },
+    "avgHeartRate": {
+      "qty": 70.78707224493242,
+      "units": "bpm"
+    },
+    "totalSwimmingStrokeCount": {
+      "qty": 0,
+      "units": "count"
+    },
+    "distance": {
+      "units": "mi",
+      "qty": 0.05539297377330965
+    },
+    "flightsClimbed": {
+      "qty": 0,
+      "units": "count"
+    },
+    "humidity": {
+      "qty": 61,
+      "units": "%"
+    },
+    "end": "2023-08-22 17:59:42 +0000",
+    "heartRateData": [
+      {
+        "units": "bpm",
+        "date": "2023-08-22 17:55:18 +0000",
+        "qty": 70.78707224493242
+      }
+    ],
+    "start": "2023-08-22 17:55:18 +0000",
+    "heartRateRecovery": [
+      {
+        "units": "bpm",
+        "date": "2023-08-22 17:59:49 +0000",
+        "qty": 65
+      },
+      {
+        "units": "bpm",
+        "date": "2023-08-22 17:59:54 +0000",
+        "qty": 67
+      },
+      {
+        "units": "bpm",
+        "date": "2023-08-22 17:59:59 +0000",
+        "qty": 69
+      },
+      {
+        "date": "2023-08-22 18:00:04 +0000",
+        "qty": 69,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "date": "2023-08-22 18:00:09 +0000",
+        "qty": 67
+      },
+      {
+        "units": "bpm",
+        "date": "2023-08-22 18:00:13 +0000",
+        "qty": 67
+      },
+      {
+        "qty": 68,
+        "date": "2023-08-22 18:00:15 +0000",
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "date": "2023-08-22 18:00:21 +0000",
+        "qty": 66
+      },
+      {
+        "date": "2023-08-22 18:00:27 +0000",
+        "qty": 65,
+        "units": "bpm"
+      },
+      {
+        "date": "2023-08-22 18:00:30 +0000",
+        "units": "bpm",
+        "qty": 66
+      },
+      {
+        "units": "bpm",
+        "date": "2023-08-22 18:00:35 +0000",
+        "qty": 66
+      },
+      {
+        "units": "bpm",
+        "date": "2023-08-22 18:00:40 +0000",
+        "qty": 67
+      },
+      {
+        "date": "2023-08-22 18:00:45 +0000",
+        "qty": 67,
+        "units": "bpm"
+      },
+      {
+        "qty": 70,
+        "units": "bpm",
+        "date": "2023-08-22 18:00:54 +0000"
+      },
+      {
+        "qty": 71,
+        "units": "bpm",
+        "date": "2023-08-22 18:00:59 +0000"
+      },
+      {
+        "units": "bpm",
+        "date": "2023-08-22 18:01:00 +0000",
+        "qty": 71
+      },
+      {
+        "date": "2023-08-22 18:01:05 +0000",
+        "qty": 72,
+        "units": "bpm"
+      },
+      {
+        "date": "2023-08-22 18:01:14 +0000",
+        "units": "bpm",
+        "qty": 71
+      },
+      {
+        "date": "2023-08-22 18:01:15 +0000",
+        "qty": 72,
+        "units": "bpm"
+      },
+      {
+        "qty": 71,
+        "units": "bpm",
+        "date": "2023-08-22 18:01:22 +0000"
+      },
+      {
+        "units": "bpm",
+        "qty": 74,
+        "date": "2023-08-22 18:01:29 +0000"
+      },
+      {
+        "date": "2023-08-22 18:01:34 +0000",
+        "qty": 73,
+        "units": "bpm"
+      },
+      {
+        "units": "bpm",
+        "date": "2023-08-22 18:01:37 +0000",
+        "qty": 74
+      }
+    ],
+    "maxHeartRate": {
+      "units": "bpm",
+      "qty": 94
+    },
+    "temperature": {
+      "qty": 87.34999999999555,
+      "units": "degF"
+    }
+  }
+]

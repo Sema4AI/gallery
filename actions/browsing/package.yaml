@@ -2,10 +2,10 @@
 name: Browsing
 
 # Required: A description of what's in the action package
-description: Base actions needed to get information from websites and interact with them.
+description: Get information from websites, and interact with them.
 
 # Package version number, recommend using semver.org
-version: 1.0.0
+version: 1.0.1
 
 dependencies:
   conda-forge:
