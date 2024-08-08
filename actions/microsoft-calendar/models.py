@@ -250,8 +250,9 @@ class CreateEvent(BaseEvent):
     timeZone: Annotated[
         str,
         Field(
-            description="The Windows available timezone of the start and end time."
-            "Either ask for it or get the system timezone"
+            description="Specifies the timezone for the start or end date. "
+            "This field is required when defining a start or end date. By default, it should match the value "
+            "returned by the get_mailbox_timezone action unless specified otherwise by the user."
         ),
     ]
     attendees: Annotated[
@@ -293,9 +294,10 @@ class UpdateEvent(CreateEvent):
         str | None, Field(description="The end date and time of the event")
     ] = None
     timeZone: Annotated[
-        str,
+        str | None,
         Field(
-            description="The Windows available timezone of the start or end time. Must be provided when you define "
-            "start or end date. Either ask for it or get the system timezone"
+            description="Specifies the timezone for the start or end date. "
+            "This field is required when defining a start or end date. By default, it should match the value "
+            "returned by the get_mailbox_timezone action unless specified otherwise by the user."
         ),
     ] = None

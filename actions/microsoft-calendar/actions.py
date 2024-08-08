@@ -6,11 +6,16 @@ from sema4ai.actions import OAuth2Secret, Response, action
 from models import Calendar, CreateEvent, Event, QueryParams, UpdateEvent
 
 
-def _build_headers(token):
-    return {
+def _build_headers(token, timezone=None):
+    headers = {
         "Authorization": f"Bearer {token.access_token}",
         "Content-Type": "application/json",
     }
+
+    if timezone:
+        headers["Prefer"] = f'outlook.timezone="{timezone}"'
+
+    return headers
 
 
 @action(is_consequential=True)
@@ -70,10 +75,28 @@ def update_event(
     Returns:
         Updated event details.
     """
+
+    headers = _build_headers(credentials)
+    updates_json = updates.model_dump(
+        mode="json", exclude_none=True, exclude={"timeZone"}
+    )
+
+    # We add the new attendees to the existing ones, so we don't override them
+    if "attendees" in updates_json:
+        response = requests.get(
+            f"https://graph.microsoft.com/v1.0/me/events/{event_id}", headers=headers
+        )
+        if not response.status_code == 200:
+            return Response(error=response.text)
+
+        updates_json["attendees"] = updates_json["attendees"] + response.json().get(
+            "attendees", []
+        )
+
     response = requests.patch(
         f"https://graph.microsoft.com/v1.0/me/events/{event_id}",
-        headers=_build_headers(credentials),
-        json=updates.model_dump(mode="json", exclude_none=True, exclude={"timeZone"}),
+        headers=headers,
+        json=updates_json,
     )
 
     if response.status_code != 200:
@@ -89,6 +112,7 @@ def list_events(
         list[Literal["Calendars.Read"]],
     ],
     query_params: QueryParams,
+    timezone: str,
     calendar_id: str = "",
 ) -> Response[list[Event]]:
     """List all events in the user's calendar.
@@ -99,8 +123,12 @@ def list_events(
     Args:
         credentials: JSON containing Microsoft OAuth2 credentials.
         query_params: JSON containing the following query parameters:
-            - filter -> used to filter results based on different properties; details available at: https://learn.microsoft.com/en-us/graph/filter-query-parameter?tabs=http
+            - filter -> used to filter results based on different properties
+                Details available at: https://learn.microsoft.com/en-us/graph/filter-query-parameter?tabs=http.
+                Usage example: "start/dateTime ge '2024-08-07T00:00:00Z' and start/dateTime lt '2024-08-07T23:59:59Z'".
             - search -> used to search after a particular string
+        timezone: By default, it should match the value returned by the get_mailbox_timezone action unless specified
+            otherwise by the user. Queries and event dates will use the timezone specified.
         calendar_id: Calendar identifier which can be found by listing calendars action.
             Default value is using the user's default calendar.
 
@@ -114,7 +142,7 @@ def list_events(
 
     response = requests.get(
         url,
-        headers=_build_headers(credentials),
+        headers=_build_headers(credentials, timezone=timezone),
         params=query_params.model_dump(by_alias=True, exclude_none=True),
     )
 
@@ -155,3 +183,31 @@ def list_calendars(
     ]
 
     return Response(result=calendars)
+
+
+@action(is_consequential=False)
+def get_mailbox_timezone(
+    credentials: OAuth2Secret[
+        Literal["microsoft"],
+        list[Literal["MailboxSettings.Read"]],
+    ],
+) -> Response[str]:
+    """Returns the user's mailbox timezone.
+
+    This timezone should be used in all subsequent actions where a timezone is required.
+
+    Args:
+        credentials: JSON containing Microsoft OAuth2 credentials.
+
+    Returns:
+        User's mailbox timezone.
+    """
+    response = requests.get(
+        "https://graph.microsoft.com/v1.0/me/mailboxSettings/timeZone",
+        headers=_build_headers(credentials),
+    )
+
+    if response.status_code != 200:
+        return Response(error=response.text)
+
+    return Response(result=response.json()["value"])

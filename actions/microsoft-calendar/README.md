@@ -52,3 +52,4 @@ Scopes in use:
 
     - Calendars.Read
     - Calendars.ReadWrite
+    - MailboxSettings.Read
