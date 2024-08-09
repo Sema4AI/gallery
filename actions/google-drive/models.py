@@ -44,8 +44,9 @@ class File(BaseModel):
         ),
     ]
     owners: Annotated[
-        List[Owner], Field(description="A list of owners associated with the file")
-    ]
+        List[Owner] | None,
+        Field(description="A list of owners associated with the file"),
+    ] = None
     size: Annotated[str | None, Field(description="The file size in bytes")] = None
     version: Annotated[str, Field(description="The current version of the file")]
     webViewLink: Annotated[
