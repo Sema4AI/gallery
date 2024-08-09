@@ -6,12 +6,11 @@ Currently supporting:
 - Getting site by site id
 """
 
-import requests
 from sema4ai.actions import action, OAuth2Secret, Response, ActionError
 from typing import Literal
 from microsoft_sharepoint.support import (
-    BASE_GRAPH_URL,
     build_headers,
+    send_request,
 )
 
 
@@ -34,14 +33,10 @@ def get_sharepoint_site_id(
         Site details including the site id or error message
     """
     headers = build_headers(token)
-    response = requests.get(
-        f"{BASE_GRAPH_URL}/sites?search={site_name}",
-        headers=headers,
+    response_json = send_request(
+        "get", f"/sites?search={site_name}", "Get site id", headers=headers
     )
-    if response.status_code in [200, 201]:
-        return Response(result=response.json())
-    else:
-        raise ActionError(f"Failed to get site id: {response.text}")
+    return Response(result=response_json)
 
 
 @action
@@ -73,14 +68,10 @@ def get_sharepoint_site(
             raise ActionError("Multiple sites with the same name found.")
         site_id = response.result["value"][0]["id"]
     headers = build_headers(token)
-    response = requests.get(
-        f"{BASE_GRAPH_URL}/sites/{site_id}",
-        headers=headers,
+    response_json = send_request(
+        "get", f"/sites/{site_id}", "Get site", headers=headers
     )
-    if response.status_code in [200, 201]:
-        return Response(result=response.json())
-    else:
-        raise ActionError(f"Failed to get a site: {response.text}")
+    return Response(result=response_json)
 
 
 @action
@@ -100,11 +91,7 @@ def get_all_sharepoint_sites(
         Result of the operation
     """
     headers = build_headers(token)
-    response = requests.get(
-        f"{BASE_GRAPH_URL}/sites?search=*",
-        headers=headers,
+    response_json = send_request(
+        "get", "/sites?search=*", "Get all sites", headers=headers
     )
-    if response.status_code in [200, 201]:
-        return Response(result=response.json())
-    else:
-        raise ActionError(f"Failed to sites: {response.text}")
+    return Response(result=response_json)
