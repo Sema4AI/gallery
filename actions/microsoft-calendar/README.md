@@ -53,3 +53,7 @@ Scopes in use:
     - Calendars.Read
     - Calendars.ReadWrite
     - MailboxSettings.Read
+
+## Caveats
+
+There are no capabilities to delete or cancel an event.
