@@ -5,6 +5,11 @@ from sema4ai.actions import OAuth2Secret, Response, action
 
 from models import Calendar, CreateEvent, Event, QueryParams, UpdateEvent
 
+BASE_URL = "https://graph.microsoft.com/v1.0/me"
+EVENTS_ENDPOINT = f"{BASE_URL}/calendar/events"
+CALENDARS_ENDPOINT = f"{BASE_URL}/calendars"
+MAILBOX_ENDPOINT = f"{BASE_URL}/mailboxSettings/timeZone"
+
 
 def _build_headers(token, timezone=None):
     headers = {
@@ -40,9 +45,9 @@ def create_event(
     """
     headers = _build_headers(credentials)
 
-    url = "https://graph.microsoft.com/v1.0/me/calendar/events"
+    url = EVENTS_ENDPOINT
     if calendar_id:
-        url = f"https://graph.microsoft.com/v1.0/me/calendars/{calendar_id}/events"
+        url = f"{CALENDARS_ENDPOINT}/{calendar_id}/events"
 
     response = requests.post(
         url,
@@ -50,8 +55,7 @@ def create_event(
         json=event.model_dump(mode="json", exclude_none=True, exclude={"timeZone"}),
     )
 
-    if response.status_code != 201:
-        return Response(error=response.text)
+    response.raise_for_status()
 
     return Response(result=Event.model_validate(response.json()))
 
@@ -83,24 +87,23 @@ def update_event(
 
     # We add the new attendees to the existing ones, so we don't override them
     if "attendees" in updates_json:
-        response = requests.get(
-            f"https://graph.microsoft.com/v1.0/me/events/{event_id}", headers=headers
-        )
-        if not response.status_code == 200:
-            return Response(error=response.text)
+        response = requests.get(f"{BASE_URL}/events/{event_id}", headers=headers)
+        response.raise_for_status()
 
-        updates_json["attendees"] = updates_json["attendees"] + response.json().get(
-            "attendees", []
-        )
+        current_event = Event.model_validate(response.json())
+        attendees = [
+            attendee.model_dump(mode="json") for attendee in current_event.attendees
+        ]
+
+        updates_json["attendees"] = updates_json["attendees"] + attendees
 
     response = requests.patch(
-        f"https://graph.microsoft.com/v1.0/me/events/{event_id}",
+        f"{BASE_URL}/events/{event_id}",
         headers=headers,
         json=updates_json,
     )
 
-    if response.status_code != 200:
-        return Response(error=response.text)
+    response.raise_for_status()
 
     return Response(result=Event.model_validate(response.json()))
 
@@ -136,9 +139,9 @@ def list_events(
         A list of calendar events that match the query, if defined.
 
     """
-    url = "https://graph.microsoft.com/v1.0/me/calendar/events"
+    url = EVENTS_ENDPOINT
     if calendar_id:
-        url = f"https://graph.microsoft.com/v1.0/me/calendars/{calendar_id}/events"
+        url = f"{CALENDARS_ENDPOINT}/{calendar_id}/events"
 
     response = requests.get(
         url,
@@ -146,8 +149,7 @@ def list_events(
         params=query_params.model_dump(by_alias=True, exclude_none=True),
     )
 
-    if response.status_code != 200:
-        return Response(error=response.text)
+    response.raise_for_status()
 
     events = [Event.model_validate(event) for event in response.json()["value"]]
 
@@ -171,12 +173,11 @@ def list_calendars(
 
     """
     response = requests.get(
-        "https://graph.microsoft.com/v1.0/me/calendars",
+        CALENDARS_ENDPOINT,
         headers=_build_headers(credentials),
     )
 
-    if response.status_code != 200:
-        return Response(error=response.text)
+    response.raise_for_status()
 
     calendars = [
         Calendar.model_validate(calendar) for calendar in response.json()["value"]
@@ -203,11 +204,10 @@ def get_mailbox_timezone(
         User's mailbox timezone.
     """
     response = requests.get(
-        "https://graph.microsoft.com/v1.0/me/mailboxSettings/timeZone",
+        MAILBOX_ENDPOINT,
         headers=_build_headers(credentials),
     )
 
-    if response.status_code != 200:
-        return Response(error=response.text)
+    response.raise_for_status()
 
     return Response(result=response.json()["value"])
