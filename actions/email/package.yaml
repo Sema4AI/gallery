@@ -2,10 +2,10 @@
 name: Email sending
 
 # Required: A description of what's in the action package
-description: Base actions needed to send emails using Sema4.ai service.
+description: Base actions needed to send emails using any SMTP service.
 
 # Package version number, recommend using semver.org
-version: 0.1.0
+version: 0.1.1
 
 dependencies:
   conda-forge:
