@@ -4,9 +4,6 @@ Please include a summary of the change and which issue is fixed or feature devel
 
 Please also include relevant motivation and context. List any dependencies that are required for this change.
 
-Link to the Linear Issue: # (issue)
-(this can also be specified in the title of the PR)
-
 ## How can (was) this tested?
 
 Please describe the tests that you ran to verify your changes.
