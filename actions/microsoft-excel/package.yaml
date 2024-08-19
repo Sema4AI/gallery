@@ -4,7 +4,7 @@ name: Microsoft 365 Excel
 # Required: A description of what's in the action package.
 description: Actions for manipulating Microsoft 365 Excel files.
 
-version: 0.0.1
+version: 1.0.0
 
 dependencies:
   conda-forge:
@@ -13,6 +13,8 @@ dependencies:
   pypi:
   - sema4ai-actions=0.10.0
   - httpx=0.27.0
+  - XlsxWriter=3.2.0
+
 
 packaging:
   # By default, all files and folders in this directory are packaged when uploaded.

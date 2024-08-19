@@ -2,8 +2,7 @@ from typing import Literal
 
 from sema4ai.actions import OAuth2Secret, Response, action
 
-from microsoft_excel._client import Client, get_client  # noqa: F401
-from microsoft_excel.models.worksheet import WorksheetInfo
+from microsoft_excel._client import Client, create_worksheet, get_client  # noqa: F401
 
 
 @action(is_consequential=True)
@@ -26,13 +25,9 @@ def add_sheet_action(
         Message containing the spreadsheet title and url.
     """
 
-    payload = {"name": worksheet_name} if worksheet_name.strip() else None
-
     with get_client(token) as client:  # type: Client
-        response = client.post(
-            WorksheetInfo,
-            f"/me/drive/items/{workbook_id}/workbook/worksheets/add",
-            json=payload,
+        return Response(
+            result=create_worksheet(
+                client, workbook_id=workbook_id, worksheet_name=worksheet_name
+            )
         )
-
-        return Response(result=response)

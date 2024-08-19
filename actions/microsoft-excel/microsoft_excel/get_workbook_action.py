@@ -3,9 +3,14 @@ from typing import Annotated, Literal
 from pydantic import BaseModel, Field, OnErrorOmit
 from sema4ai.actions import ActionError, OAuth2Secret, Response, action
 
-from microsoft_excel._client import Client, get_client  # noqa: F401
+from microsoft_excel._client import (  # noqa: F401
+    Client,
+    get_client,
+    load_worksheets_for_workbook,
+)
 from microsoft_excel._constants import EXCEL_MIME_TYPE, FILE_EXTENSION
-from microsoft_excel.models import APIResponse, Workbook
+from microsoft_excel.models import APIResponse
+from microsoft_excel.models.workbook import Workbook
 
 
 class _File(BaseModel, extra="ignore"):
@@ -19,13 +24,14 @@ class _Item(BaseModel, extra="ignore"):
     # "OnErrorOmit[_Item]" tells pydantic to omit any item from the list that fails validation,
     # and since we restrict file.mime_type to the Excel mimetype any non-Excel files will error out.
     file: _File
+    web_url: Annotated[str, Field(validation_alias="webUrl")]
 
     def match_name(self, value: str) -> bool:
         return f"{value.lower()}.{FILE_EXTENSION}" == self.name.lower()
 
     def as_workbook(self, client: Client) -> Workbook:
-        workbook = Workbook(id=self.id, name=self.name)
-        return workbook.load_worksheets(client)
+        workbook = Workbook(id=self.id, name=self.name, web_url=self.web_url)
+        return load_worksheets_for_workbook(client, workbook)
 
 
 _SearchResponse = APIResponse[OnErrorOmit[_Item]]
@@ -62,7 +68,7 @@ def get_workbook_by_name(
         while True:
             for item in response.value:  # type: _Item
                 if item.match_name(workbook_name):
-                    return Response(result=item.as_workbook(client))
+                    return Response[Workbook](result=item.as_workbook(client))
 
                 if item.name.lower() not in workbook_name.lower():
                     continue

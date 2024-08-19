@@ -155,8 +155,6 @@ def update_range_action(
 
     url = f"/me/drive/items/{workbook_id}/workbook/worksheets/{worksheet_id_or_name}/range(address='{data.address}')"
 
-    print(data.start_cell, data.end_cell, data.address)
-
     with get_client(token) as client:  # type: Client
         match data.operation:
             case "insert_shift_right" | "insert_shift_down" as op:

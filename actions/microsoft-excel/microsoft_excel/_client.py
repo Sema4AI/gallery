@@ -1,12 +1,19 @@
 from contextlib import contextmanager
 from functools import partial
+from io import BytesIO
 from pprint import pprint
 from typing import Callable, TypeVar
 
+import xlsxwriter
 from httpx import Client as HTTPXClient
 from httpx import HTTPStatusError
 from pydantic import BaseModel
-from sema4ai.actions import OAuth2Secret
+from sema4ai.actions import ActionError, OAuth2Secret
+
+from microsoft_excel._constants import EXCEL_MIME_TYPE
+from microsoft_excel.models import APIResponse
+from microsoft_excel.models.workbook import Workbook
+from microsoft_excel.models.worksheet import WorksheetInfo
 
 T = TypeVar("T", bound=BaseModel)
 
@@ -61,6 +68,52 @@ def get_client(token: OAuth2Secret) -> Client:
         yield client
     except HTTPStatusError as exc:
         # TODO add specific error handling
+        if exc.response:
+            raise ActionError(exc.response.text)
         raise exc
     finally:
         client.close()
+
+
+def create_workbook(client: Client, workbook_name: str) -> Workbook:
+    output = BytesIO()
+    workbook_name = f"{workbook_name}.xlsx"
+    with xlsxwriter.Workbook(output, {"in_memory": True}) as local_workbook:
+        local_worksheet = local_workbook.add_worksheet()
+        local_worksheet.activate()
+
+    workbook = client.put(
+        Workbook,
+        f"/me/drive/root:/{workbook_name}:/content",
+        headers={"Content-Type": EXCEL_MIME_TYPE},
+        data=output.getvalue(),
+    )
+
+    return workbook
+
+
+def create_worksheet(
+    client: Client, *, workbook_id: str, worksheet_name: str | None = None
+) -> WorksheetInfo:
+    if worksheet_name and worksheet_name.strip():
+        request_kwargs = {"json": {"name": worksheet_name}}
+    else:
+        request_kwargs = {}
+
+    return client.post(
+        WorksheetInfo,
+        f"/me/drive/items/{workbook_id}/workbook/worksheets/add",
+        **request_kwargs,
+    )
+
+
+def load_worksheets_for_workbook(client: Client, workbook: Workbook) -> Workbook:
+    if workbook.worksheets is None:
+        worksheet_info = client.get(
+            APIResponse[WorksheetInfo],
+            f"/me/drive/items/{workbook.id}/workbook/worksheets",
+        )
+
+        workbook.worksheets = worksheet_info.value
+
+    return workbook

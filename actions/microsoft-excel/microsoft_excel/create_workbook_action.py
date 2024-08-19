@@ -1,19 +1,9 @@
-from typing import Annotated, Literal
+from typing import Literal
 
-from pydantic import AliasPath, Field
 from sema4ai.actions import OAuth2Secret, Response, action
 
-from microsoft_excel._client import Client, get_client  # noqa: F401
-from microsoft_excel._constants import EXCEL_MIME_TYPE
-from microsoft_excel.models import Workbook
-
-
-class NewWorkbook(Workbook):
-    download_url: Annotated[
-        str,
-        Field(validation_alias=AliasPath("@microsoft.graph.downloadUrl")),
-    ]
-    web_url: Annotated[str, Field(validation_alias=AliasPath("webUrl"))]
+from microsoft_excel._client import Client, create_workbook, get_client  # noqa: F401
+from microsoft_excel.models.workbook import Workbook
 
 
 @action(is_consequential=True)
@@ -23,7 +13,7 @@ def create_workbook_action(
         Literal["microsoft"],
         list[Literal["Files.ReadWrite"]],
     ],
-) -> Response[NewWorkbook]:
+) -> Response[Workbook]:
     """Creates a new empty workbook (Excel document).
 
     Args:
@@ -34,11 +24,4 @@ def create_workbook_action(
     """
 
     with get_client(token) as client:  # type: Client
-        response = client.put(
-            NewWorkbook,
-            f"/drive/root:/{workbook_name}.xlsx:/content",
-            headers={"Content-Type": EXCEL_MIME_TYPE},
-            data=b"",
-        )
-
-        return Response(result=response.load_worksheets(client))
+        return Response(result=create_workbook(client, workbook_name))

@@ -2,9 +2,7 @@ from functools import cached_property
 from typing import Any
 
 from pydantic import BaseModel, Field, computed_field
-from typing_extensions import Annotated, Self
-
-from microsoft_excel._client import Client
+from typing_extensions import Annotated
 
 
 class Range(BaseModel):
@@ -35,10 +33,6 @@ class Range(BaseModel):
         return self.address.split("!", 1)[0]
 
 
-def _get_range(client: Client, worksheet_url: str) -> Range:
-    return client.get(Range, f"{worksheet_url}/range/usedRange")
-
-
 class WorksheetInfo(BaseModel, extra="ignore"):
     id: Annotated[str, Field(description="Worksheet ID")]
     name: str
@@ -58,9 +52,3 @@ class WorksheetInfo(BaseModel, extra="ignore"):
 
 class Worksheet(WorksheetInfo):
     range: Range
-
-    @classmethod
-    def from_info(cls, client: Client, info: WorksheetInfo, worksheet_url: str) -> Self:
-        return cls.model_validate(
-            {**info.model_dump(), "range": _get_range(client, worksheet_url)}
-        )

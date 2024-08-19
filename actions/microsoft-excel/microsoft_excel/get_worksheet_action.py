@@ -3,7 +3,7 @@ from typing import Literal
 from sema4ai.actions import OAuth2Secret, Response, action
 
 from microsoft_excel._client import Client, get_client  # noqa: F401
-from microsoft_excel.models.worksheet import Worksheet, WorksheetInfo
+from microsoft_excel.models.worksheet import Range, Worksheet, WorksheetInfo
 
 
 @action(is_consequential=False)
@@ -30,11 +30,10 @@ def get_worksheet_action(
 
     with get_client(token=token) as client:  # type: Client
         worksheet_info = client.get(WorksheetInfo, worksheet_url)
+        worksheet_range = client.get(Range, f"{worksheet_url}/range/usedRange")
 
-        worksheet = Worksheet.from_info(
-            client,
-            worksheet_info,
-            worksheet_url,
+        worksheet = Worksheet.model_validate(
+            {**worksheet_info.model_dump(), "range": worksheet_range}
         )
 
         return Response(result=worksheet)
