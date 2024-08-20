@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [3.0.0] - 2024-08-14
+
+### Added
+
+- Added `update_sheet_rows` function to update individual cells or a range of cells, supporting both horizontal and vertical data insertion
+
+### Changed
+
+- Removed `headers` attribute from the `Table` model
+- Removed `has_header` parameter from `get_cell` and `get_sheet_content` function to eliminate LLM confusion
+
+### Removed
+
+- Removed the `set_cell` function in favor of the more flexible `update_sheet_rows` function.
+
 ## [2.0.1] - 2024-07-31
 
 Description changed.

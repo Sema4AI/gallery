@@ -5,6 +5,7 @@ retrieving and setting data from/into their cells.
 """
 
 import contextlib
+import re
 from pathlib import Path
 
 from robocorp import excel, log
@@ -81,11 +82,21 @@ def _open_workbook(
         workbook.save(path, overwrite=True)
 
 
-def _row2index(row: str, *, has_header: bool) -> int:
-    # Computes the actual row index by excluding the header if present.
-    row_offset = int(has_header)
-    row_index = int(row) + row_offset
-    return row_index
+def _column_to_number(column) -> int:
+    """Convert Excel-style column letter to number (e.g., 'A' -> 1, 'AD' -> 30)."""
+    number = 0
+    for char in column:
+        number = number * 26 + (ord(char) - ord("A") + 1)
+    return number
+
+
+def _extract_column_and_row(cell):
+    """Extract the column letters and row number from a cell reference like 'AD2'."""
+    match = re.match(r"([A-Z]+)(\d+)", cell, re.I)
+    if match:
+        return match.groups()
+    else:
+        raise ActionError("Invalid cell reference")
 
 
 @action(is_consequential=True)
@@ -180,14 +191,9 @@ def delete_worksheet(file_path: str, sheet_name: str) -> Response[str]:
 def add_rows(file_path: str, sheet_name: str, data_table: Table) -> Response[str]:
     """Add rows in an already existing worksheet of a workbook.
 
-    This action expects a table (list of lists) structure representing the rows and
-    columns you want to append in the sheet. Optionally, a header can be specified
-    right in the `data_table` input parameter, so one would be set at the beginning of
-    the sheet if needed, then the cells within a row can be mapped correctly to their
-    corresponding columns. If not null, this header is a vector containing the column
-    names you want to have as the first row in a newly filled sheet. Passing
-    a null to it will disregard the header presence and will rely on cells' order.
-    Will return an error message if the workbook or worksheet can't be found.
+    This will append the rows at the next empty index available. Only use this method on an empty file or
+    when you want to add data to the end of the file. If you want to add a new column or manipulate data
+    use `update_sheet_rows` instead.
 
     Args:
         file_path: The file name or a local path pointing to the workbook file.
@@ -195,59 +201,64 @@ def add_rows(file_path: str, sheet_name: str, data_table: Table) -> Response[str
         data_table: A 2D matrix containing the sheet cell values.
 
     Returns:
-        How many rows were added in the sheet, excluding the header when given.
+        How many rows were added in the sheet.
     """
-    header: list[str] = data_table.get_header()
-    table = ExcelTable(data=data_table.as_list(), columns=header)
-    effect = f"{len(table)} row(s) to sheet {sheet_name!r}"
+    table = ExcelTable(data=data_table.as_list())
 
+    effect = f"{len(table)} row(s) to sheet {sheet_name!r}"
     print(f"Adding {effect}...")
+
     with _open_workbook(file_path, sheet_name, sheet_required=True) as (_, worksheet):
-        worksheet.append_rows_to_worksheet(table, header=bool(header))
+        worksheet.append_rows_to_worksheet(table)
 
     return Response(result=f"{effect} were added successfully!")
 
 
 @action(is_consequential=True)
-def set_cell(
-    file_path: str,
-    sheet_name: str,
-    row: str,
-    column: str,
-    value: str,
-    has_header: bool = False,
+def update_sheet_rows(
+    file_path: str, sheet_name: str, start_cell: str, data: Table
 ) -> Response[str]:
-    """Set the value of a cell in an already existing worksheet of a workbook.
-
-    This action expects a string `value` to be written in the cell identified by the
-    given `row` and `column`. If `has_header` is true, then the row index number is
-    adjusted so it matches the target row in the sheet.
-    Will return an error message if the workbook or worksheet can't be found.
+    """Update a cell or a range of cells in a worksheet using A1 notation.
 
     Args:
         file_path: The file name or a local path pointing to the workbook file.
         sheet_name: The name of the sheet you want to store the rows into.
-        row: The row number starting with 1.
-        column: The column letter or index.
-        value: The cell value to be set.
-        has_header: Instructs the action about the presence of a header in the sheet.
+        start_cell: The cell from where to start the update. The end will be determined based on each row's length.
+        data: Data to be inserted into the cell or cells.
+
+    Example:
+        ```python
+            update_sheet_rows("Orders", "January Sheet", "A1", [["Order number"]])
+            update_sheet_rows("Orders", "January Sheet", "B1", [["Item"]])
+            update_sheet_rows("Orders", "January Sheet", "A2", [[5, "Macbook Pro"], [6, "iPhone"]])
+        ```
 
     Returns:
-        A confirmation with the cell set value given the provided position.
+         Message indicating the success or failure of the operation.
     """
-    with _open_workbook(file_path, sheet_name, sheet_required=True) as (_, worksheet):
-        worksheet.set_cell_value(
-            _row2index(row, has_header=has_header), column, str(value)
-        )
+    start_column, start_row = _extract_column_and_row(start_cell)
+    start_column_number = _column_to_number(start_column)
+    start_row = int(start_row)
 
-    return Response(
-        result=f"Value {value!r} set successfully at row {row!r} column {column!r}."
-    )
+    with _open_workbook(file_path, sheet_name, sheet_required=True) as (_, worksheet):
+        for i, row_values in enumerate(data.as_list()):
+            current_row = start_row + i  # Move down rows
+
+            for j, value in enumerate(row_values):
+                column_number = start_column_number + j  # Move across columns
+
+                worksheet.set_cell_value(
+                    row=current_row,
+                    column=column_number,
+                    value=str(value),
+                )
+
+    return Response(result="Rows were successfully updated.")
 
 
 @action(is_consequential=False)
 def get_cell(
-    file_path: str, sheet_name: str, row: str, column: str, has_header: bool = False
+    file_path: str, sheet_name: str, row: str, column: str
 ) -> Response[str | None]:
     """Retrieve the value of a cell from an already existing worksheet of a workbook.
 
@@ -259,7 +270,6 @@ def get_cell(
         sheet_name: The name of the sheet you want to store the rows into.
         row: The row number starting with 1.
         column: The column letter or index.
-        has_header: Instructs the action about the presence of a header in the sheet.
 
     Returns:
         The value found at the given `row` and `column`.
@@ -268,26 +278,21 @@ def get_cell(
         _,
         worksheet,
     ):
-        value = worksheet.get_cell_value(_row2index(row, has_header=has_header), column)
+        value = worksheet.get_cell_value(row, column)
 
     return Response(result=value)
 
 
 @action(is_consequential=False)
-def get_sheet_content(
-    file_path: str, sheet_name: str, has_header: bool = False
-) -> Response[Table]:
+def get_sheet_content(file_path: str, sheet_name: str) -> Response[Table]:
     """Retrieve the whole content of an already existing worksheet of a workbook.
 
     This action retrieves all the cells found in the sheet and returns them in a table
-    structure. When set truthy, the `has_header` parameter will allow the action to
-    consider the first row in the sheet a header instead of an usual table row.
-    Will return an error message if the workbook or worksheet can't be found.
+    structure.
 
     Args:
         file_path: The file name or a local path pointing to the workbook file.
         sheet_name: The name of the sheet you want to store the rows into.
-        has_header: Instructs the action about the presence of a header in the sheet.
 
     Returns:
         A table structure capturing the entire content from the requested sheet.
@@ -296,14 +301,13 @@ def get_sheet_content(
         _,
         worksheet,
     ):
-        sheet_table = worksheet.as_table(header=has_header)
+        sheet_table = worksheet.as_table()
 
-    header = Row(cells=sheet_table.columns) if has_header else None
     rows = []
     for sheet_row in sheet_table.iter_lists(with_index=False):
         rows.append(Row(cells=sheet_row))
 
-    return Response(result=Table(header=header, rows=rows))
+    return Response(result=Table(rows=rows))
 
 
 @action(is_consequential=False)
@@ -312,7 +316,6 @@ def get_workbook_schema(file_path: str) -> Response[Schema]:
 
     This action identifies the sheets found in the given workbook and for each one of
     them it presents the first row which usually represents the header of the sheet.
-    Will return an error message if the workbook can't be found.
 
     Args:
         file_path: The file name or a local path pointing to the workbook file.
