@@ -148,7 +148,7 @@ def search_user(
         Literal["microsoft"],
         list[Literal["User.Read.All"]],
     ],
-) -> Response[dict]:
+) -> Response[list[dict]]:
     """
     Search for a user by email, first name, or last name.
 

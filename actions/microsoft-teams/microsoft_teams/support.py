@@ -21,13 +21,23 @@ def parse_channel_messages(response_data: dict) -> list:
     parsed_messages = []
 
     for message in response_data.get("value", []):
-        parsed_message = {
-            "id": message.get("id"),
-            "createdDateTime": message.get("createdDateTime"),
-            "from": message.get("from", {}).get("user", {}).get("displayName"),
-            "sender_id": message.get("from", {}).get("user", {}).get("id"),
-            "content": message.get("body", {}).get("content"),
-        }
+        # Check if the message is a system event message
+        if message.get("messageType") == "systemEventMessage":
+            parsed_message = {
+                "id": message.get("id"),
+                "createdDateTime": message.get("createdDateTime"),
+                "eventDetail": message.get("eventDetail"),
+                "content": "[System Event Message]",
+            }
+        else:
+            parsed_message = {
+                "id": message.get("id"),
+                "createdDateTime": message.get("createdDateTime"),
+                "from": message.get("from", {}).get("user", {}).get("displayName"),
+                "sender_id": message.get("from", {}).get("user", {}).get("id"),
+                "content": message.get("body", {}).get("content"),
+            }
+
         parsed_messages.append(parsed_message)
 
     return parsed_messages

@@ -57,7 +57,7 @@ def create_team(
     ],
 ) -> Response[dict]:
     """
-    Create a new Microsoft Team using the standard template. If details are not returned search the Team by it's name after a moment.
+    Create a new Microsoft Team using the standard template.
 
     Args:
         team_details: Details of the team to be created.
@@ -90,7 +90,7 @@ def create_team(
             else:
                 return Response(
                     result={
-                        "message": "Team created, but could not yet find the details, search after a moment."
+                        "message": "Team created, but could not yet find the details. It takes some time for the details to become available. Ask if user would like to search for the team (by it's name) but do not try to search it automatically because it would not find the team."
                     }
                 )
         else:
