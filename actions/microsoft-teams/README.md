@@ -2,7 +2,7 @@
 
 Action package for interaction with Microsoft Teams resources.
 
-Currently capable of:  
+Currently capable of:
 
 - **Listing the details of Teams that the user has joined.**
 - **Searching for Teams by name.**
@@ -16,26 +16,25 @@ Currently capable of:
 - **Getting replies to a specific message in a channel.**
 - **Replying to a specific message in a channel.**
 
-
 ## Prompt Examples
 
 ```
 Create a new chat with Tommi, and send a message "Yo, greetings from my Teams Agent!"
 ```
 
->A new chat has been created with Tommi, and the message "Yo, greetings from my Teams Agent!" has been sent.
+> A new chat has been created with Tommi, and the message "Yo, greetings from my Teams Agent!" has been sent.
 
 ```
 Create a Team "Agent Testing"
 ```
 
->The team "Agent Testing" has been created successfully. If you need any further assistance, feel free to ask!
+> The team "Agent Testing" has been created successfully. If you need any further assistance, feel free to ask!
 
 ```
 Post "Hello" to that team's general channel
 ```
 
->The message "Hello" has been posted to the General channel of the "Agent Testing" team. If you need any further assistance, feel free to ask! 
+> The message "Hello" has been posted to the General channel of the "Agent Testing" team. If you need any further assistance, feel free to ask!
 
 ## Authorization
 
