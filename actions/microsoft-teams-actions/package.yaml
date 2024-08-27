@@ -1,0 +1,34 @@
+# Required: A short name for the action package
+name: Microsoft Teams
+
+# Required: A description of what's in the action package.
+description: Work with Microsoft Teams.
+
+# Package version number, recommend using semver.org
+version: 1.0.0
+
+dependencies:
+  conda-forge:
+    - python=3.10.14
+    - python-dotenv=1.0.1
+    - uv=0.3.0
+  pypi:
+    - sema4ai-actions=0.10.0
+    - requests=2.32.3
+    - msal=1.30.0
+    - pydantic=2.8.2
+    - pydantic[email]=2.8.2
+
+packaging:
+  # By default, all files and folders in this directory are packaged when uploaded.
+  # Add exclusion rules below (expects glob format: https://docs.python.org/3/library/glob.html)
+  exclude:
+    - ./.git/**
+    - ./.vscode/**
+    - ./devdata/**
+    - ./output/**
+    - ./venv/**
+    - ./.venv/**
+    - ./.DS_store/**
+    - ./**/*.pyc
+    - ./**/*.zip
