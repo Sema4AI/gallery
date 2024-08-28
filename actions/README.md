@@ -16,6 +16,7 @@ Contains the implementation of our prebuilt AI Actions available inside Sema4.ai
 | [Google Sheets](google-sheets/README.md)                  | Interact with Google Sheets                           | OAuth2           |
 | [HubSpot](hubspot/README.md)                              | Work with HubSpot CRM objects                         | OAuth2           |
 | [Microsoft Sharepoint](microsoft-sharepoint/README.md)    | Work with Sharepoint lists and site                   | OAuth2           |
+| [Microsoft Teams](microsoft-teams/README.md)              | Work with Microsoft Teams                             | OAuth2           |
 | [PDF](pdf/README.md)                                      | Get text from PDF documents                           | N/A              |
 | [Slack](slack/README.md)                                  | Read conversations and send messages to channels      | OAuth2           |
 | [YouTube](youtube/README.md)                              | Search videos and get transcriptions                  | N/A              |
