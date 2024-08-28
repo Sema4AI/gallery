@@ -15,8 +15,6 @@ dependencies:
   pypi:
     - sema4ai-actions=0.10.0
     - requests=2.32.3
-    - msal=1.30.0
-    - pydantic=2.8.2
     - pydantic[email]=2.8.2
 
 packaging:
