@@ -25,30 +25,27 @@ def sha256(filepath: str, hash_type: str = 'sha256') -> str:
     return hash_obj.hexdigest()
 
 
-def log_error(sub_folder_path: str, error_message: str) -> None:
+def log_error(error_message: str, sub_folder_path: str = None) -> None:
     with open("log.txt", "a") as log_file:
-        log_file.write(f"Error in folder {sub_folder_path}: {error_message}\n")
+        message = f'Error in folder {sub_folder_path}: ' if sub_folder_path else ''
+        message += f"{error_message}\n"
+
+        log_file.write(message)
 
 
 def read_file_contents(file_path: str) -> str:
-    if os.path.exists(file_path):
-        with open(file_path, 'r') as file:
-            return file.read().strip()
-    return ''
+    with open(file_path, 'r') as file:
+        return file.read().strip()
 
 
 def read_json_file(file_path: str) -> dict[str, Any]:
-    if os.path.exists(file_path):
-        with open(file_path, 'r') as file:
-            return json.load(file)
-    return {}
+    with open(file_path, 'r') as file:
+        return json.load(file)
 
 
 def read_yaml_file(file_path: str) -> dict[str, Any]:
-    if os.path.exists(file_path):
-        with open(file_path, 'r') as file:
-            return yaml.safe_load(file)
-    return {}
+    with open(file_path, 'r') as file:
+        return yaml.safe_load(file)
 
 
 def clear_folders(target_folder: str) -> None:

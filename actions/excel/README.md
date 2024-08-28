@@ -33,7 +33,5 @@ Awesome! You've really done a great job, now get me back the full table content 
 
 ## Caveats
 
-- You should tell the Agent if you expect a header or not in the Excel file as currently there's no support for adjusting that after the sheet content is read. This way the actions will be capable of interpreting the tabular data correctly.
 - It currently operates on strings only (even with numbers) and it doesn't support fancy cell formatting or macros.
-- This is limited to rows additions, table export and basic cell setting/retrieval, not supporting complex rows/columns management.
-- It works with local file paths, usually relative from the place the Agent is running and sometimes it might forget the original file path it was operating on, misplacing it with a non-existent file.
+- It works with local file paths, usually relative from the place the Agent is running, and sometimes it might forget the original file path it was operating on, misplacing it with a non-existent file.
