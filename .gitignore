@@ -10,3 +10,4 @@ __pycache__/
 manifest.json
 published_manifest.json
 **/.DS_STORE
+!runbooks/manifest.json
