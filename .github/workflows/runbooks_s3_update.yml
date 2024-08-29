@@ -25,7 +25,8 @@ jobs:
           echo "Updating Gallery S3"
           S3_BASE_URL="s3://downloads.robocorp.com/gallery/runbooks"
           cd runbooks
-
+          ls -la
+          
           # Copy the updated manifest
           aws s3 cp manifest.json $S3_BASE_URL/manifest.json --cache-control max-age=120 --content-type "text/plain"
 
