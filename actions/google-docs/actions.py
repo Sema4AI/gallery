@@ -1,3 +1,4 @@
+import pprint
 from typing import Literal
 
 from google.auth.exceptions import RefreshError
@@ -148,6 +149,57 @@ def create_document(
         return Response(result=doc)
 
 
+@action(is_consequential=True)
+def append_to_document_by_id(
+    document_id: str,
+    body: str,
+    oauth_access_token: OAuth2Secret[
+        Literal["google"],
+        list[Literal["https://www.googleapis.com/auth/drive.file"]],
+    ],
+) -> Response[DocumentInfo]:
+    """Appends text formated using Extended Markdown syntax to an existing Google Document by its ID.
+
+     Args:
+        document_id: The Google Document ID
+        body: The Google Document body as an Extended Markdown string.
+        oauth_access_token: The OAuth2 Google access token
+
+    Returns:
+        A structure containing the Document
+    """
+
+    with Context(oauth_access_token) as ctx:
+        document = _append_to_document(ctx, document_id, body)
+        return Response(result=document)
+
+
+@action(is_consequential=True)
+def append_to_document_by_name(
+    name: str,
+    body: str,
+    oauth_access_token: OAuth2Secret[
+        Literal["google"],
+        list[Literal["https://www.googleapis.com/auth/drive.file"]],
+    ],
+) -> Response[DocumentInfo]:
+    """Appends text formated using Extended Markdown syntax to an existing Google Document by its name.
+
+     Args:
+        name: The Google Document name
+        body: The Google Document body as an Extended Markdown string.
+        oauth_access_token: The OAuth2 Google access token
+
+    Returns:
+        A structure containing the Document
+    """
+
+    with Context(oauth_access_token) as ctx:
+        document_id = _get_document_id(ctx, name)
+        document = _append_to_document(ctx, document_id, body)
+        return Response(result=document)
+
+
 def _get_document_id(ctx: Context, name: str) -> str:
     name = name.strip()
 
@@ -179,6 +231,7 @@ def _get_document_id(ctx: Context, name: str) -> str:
 def _load_raw_document(ctx: Context, document_id: str) -> RawDocument:
     document_id = document_id.strip()
     raw_doc = ctx.documents.get(documentId=document_id).execute()
+    pprint.pprint(raw_doc)
 
     try:
         return RawDocument.from_google_response(raw_doc)
@@ -190,3 +243,19 @@ def _create_document(ctx, title: str) -> DocumentInfo:
     return DocumentInfo.model_validate(
         ctx.documents.create(body={"title": title}).execute()
     )
+
+
+def _append_to_document(ctx: Context, document_id: str, content: str) -> DocumentInfo:
+    content = f"\n{content}"
+    raw_document = _load_raw_document(ctx, document_id)
+
+    body = BatchUpdateBody.from_markdown(
+        content, start_index=raw_document.end_index - 1, is_append=True
+    ).get_body()
+
+    ctx.documents.batchUpdate(
+        documentId=raw_document.document_id,
+        body=body,
+    ).execute()
+
+    return DocumentInfo(title=raw_document.title, document_id=raw_document.document_id)
