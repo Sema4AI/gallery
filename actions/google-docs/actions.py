@@ -1,4 +1,3 @@
-import pprint
 from typing import Literal
 
 from google.auth.exceptions import RefreshError
@@ -162,11 +161,11 @@ def append_to_document_by_id(
 
      Args:
         document_id: The Google Document ID
-        body: The Google Document body as an Extended Markdown string.
+        body: The Google Document body as an Extended Markdown string
         oauth_access_token: The OAuth2 Google access token
 
     Returns:
-        A structure containing the Document
+        A structure containing the Document.
     """
 
     with Context(oauth_access_token) as ctx:
@@ -187,11 +186,11 @@ def append_to_document_by_name(
 
      Args:
         name: The Google Document name
-        body: The Google Document body as an Extended Markdown string.
+        body: The Google Document body as an Extended Markdown string
         oauth_access_token: The OAuth2 Google access token
 
     Returns:
-        A structure containing the Document
+        A structure containing the Document.
     """
 
     with Context(oauth_access_token) as ctx:
@@ -231,7 +230,6 @@ def _get_document_id(ctx: Context, name: str) -> str:
 def _load_raw_document(ctx: Context, document_id: str) -> RawDocument:
     document_id = document_id.strip()
     raw_doc = ctx.documents.get(documentId=document_id).execute()
-    pprint.pprint(raw_doc)
 
     try:
         return RawDocument.from_google_response(raw_doc)
