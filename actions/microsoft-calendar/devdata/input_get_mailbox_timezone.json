@@ -1,0 +1,13 @@
+{
+    "vscode:request:oauth2": {
+        "credentials": {
+            "type": "OAuth2Secret",
+            "scopes": [
+                "Calendars.Read", 
+                "Calendars.ReadWrite", 
+                "MailboxSettings.Read"
+            ],
+            "provider": "microsoft"
+        }
+    }
+}

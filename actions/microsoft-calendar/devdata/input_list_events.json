@@ -1,0 +1,18 @@
+{
+    "vscode:request:oauth2": {
+        "credentials": {
+            "type": "OAuth2Secret",
+            "scopes": [
+                "Calendars.Read", 
+                "Calendars.ReadWrite", 
+                "MailboxSettings.Read"
+            ],
+            "provider": "microsoft"
+        }
+    },
+    "query_params": {
+        "filter": ""
+    },
+    "timezone": "<timezone string from get_mailbox_timezone>",
+    "calendar_id": "<calendar_id from list_calendars>"
+}
