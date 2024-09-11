@@ -1,6 +1,7 @@
 import base64
 import requests
 from sema4ai.actions import ActionError
+from pathlib import Path
 
 BASE_GRAPH_URL = "https://graph.microsoft.com/v1.0"
 
@@ -55,13 +56,18 @@ def _read_file(attachment):
 
 def _base64_attachment(attachment):
     c_bytes = (
-        attachment.content_bytes
-        if attachment.filepath == ""
-        else _read_file(attachment)
+        attachment.content_bytes if attachment.content_bytes else _read_file(attachment)
     )
+    if attachment.filepath != "" and (attachment.name is None or attachment.name == ""):
+        attachment.name = Path(attachment.filepath).name
+
     data = {
         "@odata.type": "#microsoft.graph.fileAttachment",
-        "name": attachment.name if len(attachment.name) > 0 else "SOMETHING",
+        "name": (
+            attachment.name
+            if attachment.name and len(attachment.name) > 0
+            else "SOMETHING"
+        ),
         "contentBytes": c_bytes,
     }
     return data

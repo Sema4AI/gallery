@@ -13,7 +13,7 @@ Currently supporting:
 """
 
 from sema4ai.actions import action, OAuth2Secret, Response, ActionError
-from microsoft_email.models import Message, MessageAttachment
+from microsoft_email.models import Message, MessageAttachment, MessageAttachmentList
 from microsoft_email.support import _base64_attachment
 from typing import Literal
 
@@ -22,34 +22,47 @@ from microsoft_email.support import build_headers, send_request
 
 @action
 def list_messages(
-    search_query: str,
     token: OAuth2Secret[
         Literal["microsoft"],
         list[Literal["Mail.Read"]],
     ],
+    search_query: str,
+    exclude_sent_items: bool = True,
 ) -> Response[list]:
     """
     List messages in the user's mailbox matching search query.
 
+    For any date comparison use the following format:
+        - consider Monday as beginning of the week
+        - date in ISO 8601 format (e.g., '2024-08-24')
+        - use boolean operators (e.g., 'AND', 'OR', 'NOT'). These operators must be in uppercase.
+        - comparison operators 'ge', 'le', 'eq', 'ne' (e.g., 'receivedDateTime ge 2024-08-24')
+
     Args:
-        search_query: query to search for messages.
         token: OAuth2 token to use for the operation.
+        search_query: query to search for messages.
+        exclude_sent_items: Whether to exclude sent items from the search.
 
     Returns:
-        Lists of the messages
+        Lists of the messages.
     """
     headers = build_headers(token)
-    print(f"search_query: {search_query}")
+    if exclude_sent_items:
+        folders = list_folders(token)
+        sent_items = next(
+            folder for folder in folders.result if folder["displayName"] == "Sent Items"
+        )
+        send_items_folder_id = sent_items["id"]
+        search_query = f"{search_query} AND parentFolderId ne '{send_items_folder_id}'"
     messages = send_request(
         "get",
-        f'/me/messages?$searc="{search_query}"',
+        f"/me/messages?$filter={search_query}",
         "list messages",
         headers=headers,
     )
     messages = [message for message in messages["value"]]
     for message in messages:
-        if "body" in message and "content" in message["body"]:
-            message["body"]["content"] = ""
+        message.pop("body", None)
     return Response(result=messages)
 
 
@@ -59,27 +72,53 @@ def create_draft_message(
         Literal["microsoft"],
         list[Literal["Mail.ReadWrite"]],
     ],
-    message: Message,
+    subject: str = "",
+    body: str = "",
+    to: str = "",
+    cc: str = "",
+    bcc: str = "",
+    attachments: MessageAttachmentList = [],
 ) -> Response:
     """
     Create a draft message in the user's mailbox.
 
     Args:
         token: OAuth2 token to use for the operation.
-        message: The message content to save as a draft.
+        subject: Subject of the message.
+        body: Body of the message.
+        to: Comma separated list of email addresses of the recipients.
+        cc: Comma separated list of email addresses of the CC recipients.
+        bcc: Comma separated list of email addresses of the BCC recipients.
+        attachments: Attachments to include with the message.
 
     Returns:
         The created draft message.
     """
+    if all(not param for param in [subject, body, to, cc, bcc, attachments]):
+        raise ActionError(
+            "At least one of the parameters must be provided to create a draft."
+        )
     headers = build_headers(token)
-    data = {
-        "subject": message.subject,
-        "body": {"contentType": "Text", "content": message.body},
-        "toRecipients": [
+    data = {}
+    if subject:
+        data["subject"] = subject
+    if body:
+        data["body"] = {"contentType": "Text", "content": body}
+    if to:
+        data["toRecipients"] = [
             {"emailAddress": {"address": recipient.address, "name": recipient.name}}
-            for recipient in message.to
-        ],
-    }
+            for recipient in to.split(",")
+        ]
+    if cc:
+        data["ccRecipients"] = [
+            {"emailAddress": {"address": recipient.address, "name": recipient.name}}
+            for recipient in cc.split(",")
+        ]
+    if bcc:
+        data["bccRecipients"] = [
+            {"emailAddress": {"address": recipient.address, "name": recipient.name}}
+            for recipient in bcc.split(",")
+        ]
     draft = send_request(
         "post",
         "/me/messages",
@@ -87,10 +126,11 @@ def create_draft_message(
         data=data,
         headers=headers,
     )
-    if message.attachments and len(message.attachments) > 0:
-        for attachment in message.attachments:
-            attachment.message_id = draft["id"]
-            add_attachment(token, attachment)
+    print(f"type of attachments: {type(attachments)}")
+    print(f"dir of attachments: {dir(attachments)}")
+    if attachments and len(attachments.attachments) > 0:
+        for attachment in attachments.attachments:
+            add_attachment(token, draft["id"], attachment)
     return Response(result=draft)
 
 
@@ -100,6 +140,7 @@ def add_attachment(
         Literal["microsoft"],
         list[Literal["Mail.ReadWrite"]],
     ],
+    message_id: str,
     attachment: MessageAttachment,
 ) -> Response:
     """
@@ -121,7 +162,7 @@ def add_attachment(
     data = _base64_attachment(attachment)
     attachment_response = send_request(
         "post",
-        f"/me/messages/{attachment.message_id}/attachments",
+        f"/me/messages/{message_id}/attachments",
         "add attachment",
         data=data,
         headers=headers,
@@ -202,7 +243,6 @@ def send_draft(
         list[Literal["Mail.Send"]],
     ],
     message_id: str,
-    save_to_sent_items: bool = True,
 ) -> Response:
     """
     Send a draft message.
@@ -210,7 +250,6 @@ def send_draft(
     Args:
         token: OAuth2 token to use for the operation.
         message_id: The ID of the draft message to send.
-        save_to_sent_items: Whether to save the message to the sent items.
 
     Returns:
         Response indicating the result of the send operation.
@@ -250,7 +289,7 @@ def reply_to_message(
         "post",
         f"/me/messages/{message_id}/reply",
         "reply to message",
-        json=reply,
+        data=reply,
         headers=headers,
     )
     return Response(result=reply_response)
@@ -263,7 +302,8 @@ def forward_message(
         list[Literal["Mail.Send"]],
     ],
     message_id: str,
-    forward: Message,
+    to_recipients: str,
+    comment: str = "",
 ) -> Response:
     """
     Forward an existing message.
@@ -271,17 +311,26 @@ def forward_message(
     Args:
         token: OAuth2 token to use for the operation.
         message_id: The ID of the message to forward.
-        forward: The forward message content.
+        to_recipients: Comma separated list of email addresses of the recipients to forward the message to.
+        comment: A comment to include.
 
     Returns:
         Response indicating the result of the forward operation.
     """
     headers = build_headers(token)
+    data = {
+        "comment": comment,
+        "toRecipients": [
+            {"emailAddress": {"address": recipient.strip(), "name": recipient.strip()}}
+            for recipient in to_recipients.split(",")
+        ],
+    }
+
     forward_response = send_request(
         "post",
         f"/me/messages/{message_id}/forward",
         "forward message",
-        json=forward,
+        data=data,
         headers=headers,
     )
     return Response(result=forward_response)
@@ -312,7 +361,7 @@ def move_message(
         "post",
         f"/me/messages/{message_id}/move",
         "move message",
-        json={"destinationId": destination_folder_id},
+        data={"destinationId": destination_folder_id},
         headers=headers,
     )
     return Response(result=move_response)
@@ -344,3 +393,30 @@ def get_message(
         headers=headers,
     )
     return Response(result=message)
+
+
+@action
+def list_folders(
+    token: OAuth2Secret[
+        Literal["microsoft"],
+        list[Literal["Mail.Read"]],
+    ],
+) -> Response:
+    """
+    List folders in the user's mailbox.
+
+    Args:
+        token: OAuth2 token to use for the operation.
+
+    Returns:
+        Lists of the folders.
+    """
+    headers = build_headers(token)
+    folders = send_request(
+        "get",
+        "/me/mailFolders",
+        "list folders",
+        headers=headers,
+    )
+    folders = [folder for folder in folders["value"]]
+    return Response(result=folders)
