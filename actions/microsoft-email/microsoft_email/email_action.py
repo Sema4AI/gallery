@@ -13,8 +13,11 @@ Currently supporting:
 """
 
 from sema4ai.actions import action, OAuth2Secret, Response, ActionError
-from microsoft_email.models import Message, MessageAttachment, MessageAttachmentList
-from microsoft_email.support import _base64_attachment
+from microsoft_email.models import Message, MessageAttachment
+from microsoft_email.support import (
+    _base64_attachment,
+    _set_message_data,
+)
 from typing import Literal
 
 from microsoft_email.support import build_headers, send_request
@@ -32,7 +35,10 @@ def list_messages(
     """
     List messages in the user's mailbox matching search query.
 
-    For any date comparison use the following format:
+    For email address search use:
+        - from/emailAddress/address eq 'sender@example.com
+
+    For any date comparison use:
         - consider Monday as beginning of the week
         - date in ISO 8601 format (e.g., '2024-08-24')
         - use boolean operators (e.g., 'AND', 'OR', 'NOT'). These operators must be in uppercase.
@@ -72,53 +78,36 @@ def create_draft_message(
         Literal["microsoft"],
         list[Literal["Mail.ReadWrite"]],
     ],
-    subject: str = "",
-    body: str = "",
-    to: str = "",
-    cc: str = "",
-    bcc: str = "",
-    attachments: MessageAttachmentList = [],
+    message: Message,
+    html_content: bool = False,
 ) -> Response:
     """
     Create a draft message in the user's mailbox.
 
     Args:
         token: OAuth2 token to use for the operation.
-        subject: Subject of the message.
-        body: Body of the message.
-        to: Comma separated list of email addresses of the recipients.
-        cc: Comma separated list of email addresses of the CC recipients.
-        bcc: Comma separated list of email addresses of the BCC recipients.
-        attachments: Attachments to include with the message.
+        message: The message content to create a draft.
+        html_content: Whether the body content is HTML.
 
     Returns:
         The created draft message.
     """
-    if all(not param for param in [subject, body, to, cc, bcc, attachments]):
+    if all(
+        not param
+        for param in [
+            message.subject,
+            message.body,
+            message.to,
+            message.cc,
+            message.bcc,
+            message.attachments,
+        ]
+    ):
         raise ActionError(
             "At least one of the parameters must be provided to create a draft."
         )
     headers = build_headers(token)
-    data = {}
-    if subject:
-        data["subject"] = subject
-    if body:
-        data["body"] = {"contentType": "Text", "content": body}
-    if to:
-        data["toRecipients"] = [
-            {"emailAddress": {"address": recipient.address, "name": recipient.name}}
-            for recipient in to.split(",")
-        ]
-    if cc:
-        data["ccRecipients"] = [
-            {"emailAddress": {"address": recipient.address, "name": recipient.name}}
-            for recipient in cc.split(",")
-        ]
-    if bcc:
-        data["bccRecipients"] = [
-            {"emailAddress": {"address": recipient.address, "name": recipient.name}}
-            for recipient in bcc.split(",")
-        ]
+    data = _set_message_data(message, html_content)
     draft = send_request(
         "post",
         "/me/messages",
@@ -126,11 +115,62 @@ def create_draft_message(
         data=data,
         headers=headers,
     )
-    print(f"type of attachments: {type(attachments)}")
-    print(f"dir of attachments: {dir(attachments)}")
-    if attachments and len(attachments.attachments) > 0:
-        for attachment in attachments.attachments:
+    if message.attachments and len(message.attachments.attachments) > 0:
+        for attachment in message.attachments.attachments:
             add_attachment(token, draft["id"], attachment)
+    return Response(result=draft)
+
+
+@action(is_consequential=True)
+def update_draft_message(
+    token: OAuth2Secret[
+        Literal["microsoft"],
+        list[Literal["Mail.ReadWrite"]],
+    ],
+    message_id: str,
+    message: Message,
+    html_content: bool = False,
+) -> Response:
+    """
+    Update a draft message in the user's mailbox.
+
+    Args:
+        token: OAuth2 token to use for the operation.
+        message_id: The ID of the draft message to update.
+        message: The message content to update a draft.
+        html_content: Whether the body content is HTML.
+
+    Returns:
+        The created draft message.
+    """
+    if all(
+        not param
+        for param in [
+            message.subject,
+            message.body,
+            message.to,
+            message.cc,
+            message.bcc,
+            message.attachments,
+        ]
+    ):
+        raise ActionError(
+            "At least one of the parameters must be provided to create a draft."
+        )
+    headers = build_headers(token)
+    data = _set_message_data(message, html_content)
+    if message.attachments and len(message.attachments.attachments) > 0:
+        data["attachments"] = []
+        for attachment in message.attachments.attachments:
+            file_attachment = _base64_attachment(attachment)
+            data["attachments"].append(file_attachment)
+    draft = send_request(
+        "patch",
+        f"/me/messages/{message_id}",
+        "create draft message",
+        data=data,
+        headers=headers,
+    )
     return Response(result=draft)
 
 
@@ -181,6 +221,7 @@ def send_message(
     ],
     message: Message,
     save_to_sent_items: bool = True,
+    html_content: bool = False,
 ) -> Response:
     """
     Send a new message.
@@ -189,43 +230,33 @@ def send_message(
         token: OAuth2 token to use for the operation.
         message: The message content to send.
         save_to_sent_items: Whether to save the message to the sent items.
+        html_content: Whether the body content is HTML.
 
     Returns:
         Response indicating the result of the send operation.
     """
+    if all(
+        not param
+        for param in [
+            message.subject,
+            message.body,
+            message.to,
+            message.cc,
+            message.bcc,
+            message.attachments,
+        ]
+    ):
+        raise ActionError(
+            "At least one of the parameters must be provided to create a draft."
+        )
     headers = build_headers(token)
     print(f"Received message: {message}")
-    data = {
-        "subject": message.subject,
-        "body": {"contentType": "Text", "content": message.body},
-        "toRecipients": [
-            {"emailAddress": {"address": recipient.address, "name": recipient.name}}
-            for recipient in message.to
-        ],
-        "importance": message.importance,
-    }
-    if message.cc and len(message.cc) > 0:
-        data["ccRecipients"] = [
-            {"emailAddress": {"address": recipient.address, "name": recipient.name}}
-            for recipient in message.cc
-        ]
-    if message.bcc and len(message.bcc) > 0:
-        data["bccRecipients"] = [
-            {"emailAddress": {"address": recipient.address, "name": recipient.name}}
-            for recipient in message.bcc
-        ]
-    if message.attachments and len(message.attachments) > 0:
+    data = _set_message_data(message, html_content)
+    if message.attachments and len(message.attachments.attachments) > 0:
         data["attachments"] = []
-        for attachment in message.attachments:
+        for attachment in message.attachments.attachments:
             file_attachment = _base64_attachment(attachment)
             data["attachments"].append(file_attachment)
-    if message.reply_to:
-        data["replyTo"] = {
-            "emailAddress": {
-                "address": message.reply_to.address,
-                "name": message.reply_to.name,
-            }
-        }
     send_request(
         "post",
         "/me/sendMail",
@@ -243,6 +274,7 @@ def send_draft(
         list[Literal["Mail.Send"]],
     ],
     message_id: str,
+    save_to_sent_items: bool = True,
 ) -> Response:
     """
     Send a draft message.
@@ -250,6 +282,7 @@ def send_draft(
     Args:
         token: OAuth2 token to use for the operation.
         message_id: The ID of the draft message to send.
+        save_to_sent_items: Whether to save the message to the sent items.
 
     Returns:
         Response indicating the result of the send operation.
@@ -259,6 +292,7 @@ def send_draft(
         "post",
         f"/me/messages/{message_id}/send",
         "send draft",
+        data={"saveToSentItems": save_to_sent_items},
         headers=headers,
     )
     return Response(result="Draft email sent successfully")
@@ -272,6 +306,7 @@ def reply_to_message(
     ],
     message_id: str,
     reply: Message,
+    html_content: bool = False,
 ) -> Response:
     """
     Reply to an existing message.
@@ -279,17 +314,25 @@ def reply_to_message(
     Args:
         token: OAuth2 token to use for the operation.
         message_id: The ID of the message to reply to.
-        reply: The reply message content.
+        reply: The reply message properties that needs to be appended, set or deleted. Do not modify the body of the message.
+        html_content: Whether the body content is HTML.
 
     Returns:
         Response indicating the result of the reply operation.
     """
     headers = build_headers(token)
+    existing_message = get_message(token, message_id).result
+    print(f"existing_message: {existing_message}")
+    message_data = _set_message_data(reply, html_content, existing_message)
+    data = {}
+    data["message"] = message_data
+    if reply.body:
+        data["comment"] = reply.body
     reply_response = send_request(
         "post",
         f"/me/messages/{message_id}/reply",
         "reply to message",
-        data=reply,
+        data=data,
         headers=headers,
     )
     return Response(result=reply_response)

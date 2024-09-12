@@ -1,17 +1,17 @@
 from pydantic import BaseModel, Field
-from typing import Optional, List, Annotated
+from typing import Optional, List, Annotated, Literal, Union
 
 
 class Recipient(BaseModel):
     address: str = Field(description="Email address of the recipient")
-    name: Annotated[str, Field(description="Name of the recipient")] = None
+    name: Optional[Union[str, None]] = Field(description="Name of the recipient")
 
 
-class CC_Repient(Recipient):
+class CC_Recipient(Recipient):
     pass
 
 
-class BCC_Repient(Recipient):
+class BCC_Recipient(Recipient):
     pass
 
 
@@ -25,26 +25,30 @@ class MessageAttachment(BaseModel):
     )
 
 
-class Message(BaseModel):
-    subject: str = Field(description="Subject of the message", default="")
-    body: str = Field(description="Body of the message", default="")
-    to: list[Recipient] = Field(description="Recipients of the message", default=[])
-    cc: list[CC_Repient] = Field(description="CC recipients of the message", default=[])
-    bcc: list[BCC_Repient] = Field(
-        description="BCC recipients of the message", default=[]
-    )
-    attachments: list[MessageAttachment] = Field(
-        description="Attachments to include with the message", default=[]
-    )
-    importance: str = Field(
-        description="Importance level of the message",
-        default="normal",
-        enum=["low", "normal", "high"],
-    )
-    reply_to: Recipient = Field(description="Reply-to address", default=None)
-
-
 class MessageAttachmentList(BaseModel):
     attachments: Annotated[
         List[MessageAttachment], Field(description="A list of attachments")
     ] = []
+
+
+class Message(BaseModel):
+    subject: Optional[str] = Field(default="", description="Subject of the message")
+    body: Optional[str] = Field(default="", description="Body of the message")
+    to: Optional[List[Recipient]] = Field(
+        default_factory=list, description="Recipients of the message"
+    )
+    cc: Optional[List[CC_Recipient]] = Field(
+        default_factory=list, description="CC recipients of the message"
+    )
+    bcc: Optional[List[BCC_Recipient]] = Field(
+        default_factory=list, description="BCC recipients of the message"
+    )
+    attachments: Optional["MessageAttachmentList"] = Field(
+        default_factory=list, description="Attachments to include with the message"
+    )
+    importance: Optional[Union[Literal["low", "normal", "high"], None]] = Field(
+        default="normal", description="Importance level of the message"
+    )
+    reply_to: Optional["Recipient"] = Field(
+        default=None, description="Reply-to address"
+    )

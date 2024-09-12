@@ -1,7 +1,10 @@
 import base64
 import requests
+
+
 from sema4ai.actions import ActionError
 from pathlib import Path
+from microsoft_email.models import Message
 
 BASE_GRAPH_URL = "https://graph.microsoft.com/v1.0"
 
@@ -66,8 +69,67 @@ def _base64_attachment(attachment):
         "name": (
             attachment.name
             if attachment.name and len(attachment.name) > 0
-            else "SOMETHING"
+            else "UNNAMED_ATTACHMENT"
         ),
         "contentBytes": c_bytes,
     }
+    return data
+
+
+def _set_message_data(
+    message: Message, html_content: bool, existing_message=None
+) -> dict:
+    data = existing_message or {}
+    if message.subject:
+        data["subject"] = message.subject
+    if message.body and not existing_message:
+        data["body"] = {
+            "contentType": "HTML" if html_content else "Text",
+            "content": message.body,
+        }
+    if message.to and len(message.to) > 0:
+        data["toRecipients"] = [
+            {
+                "emailAddress": {
+                    "address": recipient.address,
+                    "name": recipient.name if recipient.name else recipient.address,
+                }
+            }
+            for recipient in message.to
+        ]
+    if message.importance:
+        data["importance"] = message.importance
+    if message.cc and len(message.cc) > 0:
+        data["ccRecipients"] = [
+            {
+                "emailAddress": {
+                    "address": recipient.address,
+                    "name": recipient.name if recipient.name else recipient.address,
+                }
+            }
+            for recipient in message.cc
+        ]
+    if message.bcc and len(message.bcc) > 0:
+        data["bccRecipients"] = [
+            {
+                "emailAddress": {
+                    "address": recipient.address,
+                    "name": recipient.name if recipient.name else recipient.address,
+                }
+            }
+            for recipient in message.bcc
+        ]
+    if message.reply_to:
+        data["replyTo"] = {
+            "emailAddress": {
+                "address": message.reply_to.address,
+                "name": (
+                    message.reply_to.name
+                    if message.reply_to.name
+                    else message.reply_to.name.address
+                ),
+            }
+        }
+    if "toRecipients" in data.keys() and existing_message:
+        data["toRecipients"] = data["toRecipients"].extend(existing_message["sender"])
     return data
