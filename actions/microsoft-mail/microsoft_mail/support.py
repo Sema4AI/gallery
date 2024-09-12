@@ -4,7 +4,7 @@ import requests
 
 from sema4ai.actions import ActionError
 from pathlib import Path
-from microsoft_email.models import Message
+from microsoft_mail.models import Message
 
 BASE_GRAPH_URL = "https://graph.microsoft.com/v1.0"
 
@@ -133,3 +133,28 @@ def _set_message_data(
     if "toRecipients" in data.keys() and existing_message:
         data["toRecipients"] = data["toRecipients"].extend(existing_message["sender"])
     return data
+
+
+def _get_folder_id(token, folder_name: str, account: str = "me") -> str:
+    """
+    Get the ID of a folder by name.
+
+    Args:
+        token: The OAuth2 token for authentication.
+        folder_name : The name of the folder.
+        account: The email account. By default "me"
+
+    Returns:
+        The ID of the folder.
+
+    Raises:
+        Exception: If the folder is not found.
+    """
+    url = f"/users/{account}/mailFolders('Inbox')/childFolders"
+    headers = build_headers(token)
+    message = send_request("get", url, "get folder id", headers=headers)
+    folders = message["value"]
+    for folder in folders:
+        if folder["displayName"] == folder_name:
+            return folder["id"]
+    raise Exception(f"Folder '{folder_name}' not found")

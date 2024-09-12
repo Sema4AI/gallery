@@ -13,14 +13,15 @@ Currently supporting:
 """
 
 from sema4ai.actions import action, OAuth2Secret, Response, ActionError
-from microsoft_email.models import Message, MessageAttachment
-from microsoft_email.support import (
+from microsoft_mail.models import Message, MessageAttachment
+from microsoft_mail.support import (
     _base64_attachment,
     _set_message_data,
+    _get_folder_id,
 )
 from typing import Literal
 
-from microsoft_email.support import build_headers, send_request
+from microsoft_mail.support import build_headers, send_request
 
 
 @action
@@ -463,3 +464,105 @@ def list_folders(
     )
     folders = [folder for folder in folders["value"]]
     return Response(result=folders)
+
+
+@action
+def subscribe_notifications(
+    token: OAuth2Secret[Literal["microsoft"], list[Literal["Mail.ReadWrite"]]],
+    message_folder: str,
+    webhook_url: str,
+    expiration_date: str,
+    account: str,
+) -> Response:
+    """
+    Subscribe to notifications for new messages in a specific folder.
+
+    Args:
+        token: The OAuth2 token for authentication.
+        message_folder: The folder to subscribe to.
+        webhook_url: The URL to receive notifications.
+        expiration_date: The expiration date of the subscription. This needs to be in UTC format.
+        account: The email account.
+
+    Returns:
+        Response: Confirmation of successful subscription.
+    """
+    headers = build_headers(token)
+    account = "me" if account.lower() == "me" or len(account) == 0 else account
+    if message_folder.lower() == "inbox":
+        target_folder = "Inbox"
+    else:
+        target_folder = _get_folder_id(token, account, message_folder)
+    # subscription_resource = (
+    #     f"users/mika@beissi.onmicrosoft.com/mailFolders('Inbox')/messages"
+    # )
+    subscription_resource = f"me/mailFolders('{target_folder}')/messages"
+    data = {
+        "changeType": "created",
+        "notificationUrl": webhook_url,
+        "resource": subscription_resource,
+        "expirationDateTime": "2024-09-13T08:00:00.9356913",  # expiration_date,
+        "clientState": "secretClientValue",
+        "latestSupportedTlsVersion": "v1_2",
+    }
+    message = send_request(
+        "post",
+        "/subscriptions",
+        "subscribe for notifications",
+        headers=headers,
+        data=data,
+    )
+    return Response(result=message)
+
+
+@action
+def delete_all_subscriptions(
+    token: OAuth2Secret[Literal["microsoft"], list[Literal["Mail.ReadWrite"]]]
+) -> Response:
+    """
+    Delete all existing subscriptions.
+
+    Args:
+        token: The OAuth2 token for authentication.
+
+    Returns:
+        Response: Confirmation of successful deletion of all subscriptions.
+    """
+    headers = build_headers(token)
+    message = send_request(
+        "get",
+        "/subscriptions",
+        "get subscriptions",
+        headers=headers,
+    )
+    for subscription in message["value"]:
+        send_request(
+            "delete",
+            f"/subscriptions/{subscription['id']}",
+            "delete subscription",
+            headers=headers,
+        )
+    return Response(result="All subscriptions deleted")
+
+
+@action
+def get_subscriptions(
+    token: OAuth2Secret[Literal["microsoft"], list[Literal["Mail.Read"]]]
+) -> Response:
+    """
+    Get a list of all active subscriptions.
+
+    Args:
+        token (OAuth2Secret): The OAuth2 token for authentication.
+
+    Returns:
+        Response: A list of all active subscriptions.
+    """
+    headers = build_headers(token)
+    message = send_request(
+        "get",
+        "/subscriptions",
+        "get subscriptions",
+        headers=headers,
+    )
+    return Response(result=message)
