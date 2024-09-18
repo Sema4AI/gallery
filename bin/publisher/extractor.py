@@ -52,7 +52,7 @@ def extract_single_zip(zip_path: str, gallery_actions_folder: str, rcc_path: str
             try:
                 subprocess.run(hash_command, shell=True, check=True)
             except subprocess.CalledProcessError as e:
-                log_error(versioned_extract_path, f"Failed to run RCC on {package_yaml_path}: {str(e)}")
+                log_error(f"Failed to run RCC on {package_yaml_path}: {str(e)}", versioned_extract_path)
 
 
 def extract_all(zips_folder: str, gallery_actions_folder: str, rcc_path: str):

@@ -11,11 +11,10 @@ from email.mime.multipart import MIMEMultipart
 
 load_dotenv()
 
-message_footer = "\n\nStart building your Agents and AI Actions at https://sema4.ai"
-
 
 @action(is_consequential=False)
 def send_email(
+    sender: str,
     to: str,
     subject: str,
     body: str,
@@ -34,6 +33,7 @@ def send_email(
     check their spam folder.
 
     Args:
+        sender: email address of the sender
         to: email address(es) of the recipient(s)
         subject: subject of the email
         body: body of the email
@@ -60,16 +60,12 @@ def send_email(
     username = smtp_username.value
     password = smtp_password.value
 
-    # Email content
-    sender_email = "noreply@sema4ai.email"
-    subject = subject
-    body = body + message_footer
     # Create list of all recipients (including BCC)
     recipients = to.split(",")
 
     # Create MIME message
     message = MIMEMultipart()
-    message["From"] = sender_email
+    message["From"] = sender
     message["To"] = to
     message["Subject"] = subject
 
@@ -89,7 +85,7 @@ def send_email(
             server.starttls()  # Secure the connection
             server.login(username, password)
             text = message.as_string()
-            server.sendmail(sender_email, recipients, text)
+            server.sendmail(sender, recipients, text)
     except Exception as e:
         error_message = f"Email send error: {e}"
         print(error_message)

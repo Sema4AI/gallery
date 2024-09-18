@@ -2,7 +2,7 @@
 name: Google Search
 
 # Required: A description of what's in the action package
-description: Google search action requiring API and context keys from Google.
+description: Agent can make Google searches using a custom search engine (requires API key).
 
 # Package version number, recommend using semver.org
 version: 1.0.0

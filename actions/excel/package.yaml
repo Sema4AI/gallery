@@ -2,10 +2,10 @@
 name: Excel
 
 # Required: A description of what's in the action package
-description: Operate on local Excel files directly.
+description: Create, read and update sheets on local Excel files.
 
 # Package version number, recommend using semver.org
-version: 2.0.0
+version: 3.0.0
 
 dependencies:
   conda-forge:

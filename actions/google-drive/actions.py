@@ -7,8 +7,9 @@ from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import Resource, build
 from googleapiclient.errors import HttpError
 from googleapiclient.http import MediaIoBaseDownload
-from models import CommentList, File, FileList, Response
 from sema4ai.actions import OAuth2Secret, action
+
+from models import CommentList, File, FileList, Response
 
 load_dotenv(Path(__file__).absolute().parent / "devdata" / ".env")
 
@@ -26,7 +27,16 @@ def _build_service(credentials: OAuth2Secret) -> Resource:
 
 
 def _get_file_by_name(service: Resource, name: str) -> Optional[File]:
-    response = service.files().list(q=f"name = '{name}'", fields="*").execute()
+    response = (
+        service.files()
+        .list(
+            supportsAllDrives=True,
+            includeItemsFromAllDrives=True,
+            q=f"name = '{name}'",
+            fields="*",
+        )
+        .execute()
+    )
 
     if not response.get("files"):
         return
@@ -87,7 +97,11 @@ def get_file_by_id(
     service = _build_service(google_credentials)
     try:
         return Response(
-            result=File(**service.files().get(fileId=file_id, fields="*").execute())
+            result=File(
+                **service.files()
+                .get(supportsAllDrives=True, fileId=file_id, fields="*")
+                .execute()
+            )
         )
     except HttpError:
         return Response(error=f"No files were found with the id: {file_id}")
@@ -107,19 +121,35 @@ def get_files_by_query(
         ],
     ],
     query: str,
+    search_all_drives: bool = False,
 ) -> Response[FileList]:
     """Get all files from Google Drive that match the given query.
 
     Args:
         google_credentials: JSON containing Google OAuth2 credentials.
         query: Google Drive API V3 query string for search files in the format query_term operator values.
+        search_all_drives: Whether to search both My Drives and all shared drives.
+            Default is set to false for better performance and will include both owned files and those that have been
+            shared with the user.
+
 
     Returns:
         A list of files or an error message if no files were found.
     """
     service = _build_service(google_credentials)
 
-    response = service.files().list(q=query, fields="*").execute()
+    list_args = {
+        "supportsAllDrives": True,
+        "includeItemsFromAllDrives": True,
+        "q": query,
+        "fields": "*",
+    }
+
+    if search_all_drives:
+        list_args["corpora"] = "allDrives"
+        list_args["spaces"] = "drive"
+
+    response = service.files().list(**list_args).execute()
     service.close()
 
     files = FileList(files=response.get("files", []))
