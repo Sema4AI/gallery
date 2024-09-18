@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from typing import Optional, List, Annotated, Literal, Union
+from typing import Optional, List, Annotated, Literal, Union, Dict
 
 
 class Recipient(BaseModel):
@@ -15,7 +15,7 @@ class BCC_Recipient(Recipient):
     pass
 
 
-class MessageAttachment(BaseModel):
+class EmailAttachment(BaseModel):
     name: Optional[str] = Field(description="Name of the attachment", default="")
     content_bytes: Optional[str] = Field(
         description="Base64-encoded content of the attachment", default=""
@@ -25,30 +25,35 @@ class MessageAttachment(BaseModel):
     )
 
 
-class MessageAttachmentList(BaseModel):
+class EmailAttachmentList(BaseModel):
     attachments: Annotated[
-        List[MessageAttachment], Field(description="A list of attachments")
+        List[EmailAttachment], Field(description="A list of attachments")
     ] = []
 
 
-class Message(BaseModel):
-    subject: Optional[str] = Field(default="", description="Subject of the message")
-    body: Optional[str] = Field(default="", description="Body of the message")
+class Email(BaseModel):
+    subject: Optional[str] = Field(default="", description="Subject of the email")
+    body: Optional[str] = Field(default="", description="Body of the email")
     to: Optional[List[Recipient]] = Field(
-        default_factory=list, description="Recipients of the message"
+        default_factory=list, description="Recipients of the email"
     )
     cc: Optional[List[CC_Recipient]] = Field(
-        default_factory=list, description="CC recipients of the message"
+        default_factory=list, description="CC recipients of the email"
     )
     bcc: Optional[List[BCC_Recipient]] = Field(
-        default_factory=list, description="BCC recipients of the message"
+        default_factory=list, description="BCC recipients of the email"
     )
-    attachments: Optional["MessageAttachmentList"] = Field(
-        default_factory=list, description="Attachments to include with the message"
+    attachments: Optional["EmailAttachmentList"] = Field(
+        default_factory=list, description="Attachments to include with the email"
     )
     importance: Optional[Union[Literal["low", "normal", "high"], None]] = Field(
-        default="normal", description="Importance level of the message"
+        default="normal", description="Importance level of the email"
     )
     reply_to: Optional["Recipient"] = Field(
         default=None, description="Reply-to address"
     )
+
+
+class Emails(BaseModel):
+    items: List[Dict] = Field(description="List of emails")
+    count: int = Field(description="Number of emails matching the search query")

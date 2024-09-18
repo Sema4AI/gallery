@@ -2,7 +2,7 @@
 name: Microsoft Mail
 
 # Required: A description of what's in the action package.
-description: Microsoft actions for Microsoft 365 Outlook emails.
+description: Actions for Microsoft 365 Outlook emails.
 
 # Package version number, recommend using semver.org
 version: 1.0.0

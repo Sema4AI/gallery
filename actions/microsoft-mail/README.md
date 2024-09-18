@@ -2,33 +2,78 @@
 
 Action package for interaction with Microsoft Mail.
 
-Currently capably of handling drafts, mails, listing folders and managing folder subscriptions.
+Currently supporting:
+
+- Listing emails in the user's mailbox matching a search query.
+- Filtering emails by recipient information.
+- Creating a draft email in the user's mailbox.
+- Updating an existing draft email.
+- Adding an attachment to an email.
+- Sending a new email.
+- Sending an existing draft email.
+- Replying to an existing email.
+- Forwarding an existing email.
+- Moving an email to a different folder.
+- Retrieving details of a specific email by ID.
+- Listing all folders in the user's mailbox.
+- Subscribing to notifications for new emails or other mailbox changes.
+- Deleting all active subscriptions for notifications.
+- Deleting a specific subscription by ID.
+- Getting a list of active subscriptions.
+- Retrieving details of a specific folder in the user's mailbox.
 
 ## Prompt Examples
 
 ```
-Get a file related to studio from Community site
+List emails I have received having mika@sema4.ai in cc list
 ```
 
-> I found a file related to "studio" in the Community site:
+> You have received the following email with "mika@sema4.ai" in the CC list:
+
+> Subject: Microsoft Mail action package out soon
+> From: Mika Hänninen (mika.hanninen@gmail.com)
+> To: Mika Hänninen (mika@beissi.onmicrosoft.com)
+> Received: 2024-09-18 at 09:49:46 UTC
+> Body Preview: Hei Mikas check this one
+> View Email (LINK)
 >
-> File Name: Sema4.ai Studio (sneak peek) (1).pdf
-> Location: Sema4.ai
-> Created By: Tommi Holmgren
-> Created Date: 2023-11-15
-> Last Modified Date: 2023-11-15
-> Would you like to download this file?
+> Let me know if you need anything else!
 
 ```
-Uploaded /Users/tommi/.robocorp/sema4ai-desktop/uploads/5ddd5f53-05c4-4333-be5d-4b3b276a7dfa/molkky-game-rules.pdf.
-
-upload this file to alerts-dev-tommi
+Create draft email for mika@sema4.ai, subject "Testing Microsoft Mail action package close to completion"
 ```
 
-> The file was uploaded successfully. You can find the file at the following location:
+> The draft email has been created with the subject "Testing Microsoft Mail action package close to completion" for Mika at mika@sema4.ai.
 >
-> File Name: molkky-game-rules.pdf
-> Location: Shared documents
+> View Draft (LINK)
+
+```
+Change draft content to html and list all actions available in to the body of the and show me what that draft looks like
+```
+
+> The draft email has been updated with the complete list of 17 actions:
+>
+> Subject: Testing Microsoft Mail action package close to completion
+>
+> To: Mika (mika@sema4.ai)
+>
+> Body:
+>
+> <h2>Available Microsoft Mail Actions</h2>
+> <ul>
+>     <li>Create a draft message</li>
+>     <li>Create and send a message</li>
+>     <li>Add an attachment</li>
+>     <li>Download an attachment</li>
+>     <li>Send a draft</li>
+>   .....
+> </ul>
+
+```
+Send that draft
+```
+
+> The email has been sent successfully! If you need anything else, feel free to ask.
 
 ## Authorization
 

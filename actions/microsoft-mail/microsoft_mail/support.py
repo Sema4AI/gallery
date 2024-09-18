@@ -4,7 +4,7 @@ import requests
 
 from sema4ai.actions import ActionError
 from pathlib import Path
-from microsoft_mail.models import Message
+from microsoft_mail.models import Email
 
 BASE_GRAPH_URL = "https://graph.microsoft.com/v1.0"
 
@@ -36,8 +36,9 @@ def send_request(
     :raises: RequestException for any request failures.
     """
     try:
+        query_url = url if BASE_GRAPH_URL in url else f"{BASE_GRAPH_URL}{url}"
         response = requests.request(
-            method, f"{BASE_GRAPH_URL}{url}", headers=headers, json=data, params=params
+            method, query_url, headers=headers, json=data, params=params
         )
         response.raise_for_status()  # Raises a HTTPError for bad responses
         if response.status_code not in [200, 201, 202, 204]:
@@ -48,6 +49,11 @@ def send_request(
         return None
     except Exception as e:
         raise ActionError(f"Error on '{req_name}': {str(e)}")
+
+
+def _get_me(token):
+    headers = build_headers(token)
+    return send_request("get", "/me", "get me", headers=headers)
 
 
 def _read_file(attachment):
@@ -77,7 +83,7 @@ def _base64_attachment(attachment):
 
 
 def _set_message_data(
-    message: Message, html_content: bool, existing_message=None
+    message: Email, html_content: bool, existing_message=None
 ) -> dict:
     data = existing_message or {}
     if message.subject:
@@ -135,26 +141,51 @@ def _set_message_data(
     return data
 
 
-def _get_folder_id(token, folder_name: str, account: str = "me") -> str:
-    """
-    Get the ID of a folder by name.
-
-    Args:
-        token: The OAuth2 token for authentication.
-        folder_name : The name of the folder.
-        account: The email account. By default "me"
-
-    Returns:
-        The ID of the folder.
-
-    Raises:
-        Exception: If the folder is not found.
-    """
-    url = f"/users/{account}/mailFolders('Inbox')/childFolders"
+def _get_folder_structure(token, account, folder_id=None):
     headers = build_headers(token)
-    message = send_request("get", url, "get folder id", headers=headers)
-    folders = message["value"]
+    if folder_id:
+        url = f"/users/{account}/mailFolders/{folder_id}/childFolders"
+    else:
+        url = f"/users/{account}/mailFolders"
+
+    response = send_request("get", url, "get folder structure", headers=headers)
+    folders = response.get("value", [])
+
+    folder_structure = []
     for folder in folders:
-        if folder["displayName"] == folder_name:
-            return folder["id"]
-    raise Exception(f"Folder '{folder_name}' not found")
+        subfolders = _get_folder_structure(token, account, folder["id"])
+        folder_structure.append(
+            {
+                "name": folder["displayName"],
+                "id": folder["id"],
+                "childFolders": subfolders,
+            }
+        )
+
+    return folder_structure
+
+
+def _delete_subscription(subscription_id: str, headers: dict):
+    send_request(
+        "delete",
+        f"/subscriptions/{subscription_id}",
+        "delete subscription",
+        headers=headers,
+    )
+
+
+def _find_folder(folders, folder_to_search):
+    for folder in folders:
+        if folder["name"].lower() == folder_to_search.lower():
+            return folder
+        elif (
+            "sent" in folder_to_search.lower()
+            and folder["name"].replace(" ", "").lower() == "sentitems"
+        ):
+            return folder
+        # If the folder has child folders, search within them recursively
+        if "childFolders" in folder and len(folder["childFolders"]) > 0:
+            result = _find_folder(folder["childFolders"], folder_to_search)
+            if result:
+                return result
+    return None
