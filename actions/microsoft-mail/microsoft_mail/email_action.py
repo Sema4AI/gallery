@@ -165,13 +165,14 @@ def filter_by_recipients(
     to = to_recipients.split(",") if to_recipients else []
     cc = cc_recipients.split(",") if cc_recipients else []
     bcc = bcc_recipients.split(",") if bcc_recipients else []
-    froms = from_.split(",") if from_ else []
+    froms = from_ or None
 
     email_list = list_emails(
         token=token, search_query=search_query, folder_to_search=folder_to_search
     ).result
     filtered_emails = []
     for email in email_list.items:
+        email_from = email.get("from", {})
         if to and any(
             recipient["emailAddress"]["address"] in to
             for recipient in email.get("toRecipients", [])
@@ -190,9 +191,10 @@ def filter_by_recipients(
         ):
             filtered_emails.append(email)
             continue
-        if froms and any(
-            recipient["emailAddress"]["address"] in froms
-            for recipient in email.get("bccRecipients", [])
+        if (
+            froms
+            and "emailAddress" in email_from.keys()
+            and email_from["emailAddress"]["address"] == froms
         ):
             filtered_emails.append(email)
             continue
@@ -438,6 +440,7 @@ def reply_to_email(
     email_id: str,
     reply: Email,
     html_content: bool = False,
+    reply_to_all: bool = True,
 ) -> Response:
     """
     Reply to an existing message.
@@ -447,22 +450,26 @@ def reply_to_email(
         email_id: The ID of the email to reply to.
         reply: The reply email properties that needs to be appended, set or deleted. Do not modify the body of the email.
         html_content: Whether the body content is HTML.
-
+        reply_to_all: Whether to reply to all recipients.
     Returns:
         Response indicating the result of the reply operation.
     """
+    if len(reply.body) == 0:
+        raise ActionError("Reply cannot be empty.")
     headers = build_headers(token)
-    existing_message = get_email_by_id(token, email_id).result
-    print(f"existing_message: {existing_message}")
-    message_data = _set_message_data(reply, html_content, existing_message)
     data = {}
-    data["message"] = message_data
-    if reply.body:
+    if reply_to_all:
+        endpoint = "replyAll"
         data["comment"] = reply.body
+    else:
+        endpoint = "reply"
+        existing_message = get_email_by_id(token, email_id).result
+        message_data = _set_message_data(reply, html_content, existing_message)
+        data["message"] = message_data
     reply_response = send_request(
         "post",
-        f"/me/messages/{email_id}/reply",
-        "reply to email",
+        f"/me/messages/{email_id}/{endpoint}",
+        f"{endpoint} to email",
         data=data,
         headers=headers,
     )
