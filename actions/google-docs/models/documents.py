@@ -304,6 +304,13 @@ class RawDocument(DocumentInfo):
     def to_markdown(self) -> str:
         return self.body.to_markdown(_MarkdownContext()).strip()
 
+    @property
+    def end_index(self) -> int:
+        if last_element := self.body.content[-1]:
+            return last_element.end_index
+
+        return 1
+
 
 class MarkdownDocument(DocumentInfo):
     body: Annotated[

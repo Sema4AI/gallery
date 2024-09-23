@@ -1,0 +1,15 @@
+{
+    "folder_to_search": "inbox",
+    "to_recipients": "",
+    "cc_recipients": "mika@sema4.ai",
+    "bcc_recipients": "",
+    "vscode:request:oauth2": {
+        "token": {
+            "provider": "microsoft",
+            "type": "OAuth2Secret",
+            "scopes": [
+                "Mail.Read"
+            ]
+        }
+    }
+}

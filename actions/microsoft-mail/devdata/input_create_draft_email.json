@@ -1,0 +1,19 @@
+{
+    "vscode:request:oauth2": {
+        "token": {
+            "provider": "microsoft",
+            "type": "OAuth2Secret",
+            "scopes": [
+                "Mail.ReadWrite"
+            ]
+        }
+    },
+    "subject": "Test email",
+    "attachments": {
+        "attachments": [
+            {
+                "filepath": "C:\\Users\\mikah\\Pictures\\s4dt\\action_list_alternative.png"
+            }
+        ]
+    }
+}

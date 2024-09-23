@@ -564,12 +564,15 @@ class BatchUpdateBody(_BaseUpdateRequest):
         return cls(requests=[InsertTextRequest.new(text, index=1)])
 
     @classmethod
-    def from_markdown(cls, text: str) -> Self:
+    def from_markdown(
+        cls, text: str, *, start_index: int = 1, is_append: bool = False
+    ) -> Self:
         text = text.strip()
-        current_index = 1
+
+        current_index = start_index
         requests = []
         images = []
-        for line in cls._get_lines(text):
+        for line in cls._get_lines(text, is_append=is_append):
             operations = line.get_update_operations(start_index=current_index)
             while True:
                 try:
@@ -598,9 +601,13 @@ class BatchUpdateBody(_BaseUpdateRequest):
         )
 
     @staticmethod
-    def _get_lines(text: str) -> Iterable[_Line | _TableLine]:
+    def _get_lines(text: str, *, is_append=False) -> Iterable[_Line | _TableLine]:
         list_context = _ListContext()
         table_context = _TableContext()
+
+        if is_append:
+            # For append we add a new line
+            yield _Line("")
 
         # Split by new lines
         for new_line in text.split("\n"):

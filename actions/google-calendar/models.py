@@ -1,4 +1,3 @@
-from datetime import datetime
 from typing import List
 
 from pydantic import BaseModel, Field
@@ -29,12 +28,12 @@ class Attendee(BaseModel):
         bool | None, Field(description="Whether this is an optional attendee")
     ] = None
     responseStatus: Annotated[
-        str,
+        str | None,
         Field(
             description="The response status of the attendee. "
             "Possible values: 'needsAction', 'declined', 'tentative', 'accepted'."
         ),
-    ] = None
+    ] = "needsAction"
     organizer: Annotated[
         bool | None,
         Field(description="Whether the attendee is the organizer of the event"),
