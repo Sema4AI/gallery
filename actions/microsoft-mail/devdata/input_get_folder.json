@@ -1,0 +1,13 @@
+{
+    "vscode:request:oauth2": {
+        "token": {
+            "provider": "microsoft",
+            "type": "OAuth2Secret",
+            "scopes": [
+                "Mail.Read"
+            ]
+        }
+    },
+    "folder_to_search": "powerix",
+    "account": "me"
+}
