@@ -1,0 +1,40 @@
+name: Runbook Templates - Update to S3 Gallery
+
+on:
+  workflow_dispatch:
+    # Enables manual triggering via GitHub Actions
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write # required by AWS aws-actions/configure-aws-credentials
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: eu-west-1
+          role-to-assume: arn:aws:iam::710450854638:role/github-action-gallery
+
+      - name: Publish Runbook Templates
+        run: |
+          echo "Updating Gallery S3"
+          S3_BASE_URL="s3://downloads.robocorp.com/gallery/runbooks"
+          cd runbooks
+          ls -la
+          
+          # Copy the updated manifest
+          aws s3 cp manifest.json $S3_BASE_URL/manifest.json --cache-control max-age=120 --content-type "text/plain"
+
+          # Extract and upload markdown files listed in the manifest
+          for file in $(jq -r '.runbook_templates[].url' manifest.json | sed 's#.*/##'); do
+            if [ ! -f "$file" ]; then
+              echo "Error: Markdown file '$file' not found."
+              exit 1
+            fi
+            aws s3 cp $file $S3_BASE_URL/$file --cache-control max-age=120 --content-type "text/markdown"
+          done
