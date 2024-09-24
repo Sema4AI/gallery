@@ -5,19 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [1.0.0] - 2024-09-12
+## [1.0.1] - 2024-09-23
+
+Fix problem where `list_messages` response is missing `id` property.
+
+### Fixed
+
+Action `list_messages` will always return `id` property even if it
+is not specifically requested in the action call.
+
+## [1.0.0] - 2024-09-20
 
 First version published, changelog tracking starts.
 
 ### Added
 
-- Microsoft Entra ID (Oauth2) authentication for actions
-- Download a file
-- Upload a file
-- Search files
-- List all sites
-- Get lists for a site
-- Create a list for a site
+- Basic set of actions to handle emails for Outlook account.
 
 ### Changed
 
