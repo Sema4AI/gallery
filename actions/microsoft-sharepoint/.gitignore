@@ -11,3 +11,5 @@ temp/
 .project
 .pydevproject
 .env
+.gitattributes
+metadata.json
