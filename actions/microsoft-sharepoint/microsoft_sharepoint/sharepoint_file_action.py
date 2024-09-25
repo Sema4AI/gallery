@@ -13,7 +13,7 @@ from sema4ai.actions import action, OAuth2Secret, Response, ActionError
 from typing import Literal
 from microsoft_sharepoint.models import File, Location, FileList
 from microsoft_sharepoint.sharepoint_site_action import (
-    get_sharepoint_site_id,
+    search_for_site,
     get_sharepoint_site,
 )
 from microsoft_sharepoint.support import (
@@ -30,6 +30,7 @@ def download_sharepoint_file(
         Literal["microsoft"],
         list[Literal["Files.Read"]],
     ],
+    site_id: str = "",
     location: str = "",
     target_folder: str = "",
     download_all_matching: bool = False,
@@ -54,16 +55,19 @@ def download_sharepoint_file(
         download_url = f"{BASE_GRAPH_URL}/me/drive/items"
         search_location = "me"
         site_known = True
+    elif site_id != "":
+        site_id = site_id if len(site_id.split(",")) == 1 else site_id.split(",")[1]
+        download_url = f"{BASE_GRAPH_URL}/sites/{site_id}/drive/items"
     elif location != "":
-        response = get_sharepoint_site_id(site_name=location, token=token)
+        response = search_for_site(site_name=location, token=token)
         sites = response.result["value"]
         if len(sites) == 0:
             raise ActionError(f"Site {location} not found")
         elif len(sites) > 1:
             raise ActionError(f"Multiple sites with name {location} found")
         id_field = sites[0]["id"]
-        search_location = id_field.split(",")[1]
-        download_url = f"{BASE_GRAPH_URL}/sites/{search_location}/drive/items"
+        site_id = id_field.split(",")[-1]
+        download_url = f"{BASE_GRAPH_URL}/sites/{site_id}/drive/items"
     else:
         download_url = f"{BASE_GRAPH_URL}/sites"
         site_known = False
@@ -139,18 +143,19 @@ def search_sharepoint_files(
         "post", "/search/query", "Search files", headers=headers, data=search_payload
     )
     files = []
-    for result in search_results["value"][0]["hitsContainers"][0]["hits"]:
-        parent = result["resource"]["parentReference"]
-        id_field = parent["siteId"]
-        site_id = id_field.split(",")[1]
-        site_response = get_sharepoint_site(site_id=site_id, token=token)
-        site_name = site_response.result["displayName"]
-        files.append(
-            File(
-                file=result["resource"],
-                location=Location(name=site_name, url=result["resource"]["webUrl"]),
+    if search_results["value"][0]["hitsContainers"][0]["total"] > 0:
+        for result in search_results["value"][0]["hitsContainers"][0]["hits"]:
+            parent = result["resource"]["parentReference"]
+            id_field = parent["siteId"]
+            site_id = id_field.split(",")[1]
+            site_response = get_sharepoint_site(site_id=site_id, token=token)
+            site_name = site_response.result["displayName"]
+            files.append(
+                File(
+                    file=result["resource"],
+                    location=Location(name=site_name, url=result["resource"]["webUrl"]),
+                )
             )
-        )
     return Response(result=FileList(files=files))
 
 
@@ -162,7 +167,7 @@ def upload_file_to_sharepoint(
         list[Literal["Files.ReadWrite"]],
     ],
     location: str = "me",
-) -> Response[dict]:
+) -> Response[str]:
     """
     Upload a file to the Sharepoint site.
 
@@ -184,7 +189,7 @@ def upload_file_to_sharepoint(
             f"{BASE_GRAPH_URL}/me/drive/root:/{upload_file.name}:/createUploadSession"
         )
     else:
-        response = get_sharepoint_site_id(location, token)
+        response = search_for_site(location, token)
         sites = response.result["value"]
         if len(sites) == 0:
             raise ActionError(f"Site {location} not found")

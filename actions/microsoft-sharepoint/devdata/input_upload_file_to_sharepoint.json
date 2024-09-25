@@ -1,12 +1,13 @@
 {
     "location": "filesharing",
     "filename": "README.md",
-    "token": {
-        "provider": "microsoft",
-        "scopes": [
-            "Files.ReadWrite"
-        ],
-        "access_token": "<ACCESS_TOKEN>",
-        "metadata": {}
+    "vscode:request:oauth2": {
+        "token": {
+            "provider": "microsoft",
+            "type": "OAuth2Secret",
+            "scopes": [
+                "Files.ReadWrite"
+            ]
+        }
     }
 }

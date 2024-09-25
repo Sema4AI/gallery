@@ -1,11 +1,12 @@
 {
     "search_text": "filetype:yaml",
-    "token": {
-        "provider": "microsoft",
-        "scopes": [
-            "Files.ReadWrite.All"
-        ],
-        "access_token": "<ACCESS_TOKEN>",
-        "metadata": {}
+    "vscode:request:oauth2": {
+        "token": {
+            "provider": "microsoft",
+            "type": "OAuth2Secret",
+            "scopes": [
+                "Files.ReadWrite.All"
+            ]
+        }
     }
 }

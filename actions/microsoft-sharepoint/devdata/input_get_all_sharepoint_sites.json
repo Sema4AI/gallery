@@ -1,10 +1,11 @@
 {
-    "token": {
-        "provider": "microsoft",
-        "scopes": [
-            "Sites.Read.All"
-        ],
-        "access_token": "<ACCESS_TOKEN>",
-        "metadata": {}
+    "vscode:request:oauth2": {
+        "token": {
+            "provider": "microsoft",
+            "type": "OAuth2Secret",
+            "scopes": [
+                "Sites.Read.All"
+            ]
+        }
     }
 }

@@ -7,7 +7,10 @@ Currently supporting:
 
 from sema4ai.actions import action, OAuth2Secret, Response, ActionError
 from typing import Literal
-from microsoft_sharepoint.sharepoint_site_action import get_sharepoint_site_id
+from microsoft_sharepoint.sharepoint_site_action import (
+    get_sharepoint_site,
+    _get_my_site,
+)
 from microsoft_sharepoint.models import SharepointList
 from microsoft_sharepoint.support import (
     build_headers,
@@ -21,17 +24,19 @@ def get_sharepoint_lists(
         Literal["microsoft"],
         list[Literal["Sites.Read.All"]],
     ],
-    site_name: str = "",
     site_id: str = "",
+    site_name: str = "",
 ) -> Response[dict]:
     """
     Get lists of the Sharepoint site by site id or site name.
 
-    To get "my lists" pass "me" as the site name.
+    Use terms 'me', 'my lists', 'mylists', 'my site', 'mysite' to get lists of the user's site.
+
+    Use 'site_id' every time it is available.
 
     Args:
-        site_name: name of the Sharepoint site.
         site_id: id of the Sharepoint site.
+        site_name: name of the Sharepoint site.
         token: OAuth2 token to use for the operation.
 
     Returns:
@@ -40,24 +45,39 @@ def get_sharepoint_lists(
     if not site_id and not site_name:
         raise ActionError("Either site_id or site_name must be provided")
     headers = build_headers(token)
-
-    if site_name.lower() in ["me", "my lists", "mylists"]:
-        site_id = _get_mylists_site(headers)
-    elif site_name:
-        response = get_sharepoint_site_id(site_name=site_name, token=token)
+    mysite = _get_my_site(token)
+    if len(site_id) > 0:
+        if site_id == mysite["id"]:
+            site_name = "My Site"
+        else:
+            site = get_sharepoint_site(site_id=site_id, token=token)
+            site_name = site.result["name"]
+        lists = _get_lists(site_id, headers)
+    elif site_name.lower() in ["me", "my lists", "mylists", "my site", "mysite"]:
+        site_name = "My Site"
+        lists = _get_lists(mysite["id"], headers)
+    else:
+        response = get_sharepoint_site(site_name=site_name, token=token)
         if len(response.result["value"]) == 0:
             raise ActionError(f"Site '{site_name}' not found")
         elif len(response.result["value"]) > 1:
             raise ActionError("Multiple sites with the same name found.")
         site_id = response.result["value"][0]["id"]
+        lists = _get_lists(site_id, headers)
+    return Response(
+        result={"value": {"list_name": f"Lists for {site_name}", "lists": lists}}
+    )
 
+
+def _get_lists(site_id, headers):
+    site_id = site_id if len(site_id.split(",")) == 1 else site_id.split(",")[1]
     list_response = send_request(
         "get", f"/sites/{site_id}/lists", "Get site lists", headers=headers
     )
     lists = [
         thelist for thelist in list_response["value"] if not thelist["list"]["hidden"]
     ]
-    return Response(result={"value": lists})
+    return lists
 
 
 @action
@@ -75,8 +95,6 @@ def create_sharepoint_list(
 
     Unless specified the column type is by default 'text'.
 
-    To create a list into "my lists" pass "me" as the site name.
-
     Args:
         sharepoint_list: name of the list and columns to create.
         site_name: name of the Sharepoint site.
@@ -89,10 +107,8 @@ def create_sharepoint_list(
     if not site_id and not site_name:
         raise ActionError("Either site_id or site_name must be provided")
     headers = build_headers(token)
-    if site_name.lower() in ["me", "my lists", "mylists"]:
-        site_id = _get_mylists_site(headers)
-    elif site_name:
-        response = get_sharepoint_site_id(site_name=site_name, token=token)
+    if site_name:
+        response = get_sharepoint_site(site_name=site_name, token=token)
         if len(response.result["value"]) == 0:
             raise ActionError(f"Site '{site_name}' not found")
         elif len(response.result["value"]) > 1:
@@ -100,7 +116,7 @@ def create_sharepoint_list(
                 "Multiple sites with the same name found. Need to have a specific site to add list to."
             )
         site_id = response.result["value"][0]["id"]
-
+    site_id = site_id if len(site_id.split(",")) == 1 else site_id.split(",")[1]
     data = {
         "displayName": sharepoint_list.list_name,
         "description": sharepoint_list.description,
@@ -113,27 +129,3 @@ def create_sharepoint_list(
         "post", f"/sites/{site_id}/lists", "Create list", headers=headers, data=data
     )
     return Response(result=response_json)
-
-
-def _get_mylists_site(headers):
-    user_data = send_request(
-        "get",
-        "/me?$select=mySite",
-        req_name="Get the current user's information",
-        headers=headers,
-    )
-    my_site_url = user_data["mySite"]
-    # Extract hostname and personal site path from the mySite URL
-    my_site_url_parts = my_site_url.split("/")
-    hostname = my_site_url_parts[2]
-    personal_site_path = "/".join(my_site_url_parts[3:-1])
-
-    site_data = send_request(
-        "get",
-        f"/sites/{hostname}:/{personal_site_path}",
-        "Get the site ID",
-        headers=headers,
-    )
-    site_id = site_data["id"]
-    print(f"Site ID: {site_id}")
-    return site_id
