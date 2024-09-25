@@ -77,6 +77,9 @@ def list_emails(
         if properties_to_return
         else []
     )
+    # Make sure that 'id' is always returned when keys are limited
+    if len(keys_to_return) > 0 and "id" not in keys_to_return:
+        keys_to_return.append("id")
     headers = build_headers(token)
     headers["ConsistencyLevel"] = "eventual"
     folders = []
