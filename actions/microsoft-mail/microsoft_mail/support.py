@@ -83,13 +83,11 @@ def _base64_attachment(attachment):
     return data
 
 
-def _set_message_data(
-    message: Email, html_content: bool, existing_message=None
-) -> dict:
-    data = existing_message or {}
+def _set_message_data(message: Email, html_content: bool, reply: bool = False) -> dict:
+    data = {}
     if message.subject:
         data["subject"] = message.subject
-    if message.body and not existing_message:
+    if message.body:
         data["body"] = {
             "contentType": "HTML" if html_content else "Text",
             "content": message.body,
@@ -137,9 +135,7 @@ def _set_message_data(
                 ),
             }
         }
-    if "toRecipients" in data.keys() and existing_message:
-        data["toRecipients"] = data["toRecipients"].extend(existing_message["sender"])
-    return data
+    return {"message": data} if reply else data
 
 
 def _get_folder_structure(token, account, folder_id=None):
