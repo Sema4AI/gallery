@@ -52,6 +52,7 @@ def send_request(
 
 
 def _get_me(token):
+    # scope required: User.Read
     headers = build_headers(token)
     return send_request("get", "/me", "get me", headers=headers)
 
@@ -82,13 +83,11 @@ def _base64_attachment(attachment):
     return data
 
 
-def _set_message_data(
-    message: Email, html_content: bool, existing_message=None
-) -> dict:
-    data = existing_message or {}
+def _set_message_data(message: Email, html_content: bool, reply: bool = False) -> dict:
+    data = {}
     if message.subject:
         data["subject"] = message.subject
-    if message.body and not existing_message:
+    if message.body:
         data["body"] = {
             "contentType": "HTML" if html_content else "Text",
             "content": message.body,
@@ -136,12 +135,11 @@ def _set_message_data(
                 ),
             }
         }
-    if "toRecipients" in data.keys() and existing_message:
-        data["toRecipients"] = data["toRecipients"].extend(existing_message["sender"])
-    return data
+    return {"message": data} if reply else data
 
 
 def _get_folder_structure(token, account, folder_id=None):
+    # scope required: least Mail.ReadBasic, higher Mail.ReadWrite / Mail.Read
     headers = build_headers(token)
     if folder_id:
         url = f"/users/{account}/mailFolders/{folder_id}/childFolders"
@@ -166,6 +164,7 @@ def _get_folder_structure(token, account, folder_id=None):
 
 
 def _delete_subscription(subscription_id: str, headers: dict):
+    # scope required: least Mail.ReadBasic, higher Mail.Read
     send_request(
         "delete",
         f"/subscriptions/{subscription_id}",

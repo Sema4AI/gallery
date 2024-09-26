@@ -39,7 +39,7 @@ from microsoft_mail.support import build_headers, send_request
 def list_emails(
     token: OAuth2Secret[
         Literal["microsoft"],
-        list[Literal["Mail.Read"]],
+        list[Literal["Mail.Read", "User.Read"]],
     ],
     search_query: str,
     folder_to_search: str = "inbox",
@@ -51,7 +51,7 @@ def list_emails(
 
     When searching emails in a specific folder, the folder name should be provided in the 'folder_to_search' parameter and NOT in the 'search_query'.
 
-    Do NOT add to 'search_query' any conditions related to recipients ('to', 'cc', 'bcc' or 'from'). In that case use 'filter_by_recipients' action after this action.
+    Use action 'filter_by_recipients' if there are any conditions related to recipients ('to', 'cc', 'bcc' or 'from').
 
     For any date comparison use:
         - consider Monday as beginning of the week
@@ -87,6 +87,8 @@ def list_emails(
     if folder_to_search:
         folders = folders or list_folders(token).result
         folder_found = _find_folder(folders, folder_to_search)
+        if folder_found is None:
+            raise ActionError(f"Folder '{folder_to_search}' not found.")
         folder_to_search_id = folder_found["id"]
         if len(search_query) > 0:
             search_query = (
@@ -135,7 +137,7 @@ def list_emails(
 def filter_by_recipients(
     token: OAuth2Secret[
         Literal["microsoft"],
-        list[Literal["Mail.Read"]],
+        list[Literal["Mail.Read", "User.Read"]],
     ],
     search_query: str = "*",
     from_: str = "",
@@ -438,7 +440,7 @@ def send_draft(
 def reply_to_email(
     token: OAuth2Secret[
         Literal["microsoft"],
-        list[Literal["Mail.Send"]],
+        list[Literal["Mail.Send", "Mail.ReadWrite"]],
     ],
     email_id: str,
     reply: Email,
@@ -460,23 +462,25 @@ def reply_to_email(
     if len(reply.body) == 0:
         raise ActionError("Reply cannot be empty.")
     headers = build_headers(token)
-    data = {}
-    if reply_to_all:
-        endpoint = "replyAll"
-        data["comment"] = reply.body
-    else:
-        endpoint = "reply"
-        existing_message = get_email_by_id(token, email_id).result
-        message_data = _set_message_data(reply, html_content, existing_message)
-        data["message"] = message_data
+    endpoint = "createReplyAll" if reply_to_all else "createReply"
+    reply_data = _set_message_data(reply, html_content, reply=True)
     reply_response = send_request(
         "post",
         f"/me/messages/{email_id}/{endpoint}",
         f"{endpoint} to email",
-        data=data,
+        data=reply_data,
         headers=headers,
     )
-    return Response(result=reply_response)
+    draft_message_id = reply_response["id"]
+    for attachment in reply.attachments.attachments:
+        add_attachment(token, draft_message_id, attachment)
+    send_request(
+        "post",
+        f"/me/messages/{draft_message_id}/send",
+        "send {endpoint} email",
+        headers=headers,
+    )
+    return Response(result="Reply sent successfully")
 
 
 @action(is_consequential=True)
@@ -583,7 +587,7 @@ def get_email_by_id(
 def list_folders(
     token: OAuth2Secret[
         Literal["microsoft"],
-        list[Literal["Mail.Read"]],
+        list[Literal["Mail.Read", "User.Read"]],
     ],
     account: str = "me",
 ) -> Response:
@@ -606,7 +610,9 @@ def list_folders(
 
 @action
 def subscribe_notifications(
-    token: OAuth2Secret[Literal["microsoft"], list[Literal["Mail.ReadWrite"]]],
+    token: OAuth2Secret[
+        Literal["microsoft"], list[Literal["Mail.ReadWrite", "User.Read"]]
+    ],
     email_folder: str,
     webhook_url: str,
     expiration_date: str,
@@ -614,6 +620,8 @@ def subscribe_notifications(
 ) -> Response:
     """
     Subscribe to notifications for new messages in a specific folder.
+
+    Expiration date can be at maximum 72 hours to the future. Set that if user does not give specific date.
 
     Args:
         token: The OAuth2 token for authentication.
@@ -626,12 +634,14 @@ def subscribe_notifications(
         Response: Confirmation of successful subscription.
     """
     headers = build_headers(token)
-    if email_folder.lower() == "inbox":
-        target_folder = "Inbox"
+    folder = get_folder(token, email_folder, account)
+    if account.lower() == "me":
+        subscription_user = "/me"
     else:
-        target_folder = get_folder(token, email_folder, account)
+        subscription_user = f"users/{account}"
+    target_folder = folder.result["id"]
     subscription_resource = (
-        f"users/{account}/mailFolders('{target_folder['id']}')/messages"
+        f"{subscription_user}/mailFolders('{target_folder}')/messages"
     )
     data = {
         "changeType": "created",
@@ -721,7 +731,7 @@ def get_subscriptions(
 
 @action
 def get_folder(
-    token: OAuth2Secret[Literal["microsoft"], list[Literal["Mail.Read"]]],
+    token: OAuth2Secret[Literal["microsoft"], list[Literal["Mail.Read", "User.Read"]]],
     folder_to_search: str,
     account: str,
 ) -> Response[dict]:
