@@ -1,6 +1,6 @@
 {
-    "search_query": "receivedDateTime le 2024-08-05",
-    "folder_to_search": "Processed Invoices",
+    "search_query": "receivedDateTime eq 2024-09-26",
+    "folder_to_search": "inbox",
     "properties_to_return": "subject,from,receivedDateTime",
     "vscode:request:oauth2": {
         "token": {

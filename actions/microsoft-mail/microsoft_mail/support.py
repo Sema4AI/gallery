@@ -52,6 +52,7 @@ def send_request(
 
 
 def _get_me(token):
+    # scope required: User.Read
     headers = build_headers(token)
     return send_request("get", "/me", "get me", headers=headers)
 
@@ -142,6 +143,7 @@ def _set_message_data(
 
 
 def _get_folder_structure(token, account, folder_id=None):
+    # scope required: least Mail.ReadBasic, higher Mail.ReadWrite / Mail.Read
     headers = build_headers(token)
     if folder_id:
         url = f"/users/{account}/mailFolders/{folder_id}/childFolders"
@@ -166,6 +168,7 @@ def _get_folder_structure(token, account, folder_id=None):
 
 
 def _delete_subscription(subscription_id: str, headers: dict):
+    # scope required: least Mail.ReadBasic, higher Mail.Read
     send_request(
         "delete",
         f"/subscriptions/{subscription_id}",

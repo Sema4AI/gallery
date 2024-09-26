@@ -39,7 +39,7 @@ from microsoft_mail.support import build_headers, send_request
 def list_emails(
     token: OAuth2Secret[
         Literal["microsoft"],
-        list[Literal["Mail.Read"]],
+        list[Literal["Mail.Read", "User.Read"]],
     ],
     search_query: str,
     folder_to_search: str = "inbox",
@@ -87,6 +87,8 @@ def list_emails(
     if folder_to_search:
         folders = folders or list_folders(token).result
         folder_found = _find_folder(folders, folder_to_search)
+        if folder_found is None:
+            raise ActionError(f"Folder '{folder_to_search}' not found.")
         folder_to_search_id = folder_found["id"]
         if len(search_query) > 0:
             search_query = (
@@ -135,7 +137,7 @@ def list_emails(
 def filter_by_recipients(
     token: OAuth2Secret[
         Literal["microsoft"],
-        list[Literal["Mail.Read"]],
+        list[Literal["Mail.Read", "User.Read"]],
     ],
     search_query: str = "*",
     from_: str = "",
@@ -438,7 +440,7 @@ def send_draft(
 def reply_to_email(
     token: OAuth2Secret[
         Literal["microsoft"],
-        list[Literal["Mail.Send"]],
+        list[Literal["Mail.Send", "Mail.Read"]],
     ],
     email_id: str,
     reply: Email,
@@ -583,7 +585,7 @@ def get_email_by_id(
 def list_folders(
     token: OAuth2Secret[
         Literal["microsoft"],
-        list[Literal["Mail.Read"]],
+        list[Literal["Mail.Read", "User.Read"]],
     ],
     account: str = "me",
 ) -> Response:
@@ -606,7 +608,7 @@ def list_folders(
 
 @action
 def subscribe_notifications(
-    token: OAuth2Secret[Literal["microsoft"], list[Literal["Mail.ReadWrite"]]],
+    token: OAuth2Secret[Literal["microsoft"], list[Literal["Mail.Read", "User.Read"]]],
     email_folder: str,
     webhook_url: str,
     expiration_date: str,
@@ -653,7 +655,7 @@ def subscribe_notifications(
 
 @action
 def delete_all_subscriptions(
-    token: OAuth2Secret[Literal["microsoft"], list[Literal["Mail.ReadWrite"]]]
+    token: OAuth2Secret[Literal["microsoft"], list[Literal["Mail.Read"]]]
 ) -> Response:
     """
     Delete all existing subscriptions.
@@ -678,7 +680,7 @@ def delete_all_subscriptions(
 
 @action
 def delete_subscription(
-    token: OAuth2Secret[Literal["microsoft"], list[Literal["Mail.ReadWrite"]]],
+    token: OAuth2Secret[Literal["microsoft"], list[Literal["Mail.Read"]]],
     subscription_id: str,
 ) -> Response:
     """
@@ -721,7 +723,7 @@ def get_subscriptions(
 
 @action
 def get_folder(
-    token: OAuth2Secret[Literal["microsoft"], list[Literal["Mail.Read"]]],
+    token: OAuth2Secret[Literal["microsoft"], list[Literal["Mail.Read", "User.Read"]]],
     folder_to_search: str,
     account: str,
 ) -> Response[dict]:
