@@ -24,6 +24,7 @@ from sema4ai.actions import action, OAuth2Secret, Response, ActionError
 from microsoft_mail.models import Email, EmailAttachment, Emails
 from microsoft_mail.support import (
     _find_folder,
+    _get_inbox_folder_id,
     _base64_attachment,
     _set_message_data,
     _delete_subscription,
@@ -84,7 +85,13 @@ def list_emails(
     headers["ConsistencyLevel"] = "eventual"
     folders = []
     search_query = "" if search_query == "*" else search_query
-    if folder_to_search:
+    if folder_to_search == "inbox":
+        inbox_folder_id = _get_inbox_folder_id(token)
+        if len(search_query) > 0:
+            search_query = f"{search_query} AND parentFolderId eq '{inbox_folder_id}'"
+        else:
+            search_query = f"parentFolderId eq '{inbox_folder_id}'"
+    elif folder_to_search:
         folders = folders or list_folders(token).result
         folder_found = _find_folder(folders, folder_to_search)
         if folder_found is None:
@@ -562,13 +569,20 @@ def get_email_by_id(
         list[Literal["Mail.Read"]],
     ],
     email_id: str,
+    show_full_body: bool = False,
 ) -> Response:
     """
     Get the details of a specific email.
 
+    By default shows email's body preview. If you want to see the full body,
+    set 'show_full_body' to True.
+
+    The full 'body' of the email might return too much information for the chat to handle.
+
     Args:
         token: OAuth2 token to use for the operation.
         email_id: The ID of the email to retrieve.
+        show_full_body: Whether to show the full body content.
 
     Returns:
         The message details.
@@ -580,6 +594,10 @@ def get_email_by_id(
         "get email",
         headers=headers,
     )
+    if show_full_body:
+        message.pop("bodyPreview", None)
+    else:
+        message.pop("body", None)
     return Response(result=message)
 
 

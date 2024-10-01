@@ -139,18 +139,24 @@ def _set_message_data(message: Email, html_content: bool, reply: bool = False) -
 
 
 def _get_folder_structure(token, account, folder_id=None):
-    # scope required: least Mail.ReadBasic, higher Mail.ReadWrite / Mail.Read
     headers = build_headers(token)
     if folder_id:
         url = f"/users/{account}/mailFolders/{folder_id}/childFolders"
     else:
         url = f"/users/{account}/mailFolders"
 
-    response = send_request("get", url, "get folder structure", headers=headers)
-    folders = response.get("value", [])
+    all_folders = []
 
+    # Fetch all pages
+    while url:
+        response = send_request("get", url, "get folder structure", headers=headers)
+        all_folders.extend(response.get("value", []))
+        url = response.get("@odata.nextLink", None)
+        url = None if url is None else url.split(BASE_GRAPH_URL)[1]
+
+    # Process all folders
     folder_structure = []
-    for folder in folders:
+    for folder in all_folders:
         subfolders = _get_folder_structure(token, account, folder["id"])
         folder_structure.append(
             {
@@ -171,6 +177,20 @@ def _delete_subscription(subscription_id: str, headers: dict):
         "delete subscription",
         headers=headers,
     )
+
+
+def _get_inbox_folder_id(token):
+    headers = build_headers(token)
+    response = send_request(
+        "get",
+        "/me/mailFolders/inbox",
+        "get inbox folder",
+        headers=headers,
+    )
+    if response and "id" in response.keys():
+        return response["id"]
+    else:
+        raise ValueError("Inbox folder not found")
 
 
 def _find_folder(folders, folder_to_search):
