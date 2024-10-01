@@ -24,6 +24,7 @@ from sema4ai.actions import action, OAuth2Secret, Response, ActionError
 from microsoft_mail.models import Email, EmailAttachment, Emails
 from microsoft_mail.support import (
     _find_folder,
+    _get_inbox_folder_id,
     _base64_attachment,
     _set_message_data,
     _delete_subscription,
@@ -84,7 +85,13 @@ def list_emails(
     headers["ConsistencyLevel"] = "eventual"
     folders = []
     search_query = "" if search_query == "*" else search_query
-    if folder_to_search:
+    if folder_to_search == "inbox":
+        inbox_folder_id = _get_inbox_folder_id(token)
+        if len(search_query) > 0:
+            search_query = f"{search_query} AND parentFolderId eq '{inbox_folder_id}'"
+        else:
+            search_query = f"parentFolderId eq '{inbox_folder_id}'"
+    elif folder_to_search:
         folders = folders or list_folders(token).result
         folder_found = _find_folder(folders, folder_to_search)
         if folder_found is None:

@@ -1,5 +1,5 @@
 # Required: A short name for the action package
-name: Microsoft Mail
+name: XMicrosoft Mail
 
 # Required: A description of what's in the action package.
 description: Actions for Microsoft 365 Outlook emails.
