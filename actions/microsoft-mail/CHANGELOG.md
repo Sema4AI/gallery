@@ -7,9 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [1.0.3] - 2024-10-01
 
-Change `get_email_by_id` to return only `bodyPreview` by default.
-By new `show_full_body` parameter set to `True` the `body` of email can be
-still retrieved.
+- Change `get_email_by_id` to return only `bodyPreview` by default.
+  By setting new `show_full_body` parameter to `True` the `body` of email can be
+  still retrieved.
+- Add special handling for "inbox" folder with `list_emails` actions
 
 ## [1.0.2] - 2024-09-26
 
