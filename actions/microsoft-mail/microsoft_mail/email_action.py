@@ -562,13 +562,20 @@ def get_email_by_id(
         list[Literal["Mail.Read"]],
     ],
     email_id: str,
+    show_full_body: bool = False,
 ) -> Response:
     """
     Get the details of a specific email.
 
+    By default shows email's body preview. If you want to see the full body,
+    set 'show_full_body' to True.
+
+    The full 'body' of the email might return too much information for the chat to handle.
+
     Args:
         token: OAuth2 token to use for the operation.
         email_id: The ID of the email to retrieve.
+        show_full_body: Whether to show the full body content.
 
     Returns:
         The message details.
@@ -580,6 +587,10 @@ def get_email_by_id(
         "get email",
         headers=headers,
     )
+    if show_full_body:
+        message.pop("bodyPreview", None)
+    else:
+        message.pop("body", None)
     return Response(result=message)
 
 

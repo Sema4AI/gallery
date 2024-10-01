@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.0.3] - 2024-10-01
+
+Change `get_email_by_id` to return only `bodyPreview` by default.
+By new `show_full_body` parameter set to `True` the `body` of email can be
+still retrieved.
+
 ## [1.0.2] - 2024-09-26
 
 Fix problems with action scopes. Improvements on error handling.
