@@ -1,4 +1,3 @@
-
 # Required: A short name for the action package
 name: Zendesk
 
@@ -12,10 +11,10 @@ dependencies:
   conda-forge:
     - python=3.10.14
     - python-dotenv=1.0.1
-    - uv=0.2.6
+    - uv=0.4.17
   pypi:
-    - sema4ai-actions=0.10.0
-    - pydantic=2.7.4
+    - sema4ai-actions=1.0.1
+    - pydantic=2.9.2
     - requests=2.32.3
 
 packaging:
@@ -31,4 +30,3 @@ packaging:
     - ./.DS_store/**
     - ./**/*.pyc
     - ./**/*.zip
-

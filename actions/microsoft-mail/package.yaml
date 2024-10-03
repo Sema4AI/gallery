@@ -11,12 +11,12 @@ dependencies:
   conda-forge:
     - python=3.10.14
     - python-dotenv=1.0.1
-    - uv=0.4.16
+    - uv=0.4.17
   pypi:
-    - sema4ai-actions=1.0.0
+    - sema4ai-actions=1.0.1
+    - pydantic=2.9.2
     - requests=2.32.3
     - msal=1.31.0
-    - pydantic=2.9.2
 
 packaging:
   # By default, all files and folders in this directory are packaged when uploaded.

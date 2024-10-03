@@ -10,9 +10,9 @@ version: 1.0.0
 dependencies:
   conda-forge:
     - python=3.10.14
-    - uv=0.1.44
+    - uv=0.4.17
   pypi:
-    - sema4ai-actions=0.6.0
+    - sema4ai-actions=1.0.1
     - pytz=2024.1
     - waybackpy=3.0.6
 
