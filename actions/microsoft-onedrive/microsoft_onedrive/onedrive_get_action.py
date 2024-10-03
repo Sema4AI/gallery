@@ -1,5 +1,5 @@
 from typing import List, Literal
-
+from pathlib import Path
 import requests
 from sema4ai.actions import ActionError, OAuth2Secret, Response, action
 
@@ -7,7 +7,7 @@ from microsoft_onedrive.models import (
     GetOneDriveItemByIdParams,
     OneDriveListingParams,
     OneDriveSearchItemsRequest,
-    RecursiveOneDriveFoldersParams,
+    DownloadRequest,
 )
 from microsoft_onedrive.support import (
     BASE_GRAPH_URL,
@@ -26,7 +26,8 @@ def get_onedrive_item_by_id(
     params: GetOneDriveItemByIdParams,
 ) -> Response[dict]:
     """
-    Retrieve detailed information about a file or folder in OneDrive using its ID. Useful also to find parent folders.
+    Retrieve detailed information about a file or folder in OneDrive using its ID.
+    Useful also to find parent folders.
 
     Args:
         token: OAuth2 token with Files.Read permission.
@@ -95,14 +96,14 @@ def list_all_onedrive_folders_recursively(
         Literal["microsoft"],
         List[Literal["Files.Read"]],
     ],
-    params: RecursiveOneDriveFoldersParams,
+    root_folder: str = "/",
 ) -> Response[dict]:
     """
     Recursively list all folders in OneDrive starting from a specified root folder.
 
     Args:
         token: OAuth2 token.
-        params: Pydantic model containing the root_folder parameter.
+        root_folder: The root folder to start listing folders from. Use "/" for the root of OneDrive.
 
     Returns:
         Dictionary with a 'folders' key mapping to a list of dictionaries,
@@ -110,10 +111,10 @@ def list_all_onedrive_folders_recursively(
     """
     headers = build_headers(token)
 
-    if params.root_folder in ["/", "root", "home"]:
+    if root_folder in ["/", "root", "home"]:
         url = f"{BASE_GRAPH_URL}/me/drive/root/children"
     else:
-        folder_path = params.root_folder.strip("/")
+        folder_path = root_folder.strip("/")
         url = f"{BASE_GRAPH_URL}/me/drive/root:/{folder_path}:/children"
 
     try:
@@ -123,7 +124,7 @@ def list_all_onedrive_folders_recursively(
         status_code = e.response.status_code
         if status_code == 400:
             raise ActionError(
-                f"Bad request. The folder path '{params.root_folder}' might be invalid."
+                f"Bad request. The folder path '{root_folder}' might be invalid."
             )
         elif status_code == 401:
             raise ActionError("Unauthorized. Please check your authentication token.")
@@ -132,7 +133,7 @@ def list_all_onedrive_folders_recursively(
                 "Access forbidden. You may not have permission to access this folder."
             )
         elif status_code == 404:
-            raise ActionError(f"Folder not found: {params.root_folder}")
+            raise ActionError(f"Folder not found: {root_folder}")
         else:
             raise ActionError(f"Failed to list OneDrive folders: HTTP {status_code}")
     except requests.RequestException as e:
@@ -150,7 +151,8 @@ def list_items_from_onedrive_folder(
     params: OneDriveListingParams,
 ) -> Response[dict]:
     """
-    List items in a specified OneDrive folder. Use "/" for the root folder, "/Documents", etc. Returns also download urls (note that it's slow to print).
+    List items in a specified OneDrive folder. Use "/" for the root folder, "/Documents", etc.
+    Returns also download urls (note that it's slow to print).
 
     Args:
         token: OAuth2 token.
@@ -256,3 +258,74 @@ def search_for_onedrive_items(
         return Response(result={"items": filtered_items})
     else:
         raise ActionError(f"Failed to search items: {response.text}")
+
+
+@action
+def download_onedrive_file(
+    token: OAuth2Secret[
+        Literal["microsoft"],
+        List[Literal["Files.Read.All"]],
+    ],
+    download_request: DownloadRequest,
+    download_location: str = "",
+    download_all: bool = False,
+) -> Response[str]:
+    """
+    Download file or files from OneDrive to local storage.
+
+    Do not give 'download_location' unless user specifies a path.
+    By default downloads to the user's Downloads folder.
+
+    Args:
+        token: OAuth2 token to use for the operation.
+        download_request: The download request containing the search query or download URL.
+        download_location:  The path (folder) to save the downloaded file.
+        download_all: Whether to download all files found or not.
+
+    Returns:
+        Response with a message indicating the number of files downloaded.
+    """
+    download_location = (
+        Path.home() / "Downloads"
+        if download_location == ""
+        else Path(download_location)
+    )
+    if download_request.download_url and download_request.name:
+        matching_files = [
+            {
+                "name": download_request.name,
+                "download_url": download_request.download_url,
+            }
+        ]
+    elif download_request.search_items_request:
+        response = search_for_onedrive_items(
+            token,
+            download_request.search_items_request,
+        )
+        matching_files = response.result.get("items", [])
+        if len(matching_files) == 0:
+            raise ActionError("No files found matching the search query.")
+        elif not download_all and len(matching_files) > 1:
+            raise ActionError(
+                "Multiple files found matching the search query. Set download_all to True to download all files."
+            )
+
+    else:
+        raise ActionError("Either query or download_url, name must be provided.")
+    download_count = 0
+    for file in matching_files:
+        download_url = file.get("download_url")
+        if download_url:
+            file_name = file.get("name")
+            download_response = requests.get(download_url)
+            if download_response.status_code == 200:
+                with open(f"{download_location}/{file_name}", "wb") as f:
+                    f.write(download_response.content)
+                download_count += 1
+            else:
+                raise ActionError(f"Failed to download file: {download_response.text}")
+        else:
+            raise ActionError(f"No download URL available for file: {file.get('name')}")
+    return Response(
+        result=f"{download_count} file(s) downloaded successfully to {download_location}."
+    )

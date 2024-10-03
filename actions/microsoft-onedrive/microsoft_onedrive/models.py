@@ -1,5 +1,5 @@
 from enum import Enum
-
+from typing import Optional
 from pydantic import BaseModel, Field
 
 
@@ -43,17 +43,10 @@ class OneDriveSearchItemsRequest(BaseModel):
 
 
 class OneDriveUploadRequest(BaseModel):
-    filename: str
+    filepath: str = Field(..., description="The path to the file to upload")
     folder_path: str = Field(
         default="/",
         description="The path of the folder where the file will be uploaded. Use '/' for the root of OneDrive.",
-    )
-
-
-class RecursiveOneDriveFoldersParams(BaseModel):
-    root_folder: str = Field(
-        default="/",
-        description="The root folder to start listing folders from. Use '/' for the root of OneDrive.",
     )
 
 
@@ -61,4 +54,14 @@ class RenameOneDriveItemParams(BaseModel):
     item_id: str = Field(..., description="The ID of the file or folder to rename")
     new_name: str = Field(
         ..., description="The new name for the file (including extension) or folder"
+    )
+
+
+class DownloadRequest(BaseModel):
+    search_items_request: Optional[OneDriveSearchItemsRequest] = Field(
+        description="The search query request"
+    )
+    name: Optional[str] = Field(default="", description="The name of the file")
+    download_url: Optional[str] = Field(
+        default="", description="The download URL for the file"
     )

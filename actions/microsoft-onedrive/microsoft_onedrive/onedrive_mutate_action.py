@@ -27,11 +27,13 @@ def create_onedrive_folder(
 ) -> Response[dict]:
     """
     Create a new folder in OneDrive.
+
     Args:
         token: OAuth2 token to use for the operation.
         params: OneDriveFolderCreationParams object containing:
             folder_name: name of the folder to create.
             parent_folder_path: path of the parent folder in OneDrive (optional).
+
     Returns:
         Response with the result of the operation
     """
@@ -195,16 +197,18 @@ def upload_file_to_onedrive(
 ) -> Response[dict]:
     """
     Upload a file to OneDrive.
+
     Args:
         token: OAuth2 token to use for the operation.
         upload_request: OneDriveUploadRequest object containing:
             filename: name of the file to upload.
             folder_path: path of the folder in OneDrive to upload the file to.
+
     Returns:
         Response with the result of the operation
     """
     headers = build_headers(token)
-    upload_file = Path(upload_request.filename)
+    upload_file = Path(upload_request.filepath).resolve()
     filesize = os.path.getsize(upload_file)
 
     if upload_request.folder_path:
@@ -219,7 +223,7 @@ def upload_file_to_onedrive(
     headers.update({"Content-Type": "application/octet-stream"})
 
     if filesize <= 4000000:  # 4MB
-        with open(upload_request.filename, "rb") as file:
+        with open(upload_request.filepath, "rb") as file:
             file_content = file.read()
         upload_response = requests.put(upload_url, headers=headers, data=file_content)
         if upload_response.status_code in [200, 201]:
@@ -236,7 +240,7 @@ def upload_file_to_onedrive(
         upload_session_response = requests.post(upload_session_url, headers=headers)
         upload_url = upload_session_response.json()["uploadUrl"]
         chunk_size = 327680  # 320KB
-        with open(upload_request.filename, "rb") as file:
+        with open(upload_request.filepath, "rb") as file:
             i = 0
             while True:
                 chunk_data = file.read(chunk_size)
