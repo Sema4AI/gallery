@@ -1,0 +1,42 @@
+{
+    "inputs": [
+        {
+            "inputName": "upload 'package.yaml' to newfolder",
+            "inputValue": {
+                "upload_request": {
+                    "filepath": "package.yaml",
+                    "folder_path": "/newfolder"
+                },
+                "vscode:request:oauth2": {
+                    "token": {
+                        "type": "OAuth2Secret",
+                        "provider": "microsoft",
+                        "scopes": [
+                            "Files.ReadWrite"
+                        ],
+                        "access_token": "<access-token-will-be-requested-by-vscode>"
+                    }
+                }
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "upload_file_to_onedrive",
+        "actionRelativePath": "microsoft_onedrive/onedrive_mutate_action.py",
+        "schemaDescription": [
+            "upload_request.filepath: string: The path to the file to upload",
+            "upload_request.folder_path: string: The path of the folder where the file will be uploaded. Use '/' for the root of OneDrive."
+        ],
+        "managedParamsSchemaDescription": {
+            "token": {
+                "type": "OAuth2Secret",
+                "provider": "microsoft",
+                "scopes": [
+                    "Files.ReadWrite"
+                ],
+                "description": "OAuth2 token to use for the operation."
+            }
+        },
+        "inputFileVersion": "v2"
+    }
+}

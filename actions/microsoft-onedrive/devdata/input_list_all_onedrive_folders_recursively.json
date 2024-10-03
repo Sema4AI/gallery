@@ -1,0 +1,37 @@
+{
+    "inputs": [
+        {
+            "inputName": "list all folders recursively using defaults",
+            "inputValue": {
+                "vscode:request:oauth2": {
+                    "token": {
+                        "type": "OAuth2Secret",
+                        "provider": "microsoft",
+                        "scopes": [
+                            "Files.Read"
+                        ],
+                        "access_token": "<access-token-will-be-requested-by-vscode>"
+                    }
+                }
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "list_all_onedrive_folders_recursively",
+        "actionRelativePath": "microsoft_onedrive/onedrive_get_action.py",
+        "schemaDescription": [
+            "params.root_folder: string: The root folder to start listing folders from. Use '/' for the root of OneDrive."
+        ],
+        "managedParamsSchemaDescription": {
+            "token": {
+                "type": "OAuth2Secret",
+                "provider": "microsoft",
+                "scopes": [
+                    "Files.Read"
+                ],
+                "description": "OAuth2 token."
+            }
+        },
+        "inputFileVersion": "v2"
+    }
+}
