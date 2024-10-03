@@ -4,7 +4,7 @@ name: Microsoft 365 Excel
 # Required: A description of what's in the action package.
 description: Actions for manipulating Microsoft 365 Excel files.
 
-version: 1.0.0
+version: 1.0.1
 
 dependencies:
   conda-forge:
