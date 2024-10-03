@@ -5,7 +5,7 @@ name: Microsoft Teams
 description: Work with Microsoft Teams.
 
 # Package version number, recommend using semver.org
-version: 1.0.0
+version: 1.0.1
 
 dependencies:
   conda-forge:
@@ -15,7 +15,7 @@ dependencies:
   pypi:
     - sema4ai-actions=1.0.1
     - requests=2.32.3
-    - pydantic[email]=2.8.2
+    - pydantic[email]=2.9.2
 
 packaging:
   # By default, all files and folders in this directory are packaged when uploaded.
