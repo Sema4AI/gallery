@@ -5,7 +5,7 @@ name: YouTube
 description: Search for videos and extract various details from YouTube videos.
 
 # Package version number, recommend using semver.org
-version: 1.0.0
+version: 1.0.1
 
 dependencies:
   conda-forge:
