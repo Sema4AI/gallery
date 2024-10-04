@@ -1,7 +1,27 @@
 {
-    "place": "pharmacy",
-    "city": "Järvenpää",
-    "country": "Finland",
-    "radius": 5,
-    "count": 5
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "place": "pharmacy",
+                "city": "Järvenpää",
+                "country": "Finland",
+                "radius": 5,
+                "max_results": 3
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "web_search_places",
+        "actionRelativePath": "actions.py",
+        "schemaDescription": [
+            "place: string: place to search for",
+            "city: string: city to search on",
+            "country: string: country to search on",
+            "radius: integer: radius to search on (in kilometers)",
+            "max_results: integer: how many results to retrieve"
+        ],
+        "managedParamsSchemaDescription": {},
+        "inputFileVersion": "v2"
+    }
 }
