@@ -3,13 +3,16 @@
         {
             "inputName": "input-1",
             "inputValue": {
+                "email": {
+                    "subject": "test email"
+                },
+                "html_content": false,
                 "vscode:request:oauth2": {
                     "token": {
                         "type": "OAuth2Secret",
                         "provider": "microsoft",
                         "scopes": [
-                            "Mail.Read",
-                            "User.Read"
+                            "Mail.ReadWrite"
                         ],
                         "access_token": "<access-token-will-be-requested-by-vscode>"
                     }
@@ -18,18 +21,25 @@
         }
     ],
     "metadata": {
-        "actionName": "list_folders",
+        "actionName": "create_draft",
         "actionRelativePath": "microsoft_mail/email_action.py",
         "schemaDescription": [
-            "account: string: The email account. By default \"me\""
+            "email.subject: string: Subject of the email",
+            "email.body: string: Body of the email",
+            "email.to: string: Recipients of the email",
+            "email.cc: string: CC recipients of the email",
+            "email.bcc: string: BCC recipients of the email",
+            "email.attachments: string: Attachments to include with the email",
+            "email.importance: string: Importance level of the email",
+            "email.reply_to: string: Reply-to address",
+            "html_content: boolean: Whether the body content is HTML."
         ],
         "managedParamsSchemaDescription": {
             "token": {
                 "type": "OAuth2Secret",
                 "provider": "microsoft",
                 "scopes": [
-                    "Mail.Read",
-                    "User.Read"
+                    "Mail.ReadWrite"
                 ],
                 "description": "OAuth2 token to use for the operation."
             }
