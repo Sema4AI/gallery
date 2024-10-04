@@ -64,7 +64,7 @@ def create_spreadsheet(
         list[
             Literal[
                 "https://www.googleapis.com/auth/spreadsheets",
-                "https://www.googleapis.com/auth/drive",
+                "https://www.googleapis.com/auth/drive.file",
             ],
         ],
     ],
@@ -95,7 +95,7 @@ def create_worksheet(
         list[
             Literal[
                 "https://www.googleapis.com/auth/spreadsheets",
-                "https://www.googleapis.com/auth/drive",
+                "https://www.googleapis.com/auth/drive.file",
             ],
         ],
     ],
@@ -216,7 +216,7 @@ def add_sheet_rows(
         list[
             Literal[
                 "https://www.googleapis.com/auth/spreadsheets",
-                "https://www.googleapis.com/auth/drive",
+                "https://www.googleapis.com/auth/drive.file",
             ],
         ],
     ],
@@ -256,7 +256,7 @@ def update_sheet_rows(
         list[
             Literal[
                 "https://www.googleapis.com/auth/spreadsheets",
-                "https://www.googleapis.com/auth/drive",
+                "https://www.googleapis.com/auth/drive.file",
             ],
         ],
     ],
