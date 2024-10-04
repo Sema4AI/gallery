@@ -44,6 +44,17 @@ def _get_file_by_name(service: Resource, name: str) -> Optional[File]:
     return File(**response["files"][0])
 
 
+def _get_file_by_id(service: Resource, file_id: str) -> Optional[File]:
+    try:
+        return File(
+            **service.files()
+            .get(supportsAllDrives=True, fileId=file_id, fields="*")
+            .execute()
+        )
+    except HttpError:
+        return None
+
+
 def _export_file_content(service: Resource, file_id: str, mime_type: str) -> BytesIO:
     # Export the file content to the desired format
     request = service.files().export_media(fileId=file_id, mimeType=mime_type)
@@ -95,18 +106,14 @@ def get_file_by_id(
     """
 
     service = _build_service(google_credentials)
-    try:
-        return Response(
-            result=File(
-                **service.files()
-                .get(supportsAllDrives=True, fileId=file_id, fields="*")
-                .execute()
-            )
-        )
-    except HttpError:
-        return Response(error=f"No files were found with the id: {file_id}")
-    finally:
-        service.close()
+
+    file = _get_file_by_id(service, file_id)
+    service.close()
+
+    if file:
+        return Response(result=file)
+
+    return Response(error=f"No files were found with the id: {file_id}")
 
 
 @action(is_consequential=False)
@@ -261,7 +268,7 @@ def list_file_comments(
     """
     service = _build_service(google_credentials)
 
-    file = _get_file_by_name(service, name)
+    file = _get_file_by_name(service, name) or _get_file_by_id(service, name)
     if not file:
         return Response(error=f"The file named '{name}' could not be found")
 
