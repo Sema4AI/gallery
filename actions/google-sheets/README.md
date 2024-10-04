@@ -60,4 +60,4 @@ This action package uses Google OAuth2 flow to authenticate user.
 Scopes in use:
 
     - https://www.googleapis.com/auth/spreadsheets
-    - https://www.googleapis.com/auth/drive
+    - https://www.googleapis.com/auth/drive.file
