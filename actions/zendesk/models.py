@@ -59,8 +59,8 @@ class Group(BaseModel):
 
 
 class Rating(BaseModel):
-    comment: Annotated[str, Field(description="Comment for rating")]
-    score: Annotated[int, Field(description="Score for rating")]
+    comment: Annotated[str | None, Field(description="Comment for rating")] = None
+    score: Annotated[str | None, Field(description="Score for rating")] = None
 
 
 class Ticket(BaseModel):
