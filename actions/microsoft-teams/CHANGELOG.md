@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ### Changed
 
 - Dependency versions updated
+- Instructions for dealing with OAuth admin consent
 
 ## [1.0.0] - 2024-08-28
 
