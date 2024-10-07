@@ -160,24 +160,19 @@ def search_user(
         Result of the operation with user details if found.
     """
     headers = build_headers(token)
-
+    search_query = []
     if user_search.email:
-        response = requests.get(
-            f"{BASE_GRAPH_URL}/users/{user_search.email}",
-            headers=headers,
-        )
-    else:
-        search_query = []
-        if user_search.first_name:
-            search_query.append(f"startswith(givenName,'{user_search.first_name}')")
-        if user_search.last_name:
-            search_query.append(f"startswith(surname,'{user_search.last_name}')")
+        search_query.append(f"mail eq '{user_search.email}'")
+    if user_search.first_name:
+        search_query.append(f"startswith(givenName,'{user_search.first_name}')")
+    if user_search.last_name:
+        search_query.append(f"startswith(surname,'{user_search.last_name}')")
 
-        filter_query = " and ".join(search_query)
-        response = requests.get(
-            f"{BASE_GRAPH_URL}/users?$filter={filter_query}",
-            headers=headers,
-        )
+    filter_query = " and ".join(search_query)
+    response = requests.get(
+        f"{BASE_GRAPH_URL}/users?$filter={filter_query}",
+        headers=headers,
+    )
 
     if response.status_code in [200, 201]:
         search_results = response.json().get("value", [])
