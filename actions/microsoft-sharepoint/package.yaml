@@ -1,11 +1,11 @@
 # Required: A short name for the action package
-name: Microsoft Sharepoint
+name: XMicrosoft Sharepoint
 
 # Required: A description of what's in the action package.
 description: Work with Sharepoint sites, lists and files.
 
 # Package version number, recommend using semver.org
-version: 1.0.2
+version: 2.0.0
 
 dependencies:
   conda-forge:
@@ -31,3 +31,4 @@ packaging:
     - ./.DS_store/**
     - ./**/*.pyc
     - ./**/*.zip
+    - ./test/**

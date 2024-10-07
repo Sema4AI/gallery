@@ -1,20 +1,55 @@
 {
-    "site_name": "Communication Site",
-    "sharepoint_list": {
-        "list_name": "Test List2",
-        "columns": [
-            {
-                "column_name": "Description",
-                "column_type": "number"
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "sharepoint_list": {
+                    "list_name": "newlist23",
+                    "description": "my list description",
+                    "columns": [
+                        {
+                            "column_name": "Description",
+                            "column_type": "number"
+                        }
+                    ]
+                },
+                "site_name": "Testing",
+                "site_id": "",
+                "vscode:request:oauth2": {
+                    "token": {
+                        "type": "OAuth2Secret",
+                        "provider": "microsoft",
+                        "scopes": [
+                            "Sites.ReadWrite.All"
+                        ],
+                        "access_token": "<access-token-will-be-requested-by-vscode>"
+                    }
+                }
             }
-        ]
-    },
-    "token": {
-        "provider": "microsoft",
-        "scopes": [
-            "Sites.Read.All"
+        }
+    ],
+    "metadata": {
+        "actionName": "create_sharepoint_list",
+        "actionRelativePath": "microsoft_sharepoint/sharepoint_list_action.py",
+        "schemaDescription": [
+            "sharepoint_list.list_name: string: Name of the list",
+            "sharepoint_list.description: string: Description of the list",
+            "sharepoint_list.columns: array: List of columns",
+            "sharepoint_list.columns.0.column_name: string: Name of the column",
+            "sharepoint_list.columns.0.column_type: ['text', 'boolean', 'dateTime', 'number']",
+            "site_name: string: name of the Sharepoint site.",
+            "site_id: string: id of the Sharepoint site."
         ],
-        "access_token": "<ACCESS_TOKEN>",
-        "metadata": {}
+        "managedParamsSchemaDescription": {
+            "token": {
+                "type": "OAuth2Secret",
+                "provider": "microsoft",
+                "scopes": [
+                    "Sites.ReadWrite.All"
+                ],
+                "description": "OAuth2 token to use for the operation."
+            }
+        },
+        "inputFileVersion": "v2"
     }
 }

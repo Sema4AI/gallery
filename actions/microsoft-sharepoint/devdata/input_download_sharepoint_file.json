@@ -1,13 +1,46 @@
 {
-    "filename": "yaml",
-    "target_folder": "./devdata",
-    "download_all_matching": true,
-    "token": {
-        "provider": "microsoft",
-        "scopes": [
-            "Files.Read"
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "filename": "yaml",
+                "site_id": "",
+                "location": "",
+                "target_folder": "./test",
+                "download_all_matching": true,
+                "vscode:request:oauth2": {
+                    "token": {
+                        "type": "OAuth2Secret",
+                        "provider": "microsoft",
+                        "scopes": [
+                            "Files.Read"
+                        ],
+                        "access_token": "<access-token-will-be-requested-by-vscode>"
+                    }
+                }
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "download_sharepoint_file",
+        "actionRelativePath": "microsoft_sharepoint/sharepoint_file_action.py",
+        "schemaDescription": [
+            "filename: string: name of the file to download (including the path)",
+            "site_id: string",
+            "location: string: \"me\" or \"my files\" or the name of the Sharepoint site or empty to search in all sites",
+            "target_folder: string: folder to download the file to",
+            "download_all_matching: boolean"
         ],
-        "access_token": "<ACCESS_TOKEN>",
-        "metadata": {}
+        "managedParamsSchemaDescription": {
+            "token": {
+                "type": "OAuth2Secret",
+                "provider": "microsoft",
+                "scopes": [
+                    "Files.Read"
+                ],
+                "description": "OAuth2 token to use for the operation"
+            }
+        },
+        "inputFileVersion": "v2"
     }
 }

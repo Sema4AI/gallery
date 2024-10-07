@@ -3,8 +3,7 @@
         {
             "inputName": "input-1",
             "inputValue": {
-                "site_id": "",
-                "site_name": "filesharing",
+                "search_string": "filesharing",
                 "vscode:request:oauth2": {
                     "token": {
                         "type": "OAuth2Secret",
@@ -19,11 +18,10 @@
         }
     ],
     "metadata": {
-        "actionName": "get_sharepoint_site",
+        "actionName": "search_for_site",
         "actionRelativePath": "microsoft_sharepoint/sharepoint_site_action.py",
         "schemaDescription": [
-            "site_id: string: id of the Sharepoint site.",
-            "site_name: string: name of the Sharepoint site."
+            "search_string: string: name of the Sharepoint site."
         ],
         "managedParamsSchemaDescription": {
             "token": {

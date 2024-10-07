@@ -11,3 +11,6 @@ metadata.json
 output/
 temp/
 venv/
+.gitattributes
+test/**
+!test/README.md

@@ -5,15 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
-## [1.0.2] - 2024-10-03
+## [2.0.0] - 2024-10-07
+
+### Added
+
+- Added "my site" into output of "get_all_sharepoint_sites" action.
 
 ### Changed
 
 - Dependency versions updated
+- Improved the description of the package in `package.yaml`
+- Instead of having action to return just a "site_id" it will return
+  all site information. Renamed action to "search_for_site".
+- Improved error handling for the actions.
 
 ## [1.0.1] - 2024-07-31
 
-Description changed.
+- Description changed.
 
 ### Added
 

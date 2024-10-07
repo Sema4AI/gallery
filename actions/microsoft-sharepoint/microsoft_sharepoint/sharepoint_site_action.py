@@ -6,42 +6,37 @@ Currently supporting:
 - Getting site by site id
 """
 
-import requests
 from sema4ai.actions import action, OAuth2Secret, Response, ActionError
 from typing import Literal
 from microsoft_sharepoint.support import (
-    BASE_GRAPH_URL,
     build_headers,
+    send_request,
 )
 
 
 @action
-def get_sharepoint_site_id(
-    site_name: str,
+def search_for_site(
+    search_string: str,
     token: OAuth2Secret[
         Literal["microsoft"],
         list[Literal["Sites.Read.All"]],
     ],
 ) -> Response[dict]:
     """
-    Get the site id of the Sharepoint site by its name
+    Search for a Sharepoint site by name.
 
     Args:
-        site_name: name of the Sharepoint site.
+        search_string: name of the Sharepoint site.
         token: OAuth2 token to use for the operation.
 
     Returns:
         Site details including the site id or error message
     """
     headers = build_headers(token)
-    response = requests.get(
-        f"{BASE_GRAPH_URL}/sites?search={site_name}",
-        headers=headers,
+    response_json = send_request(
+        "get", f"/sites?search={search_string}", "Search for site", headers=headers
     )
-    if response.status_code in [200, 201]:
-        return Response(result=response.json())
-    else:
-        raise ActionError(f"Failed to get site id: {response.text}")
+    return Response(result=response_json)
 
 
 @action
@@ -59,28 +54,29 @@ def get_sharepoint_site(
     Args:
         site_id: id of the Sharepoint site.
         site_name: name of the Sharepoint site.
-        filename: name of the file.
         token: OAuth2 token to use for the operation.
 
     Returns:
-        Result of the operation
+        Site details or error message
     """
     if not site_id and not site_name:
         raise ActionError("Either site_id or site_name must be provided")
-    if site_name:
-        response = get_sharepoint_site_id(site_name=site_name, token=token)
+    if site_id != "":
+        pass
+    elif site_name.lower() in ["me", "my site", "mysite"]:
+        mysite = _get_my_site(token)
+        site_id = mysite["id"]
+    else:
+        response = search_for_site(search_string=site_name, token=token)
         if len(response.result["value"]) > 1:
             raise ActionError("Multiple sites with the same name found.")
         site_id = response.result["value"][0]["id"]
+    site_id = site_id if len(site_id.split(",")) == 1 else site_id.split(",")[1]
     headers = build_headers(token)
-    response = requests.get(
-        f"{BASE_GRAPH_URL}/sites/{site_id}",
-        headers=headers,
+    response_json = send_request(
+        "get", f"/sites/{site_id}", "Get site", headers=headers
     )
-    if response.status_code in [200, 201]:
-        return Response(result=response.json())
-    else:
-        raise ActionError(f"Failed to get a site: {response.text}")
+    return Response(result=response_json)
 
 
 @action
@@ -100,11 +96,46 @@ def get_all_sharepoint_sites(
         Result of the operation
     """
     headers = build_headers(token)
-    response = requests.get(
-        f"{BASE_GRAPH_URL}/sites?search=*",
+    response_json = send_request(
+        "get", "/sites?search=*", "Get all sites", headers=headers
+    )
+    mysite = _get_my_site(token)
+    response_json["value"].append(mysite)
+    return Response(result=response_json)
+
+
+def _get_my_site(
+    token: OAuth2Secret[
+        Literal["microsoft"],
+        list[Literal["Sites.Read.All"]],
+    ]
+) -> dict:
+    """
+    Get the site details of the current user's personal site.
+
+    Args:
+        token: OAuth2 token to use for the operation.
+
+    Returns:
+        Result of the operation
+    """
+    headers = build_headers(token)
+    user_data = send_request(
+        "get",
+        "/me?$select=mySite",
+        req_name="Get the current user's information",
         headers=headers,
     )
-    if response.status_code in [200, 201]:
-        return Response(result=response.json())
-    else:
-        raise ActionError(f"Failed to sites: {response.text}")
+    my_site_url = user_data["mySite"]
+    # Extract hostname and personal site path from the mySite URL
+    my_site_url_parts = my_site_url.split("/")
+    hostname = my_site_url_parts[2]
+    personal_site_path = "/".join(my_site_url_parts[3:-1])
+
+    site_data = send_request(
+        "get",
+        f"/sites/{hostname}:/{personal_site_path}",
+        "Get the site details",
+        headers=headers,
+    )
+    return site_data
