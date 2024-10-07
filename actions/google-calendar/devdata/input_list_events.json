@@ -1,0 +1,42 @@
+{
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "start_date": "2024-10-03T00:00:00+03:00",
+                "end_date": "2024-10-04T00:00:00+03:00",
+                "vscode:request:oauth2": {
+                    "google_credentials": {
+                        "type": "OAuth2Secret",
+                        "provider": "google",
+                        "scopes": [
+                            "https://www.googleapis.com/auth/calendar.readonly"
+                        ],
+                        "access_token": "<access-token-will-be-requested-by-vscode>"
+                    }
+                }
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "list_events",
+        "actionRelativePath": "actions.py",
+        "schemaDescription": [
+            "calendar_id: string: Calendar identifier which can be found by listing all calendars action.\nDefault value is \"primary\" which indicates the calendar where the user is currently logged in.",
+            "query: string: Free text search terms to find events that match these terms in summary, description, location,\nattendee's name / email or working location information.",
+            "start_date: string: Upper bound (exclusive) for an event's start time to filter by.\nMust be an RFC3339 timestamp with mandatory time zone offset.",
+            "end_date: string: Lower bound (exclusive) for an event's end time to filter by.\nMust be an RFC3339 timestamp with mandatory time zone offset."
+        ],
+        "managedParamsSchemaDescription": {
+            "google_credentials": {
+                "type": "OAuth2Secret",
+                "provider": "google",
+                "scopes": [
+                    "https://www.googleapis.com/auth/calendar.readonly"
+                ],
+                "description": "JSON containing Google OAuth2 credentials."
+            }
+        },
+        "inputFileVersion": "v2"
+    }
+}

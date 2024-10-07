@@ -1,7 +1,25 @@
 {
-    "file_path": "./output/data",
-    "sheet_name": "MySheet",
-    "row": "2",
-    "column": "B",
-    "has_header": true
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "file_path": "/Users/username/Documents/MyWorkbook.xlsx",
+                "sheet_name": "Countries",
+                "row": "1",
+                "column": "2"
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "get_cell",
+        "actionRelativePath": "actions.py",
+        "schemaDescription": [
+            "file_path: string: The file name or a local path pointing to the workbook file.",
+            "sheet_name: string: The name of the sheet you want to store the rows into.",
+            "row: string: The row number starting with 1.",
+            "column: string: The column letter or index."
+        ],
+        "managedParamsSchemaDescription": {},
+        "inputFileVersion": "v2"
+    }
 }

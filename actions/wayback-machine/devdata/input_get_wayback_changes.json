@@ -1,0 +1,21 @@
+{
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "url": "https://en.wikipedia.org/wiki/Vin_Diesel",
+                "days": 10
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "get_wayback_changes",
+        "actionRelativePath": "actions.py",
+        "schemaDescription": [
+            "url: string: Website to check for changes\nExample: \"https://sema4.ai\"",
+            "days: integer: Number of days to go back looking for changes\nExample: \"7\""
+        ],
+        "managedParamsSchemaDescription": {},
+        "inputFileVersion": "v2"
+    }
+}

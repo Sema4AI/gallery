@@ -1,0 +1,23 @@
+{
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "text_to_find": "aria",
+                "filename": "/Users/username/Documents/MyPDF.pdf",
+                "case_sensitive": false
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "find_text_in_pdf",
+        "actionRelativePath": "actions.py",
+        "schemaDescription": [
+            "text_to_find: string: The text to find in the PDF.",
+            "filename: string: The name of the file to read.",
+            "case_sensitive: boolean: Whether the search should be case sensitive (default False)"
+        ],
+        "managedParamsSchemaDescription": {},
+        "inputFileVersion": "v2"
+    }
+}

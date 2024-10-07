@@ -1,0 +1,53 @@
+{
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "event": {
+                    "id": "id-1",
+                    "summary": "Team sync",
+                    "description": "Discuss the upcoming sprint and unblock people.",
+                    "start": "2024-10-03T18:45:00+03:00",
+                    "end": "2024-10-03T19:15:00+03:00",
+                },
+                "vscode:request:oauth2": {
+                    "google_credentials": {
+                        "type": "OAuth2Secret",
+                        "provider": "google",
+                        "scopes": [
+                            "https://www.googleapis.com/auth/calendar.events"
+                        ],
+                        "access_token": "<access-token-will-be-requested-by-vscode>"
+                    }
+                }
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "create_event",
+        "actionRelativePath": "actions.py",
+        "schemaDescription": [
+            "event.id: string: The id of the event",
+            "event.summary: string: A short summary of the event's purpose",
+            "event.location: string: The physical location of the event",
+            "event.description: string: A more detailed description of the event",
+            "event.start: string: The (inclusive) start time of the event",
+            "event.end: string: The (exclusive) end time of the event",
+            "event.recurrence: string: A list of RRULE, EXRULE, RDATE, and EXDATE lines for a recurring event.",
+            "event.attendees: string: A list of attendees",
+            "event.reminders: string: Reminders settings for the event",
+            "calendar_id: string: Calendar identifier which can be found by listing all calendars action.\nDefault value is \"primary\" which indicates the calendar where the user is currently logged in."
+        ],
+        "managedParamsSchemaDescription": {
+            "google_credentials": {
+                "type": "OAuth2Secret",
+                "provider": "google",
+                "scopes": [
+                    "https://www.googleapis.com/auth/calendar.events"
+                ],
+                "description": "JSON containing Google OAuth2 credentials."
+            }
+        },
+        "inputFileVersion": "v2"
+    }
+}

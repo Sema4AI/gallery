@@ -3,15 +3,15 @@
         {
             "inputName": "input-1",
             "inputValue": {
-                "file_path": "/Users/username/Documents/MyWorkbook.xlsx"
+                "filename": "/Users/username/Documents/MyPDF.pdf"
             }
         }
     ],
     "metadata": {
-        "actionName": "delete_workbook",
+        "actionName": "read_text_from_pdf",
         "actionRelativePath": "actions.py",
         "schemaDescription": [
-            "file_path: string: The file name or a local path pointing to the workbook file."
+            "filename: string: The name of the file to read."
         ],
         "managedParamsSchemaDescription": {},
         "inputFileVersion": "v2"

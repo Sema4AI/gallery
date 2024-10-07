@@ -1,8 +1,0 @@
-{
-    "file_path": "./output/data",
-    "sheet_name": "MySheet",
-    "row": "2",
-    "column": "B",
-    "value": "10",
-    "has_header": true
-}

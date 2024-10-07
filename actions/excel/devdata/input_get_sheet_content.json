@@ -9,11 +9,11 @@
         }
     ],
     "metadata": {
-        "actionName": "create_workbook",
+        "actionName": "get_sheet_content",
         "actionRelativePath": "actions.py",
         "schemaDescription": [
             "file_path: string: The file name or a local path pointing to the workbook file.",
-            "sheet_name: string: The name of the initial sheet in the workbook. Leave it blank for\nrelying on the default name (\"Sheet\")."
+            "sheet_name: string: The name of the sheet you want to store the rows into."
         ],
         "managedParamsSchemaDescription": {},
         "inputFileVersion": "v2"

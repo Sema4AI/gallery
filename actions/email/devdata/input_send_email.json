@@ -1,7 +1,49 @@
 {
-    "to": "TARGET_EMAIL_ADDRESS",
-    "cc": "",
-    "bcc": "",
-    "subject": "Email subject",
-    "body": "Email body message."
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "to": "TARGET_EMAIL_ADDRESS",
+                "subject": "Email subject",
+                "body": "Email body message",
+                "cc": "",
+                "bcc": "",
+                "smtp_host": "<specify-secret>",
+                "smtp_port": "<specify-secret>",
+                "smtp_username": "<specify-secret>",
+                "smtp_password": "<specify-secret>"
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "send_email",
+        "actionRelativePath": "actions.py",
+        "schemaDescription": [
+            "sender: string: email address of the sender",
+            "to: string: email address(es) of the recipient(s)",
+            "subject: string: subject of the email",
+            "body: string: body of the email",
+            "cc: string: email address(es) of the recipient(s) to be CC'd",
+            "bcc: string: email address(es) of the recipient(s) to be BCC'd"
+        ],
+        "managedParamsSchemaDescription": {
+            "smtp_host": {
+                "type": "Secret",
+                "description": "SMTP server host"
+            },
+            "smtp_port": {
+                "type": "Secret",
+                "description": "SMTP server port, default value is 587"
+            },
+            "smtp_username": {
+                "type": "Secret",
+                "description": "SMTP server username"
+            },
+            "smtp_password": {
+                "type": "Secret",
+                "description": "SMTP server password"
+            }
+        },
+        "inputFileVersion": "v2"
+    }
 }

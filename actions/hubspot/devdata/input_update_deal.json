@@ -3,16 +3,16 @@
         {
             "inputName": "input-1",
             "inputValue": {
-                "search_params": {
-                    "query": "Amazon",
-                    "limit": "3"
+                "deal_id": "deal-id-1",
+                "deal_data": {
+                    "dealname": "Amazon Deal - Romania"
                 },
                 "vscode:request:oauth2": {
                     "token": {
                         "type": "OAuth2Secret",
                         "provider": "hubspot",
                         "scopes": [
-                            "crm.objects.deals.read"
+                            "crm.objects.deals.write"
                         ],
                         "access_token": "<access-token-will-be-requested-by-vscode>"
                     }
@@ -21,19 +21,22 @@
         }
     ],
     "metadata": {
-        "actionName": "search_deals",
-        "actionRelativePath": "hubspot_client/search_action.py",
+        "actionName": "update_deal",
+        "actionRelativePath": "hubspot_client/update_action.py",
         "schemaDescription": [
-            "search_params.query: string: Search query",
-            "search_params.filter_groups: string: To include multiple filter criteria, you can group filters within filterGroups: - to apply AND logic, include a comma separated list of conditions within one set of filters. - to apply OR logic, include multiple filters within a filterGroup. You can include a maximum of three filterGroups with up to three filters in each group.",
-            "search_params.limit: string: Number of results to return"
+            "deal_id: string: The id of the deal to update.",
+            "deal_data.dealname: string: Deal name",
+            "deal_data.amount: string: Deal money amount",
+            "deal_data.closedate: string: Deal close date",
+            "deal_data.dealstage: string: Deal stage",
+            "deal_data.hubspot_owner_id: string: Owner ID"
         ],
         "managedParamsSchemaDescription": {
             "token": {
                 "type": "OAuth2Secret",
                 "provider": "hubspot",
                 "scopes": [
-                    "crm.objects.deals.read"
+                    "crm.objects.deals.write"
                 ],
                 "description": "An OAuth2 Public App (client) token structure used to make API calls."
             }

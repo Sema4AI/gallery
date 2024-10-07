@@ -3,16 +3,12 @@
         {
             "inputName": "input-1",
             "inputValue": {
-                "search_params": {
-                    "query": "Amazon",
-                    "limit": "3"
-                },
                 "vscode:request:oauth2": {
                     "token": {
                         "type": "OAuth2Secret",
                         "provider": "hubspot",
                         "scopes": [
-                            "crm.objects.deals.read"
+                            "crm.objects.owners.read"
                         ],
                         "access_token": "<access-token-will-be-requested-by-vscode>"
                     }
@@ -21,19 +17,15 @@
         }
     ],
     "metadata": {
-        "actionName": "search_deals",
+        "actionName": "list_owners",
         "actionRelativePath": "hubspot_client/search_action.py",
-        "schemaDescription": [
-            "search_params.query: string: Search query",
-            "search_params.filter_groups: string: To include multiple filter criteria, you can group filters within filterGroups: - to apply AND logic, include a comma separated list of conditions within one set of filters. - to apply OR logic, include multiple filters within a filterGroup. You can include a maximum of three filterGroups with up to three filters in each group.",
-            "search_params.limit: string: Number of results to return"
-        ],
+        "schemaDescription": [],
         "managedParamsSchemaDescription": {
             "token": {
                 "type": "OAuth2Secret",
                 "provider": "hubspot",
                 "scopes": [
-                    "crm.objects.deals.read"
+                    "crm.objects.owners.read"
                 ],
                 "description": "An OAuth2 Public App (client) token structure used to make API calls."
             }
