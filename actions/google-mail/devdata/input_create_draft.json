@@ -3,10 +3,9 @@
         {
             "inputName": "input-1",
             "inputValue": {
-                "draft_id": "<The ID of the draft to update>",
-                "subject": "AI Summary",
+                "subject": "Test Subject",
                 "body": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras eget enim maximus leo tempor rutrum ut sit amet dolor. Curabitur accumsan laoreet massa, vitae ultrices ex auctor eu. ",
-                "to": "",
+                "to": "hello@example.com",
                 "cc": "",
                 "bcc": "",
                 "vscode:request:oauth2": {
@@ -23,10 +22,9 @@
         }
     ],
     "metadata": {
-        "actionName": "update_draft",
-        "actionRelativePath": "google_mail/update_draft_action.py",
+        "actionName": "create_draft",
+        "actionRelativePath": "google_mail/create_draft_action.py",
         "schemaDescription": [
-            "draft_id: string: identify the draft by its id",
             "subject: string: the subject of the email",
             "body: string: the message of the email",
             "to: string: the email address(es) of the recipient(s), comma separated",

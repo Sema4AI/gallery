@@ -3,15 +3,14 @@
         {
             "inputName": "input-1",
             "inputValue": {
-                "email_id": "",
-                "query": "from:github",
-                "max_results": 10,
+                "file_id": "<The ID of the file to fetch>",
                 "vscode:request:oauth2": {
-                    "token": {
+                    "google_credentials": {
                         "type": "OAuth2Secret",
                         "provider": "google",
                         "scopes": [
-                            "https://www.googleapis.com/auth/gmail.readonly"
+                            "https://www.googleapis.com/auth/drive.readonly",
+                            "https://www.googleapis.com/auth/drive.metadata.readonly"
                         ],
                         "access_token": "<access-token-will-be-requested-by-vscode>"
                     }
@@ -20,21 +19,20 @@
         }
     ],
     "metadata": {
-        "actionName": "get_email_content",
-        "actionRelativePath": "google_mail/get_email_content_action.py",
+        "actionName": "get_file_by_id",
+        "actionRelativePath": "actions.py",
         "schemaDescription": [
-            "email_id: string: the email id to get the content from",
-            "query: string: the query filter to apply to the emails",
-            "max_results: integer: the maximum number of emails to return (default 10)"
+            "file_id: string: Unique id of the file."
         ],
         "managedParamsSchemaDescription": {
-            "token": {
+            "google_credentials": {
                 "type": "OAuth2Secret",
                 "provider": "google",
                 "scopes": [
-                    "https://www.googleapis.com/auth/gmail.readonly"
+                    "https://www.googleapis.com/auth/drive.readonly",
+                    "https://www.googleapis.com/auth/drive.metadata.readonly"
                 ],
-                "description": "the OAuth2 token for the user"
+                "description": "JSON containing Google OAuth2 credentials."
             }
         },
         "inputFileVersion": "v2"

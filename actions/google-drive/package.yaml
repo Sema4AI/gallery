@@ -1,11 +1,11 @@
 # Required: A short name for the action package
-name: Google Drive
+name: Google Drive Dev
 
 # Required: A description of what's in the action package
 description: Interact with Google Drive resources - search files, get comments, get contents and more!
 
 # Package version number, recommend using semver.org
-version: 1.0.3
+version: 1.0.4
 
 dependencies:
   conda-forge:

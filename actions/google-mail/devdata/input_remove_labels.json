@@ -3,12 +3,14 @@
         {
             "inputName": "input-1",
             "inputValue": {
-                "draft_id": "<The ID of the draft to update>",
-                "subject": "AI Summary",
-                "body": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras eget enim maximus leo tempor rutrum ut sit amet dolor. Curabitur accumsan laoreet massa, vitae ultrices ex auctor eu. ",
-                "to": "",
-                "cc": "",
-                "bcc": "",
+                "query": "",
+                "email_ids": {
+                    "id_list": [
+                        "<ID of the email to remove the labels>"
+                    ]
+                },
+                "labels": "AI sorted",
+                "max_results": 0,
                 "vscode:request:oauth2": {
                     "token": {
                         "type": "OAuth2Secret",
@@ -23,15 +25,14 @@
         }
     ],
     "metadata": {
-        "actionName": "update_draft",
-        "actionRelativePath": "google_mail/update_draft_action.py",
+        "actionName": "remove_labels",
+        "actionRelativePath": "google_mail/remove_labels_action.py",
         "schemaDescription": [
-            "draft_id: string: identify the draft by its id",
-            "subject: string: the subject of the email",
-            "body: string: the message of the email",
-            "to: string: the email address(es) of the recipient(s), comma separated",
-            "cc: string: the email address(es) of the recipient(s) to be cc'd, comma separated",
-            "bcc: string: the email address(es) of the recipient(s) to be bcc'd, comma separated"
+            "query: string: the query filter to find emails to remove labels",
+            "email_ids.id_list: array: A list of email ids",
+            "email_ids.id_list.0: string: A list of email ids",
+            "labels: string: the label names to remove from the emails (comma separated)",
+            "max_results: integer: the maximum number of emails to remove labels"
         ],
         "managedParamsSchemaDescription": {
             "token": {

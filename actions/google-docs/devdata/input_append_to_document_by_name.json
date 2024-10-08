@@ -1,0 +1,39 @@
+{
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "name": "Sema4.ai Actions - Test Document",
+                "body": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi tortor neque, ornare vitae lectus at, molestie tempor purus. Suspendisse potenti. Nam tellus nisl, viverra non tristique ac, blandit sit amet sapien. In hac habitasse platea dictumst. Etiam eget congue sem. Fusce accumsan ligula nec ultricies pharetra. In cursus hendrerit elit, a ultrices leo pharetra quis. Morbi et vehicula diam. Fusce dictum est sed orci tincidunt sagittis vitae eu urna.",
+                "vscode:request:oauth2": {
+                    "oauth_access_token": {
+                        "type": "OAuth2Secret",
+                        "provider": "google",
+                        "scopes": [
+                            "https://www.googleapis.com/auth/drive.file"
+                        ],
+                        "access_token": "<access-token-will-be-requested-by-vscode>"
+                    }
+                }
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "append_to_document_by_name",
+        "actionRelativePath": "actions.py",
+        "schemaDescription": [
+            "name: string",
+            "body: string"
+        ],
+        "managedParamsSchemaDescription": {
+            "oauth_access_token": {
+                "type": "OAuth2Secret",
+                "provider": "google",
+                "scopes": [
+                    "https://www.googleapis.com/auth/drive.file"
+                ]
+            }
+        },
+        "inputFileVersion": "v2"
+    }
+}
