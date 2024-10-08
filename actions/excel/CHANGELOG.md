@@ -1,8 +1,15 @@
 # Change Log
+
 All notable changes to this project will be documented in this file.
- 
+
 The format is based on [Keep a Changelog](https://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](https://semver.org/).
+
+## [3.0.1] - 2024-10-08
+
+### Changed
+
+- Dependency versions updated
 
 ## [3.0.0] - 2024-08-14
 
@@ -36,14 +43,16 @@ Description changed.
 ## [2.0.0] - 2024-07-10
 
 ### Changed
-- The `Get Table` action was renamed to `Get Sheet Content` 
+
+- The `Get Table` action was renamed to `Get Sheet Content`
 
 ## [1.0.0] - 2024-07-04
- 
+
 First version published, changelog tracking starts.
- 
+
 ### Added
-- Crate a new workbook (Excel Document)   
+
+- Crate a new workbook (Excel Document)
 - Add a new worksheet to an existing workbook
 - Add rows to an existing worksheet
 - Set the value of a specific cell within a worksheet
@@ -52,9 +61,9 @@ First version published, changelog tracking starts.
 - Get workbook schema
 - Delete a worksheet from an existing workbook
 - Delete workbook
- 
+
 ### Changed
- 
+
 ### Fixed
 
 ### Removed
