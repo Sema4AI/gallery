@@ -9,16 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Changed
 
-Updated core dependencies
- 
-## [1.0.1] - 2024-07-31
-
-Description changed.
-
-### Added
-
-### Changed
-
+- Updated core dependencies
 - Improved the description of the package in `package.yaml`
 
 ### Fixed
