@@ -22,6 +22,7 @@ jobs:
 
       - name: Publish Runbook Templates
         run: |
+          set -e  # Exit on any error
           echo "Updating Gallery S3"
           S3_BASE_URL="s3://downloads.robocorp.com/gallery/runbooks"
           cd runbooks
@@ -31,10 +32,10 @@ jobs:
           aws s3 cp manifest.json $S3_BASE_URL/manifest.json --cache-control max-age=120 --content-type "text/plain"
 
           # Extract and upload markdown files listed in the manifest
-          for file in $(jq -r '.runbook_templates[].url' manifest.json | sed 's#.*/##'); do
+          for file in $(jq -r '.templates[].url' manifest.json | sed 's#.*/##'); do
             if [ ! -f "$file" ]; then
-              echo "Error: Markdown file '$file' not found."
-              exit 1
+                echo "Error: Markdown file '$file' not found."
+                exit 1
             fi
             aws s3 cp $file $S3_BASE_URL/$file --cache-control max-age=120 --content-type "text/markdown"
           done
