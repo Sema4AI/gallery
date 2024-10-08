@@ -5,7 +5,7 @@ name: Slack
 description: Prebuilt actions for reading and writing from/to Slack channels.
 
 # Package version number, recommend using semver.org
-version: 1.0.0
+version: 1.0.1
 
 dependencies:
   conda-forge:

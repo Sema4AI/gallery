@@ -1,5 +1,5 @@
 # Required: A short name for the action package
-name: Google Drive Dev
+name: Google Drive
 
 # Required: A description of what's in the action package
 description: Interact with Google Drive resources - search files, get comments, get contents and more!
