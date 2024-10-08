@@ -5,7 +5,7 @@ name: Agent Connector
 description: Actions to connect agents with each other
 
 # Package version number, recommend using semver.org
-version: 1.0.0
+version: 1.0.1
 
 # Required: A link to where the documentation on the package lives.
 documentation: https://sema4.ai/

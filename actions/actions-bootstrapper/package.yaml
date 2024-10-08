@@ -12,7 +12,7 @@ name: Actions Bootstrapper
 description: Actions for setting up and managing other action packages.
 
 # Package version number, recommend using semver.org
-version: 1.0.1
+version: 1.0.2
 
 packaging:
   exclude:
