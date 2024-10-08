@@ -5,7 +5,7 @@ name: Wayback Machine
 description: Uses the Wayback Machine to detect changes to websites.
 
 # Package version number, recommend using semver.org
-version: 1.0.0
+version: 1.0.1
 
 dependencies:
   conda-forge:

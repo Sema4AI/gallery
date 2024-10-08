@@ -5,7 +5,7 @@ name: Vitality Medications
 description: Explore the dummy Medications data
 
 # Package version number, recommend using semver.org
-version: 1.0.0
+version: 1.0.1
 
 dependencies:
   conda-forge:
@@ -13,7 +13,7 @@ dependencies:
     - uv=0.4.17
   pypi:
     - sema4ai-actions=1.0.1
-    - robocorp=2.0.2
+    - robocorp=2.1.2
 
 packaging:
   # By default, all files and folders in this directory are packaged when uploaded.
