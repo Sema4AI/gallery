@@ -1,11 +1,11 @@
 # Required: A short name for the action package
-name: Google Search Dev
+name: Google Search
 
 # Required: A description of what's in the action package
 description: Agent can make Google searches using a custom search engine (requires API key).
 
 # Package version number, recommend using semver.org
-version: 1.0.2
+version: 1.0.1
 
 dependencies:
   conda-forge:
