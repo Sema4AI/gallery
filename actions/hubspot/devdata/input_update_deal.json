@@ -1,0 +1,46 @@
+{
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "deal_id": "deal-id-1",
+                "deal_data": {
+                    "dealname": "Amazon Deal - Romania"
+                },
+                "vscode:request:oauth2": {
+                    "token": {
+                        "type": "OAuth2Secret",
+                        "provider": "hubspot",
+                        "scopes": [
+                            "crm.objects.deals.write"
+                        ],
+                        "access_token": "<access-token-will-be-requested-by-vscode>"
+                    }
+                }
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "update_deal",
+        "actionRelativePath": "hubspot_client/update_action.py",
+        "schemaDescription": [
+            "deal_id: string: The id of the deal to update.",
+            "deal_data.dealname: string: Deal name",
+            "deal_data.amount: string: Deal money amount",
+            "deal_data.closedate: string: Deal close date",
+            "deal_data.dealstage: string: Deal stage",
+            "deal_data.hubspot_owner_id: string: Owner ID"
+        ],
+        "managedParamsSchemaDescription": {
+            "token": {
+                "type": "OAuth2Secret",
+                "provider": "hubspot",
+                "scopes": [
+                    "crm.objects.deals.write"
+                ],
+                "description": "An OAuth2 Public App (client) token structure used to make API calls."
+            }
+        },
+        "inputFileVersion": "v2"
+    }
+}

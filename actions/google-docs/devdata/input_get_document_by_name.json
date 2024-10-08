@@ -1,0 +1,38 @@
+{
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "name": "Sema4.ai Actions - Test Document",
+                "vscode:request:oauth2": {
+                    "oauth_access_token": {
+                        "type": "OAuth2Secret",
+                        "provider": "google",
+                        "scopes": [
+                            "https://www.googleapis.com/auth/drive.readonly"
+                        ],
+                        "access_token": "<access-token-will-be-requested-by-vscode>"
+                    }
+                }
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "get_document_by_name",
+        "actionRelativePath": "actions.py",
+        "schemaDescription": [
+            "name: string: The Google Document name"
+        ],
+        "managedParamsSchemaDescription": {
+            "oauth_access_token": {
+                "type": "OAuth2Secret",
+                "provider": "google",
+                "scopes": [
+                    "https://www.googleapis.com/auth/drive.readonly"
+                ],
+                "description": "The OAuth2 Google access token"
+            }
+        },
+        "inputFileVersion": "v2"
+    }
+}

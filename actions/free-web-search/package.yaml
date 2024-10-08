@@ -5,18 +5,18 @@ name: Free Web Search
 description: Web search without credentials using DuckDuckGo API
 
 # Package version number, recommend using semver.org
-version: 1.0.0
+version: 1.0.1
 
 dependencies:
   conda-forge:
     - python=3.10.14
     - python-dotenv=1.0.1
-    - uv=0.2.6
+    - uv=0.4.17
   pypi:
-    - sema4ai-actions=0.9.2
-    - pydantic=2.7.4
-    - requests=2.31.0
-    - duckduckgo-search=6.1.7
+    - sema4ai-actions=1.0.1
+    - pydantic=2.9.2
+    - requests=2.32.3
+    - duckduckgo-search=6.2.13
 
 packaging:
   # By default, all files and folders in this directory are packaged when uploaded.

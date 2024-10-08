@@ -1,3 +1,23 @@
 {
-    "url": "https://robocorp.com"
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "url": "https://sema4.ai",
+                "user_agent": {
+                    "name": ""
+                }
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "get_website_content",
+        "actionRelativePath": "actions.py",
+        "schemaDescription": [
+            "url: string: the URL of the website",
+            "user_agent.name: string: The user agent to use for browsing"
+        ],
+        "managedParamsSchemaDescription": {},
+        "inputFileVersion": "v2"
+    }
 }

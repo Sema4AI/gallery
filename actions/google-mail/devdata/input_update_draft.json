@@ -1,13 +1,48 @@
 {
-    "draft_id": "r7696254233047659583",
-    "token": {
-        "provider": "google",
-        "scopes": [
-            "https://www.googleapis.com/auth/gmail.modify"
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "draft_id": "<The ID of the draft to update>",
+                "subject": "AI Summary",
+                "body": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras eget enim maximus leo tempor rutrum ut sit amet dolor. Curabitur accumsan laoreet massa, vitae ultrices ex auctor eu. ",
+                "to": "",
+                "cc": "",
+                "bcc": "",
+                "vscode:request:oauth2": {
+                    "token": {
+                        "type": "OAuth2Secret",
+                        "provider": "google",
+                        "scopes": [
+                            "https://www.googleapis.com/auth/gmail.modify"
+                        ],
+                        "access_token": "<access-token-will-be-requested-by-vscode>"
+                    }
+                }
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "update_draft",
+        "actionRelativePath": "google_mail/update_draft_action.py",
+        "schemaDescription": [
+            "draft_id: string: identify the draft by its id",
+            "subject: string: the subject of the email",
+            "body: string: the message of the email",
+            "to: string: the email address(es) of the recipient(s), comma separated",
+            "cc: string: the email address(es) of the recipient(s) to be cc'd, comma separated",
+            "bcc: string: the email address(es) of the recipient(s) to be bcc'd, comma separated"
         ],
-        "access_token": "ya29.x",
-        "metadata": {}
-    },
-    "subject": "test subjecti",
-    "body": "test body"
+        "managedParamsSchemaDescription": {
+            "token": {
+                "type": "OAuth2Secret",
+                "provider": "google",
+                "scopes": [
+                    "https://www.googleapis.com/auth/gmail.modify"
+                ],
+                "description": "the OAuth2 token for the user"
+            }
+        },
+        "inputFileVersion": "v2"
+    }
 }

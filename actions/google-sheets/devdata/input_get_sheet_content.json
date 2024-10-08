@@ -1,0 +1,46 @@
+{
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "spreadsheet": "Sema4 AI - Test Spreadsheet",
+                "worksheet": "Test Worksheet",
+                "from_row": 0,
+                "limit": 200,
+                "vscode:request:oauth2": {
+                    "oauth_access_token": {
+                        "type": "OAuth2Secret",
+                        "provider": "google",
+                        "scopes": [
+                            "https://www.googleapis.com/auth/spreadsheets.readonly",
+                            "https://www.googleapis.com/auth/drive.readonly"
+                        ],
+                        "access_token": "<access-token-will-be-requested-by-vscode>"
+                    }
+                }
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "get_sheet_content",
+        "actionRelativePath": "actions.py",
+        "schemaDescription": [
+            "spreadsheet: string: Spreadsheet object or name of the spreadsheet from which to get the data.",
+            "worksheet: string: Name of the worksheet within the spreadsheet.",
+            "from_row: integer: Used for pagination, default is first row.",
+            "limit: integer: How many rows to retrieve starting from line number defined in `from_row`."
+        ],
+        "managedParamsSchemaDescription": {
+            "oauth_access_token": {
+                "type": "OAuth2Secret",
+                "provider": "google",
+                "scopes": [
+                    "https://www.googleapis.com/auth/spreadsheets.readonly",
+                    "https://www.googleapis.com/auth/drive.readonly"
+                ],
+                "description": "The OAuth2 access token ."
+            }
+        },
+        "inputFileVersion": "v2"
+    }
+}

@@ -1,3 +1,19 @@
 {
-    "file_path": "./output/data"
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "file_path": "/Users/username/Documents/MyWorkbook.xlsx"
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "delete_workbook",
+        "actionRelativePath": "actions.py",
+        "schemaDescription": [
+            "file_path: string: The file name or a local path pointing to the workbook file."
+        ],
+        "managedParamsSchemaDescription": {},
+        "inputFileVersion": "v2"
+    }
 }

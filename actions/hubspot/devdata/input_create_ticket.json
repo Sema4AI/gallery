@@ -1,0 +1,47 @@
+{
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "ticket_data": {
+                    "subject": "Issues with payment",
+                    "content": "I cannot pay for the subscription",
+                    "hs_ticket_priority": "HIGH",
+                    "hs_pipeline_stage": "1"
+                },
+                "vscode:request:oauth2": {
+                    "token": {
+                        "type": "OAuth2Secret",
+                        "provider": "hubspot",
+                        "scopes": [
+                            "tickets"
+                        ],
+                        "access_token": "<access-token-will-be-requested-by-vscode>"
+                    }
+                }
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "create_ticket",
+        "actionRelativePath": "hubspot_client/create_action.py",
+        "schemaDescription": [
+            "ticket_data.subject: string: Ticket name",
+            "ticket_data.content: string: Ticket content",
+            "ticket_data.hs_ticket_priority: string: Ticket priority",
+            "ticket_data.hs_pipeline_stage: string: Ticket stage ID",
+            "ticket_data.hubspot_owner_id: string: Owner ID"
+        ],
+        "managedParamsSchemaDescription": {
+            "token": {
+                "type": "OAuth2Secret",
+                "provider": "hubspot",
+                "scopes": [
+                    "tickets"
+                ],
+                "description": "An OAuth2 Public App (client) token structure used to make API calls."
+            }
+        },
+        "inputFileVersion": "v2"
+    }
+}

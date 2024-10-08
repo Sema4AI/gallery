@@ -6,7 +6,7 @@ Currently supporting:
 - download file
 """
 
-from sema4ai.actions import action
+from sema4ai.actions import action, Response
 from robocorp import browser
 
 from dotenv import load_dotenv
@@ -18,13 +18,9 @@ import requests
 from urllib.parse import urlparse
 
 
-from models import (
-    DownloadedFile,
-    Form,
-    Links,
-    WebPage,
-)
+from models import DownloadedFile, Form, Links, WebPage, UserAgent
 from support import (
+    _configure_browser,
     _ensure_https,
     _get_form_elements,
     _get_page_links,
@@ -37,20 +33,21 @@ load_dotenv(Path(__file__).absolute().parent / "devdata" / ".env")
 HEADLESS_BROWSER = not os.getenv("HEADLESS_BROWSER")
 
 
-@action(is_consequential=False)
-def get_website_content(url: str) -> WebPage:
+@action
+def get_website_content(url: str, user_agent: UserAgent) -> Response[WebPage]:
     """
     Gets the text content, form elements, links and other elements of a website.
     If content-type is not "text/html" then just URL content is returned.
 
     Args:
         url: the URL of the website
+        user_agent: the user agent to use for browsing
 
     Returns:
         Text content, form elements and elements of the website.
     """
     url = _ensure_https(url)
-    browser.configure(browser_engine="chromium", headless=HEADLESS_BROWSER)
+    _configure_browser(browser, HEADLESS_BROWSER, user_agent)
     page = browser.page()
     response = page.goto(url)
     page.wait_for_load_state("domcontentloaded")
@@ -73,10 +70,10 @@ def get_website_content(url: str) -> WebPage:
     return wb
 
 
-@action(is_consequential=False)
+@action
 def download_file(
     file_url: str, max_filesize_in_megabytes: int = 100, target_folder: str = ""
-) -> DownloadedFile:
+) -> Response[DownloadedFile]:
     """
     Download a file from the given URL.
 
@@ -142,7 +139,7 @@ def download_file(
 @action(is_consequential=True)
 def fill_elements(
     web_page: WebPage,
-) -> str:
+) -> Response[str]:
     """
     Fill form elements according to input values given in the Form object.
 

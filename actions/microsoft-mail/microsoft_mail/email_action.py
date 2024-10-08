@@ -619,7 +619,7 @@ def list_folders(
     Returns:
         Lists of the folders. Always show all folders including amount of email in them.
     """
-    if account.lower() == "me":
+    if not account or account.lower() == "me":
         account_me = _get_me(token)
         account = account_me["mail"]
     folders = _get_folder_structure(token, account)
@@ -634,7 +634,7 @@ def subscribe_notifications(
     email_folder: str,
     webhook_url: str,
     expiration_date: str,
-    account: str,
+    account: str = "me",
 ) -> Response:
     """
     Subscribe to notifications for new messages in a specific folder.
@@ -653,7 +653,7 @@ def subscribe_notifications(
     """
     headers = build_headers(token)
     folder = get_folder(token, email_folder, account)
-    if account.lower() == "me":
+    if not account or account.lower() == "me":
         subscription_user = "/me"
     else:
         subscription_user = f"users/{account}"
@@ -751,7 +751,7 @@ def get_subscriptions(
 def get_folder(
     token: OAuth2Secret[Literal["microsoft"], list[Literal["Mail.Read", "User.Read"]]],
     folder_to_search: str,
-    account: str,
+    account: str = "me",
 ) -> Response[dict]:
     """
     Get the folder details by name.
@@ -767,7 +767,7 @@ def get_folder(
     Raises:
         Exception: If the folder is not found.
     """
-    if account.lower() == "me":
+    if not account or account.lower() == "me":
         account_me = _get_me(token)
         account = account_me["mail"]
     folder_structure = _get_folder_structure(token, account)

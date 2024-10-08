@@ -26,9 +26,15 @@ class ColumnType(str, Enum):
 
 class ListColumn(BaseModel):
     column_name: str = Field(description="Name of the column", default="")
-    column_type: ColumnType = Field(description="Type of the column", default="")
+    column_type: ColumnType = Field(
+        description="Type of the column", default=ColumnType.text
+    )
+
+    class Config:
+        use_enum_values = True
 
 
 class SharepointList(BaseModel):
     list_name: str = Field(description="Name of the list", default="")
+    description: str = Field(description="Description of the list", default="")
     columns: list[ListColumn] = Field(description="List of columns", default=[])

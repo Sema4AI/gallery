@@ -1,0 +1,21 @@
+{
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "file_path": "/Users/username/Documents/MyWorkbook.xlsx",
+                "sheet_name": "Countries"
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "get_sheet_content",
+        "actionRelativePath": "actions.py",
+        "schemaDescription": [
+            "file_path: string: The file name or a local path pointing to the workbook file.",
+            "sheet_name: string: The name of the sheet you want to store the rows into."
+        ],
+        "managedParamsSchemaDescription": {},
+        "inputFileVersion": "v2"
+    }
+}

@@ -1,6 +1,33 @@
 {
-    "channel_name": "general",
-    "newer_than": "2024-06-05",
-    "saved_only": true,
-    "with_replies": true
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "channel_name": "#general",
+                "messages_limit": 100,
+                "newer_than": "",
+                "saved_only": false,
+                "with_replies": false,
+                "access_token": "<specify-secret>"
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "read_messages_from_channel",
+        "actionRelativePath": "actions.py",
+        "schemaDescription": [
+            "channel_name: string: The name of the Slack channel to read the messages from.",
+            "messages_limit: integer: The number of messages to read from the channel. Defaults to 20\nmessages and has a maximum limit of 200 messages.",
+            "newer_than: string: Get messages newer than the specified date in YYYY-MM-DD format.",
+            "saved_only: boolean: Enable this to return only the saved messages.",
+            "with_replies: boolean: Enable this to retrieve message thread replies as well."
+        ],
+        "managedParamsSchemaDescription": {
+            "access_token": {
+                "type": "Secret",
+                "description": "The Slack application access token."
+            }
+        },
+        "inputFileVersion": "v2"
+    }
 }

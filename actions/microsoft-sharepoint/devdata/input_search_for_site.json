@@ -1,0 +1,38 @@
+{
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "search_string": "filesharing",
+                "vscode:request:oauth2": {
+                    "token": {
+                        "type": "OAuth2Secret",
+                        "provider": "microsoft",
+                        "scopes": [
+                            "Sites.Read.All"
+                        ],
+                        "access_token": "<access-token-will-be-requested-by-vscode>"
+                    }
+                }
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "search_for_site",
+        "actionRelativePath": "microsoft_sharepoint/sharepoint_site_action.py",
+        "schemaDescription": [
+            "search_string: string: name of the Sharepoint site."
+        ],
+        "managedParamsSchemaDescription": {
+            "token": {
+                "type": "OAuth2Secret",
+                "provider": "microsoft",
+                "scopes": [
+                    "Sites.Read.All"
+                ],
+                "description": "OAuth2 token to use for the operation."
+            }
+        },
+        "inputFileVersion": "v2"
+    }
+}

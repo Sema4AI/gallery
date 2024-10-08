@@ -1,0 +1,46 @@
+{
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "spreadsheet": "Sema4 AI - Test Spreadsheet",
+                "title": "Test Worksheet",
+                "rows": 1000,
+                "columns": 1000,
+                "vscode:request:oauth2": {
+                    "oauth_access_token": {
+                        "type": "OAuth2Secret",
+                        "provider": "google",
+                        "scopes": [
+                            "https://www.googleapis.com/auth/spreadsheets",
+                            "https://www.googleapis.com/auth/drive.file"
+                        ],
+                        "access_token": "<access-token-will-be-requested-by-vscode>"
+                    }
+                }
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "create_worksheet",
+        "actionRelativePath": "actions.py",
+        "schemaDescription": [
+            "spreadsheet: string: Name of the Spreadsheet where to add the new Worksheet.",
+            "title: string: The title of the new Worksheet.",
+            "rows: integer: Number of rows to be added in the new Worksheet.",
+            "columns: integer: Number of columns to be added in the new Worksheet."
+        ],
+        "managedParamsSchemaDescription": {
+            "oauth_access_token": {
+                "type": "OAuth2Secret",
+                "provider": "google",
+                "scopes": [
+                    "https://www.googleapis.com/auth/spreadsheets",
+                    "https://www.googleapis.com/auth/drive.file"
+                ],
+                "description": "The OAuth2 access token ."
+            }
+        },
+        "inputFileVersion": "v2"
+    }
+}

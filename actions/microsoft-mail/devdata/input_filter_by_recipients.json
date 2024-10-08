@@ -1,15 +1,52 @@
 {
-    "folder_to_search": "inbox",
-    "to_recipients": "",
-    "cc_recipients": "mika@sema4.ai",
-    "bcc_recipients": "",
-    "vscode:request:oauth2": {
-        "token": {
-            "provider": "microsoft",
-            "type": "OAuth2Secret",
-            "scopes": [
-                "Mail.Read"
-            ]
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "search_query": "",
+                "from_": "mika.hanninen@gmail.com",
+                "to_recipients": "",
+                "cc_recipients": "",
+                "bcc_recipients": "",
+                "folder_to_search": "",
+                "return_only_count": false,
+                "vscode:request:oauth2": {
+                    "token": {
+                        "type": "OAuth2Secret",
+                        "provider": "microsoft",
+                        "scopes": [
+                            "Mail.Read",
+                            "User.Read"
+                        ],
+                        "access_token": "<access-token-will-be-requested-by-vscode>"
+                    }
+                }
+            }
         }
+    ],
+    "metadata": {
+        "actionName": "filter_by_recipients",
+        "actionRelativePath": "microsoft_mail/email_action.py",
+        "schemaDescription": [
+            "search_query: string: Query to search for emails. Default is '*'.",
+            "from_: string: Email address of the sender to filter by.",
+            "to_recipients: string: Comma separated list of email addresses of the recipients to filter by.",
+            "cc_recipients: string: Comma separated list of email addresses of the cc recipients to filter by.",
+            "bcc_recipients: string: Comma separated list of email addresses of the bcc recipients to filter by.",
+            "folder_to_search: string: Folder to search for emails. Default is 'inbox'.",
+            "return_only_count: boolean: Limit response size, but still return the count matching the query."
+        ],
+        "managedParamsSchemaDescription": {
+            "token": {
+                "type": "OAuth2Secret",
+                "provider": "microsoft",
+                "scopes": [
+                    "Mail.Read",
+                    "User.Read"
+                ],
+                "description": "OAuth2 token to use for the operation."
+            }
+        },
+        "inputFileVersion": "v2"
     }
 }

@@ -35,7 +35,8 @@ def search_tickets(
         zendesk_credentials.access_token, zendesk_credentials.metadata["server"]
     )
 
-    return Response(result=client.search(query))
+    response = client.search(query)
+    return Response(result=response)
 
 
 @action(is_consequential=True)
@@ -58,7 +59,8 @@ def update_ticket(
         zendesk_credentials.access_token, zendesk_credentials.metadata["server"]
     )
 
-    return Response(result=client.update(ticket_id, updates))
+    response = client.update(ticket_id, updates)
+    return Response(result=response)
 
 
 @action(is_consequential=False)
@@ -82,7 +84,8 @@ def get_ticket_comments(
         zendesk_credentials.access_token, zendesk_credentials.metadata["server"]
     )
 
-    return Response(result=client.get(ticket_id))
+    response = client.get(ticket_id)
+    return Response(result=response)
 
 
 @action(is_consequential=False)
@@ -104,7 +107,8 @@ def search_users(
         zendesk_credentials.access_token, zendesk_credentials.metadata["server"]
     )
 
-    return Response(result=client.search(query))
+    response = client.search(query)
+    return Response(result=response)
 
 
 @action(is_consequential=True)
@@ -129,7 +133,8 @@ def add_comment(
         zendesk_credentials.access_token, zendesk_credentials.metadata["server"]
     )
 
-    return Response(result=client.create(ticket_id, comment))
+    response = client.create(ticket_id, comment)
+    return Response(result=response)
 
 
 @action(is_consequential=False)
@@ -151,4 +156,5 @@ def list_groups(
         zendesk_credentials.access_token, zendesk_credentials.metadata["server"]
     )
 
-    return Response(result=client.list())
+    response = client.list()
+    return Response(result=response)

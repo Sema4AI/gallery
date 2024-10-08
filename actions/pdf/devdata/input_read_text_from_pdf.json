@@ -1,0 +1,19 @@
+{
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "filename": "/Users/username/Documents/MyPDF.pdf"
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "read_text_from_pdf",
+        "actionRelativePath": "actions.py",
+        "schemaDescription": [
+            "filename: string: The name of the file to read."
+        ],
+        "managedParamsSchemaDescription": {},
+        "inputFileVersion": "v2"
+    }
+}

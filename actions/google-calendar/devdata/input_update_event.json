@@ -1,0 +1,50 @@
+{
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "event_id": "n7kj0efe9g3vvtscimr5mei440",
+                "updates": {
+                    "summary": "Haircut Reminder"
+                },
+                "calendar_id": "",
+                "vscode:request:oauth2": {
+                    "google_credentials": {
+                        "type": "OAuth2Secret",
+                        "provider": "google",
+                        "scopes": [
+                            "https://www.googleapis.com/auth/calendar.events"
+                        ],
+                        "access_token": "<access-token-will-be-requested-by-vscode>"
+                    }
+                }
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "update_event",
+        "actionRelativePath": "actions.py",
+        "schemaDescription": [
+            "event_id: string: Identifier of the event to update. Can be found by listing events in all calendars.",
+            "updates.summary: string: A short summary of the event's purpose",
+            "updates.location: string: The physical location of the event",
+            "updates.description: string: A more detailed description of the event",
+            "updates.start: string: The (inclusive) start time of the event",
+            "updates.end: string: The (exclusive) end time of the event",
+            "updates.attendees: string: A list of attendees consisting in email and whether they are mandatory to participate or not",
+            "updates.reminders: string: Reminders settings for the event",
+            "calendar_id: string: Identifier of the calendar where the event is.\nDefault value is \"primary\" which indicates the calendar where the user is currently logged in."
+        ],
+        "managedParamsSchemaDescription": {
+            "google_credentials": {
+                "type": "OAuth2Secret",
+                "provider": "google",
+                "scopes": [
+                    "https://www.googleapis.com/auth/calendar.events"
+                ],
+                "description": "JSON containing Google OAuth2 credentials."
+            }
+        },
+        "inputFileVersion": "v2"
+    }
+}

@@ -1,0 +1,49 @@
+{
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "query": "from:sema4.ai",
+                "email_ids": {
+                    "id_list": [
+                        "<ID of the email to move>"
+                    ]
+                },
+                "label": "AI Generated email",
+                "max_results": 0,
+                "vscode:request:oauth2": {
+                    "token": {
+                        "type": "OAuth2Secret",
+                        "provider": "google",
+                        "scopes": [
+                            "https://www.googleapis.com/auth/gmail.modify"
+                        ],
+                        "access_token": "<access-token-will-be-requested-by-vscode>"
+                    }
+                }
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "move_email",
+        "actionRelativePath": "google_mail/move_email_action.py",
+        "schemaDescription": [
+            "query: string: the query filter to find emails to move",
+            "email_ids.id_list: array: A list of email ids",
+            "email_ids.id_list.0: string: A list of email ids",
+            "label: string: the label name to apply to the emails",
+            "max_results: integer: the maximum number of emails to move (default 100)"
+        ],
+        "managedParamsSchemaDescription": {
+            "token": {
+                "type": "OAuth2Secret",
+                "provider": "google",
+                "scopes": [
+                    "https://www.googleapis.com/auth/gmail.modify"
+                ],
+                "description": "the OAuth2 token for the user"
+            }
+        },
+        "inputFileVersion": "v2"
+    }
+}

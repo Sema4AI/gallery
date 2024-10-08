@@ -1,3 +1,21 @@
 {
-    "search_term": "Andrew Ng"
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "search_term": "Andrew Ng",
+                "max_results": 2
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "search",
+        "actionRelativePath": "actions.py",
+        "schemaDescription": [
+            "search_term: string: A search term for the Youtube video search, example: \"Agentic Automation\"",
+            "max_results: integer: How many results to return, default 3."
+        ],
+        "managedParamsSchemaDescription": {},
+        "inputFileVersion": "v2"
+    }
 }

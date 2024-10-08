@@ -1,3 +1,19 @@
 {
-    "video_url": "https://youtu.be/uOnL4fEnldA?si=gpDTLeoooByIJ_5S"
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "video_url": "https://youtu.be/uOnL4fEnldA?si=gpDTLeoooByIJ_5S"
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "get_transcript",
+        "actionRelativePath": "actions.py",
+        "schemaDescription": [
+            "video_url: string: Youtube video URL as a complete URL, example: \"https://www.youtube.com/watch?v=YOUR_VIDEO_ID\""
+        ],
+        "managedParamsSchemaDescription": {},
+        "inputFileVersion": "v2"
+    }
 }

@@ -1,0 +1,46 @@
+{
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "ticket_id": "ticket-id-1",
+                "ticket_data": {
+                    "subject": "Subject changed"
+                },
+                "vscode:request:oauth2": {
+                    "token": {
+                        "type": "OAuth2Secret",
+                        "provider": "hubspot",
+                        "scopes": [
+                            "tickets"
+                        ],
+                        "access_token": "<access-token-will-be-requested-by-vscode>"
+                    }
+                }
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "update_ticket",
+        "actionRelativePath": "hubspot_client/update_action.py",
+        "schemaDescription": [
+            "ticket_id: string: The id of the ticket to update.",
+            "ticket_data.subject: string: Ticket name",
+            "ticket_data.content: string: Ticket content",
+            "ticket_data.hs_ticket_priority: string: Priority",
+            "ticket_data.hs_pipeline_stage: string: Stage ID",
+            "ticket_data.hubspot_owner_id: string: Owner ID"
+        ],
+        "managedParamsSchemaDescription": {
+            "token": {
+                "type": "OAuth2Secret",
+                "provider": "hubspot",
+                "scopes": [
+                    "tickets"
+                ],
+                "description": "An OAuth2 Public App (client) token structure used to make API calls."
+            }
+        },
+        "inputFileVersion": "v2"
+    }
+}
