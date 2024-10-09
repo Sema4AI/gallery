@@ -33,6 +33,10 @@ upload this file to alerts-dev-tommi
 
 ## Authorization
 
+This package uses OAuth for user authenticaion. In Sema4.ai Studio you can either use the Sema4.ai provided public OAuth app credentials, or create your own client. In Control Room, you are expected to create the private client regardless.
+
+### Creating a Microsoft Entra Enterprise app for authentication
+
 In order to use the action package you need to go into https://portal.azure.com and register new Azure Entra ID (formerly Azure AD) application. Follow the detailed instructions [here](https://sema4.ai/docs/actions/auth/microsoft).
 
 Scopes in use:

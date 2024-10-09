@@ -17,12 +17,48 @@ Currently supporting:
 
 ## Prompt Examples
 
+```
+List my .png files
+```
+
+> I found several .png files in your OneDrive:
+>
+> 1. actions.png
+>    Created: 2024-10-03
+>    Size: 19.8 KB
+>    Download
+>
+> 2. veryslow.png
+>    Created: 2024-10-02
+>    Size: 16.2 KB
+>    Download
+
+```
+List my folders
+```
+
+> Here are your folders:
+>
+> 1. Apps
+> 2. Attachments
+> 3. Documents
+>    -- Office Scripts
+> 4. images
+> 5. newfolder
+>    -- newfolder/newfolder
+>
+> You can click on the folder names to open them.
+
 ## Authorization
+
+This package uses OAuth for user authenticaion. In Sema4.ai Studio you can either use the Sema4.ai provided public OAuth app credentials, or create your own client. In Control Room, you are expected to create the private client regardless.
+
+### Creating a Microsoft Entra Enterprise app for authentication
 
 In order to use the action package you need to go into https://portal.azure.com and register new Azure Entra ID (formerly Azure AD) application. Follow the detailed instructions [here](https://sema4.ai/docs/actions/auth/microsoft).
 
 Scopes in use:
 
-    - Files.ReadWrite
     - Files.Read
     - Files.Read.All
+    - Files.ReadWrite
