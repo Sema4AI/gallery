@@ -1,0 +1,55 @@
+{
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "spreadsheet": "Sema4 AI - Test Spreadsheet",
+                "worksheet": "Test Worksheet",
+                "rows_to_add": {
+                    "rows": [
+                        {
+                            "columns": [
+                                "Test Value 1",
+                                "Test Value 2"
+                            ]
+                        }
+                    ]
+                },
+                "vscode:request:oauth2": {
+                    "oauth_access_token": {
+                        "type": "OAuth2Secret",
+                        "provider": "google",
+                        "scopes": [
+                            "https://www.googleapis.com/auth/spreadsheets",
+                            "https://www.googleapis.com/auth/drive.file"
+                        ],
+                        "access_token": "<access-token-will-be-requested-by-vscode>"
+                    }
+                }
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "add_sheet_rows",
+        "actionRelativePath": "actions.py",
+        "schemaDescription": [
+            "spreadsheet: string: Name of the spreadsheet you want to work on.",
+            "worksheet: string: Name of the sheet where the data is added to.",
+            "rows_to_add.rows: array: The rows that need to be added",
+            "rows_to_add.rows.0.columns: array: The columns that make up the row",
+            "rows_to_add.rows.0.columns.0: string: The columns that make up the row"
+        ],
+        "managedParamsSchemaDescription": {
+            "oauth_access_token": {
+                "type": "OAuth2Secret",
+                "provider": "google",
+                "scopes": [
+                    "https://www.googleapis.com/auth/spreadsheets",
+                    "https://www.googleapis.com/auth/drive.file"
+                ],
+                "description": "The OAuth2 access token ."
+            }
+        },
+        "inputFileVersion": "v2"
+    }
+}

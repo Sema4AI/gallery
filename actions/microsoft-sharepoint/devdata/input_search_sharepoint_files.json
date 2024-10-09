@@ -1,11 +1,40 @@
 {
-    "search_text": "filetype:yaml",
-    "token": {
-        "provider": "microsoft",
-        "scopes": [
-            "Files.ReadWrite.All"
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "search_text": "filetype:yaml",
+                "location": "",
+                "vscode:request:oauth2": {
+                    "token": {
+                        "type": "OAuth2Secret",
+                        "provider": "microsoft",
+                        "scopes": [
+                            "Files.Read.All"
+                        ],
+                        "access_token": "<access-token-will-be-requested-by-vscode>"
+                    }
+                }
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "search_sharepoint_files",
+        "actionRelativePath": "microsoft_sharepoint/sharepoint_file_action.py",
+        "schemaDescription": [
+            "search_text: string: text to search for, use \"*\" to search for all files",
+            "location: string: \"me\" or \"my files\" or the id of the Sharepoint site or empty to search in all sites"
         ],
-        "access_token": "<ACCESS_TOKEN>",
-        "metadata": {}
+        "managedParamsSchemaDescription": {
+            "token": {
+                "type": "OAuth2Secret",
+                "provider": "microsoft",
+                "scopes": [
+                    "Files.Read.All"
+                ],
+                "description": "OAuth2 token to use for the operation"
+            }
+        },
+        "inputFileVersion": "v2"
     }
 }

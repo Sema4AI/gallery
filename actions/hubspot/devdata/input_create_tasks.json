@@ -1,0 +1,51 @@
+{
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "task_data": {
+                    "hs_task_subject": "Reminder call with Amazon",
+                    "hs_task_body": "Call Amazon to discuss the new deal",
+                    "hubspot_owner_id": "owner-id-1",
+                    "hs_task_status": "NOT_STARTED",
+                    "hs_task_priority": "HIGH",
+                    "hs_timestamp": "2024-10-06T23:59:59+03:00"
+                },
+                "vscode:request:oauth2": {
+                    "token": {
+                        "type": "OAuth2Secret",
+                        "provider": "hubspot",
+                        "scopes": [
+                            "crm.objects.contacts.write"
+                        ],
+                        "access_token": "<access-token-will-be-requested-by-vscode>"
+                    }
+                }
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "create_tasks",
+        "actionRelativePath": "hubspot_client/create_action.py",
+        "schemaDescription": [
+            "task_data.hs_task_subject: string: Task title",
+            "task_data.hs_task_body: string: Task notes",
+            "task_data.hubspot_owner_id: string: Task owner ID",
+            "task_data.hs_task_status: string: Task status",
+            "task_data.hs_task_priority: string: Task priority; valid values are: LOW, MEDIUM, or HIGH",
+            "task_data.hs_task_type: string: Task type; valid values are: EMAIL, CALL, or TODO",
+            "task_data.hs_timestamp: string: Task due date"
+        ],
+        "managedParamsSchemaDescription": {
+            "token": {
+                "type": "OAuth2Secret",
+                "provider": "hubspot",
+                "scopes": [
+                    "crm.objects.contacts.write"
+                ],
+                "description": "An OAuth2 Public App (client) token structure used to make API calls."
+            }
+        },
+        "inputFileVersion": "v2"
+    }
+}

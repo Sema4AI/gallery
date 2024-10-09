@@ -1,4 +1,27 @@
 {
-    "channel_name": "random",
-    "message": "Here's something random!"
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "channel_name": "#general",
+                "message": "Hello from Sema4 AI",
+                "access_token": "<specify-secret>"
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "send_message_to_channel",
+        "actionRelativePath": "actions.py",
+        "schemaDescription": [
+            "channel_name: string: Slack channel to send the message to.",
+            "message: string: Message to send on the Slack channel."
+        ],
+        "managedParamsSchemaDescription": {
+            "access_token": {
+                "type": "Secret",
+                "description": "The Slack application access token."
+            }
+        },
+        "inputFileVersion": "v2"
+    }
 }

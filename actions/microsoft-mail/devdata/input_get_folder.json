@@ -1,13 +1,59 @@
 {
-    "vscode:request:oauth2": {
-        "token": {
-            "provider": "microsoft",
-            "type": "OAuth2Secret",
-            "scopes": [
-                "Mail.Read"
-            ]
+    "inputs": [
+        {
+            "inputName": "search with account set to 'me'",
+            "inputValue": {
+                "folder_to_search": "powerix",
+                "account": "me",
+                "vscode:request:oauth2": {
+                    "token": {
+                        "type": "OAuth2Secret",
+                        "provider": "microsoft",
+                        "scopes": [
+                            "Mail.Read",
+                            "User.Read"
+                        ],
+                        "access_token": "<access-token-will-be-requested-by-vscode>"
+                    }
+                }
+            }
+        },
+        {
+            "inputName": "search without account set",
+            "inputValue": {
+                "folder_to_search": "powerix",
+                "vscode:request:oauth2": {
+                    "token": {
+                        "type": "OAuth2Secret",
+                        "provider": "microsoft",
+                        "scopes": [
+                            "Mail.Read",
+                            "User.Read"
+                        ],
+                        "access_token": "<access-token-will-be-requested-by-vscode>"
+                    }
+                }
+            }
         }
-    },
-    "folder_to_search": "powerix",
-    "account": "me"
+    ],
+    "metadata": {
+        "actionName": "get_folder",
+        "actionRelativePath": "microsoft_mail/email_action.py",
+        "schemaDescription": [
+            "folder_to_search: string: The name or ID of the folder to retrieve.",
+            "account: string: The email account. By default \"me\""
+        ],
+        "managedParamsSchemaDescription": {
+            "token": {
+                "type": "OAuth2Secret",
+                "provider": "microsoft",
+                "scopes": [
+                    "Mail.Read",
+                    "User.Read"
+                ],
+                "description": "The OAuth2 token for authentication."
+            }
+        },
+        "inputFileVersion": "v2"
+    }
 }

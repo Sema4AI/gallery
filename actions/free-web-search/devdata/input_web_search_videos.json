@@ -1,3 +1,21 @@
 {
-    "keywords": "AI and Robots"
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "keywords": "AI and Robots",
+                "max_results": 3
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "web_search_videos",
+        "actionRelativePath": "actions.py",
+        "schemaDescription": [
+            "keywords: string: keywords to search videos on",
+            "max_results: integer: count on how many results to retrieve"
+        ],
+        "managedParamsSchemaDescription": {},
+        "inputFileVersion": "v2"
+    }
 }

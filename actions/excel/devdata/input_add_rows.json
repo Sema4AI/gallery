@@ -1,17 +1,33 @@
 {
-    "file_path": "./output/data",
-    "sheet_name": "MySheet",
-    "data_table": {
-        "header": {
-            "cells": ["Name", "Age"]
-        },
-        "rows": [
-            {
-                "cells": ["Cosmin", "31"]
-            },
-            {
-                "cells": ["Mark", "6"]
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "file_path": "/Users/username/Documents/MyWorkbook.xlsx",
+                "sheet_name": "Countries",
+                "data_table": {
+                    "rows": [
+                        {
+                            "cells": [
+                                "1", "Japan"
+                            ]
+                        }
+                    ]
+                }
             }
-        ]
+        }
+    ],
+    "metadata": {
+        "actionName": "add_rows",
+        "actionRelativePath": "actions.py",
+        "schemaDescription": [
+            "file_path: string: The file name or a local path pointing to the workbook file.",
+            "sheet_name: string: The name of the sheet you want to store the rows into.",
+            "data_table.rows: array: The rows that need to be added",
+            "data_table.rows.0.cells: array: Row cells",
+            "data_table.rows.0.cells.0: string: Row cells"
+        ],
+        "managedParamsSchemaDescription": {},
+        "inputFileVersion": "v2"
     }
 }

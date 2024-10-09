@@ -1,0 +1,48 @@
+{
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "company_id": "company-id-1",
+                "company_data": {
+                    "name": "Amazon - Romania",
+                    "city": "Iasi",
+                    "state": "Iasi",
+                },
+                "vscode:request:oauth2": {
+                    "token": {
+                        "type": "OAuth2Secret",
+                        "provider": "hubspot",
+                        "scopes": [
+                            "crm.objects.companies.write"
+                        ],
+                        "access_token": "<access-token-will-be-requested-by-vscode>"
+                    }
+                }
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "update_company",
+        "actionRelativePath": "hubspot_client/update_action.py",
+        "schemaDescription": [
+            "company_id: string: The id of the company to update.",
+            "company_data.name: string: Company name",
+            "company_data.domain: string: Company domain",
+            "company_data.city: string: Company city",
+            "company_data.state: string: Company state",
+            "company_data.industry: string: Company industry"
+        ],
+        "managedParamsSchemaDescription": {
+            "token": {
+                "type": "OAuth2Secret",
+                "provider": "hubspot",
+                "scopes": [
+                    "crm.objects.companies.write"
+                ],
+                "description": "An OAuth2 Public App (client) token structure used to make API calls."
+            }
+        },
+        "inputFileVersion": "v2"
+    }
+}

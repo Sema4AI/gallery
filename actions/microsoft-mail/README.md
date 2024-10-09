@@ -78,3 +78,10 @@ Send that draft
 ## Authorization
 
 In order to use the action package you need to go into https://portal.azure.com and register new Azure Entra ID (formerly Azure AD) application. Follow the detailed instructions [here](https://sema4.ai/docs/actions/auth/microsoft).
+
+Scopes in use:
+
+    - Mail.Read
+    - Mail.ReadWrite
+    - Mail.Send
+    - User.Read

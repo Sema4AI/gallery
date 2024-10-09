@@ -1,0 +1,42 @@
+{
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "query": {
+                    "startTimestamp": "2024-10-06T00:00:00+03:00",
+                    "endTimestamp": "2024-10-06T23:59:59+03:00"
+                },
+                "vscode:request:oauth2": {
+                    "token": {
+                        "type": "OAuth2Secret",
+                        "provider": "hubspot",
+                        "scopes": [
+                            "content"
+                        ],
+                        "access_token": "<access-token-will-be-requested-by-vscode>"
+                    }
+                }
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "get_marketing_email_analytics",
+        "actionRelativePath": "hubspot_client/search_action.py",
+        "schemaDescription": [
+            "query.startTimestamp: string: Start timestamp in ISO8601 format",
+            "query.endTimestamp: string: End timestamp in ISO8601 format"
+        ],
+        "managedParamsSchemaDescription": {
+            "token": {
+                "type": "OAuth2Secret",
+                "provider": "hubspot",
+                "scopes": [
+                    "content"
+                ],
+                "description": "An OAuth2 Public App (client) token structure used to make API calls."
+            }
+        },
+        "inputFileVersion": "v2"
+    }
+}

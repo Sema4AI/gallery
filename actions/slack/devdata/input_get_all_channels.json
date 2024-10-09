@@ -1,3 +1,25 @@
 {
-    "channels_limit": 100
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "channels_limit": 100,
+                "access_token": "<specify-secret>"
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "get_all_channels",
+        "actionRelativePath": "actions.py",
+        "schemaDescription": [
+            "channels_limit: integer: The maximum number of channels that can be returned."
+        ],
+        "managedParamsSchemaDescription": {
+            "access_token": {
+                "type": "Secret",
+                "description": "The Slack application access token."
+            }
+        },
+        "inputFileVersion": "v2"
+    }
 }

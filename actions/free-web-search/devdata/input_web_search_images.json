@@ -1,3 +1,23 @@
 {
-    "keywords": "butterfly"
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "keywords": "butterfly",
+                "type_image": "gif",
+                "max_results": 3
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "web_search_images",
+        "actionRelativePath": "actions.py",
+        "schemaDescription": [
+            "keywords: string: keywords to search images on",
+            "type_image: string: type of image to search on ('photo', 'clipart', 'gif', 'transparent', 'line')",
+            "max_results: integer: count on how many results to retrieve"
+        ],
+        "managedParamsSchemaDescription": {},
+        "inputFileVersion": "v2"
+    }
 }

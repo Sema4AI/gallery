@@ -93,3 +93,12 @@ def _get_filename_from_cd(cd):
         return None
     fname = cd.split("filename=")[1] if "filename=" in cd else None
     return unquote(fname.strip('"')) if fname else None
+
+
+def _configure_browser(browser, headless_mode, user_agent):
+    extras = {}
+    if user_agent and user_agent.name != "":
+        extras["user_agent"] = user_agent.name
+    browser.configure(browser_engine="chromium", headless=headless_mode)
+    if extras:
+        browser.configure_context(**extras)

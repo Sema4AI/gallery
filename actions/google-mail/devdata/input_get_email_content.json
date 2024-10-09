@@ -1,12 +1,42 @@
 {
-    "query": "from:robocorp.tester@gmail.com in:Testing",
-    "max_results": 100,
-    "token": {
-        "provider": "google",
-        "scopes": [
-            "https://www.googleapis.com/auth/gmail.readonly"
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "email_id": "",
+                "query": "from:github",
+                "max_results": 10,
+                "vscode:request:oauth2": {
+                    "token": {
+                        "type": "OAuth2Secret",
+                        "provider": "google",
+                        "scopes": [
+                            "https://www.googleapis.com/auth/gmail.readonly"
+                        ],
+                        "access_token": "<access-token-will-be-requested-by-vscode>"
+                    }
+                }
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "get_email_content",
+        "actionRelativePath": "google_mail/get_email_content_action.py",
+        "schemaDescription": [
+            "email_id: string: the email id to get the content from",
+            "query: string: the query filter to apply to the emails",
+            "max_results: integer: the maximum number of emails to return (default 10)"
         ],
-        "access_token": "ya29.x",
-        "metadata": {}
+        "managedParamsSchemaDescription": {
+            "token": {
+                "type": "OAuth2Secret",
+                "provider": "google",
+                "scopes": [
+                    "https://www.googleapis.com/auth/gmail.readonly"
+                ],
+                "description": "the OAuth2 token for the user"
+            }
+        },
+        "inputFileVersion": "v2"
     }
 }

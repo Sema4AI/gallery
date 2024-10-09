@@ -1,0 +1,42 @@
+{
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "query": "fullText contains 'Sema4 AI'",
+                "search_all_drives": false,
+                "vscode:request:oauth2": {
+                    "google_credentials": {
+                        "type": "OAuth2Secret",
+                        "provider": "google",
+                        "scopes": [
+                            "https://www.googleapis.com/auth/drive.readonly",
+                            "https://www.googleapis.com/auth/drive.metadata.readonly"
+                        ],
+                        "access_token": "<access-token-will-be-requested-by-vscode>"
+                    }
+                }
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "get_files_by_query",
+        "actionRelativePath": "actions.py",
+        "schemaDescription": [
+            "query: string: Google Drive API V3 query string for search files in the format query_term operator values.",
+            "search_all_drives: boolean: Whether to search both My Drives and all shared drives.\nDefault is set to false for better performance and will include both owned files and those that have been\nshared with the user."
+        ],
+        "managedParamsSchemaDescription": {
+            "google_credentials": {
+                "type": "OAuth2Secret",
+                "provider": "google",
+                "scopes": [
+                    "https://www.googleapis.com/auth/drive.readonly",
+                    "https://www.googleapis.com/auth/drive.metadata.readonly"
+                ],
+                "description": "JSON containing Google OAuth2 credentials."
+            }
+        },
+        "inputFileVersion": "v2"
+    }
+}

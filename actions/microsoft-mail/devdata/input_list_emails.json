@@ -1,14 +1,46 @@
 {
-    "search_query": "receivedDateTime eq 2024-09-26",
-    "folder_to_search": "inbox",
-    "properties_to_return": "subject,from,receivedDateTime",
-    "vscode:request:oauth2": {
-        "token": {
-            "provider": "microsoft",
-            "type": "OAuth2Secret",
-            "scopes": [
-                "Mail.Read"
-            ]
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "search_query": "receivedDateTime gt 2024-09-26",
+                "folder_to_search": "inbox",
+                "properties_to_return": "subject,from,receivedDateTime",
+                "return_only_count": false,
+                "vscode:request:oauth2": {
+                    "token": {
+                        "type": "OAuth2Secret",
+                        "provider": "microsoft",
+                        "scopes": [
+                            "Mail.Read",
+                            "User.Read"
+                        ],
+                        "access_token": "<access-token-will-be-requested-by-vscode>"
+                    }
+                }
+            }
         }
+    ],
+    "metadata": {
+        "actionName": "list_emails",
+        "actionRelativePath": "microsoft_mail/email_action.py",
+        "schemaDescription": [
+            "search_query: string: query to search for emails. Keep spaces in folder names if user gives spaces.",
+            "folder_to_search: string: The folder to search for emails. Default is 'inbox'.",
+            "properties_to_return: string: The properties to return in the response. Default is all properties. Comma separated list of properties, like 'subject,body,toRecipients'.",
+            "return_only_count: boolean: Limit response size, but still return the count matching the query."
+        ],
+        "managedParamsSchemaDescription": {
+            "token": {
+                "type": "OAuth2Secret",
+                "provider": "microsoft",
+                "scopes": [
+                    "Mail.Read",
+                    "User.Read"
+                ],
+                "description": "OAuth2 token to use for the operation."
+            }
+        },
+        "inputFileVersion": "v2"
     }
 }

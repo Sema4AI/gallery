@@ -1,0 +1,38 @@
+{
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "deal_id": "deal-id-1",
+                "vscode:request:oauth2": {
+                    "token": {
+                        "type": "OAuth2Secret",
+                        "provider": "hubspot",
+                        "scopes": [
+                            "crm.objects.deals.write"
+                        ],
+                        "access_token": "<access-token-will-be-requested-by-vscode>"
+                    }
+                }
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "delete_deal",
+        "actionRelativePath": "hubspot_client/delete_action.py",
+        "schemaDescription": [
+            "deal_id: string: The id of the deal to delete."
+        ],
+        "managedParamsSchemaDescription": {
+            "token": {
+                "type": "OAuth2Secret",
+                "provider": "hubspot",
+                "scopes": [
+                    "crm.objects.deals.write"
+                ],
+                "description": "An OAuth2 Public App (client) token structure used to make API calls."
+            }
+        },
+        "inputFileVersion": "v2"
+    }
+}

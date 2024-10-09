@@ -1,4 +1,32 @@
 {
-    "topic": "python and ai",
-    "count": 5
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "topic": "Sema4 AI",
+                "count": 10,
+                "api_key": "<specify-secret>",
+                "context": "<specify-secret>"
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "google_search",
+        "actionRelativePath": "actions.py",
+        "schemaDescription": [
+            "topic: string: topic to search on",
+            "count: integer: count on how many results to retrieve"
+        ],
+        "managedParamsSchemaDescription": {
+            "api_key": {
+                "type": "Secret",
+                "description": "the Google Custom Search API key"
+            },
+            "context": {
+                "type": "Secret",
+                "description": "the Custom Search Engine ID"
+            }
+        },
+        "inputFileVersion": "v2"
+    }
 }

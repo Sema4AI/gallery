@@ -1,0 +1,38 @@
+{
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "document_id": "<The ID of the document to fetch>",
+                "vscode:request:oauth2": {
+                    "oauth_access_token": {
+                        "type": "OAuth2Secret",
+                        "provider": "google",
+                        "scopes": [
+                            "https://www.googleapis.com/auth/documents.readonly"
+                        ],
+                        "access_token": "<access-token-will-be-requested-by-vscode>"
+                    }
+                }
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "get_document_by_id",
+        "actionRelativePath": "actions.py",
+        "schemaDescription": [
+            "document_id: string: The Google Document ID."
+        ],
+        "managedParamsSchemaDescription": {
+            "oauth_access_token": {
+                "type": "OAuth2Secret",
+                "provider": "google",
+                "scopes": [
+                    "https://www.googleapis.com/auth/documents.readonly"
+                ],
+                "description": "The OAuth2 Google access token"
+            }
+        },
+        "inputFileVersion": "v2"
+    }
+}

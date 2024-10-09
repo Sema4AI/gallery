@@ -1,0 +1,40 @@
+{
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "file_id": "<The ID of the file to fetch>",
+                "vscode:request:oauth2": {
+                    "google_credentials": {
+                        "type": "OAuth2Secret",
+                        "provider": "google",
+                        "scopes": [
+                            "https://www.googleapis.com/auth/drive.readonly",
+                            "https://www.googleapis.com/auth/drive.metadata.readonly"
+                        ],
+                        "access_token": "<access-token-will-be-requested-by-vscode>"
+                    }
+                }
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "get_file_by_id",
+        "actionRelativePath": "actions.py",
+        "schemaDescription": [
+            "file_id: string: Unique id of the file."
+        ],
+        "managedParamsSchemaDescription": {
+            "google_credentials": {
+                "type": "OAuth2Secret",
+                "provider": "google",
+                "scopes": [
+                    "https://www.googleapis.com/auth/drive.readonly",
+                    "https://www.googleapis.com/auth/drive.metadata.readonly"
+                ],
+                "description": "JSON containing Google OAuth2 credentials."
+            }
+        },
+        "inputFileVersion": "v2"
+    }
+}

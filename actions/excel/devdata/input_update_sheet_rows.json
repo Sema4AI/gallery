@@ -1,0 +1,35 @@
+{
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "file_path": "/Users/username/Documents/MyWorkbook.xlsx",
+                "sheet_name": "Countries",
+                "start_cell": "1",
+                "data": {
+                    "rows": [
+                        {
+                            "cells": [
+                                "1", "Russia"
+                            ]
+                        }
+                    ]
+                }
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "update_sheet_rows",
+        "actionRelativePath": "actions.py",
+        "schemaDescription": [
+            "file_path: string: The file name or a local path pointing to the workbook file.",
+            "sheet_name: string: The name of the sheet you want to store the rows into.",
+            "start_cell: string: The cell from where to start the update. The end will be determined based on each row's length.",
+            "data.rows: array: The rows that need to be added",
+            "data.rows.0.cells: array: Row cells",
+            "data.rows.0.cells.0: string: Row cells"
+        ],
+        "managedParamsSchemaDescription": {},
+        "inputFileVersion": "v2"
+    }
+}

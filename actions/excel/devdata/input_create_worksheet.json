@@ -1,4 +1,21 @@
 {
-    "file_path": "./output/data",
-    "sheet_name": "Another sheet"
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "file_path": "/Users/username/Documents/MyWorkbook.xlsx",
+                "sheet_name": "Cities"
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "create_worksheet",
+        "actionRelativePath": "actions.py",
+        "schemaDescription": [
+            "file_path: string: The file name or a local path pointing to the workbook file.",
+            "sheet_name: string: The name of the new sheet to be added in the workbook."
+        ],
+        "managedParamsSchemaDescription": {},
+        "inputFileVersion": "v2"
+    }
 }

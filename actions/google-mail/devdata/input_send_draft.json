@@ -1,0 +1,38 @@
+{
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "draft_id": "<The ID of the draft to send>",
+                "vscode:request:oauth2": {
+                    "token": {
+                        "type": "OAuth2Secret",
+                        "provider": "google",
+                        "scopes": [
+                            "https://www.googleapis.com/auth/gmail.send"
+                        ],
+                        "access_token": "<access-token-will-be-requested-by-vscode>"
+                    }
+                }
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "send_draft",
+        "actionRelativePath": "google_mail/send_draft_action.py",
+        "schemaDescription": [
+            "draft_id: string: the id of the draft to send"
+        ],
+        "managedParamsSchemaDescription": {
+            "token": {
+                "type": "OAuth2Secret",
+                "provider": "google",
+                "scopes": [
+                    "https://www.googleapis.com/auth/gmail.send"
+                ],
+                "description": "the OAuth2 token for the user"
+            }
+        },
+        "inputFileVersion": "v2"
+    }
+}

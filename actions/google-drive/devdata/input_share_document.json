@@ -1,0 +1,42 @@
+{
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "name": "Sema4 AI - Test Document",
+                "role": "commenter",
+                "email_address": "hello@example.com",
+                "vscode:request:oauth2": {
+                    "google_credentials": {
+                        "type": "OAuth2Secret",
+                        "provider": "google",
+                        "scopes": [
+                            "https://www.googleapis.com/auth/drive.file"
+                        ],
+                        "access_token": "<access-token-will-be-requested-by-vscode>"
+                    }
+                }
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "share_document",
+        "actionRelativePath": "actions.py",
+        "schemaDescription": [
+            "name: string: Name of the file to be shared.",
+            "role: string: Assign a specific role. Possible options are: reader, writer, commenter, organizer, fileOrganizer.",
+            "email_address: string: The email address of the user or group to share the file with."
+        ],
+        "managedParamsSchemaDescription": {
+            "google_credentials": {
+                "type": "OAuth2Secret",
+                "provider": "google",
+                "scopes": [
+                    "https://www.googleapis.com/auth/drive.file"
+                ],
+                "description": "JSON containing Google OAuth2 credentials."
+            }
+        },
+        "inputFileVersion": "v2"
+    }
+}

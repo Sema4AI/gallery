@@ -1,0 +1,39 @@
+{
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "object_type": "deals",
+                "vscode:request:oauth2": {
+                    "token": {
+                        "type": "OAuth2Secret",
+                        "provider": "hubspot",
+                        "scopes": [
+                            "crm.objects.custom.read",
+                            "crm.objects.deals.read"
+                        ],
+                        "access_token": "<access-token-will-be-requested-by-vscode>"
+                    }
+                }
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "list_pipelines",
+        "actionRelativePath": "hubspot_client/search_action.py",
+        "schemaDescription": [
+            "object_type: string"
+        ],
+        "managedParamsSchemaDescription": {
+            "token": {
+                "type": "OAuth2Secret",
+                "provider": "hubspot",
+                "scopes": [
+                    "crm.objects.custom.read",
+                    "crm.objects.deals.read"
+                ]
+            }
+        },
+        "inputFileVersion": "v2"
+    }
+}

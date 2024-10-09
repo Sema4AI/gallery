@@ -1,6 +1,6 @@
 from typing import List, Optional
-
-from pydantic import BaseModel, EmailStr, Field, model_validator
+from email_validator import validate_email, EmailNotValidError
+from pydantic import BaseModel, Field, model_validator
 
 
 class TeamSearchRequest(BaseModel):
@@ -24,7 +24,7 @@ class TeamDetails(BaseModel):
 
 
 class UserSearch(BaseModel):
-    email: Optional[EmailStr] = Field(None, description="Email address of the user")
+    email: Optional[str] = Field(None, description="Email address of the user")
     first_name: Optional[str] = Field(None, description="First name of the user")
     last_name: Optional[str] = Field(None, description="Last name of the user")
 
@@ -34,6 +34,15 @@ class UserSearch(BaseModel):
             raise ValueError(
                 "At least one of email, first_name, or last_name must be provided"
             )
+
+        # Validate email only if it's not an empty string
+        email = values.get("email")
+        if email and email.strip() != "":
+            try:
+                validate_email(email)
+            except EmailNotValidError:
+                raise ValueError("Invalid email address format")
+
         return values
 
 
