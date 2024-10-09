@@ -1,0 +1,61 @@
+{
+    "inputs": [
+        {
+            "inputName": "create 'newfolder' in root",
+            "inputValue": {
+                "params": {
+                    "folder_name": "newfolder",
+                    "parent_folder_path": ""
+                },
+                "vscode:request:oauth2": {
+                    "token": {
+                        "type": "OAuth2Secret",
+                        "provider": "microsoft",
+                        "scopes": [
+                            "Files.ReadWrite"
+                        ],
+                        "access_token": "<access-token-will-be-requested-by-vscode>"
+                    }
+                }
+            }
+        },
+        {
+            "inputName": "create 'newfolder' in 'newfolder'",
+            "inputValue": {
+                "params": {
+                    "folder_name": "newfolder",
+                    "parent_folder_path": "/newfolder"
+                },
+                "vscode:request:oauth2": {
+                    "token": {
+                        "type": "OAuth2Secret",
+                        "provider": "microsoft",
+                        "scopes": [
+                            "Files.ReadWrite"
+                        ],
+                        "access_token": "<access-token-will-be-requested-by-vscode>"
+                    }
+                }
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "create_onedrive_folder",
+        "actionRelativePath": "microsoft_onedrive/onedrive_mutate_action.py",
+        "schemaDescription": [
+            "params.folder_name: string",
+            "params.parent_folder_path: string: The path of the parent folder where the new folder will be created. Use '/' for the root of OneDrive."
+        ],
+        "managedParamsSchemaDescription": {
+            "token": {
+                "type": "OAuth2Secret",
+                "provider": "microsoft",
+                "scopes": [
+                    "Files.ReadWrite"
+                ],
+                "description": "OAuth2 token to use for the operation."
+            }
+        },
+        "inputFileVersion": "v2"
+    }
+}

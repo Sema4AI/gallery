@@ -65,3 +65,16 @@ Get the contest of Test AI
 > | A8 | B8 | C8 | D8 | E8 |
 > | A9 | B9 | C9 | D9 | E9 |
 > | A10 | B10 | C10 | D10 | E10 |
+
+## Authorization
+
+This package uses OAuth for user authenticaion. In Sema4.ai Studio you can either use the Sema4.ai provided public OAuth app credentials, or create your own client. In Control Room, you are expected to create the private client regardless.
+
+### Creating a Microsoft Entra Enterprise app for authentication
+
+In order to use the action package you need to go into https://portal.azure.com and register new Azure Entra ID (formerly Azure AD) application. Follow the detailed instructions [here](https://sema4.ai/docs/actions/auth/microsoft).
+
+Scopes in use:
+
+    - Files.Read
+    - Files.ReadWrite

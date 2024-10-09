@@ -135,7 +135,7 @@ def update_range_action(
     data: UpdateRange,
     token: OAuth2Secret[
         Literal["microsoft"],
-        list[Literal["Files.Read"]],
+        list[Literal["Files.ReadWrite"]],
     ],
 ) -> Response[str]:
     """
