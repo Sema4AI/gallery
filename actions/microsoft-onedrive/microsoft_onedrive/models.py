@@ -1,14 +1,16 @@
 from enum import Enum
-from typing import Optional
+from typing import Optional, Annotated
 from pydantic import BaseModel, Field
 
 
 class DeleteOneDriveItemParams(BaseModel):
-    item_id: str = Field(..., description="The ID of the file or folder to delete")
+    item_id: Annotated[str, Field(description="The ID of the file or folder to delete")]
 
 
 class GetOneDriveItemByIdParams(BaseModel):
-    item_id: str = Field(..., description="The ID of the file or folder to retrieve")
+    item_id: Annotated[
+        str, Field(description="The ID of the file or folder to retrieve")
+    ]
 
 
 class ItemType(str, Enum):
@@ -33,6 +35,9 @@ class OneDriveListingParams(BaseModel):
         default=ItemType.all, description="Type of items to list"
     )
 
+    class Config:
+        use_enum_values = True
+
 
 class OneDriveSearchItemsRequest(BaseModel):
     query: str
@@ -41,9 +46,12 @@ class OneDriveSearchItemsRequest(BaseModel):
         description="Type of items to search for, 'files', 'folders', defaults to 'all'",
     )
 
+    class Config:
+        use_enum_values = True
+
 
 class OneDriveUploadRequest(BaseModel):
-    filepath: str = Field(..., description="The path to the file to upload")
+    filepath: Annotated[str, Field(description="The path to the file to upload")]
     folder_path: str = Field(
         default="/",
         description="The path of the folder where the file will be uploaded. Use '/' for the root of OneDrive.",
@@ -51,10 +59,11 @@ class OneDriveUploadRequest(BaseModel):
 
 
 class RenameOneDriveItemParams(BaseModel):
-    item_id: str = Field(..., description="The ID of the file or folder to rename")
-    new_name: str = Field(
-        ..., description="The new name for the file (including extension) or folder"
-    )
+    item_id: Annotated[str, Field(description="The ID of the file or folder to rename")]
+    new_name: Annotated[
+        str,
+        Field(description="The new name for the file (including extension) or folder"),
+    ]
 
 
 class DownloadRequest(BaseModel):

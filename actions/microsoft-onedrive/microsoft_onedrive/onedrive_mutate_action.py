@@ -2,8 +2,7 @@ import os
 from pathlib import Path
 from typing import List, Literal
 
-import requests
-from sema4ai.actions import ActionError, OAuth2Secret, Response, action
+from sema4ai.actions import OAuth2Secret, Response, action
 
 from microsoft_onedrive.models import (
     DeleteOneDriveItemParams,
@@ -11,10 +10,7 @@ from microsoft_onedrive.models import (
     OneDriveUploadRequest,
     RenameOneDriveItemParams,
 )
-from microsoft_onedrive.support import (
-    BASE_GRAPH_URL,
-    build_headers,
-)
+from microsoft_onedrive.support import build_headers, send_request
 
 
 @action
@@ -25,8 +21,7 @@ def create_onedrive_folder(
     ],
     params: OneDriveFolderCreationParams,
 ) -> Response[dict]:
-    """
-    Create a new folder in OneDrive.
+    """Create a new folder in OneDrive.
 
     Args:
         token: OAuth2 token to use for the operation.
@@ -38,34 +33,27 @@ def create_onedrive_folder(
         Response with the result of the operation
     """
     headers = build_headers(token)
-
     if params.parent_folder_path:
-        create_url = (
-            f"{BASE_GRAPH_URL}/me/drive/root:/{params.parent_folder_path}:/children"
-        )
+        create_url = f"/me/drive/root:/{params.parent_folder_path}:/children"
     else:
-        create_url = f"{BASE_GRAPH_URL}/me/drive/root/children"
-
+        create_url = "/me/drive/root/children"
     folder_data = {
         "name": params.folder_name,
         "folder": {},
         "@microsoft.graph.conflictBehavior": "rename",
     }
 
-    create_response = requests.post(create_url, headers=headers, json=folder_data)
-
-    if create_response.status_code in [200, 201]:
-        folder_info = create_response.json()
-        return Response(
-            result={
-                "message": "Folder created successfully",
-                "folder_id": folder_info.get("id"),
-                "folder_name": folder_info.get("name"),
-                "web_url": folder_info.get("webUrl"),
-            }
-        )
-    else:
-        raise ActionError(f"Failed to create folder: {create_response.text}")
+    folder_info = send_request(
+        "post", create_url, "create folder", headers=headers, json=folder_data
+    )
+    return Response(
+        result={
+            "message": "Folder created successfully",
+            "folder_id": folder_info.get("id"),
+            "folder_name": folder_info.get("name"),
+            "web_url": folder_info.get("webUrl"),
+        }
+    )
 
 
 @action
@@ -76,8 +64,7 @@ def delete_onedrive_item(
     ],
     params: DeleteOneDriveItemParams,
 ) -> Response[dict]:
-    """
-    Delete a file or folder from OneDrive using its ID.
+    """Delete a file or folder from OneDrive using its ID.
 
     Args:
         token: OAuth2 token with Files.ReadWrite permission.
@@ -87,38 +74,10 @@ def delete_onedrive_item(
         Dictionary with a 'success' key indicating whether the deletion was successful.
     """
     headers = build_headers(token)
-    url = f"{BASE_GRAPH_URL}/me/drive/items/{params.item_id}"
+    url = f"/me/drive/items/{params.item_id}"
 
-    try:
-        response = requests.delete(url, headers=headers)
-        response.raise_for_status()
-
-        return Response(
-            result={"success": True, "message": "Item deleted successfully"}
-        )
-
-    except requests.HTTPError as e:
-        status_code = e.response.status_code
-        if status_code == 400:
-            raise ActionError(
-                f"Bad request. The item ID '{params.item_id}' might be invalid."
-            )
-        elif status_code == 401:
-            raise ActionError("Unauthorized. Please check your authentication token.")
-        elif status_code == 403:
-            raise ActionError(
-                "Access forbidden. You may not have permission to delete this item."
-            )
-        elif status_code == 404:
-            raise ActionError(f"Item not found: {params.item_id}")
-        elif status_code == 409:
-            raise ActionError("Conflict error. The item might be locked or in use.")
-        else:
-            raise ActionError(f"Failed to delete OneDrive item: HTTP {status_code}")
-    except requests.RequestException as e:
-        raise ActionError(f"Network error while deleting OneDrive item: {str(e)}")
-    except Exception as e:
-        raise ActionError(f"Unexpected error while deleting OneDrive item: {str(e)}")
+    send_request("delete", url, "delete item", headers=headers)
+    return Response(result={"success": True, "message": "Item deleted successfully"})
 
 
 @action
@@ -129,8 +88,7 @@ def rename_onedrive_item(
     ],
     params: RenameOneDriveItemParams,
 ) -> Response[dict]:
-    """
-    Rename a file or folder in OneDrive using its ID.
+    """Rename a file or folder in OneDrive using its ID.
 
     Args:
         token: OAuth2 token with Files.ReadWrite permission.
@@ -140,51 +98,21 @@ def rename_onedrive_item(
         Dictionary with information about the renamed item.
     """
     headers = build_headers(token)
-    url = f"{BASE_GRAPH_URL}/me/drive/items/{params.item_id}"
-
+    url = f"/me/drive/items/{params.item_id}"
     body = {"name": params.new_name}
 
-    try:
-        response = requests.patch(url, headers=headers, json=body)
-        response.raise_for_status()
-
-        renamed_item = response.json()
-        return Response(
-            result={
-                "success": True,
-                "message": "Item renamed successfully",
-                "item": {
-                    "id": renamed_item.get("id"),
-                    "name": renamed_item.get("name"),
-                    "type": "folder" if "folder" in renamed_item else "file",
-                },
-            }
-        )
-
-    except requests.HTTPError as e:
-        status_code = e.response.status_code
-        if status_code == 400:
-            raise ActionError(
-                f"Bad request. The item ID '{params.item_id}' might be invalid or the new name '{params.new_name}' is not allowed."
-            )
-        elif status_code == 401:
-            raise ActionError("Unauthorized. Please check your authentication token.")
-        elif status_code == 403:
-            raise ActionError(
-                "Access forbidden. You may not have permission to rename this item."
-            )
-        elif status_code == 404:
-            raise ActionError(f"Item not found: {params.item_id}")
-        elif status_code == 409:
-            raise ActionError(
-                "Conflict error. An item with the new name might already exist in the same location."
-            )
-        else:
-            raise ActionError(f"Failed to rename OneDrive item: HTTP {status_code}")
-    except requests.RequestException as e:
-        raise ActionError(f"Network error while renaming OneDrive item: {str(e)}")
-    except Exception as e:
-        raise ActionError(f"Unexpected error while renaming OneDrive item: {str(e)}")
+    renamed_item = send_request("patch", url, "rename item", headers=headers, json=body)
+    return Response(
+        result={
+            "success": True,
+            "message": "Item renamed successfully",
+            "item": {
+                "id": renamed_item.get("id"),
+                "name": renamed_item.get("name"),
+                "type": "folder" if "folder" in renamed_item else "file",
+            },
+        }
+    )
 
 
 @action
@@ -195,8 +123,7 @@ def upload_file_to_onedrive(
     ],
     upload_request: OneDriveUploadRequest,
 ) -> Response[dict]:
-    """
-    Upload a file to OneDrive.
+    """Upload a file to OneDrive.
 
     Args:
         token: OAuth2 token to use for the operation.
@@ -212,33 +139,33 @@ def upload_file_to_onedrive(
     filesize = os.path.getsize(upload_file)
 
     if upload_request.folder_path:
-        upload_url = f"{BASE_GRAPH_URL}/me/drive/root:/{upload_request.folder_path}/{upload_file.name}:/content"
-        upload_session_url = f"{BASE_GRAPH_URL}/me/drive/root:/{upload_request.folder_path}/{upload_file.name}:/createUploadSession"
-    else:
-        upload_url = f"{BASE_GRAPH_URL}/me/drive/root:/{upload_file.name}:/content"
-        upload_session_url = (
-            f"{BASE_GRAPH_URL}/me/drive/root:/{upload_file.name}:/createUploadSession"
+        upload_url = (
+            f"/me/drive/root:/{upload_request.folder_path}/{upload_file.name}:/content"
         )
+        upload_session_url = f"/me/drive/root:/{upload_request.folder_path}/{upload_file.name}:/createUploadSession"
+    else:
+        upload_url = f"/me/drive/root:/{upload_file.name}:/content"
+        upload_session_url = f"/me/drive/root:/{upload_file.name}:/createUploadSession"
 
     headers.update({"Content-Type": "application/octet-stream"})
 
     if filesize <= 4000000:  # 4MB
         with open(upload_request.filepath, "rb") as file:
             file_content = file.read()
-        upload_response = requests.put(upload_url, headers=headers, data=file_content)
-        if upload_response.status_code in [200, 201]:
-            web_url = upload_response.json()["webUrl"]
-            return Response(
-                result={
-                    "message": f"File uploaded successfully and can be found at {web_url}"
-                }
-            )
-        else:
-            raise ActionError(f"Failed to upload file: {upload_response.text}")
+        upload_response = send_request(
+            "put", upload_url, "upload file", headers=headers, data=file_content
+        )
+        return Response(
+            result={
+                "message": f"File uploaded successfully and can be found at {upload_response['webUrl']}"
+            }
+        )
     else:
         # upload bigger file in session
-        upload_session_response = requests.post(upload_session_url, headers=headers)
-        upload_url = upload_session_response.json()["uploadUrl"]
+        upload_session_response = send_request(
+            "post", upload_session_url, "create upload session", headers=headers
+        )
+        upload_url = upload_session_response["uploadUrl"]
         chunk_size = 327680  # 320KB
         with open(upload_request.filepath, "rb") as file:
             i = 0
@@ -249,10 +176,8 @@ def upload_file_to_onedrive(
                 start = i * chunk_size
                 end = start + len(chunk_data) - 1
                 headers.update({"Content-Range": f"bytes {start}-{end}/{filesize}"})
-                chunk_response = requests.put(
-                    upload_url, headers=headers, data=chunk_data
+                send_request(
+                    "put", upload_url, "upload chunk", headers=headers, data=chunk_data
                 )
-                if not chunk_response.ok:
-                    raise ActionError(f"Failed to upload file: {chunk_response.text}")
                 i += 1
         return Response(result={"message": "File uploaded successfully"})
