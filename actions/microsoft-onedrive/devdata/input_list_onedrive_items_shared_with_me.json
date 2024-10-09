@@ -1,0 +1,35 @@
+{
+    "inputs": [
+        {
+            "inputName": "list shared files",
+            "inputValue": {
+                "vscode:request:oauth2": {
+                    "token": {
+                        "type": "OAuth2Secret",
+                        "provider": "microsoft",
+                        "scopes": [
+                            "Files.Read.All"
+                        ],
+                        "access_token": "<access-token-will-be-requested-by-vscode>"
+                    }
+                }
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "list_onedrive_items_shared_with_me",
+        "actionRelativePath": "microsoft_onedrive/onedrive_get_action.py",
+        "schemaDescription": [],
+        "managedParamsSchemaDescription": {
+            "token": {
+                "type": "OAuth2Secret",
+                "provider": "microsoft",
+                "scopes": [
+                    "Files.Read.All"
+                ],
+                "description": "OAuth2 token to use for the operation."
+            }
+        },
+        "inputFileVersion": "v2"
+    }
+}

@@ -1,0 +1,42 @@
+{
+    "inputs": [
+        {
+            "inputName": "list files in 'newfolder'",
+            "inputValue": {
+                "params": {
+                    "folder_path": "/newfolder",
+                    "item_type": "files"
+                },
+                "vscode:request:oauth2": {
+                    "token": {
+                        "type": "OAuth2Secret",
+                        "provider": "microsoft",
+                        "scopes": [
+                            "Files.Read"
+                        ],
+                        "access_token": "<access-token-will-be-requested-by-vscode>"
+                    }
+                }
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "list_items_from_onedrive_folder",
+        "actionRelativePath": "microsoft_onedrive/onedrive_get_action.py",
+        "schemaDescription": [
+            "params.folder_path: string: The path of the folder to list items from",
+            "params.item_type: ['files', 'folders', 'all']"
+        ],
+        "managedParamsSchemaDescription": {
+            "token": {
+                "type": "OAuth2Secret",
+                "provider": "microsoft",
+                "scopes": [
+                    "Files.Read"
+                ],
+                "description": "OAuth2 token."
+            }
+        },
+        "inputFileVersion": "v2"
+    }
+}
