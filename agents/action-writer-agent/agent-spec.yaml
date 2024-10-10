@@ -21,7 +21,7 @@ agent-package:
       organization: Sema4.ai
       type: folder
       version: 2.0.0
-      whitelist: create_test_agent,create_thread,send_message
+      whitelist: get_all_agents,get_agent_by_name,get_thread,get_threads,create_thread,send_message
       path: Sema4.ai/agent-connector
     - name: Browsing
       organization: Sema4.ai
