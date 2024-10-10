@@ -1,14 +1,14 @@
+import os
+import socket
+import subprocess
 import sys
 import time
+import urllib.parse
 from pathlib import Path
 
-from sema4ai.actions import action
-import os
-import urllib.parse
-import subprocess
-import socket
-import requests
 import black
+import requests
+from sema4ai.actions import action
 
 
 @action
@@ -156,16 +156,19 @@ def start_action_server(action_package_name: str, secrets: str) -> str:
     # Command to start the server using the script
     script_path = Path(__file__).parent / "start_action_server.py"
     start_command = [
-        sys.executable, str(script_path),
-        str(full_action_path), str(available_port), secrets
+        sys.executable,
+        str(script_path),
+        str(full_action_path),
+        str(available_port),
+        secrets,
     ]
-    print(f"Start command: {start_command}")
+    print(f"Start command: {start_command[:-1]}")
 
     process = subprocess.Popen(
         start_command,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
-        creationflags=subprocess.CREATE_NEW_PROCESS_GROUP if os.name == 'nt' else 0
+        creationflags=subprocess.CREATE_NEW_PROCESS_GROUP if os.name == "nt" else 0,
     )
     print("Subprocess started.")
 
@@ -196,8 +199,12 @@ def start_action_server(action_package_name: str, secrets: str) -> str:
                         print(f"Action Server started at {url}")
                         return f"Action Server started at {url}"
                     if "Error executing action-server" in line:
-                        stdout_content = process.stdout.read().decode() if process.stdout else ""
-                        stderr_content = process.stderr.read().decode() if process.stderr else ""
+                        stdout_content = (
+                            process.stdout.read().decode() if process.stdout else ""
+                        )
+                        stderr_content = (
+                            process.stderr.read().decode() if process.stderr else ""
+                        )
                         print("Failed to start.")
                         print("Stdout:")
                         print(stdout_content)
@@ -304,10 +311,7 @@ def open_action_code(action_package_name: str) -> str:
             "Ensure VSCode is installed and the 'code' command is available in your PATH."
         )
     except Exception as e:
-        return (
-            f"Unexpected error: {str(e)}. "
-            "Please check your setup and try again."
-        )
+        return f"Unexpected error: {str(e)}. " "Please check your setup and try again."
 
     return f"{action_package_name} code opened with VSCode."
 

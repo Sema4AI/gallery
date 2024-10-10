@@ -1,7 +1,7 @@
-import os
-import sys
 import json
+import os
 import subprocess
+import sys
 from pathlib import Path
 
 
@@ -25,7 +25,7 @@ def start_action_server(action_package_path, port, secrets):
         shell=True,
         env=env,
         cwd=full_action_path,
-        creationflags=subprocess.CREATE_NEW_PROCESS_GROUP if os.name == 'nt' else 0
+        creationflags=subprocess.CREATE_NEW_PROCESS_GROUP if os.name == "nt" else 0,
     )
     print("Subprocess Popen executed.")
 
@@ -34,5 +34,5 @@ if __name__ == "__main__":
     action_package_path = sys.argv[1]
     port = int(sys.argv[2])
     secrets = sys.argv[3] if len(sys.argv) > 3 else ""
-    print(f"Running start_server.py with path: {action_package_path}, port: {port}, secrets: {secrets}")
+    print(f"Running start_server.py with path: {action_package_path}, port: {port}")
     start_action_server(action_package_path, port, secrets)
