@@ -1,11 +1,11 @@
 # Change Log
 All notable changes to this project will be documented in this file.
- 
+
 The format is based on [Keep a Changelog](https://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
 
-## [1.1.1] - 2024-07-31
+## [1.1.2] - 2024-07-31
 
 ### Changed
 
@@ -30,12 +30,12 @@ Description changed.
 
 ### Changed
 
-- Can now create an formatted email by sending Markdown as the body. Affected actions: `Create Draft` and `Send Email` 
+- Can now create an formatted email by sending Markdown as the body. Affected actions: `Create Draft` and `Send Email`
 
 ## [1.0.0] - 2024-07-09
- 
+
 First version published, changelog tracking starts.
- 
+
 ### Added
 - Send email (to, subject, body, cc and bcc fields)
 - Search for emails
@@ -47,7 +47,7 @@ First version published, changelog tracking starts.
 - Send draft
 
 ### Changed
- 
+
 ### Fixed
 
 ### Removed

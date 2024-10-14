@@ -14,6 +14,7 @@ Possible actions with this package are:
 - update draft
 - list drafts
 - send draft
+- remove labels from emails that match a query
 
 ## Prompts
 

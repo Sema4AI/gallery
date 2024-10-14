@@ -45,7 +45,7 @@ Scopes in use:
     - Files.Read.All
     - Files.ReadWrite
     - Sites.Read.All
-    - Sites.ReadWrite.All
+    - Sites.Manage.All
 
 ## Caveats
 
