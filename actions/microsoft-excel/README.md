@@ -5,6 +5,7 @@ Action Package interacting Microsoft 365 Excel files
 Possible actions with this package are:
 
 - Create Workbook
+- Add Worksheet to Workbook
 - Get Workbook By Name
 - Add Sheet
 - Get Worksheet

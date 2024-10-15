@@ -2,7 +2,7 @@
 
 Action package for getting text from PDF documents.
 
-Currently capable of reading text- and image-based PDF documents and finding "text" in the PDF returns matching text content including
+Currently capable of reading text and image-based PDF documents and finding "text" in the PDF returns matching text content including
 page number where text was found.
 
 ## Prompts

@@ -20,7 +20,7 @@
                         "type": "OAuth2Secret",
                         "provider": "microsoft",
                         "scopes": [
-                            "Sites.ReadWrite.All"
+                            "Sites.Manage.All"
                         ],
                         "access_token": "<access-token-will-be-requested-by-vscode>"
                     }
@@ -45,7 +45,7 @@
                 "type": "OAuth2Secret",
                 "provider": "microsoft",
                 "scopes": [
-                    "Sites.ReadWrite.All"
+                    "Sites.Manage.All"
                 ],
                 "description": "OAuth2 token to use for the operation."
             }

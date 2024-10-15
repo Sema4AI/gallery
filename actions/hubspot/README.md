@@ -90,7 +90,7 @@ Create a new Ticket to address the delivery issues for Jaloo, set the priority a
 ```
 
 > A new ticket has been successfully created to address the delivery issues for Jaloo. Here are the details:
-> 
+>
 > * Subject: Delivery Issues for Jaloo
 > * Content: Addressing the delivery issues for Jaloo.
 > * Priority: MEDIUM
@@ -105,3 +105,18 @@ Assign the Delivery Issues for Jaloo ticket to Tommi and make it high priority.
 >
 > Priority: HIGH
 > Assigned to: Tommi
+
+## Authorization
+
+This action package uses OAuth2 flow to authenticate user.
+
+Scopes in use:
+
+    - crm.objects.companies.write
+    - crm.objects.contacts.write
+    - crm.objects.deals.write
+    - tickets
+    - crm.objects.companies.read
+    - crm.objects.contacts.read
+    - crm.objects.deals.read
+    - crm.objects.custom.read

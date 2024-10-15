@@ -8,6 +8,7 @@ Possible actions with this package are:
 - query events from the user's calendar
 - create a new event
 - update an existing event
+- get mailbox timezone
 
 ## Prompts
 
