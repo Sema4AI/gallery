@@ -45,7 +45,7 @@ def list_emails(
     search_query: str,
     folder_to_search: str = "inbox",
     properties_to_return: str = "",
-    maximum_emails_to_return: int = -1,
+    max_emails_to_return: int = -1,
     return_only_count: bool = False,
 ) -> Response[Emails]:
     """
@@ -66,7 +66,7 @@ def list_emails(
         search_query: query to search for emails. Keep spaces in folder names if user gives spaces.
         folder_to_search: The folder to search for emails. Default is 'inbox'.
         properties_to_return: The properties to return in the response. Default is all properties. Comma separated list of properties, like 'idsubject,body,toRecipients'.
-        maximum_emails_to_return: Maximum number of emails to return. Default is -1 (return all emails).
+        max_emails_to_return: Maximum number of emails to return. Default is -1 (return all emails).
         return_only_count: Limit response size, but still return the count matching the query.
 
     Returns:
@@ -136,10 +136,7 @@ def list_emails(
                 for k in keys_to_pop:
                     message.pop(k, None)
             emails.items.append(message)
-            if (
-                maximum_emails_to_return > 0
-                and len(emails.items) >= maximum_emails_to_return
-            ):
+            if max_emails_to_return > 0 and len(emails.items) >= max_emails_to_return:
                 query = None
                 break
         query = messages_result.get("@odata.nextLink", None)

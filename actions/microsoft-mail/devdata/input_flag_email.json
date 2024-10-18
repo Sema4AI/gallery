@@ -1,0 +1,42 @@
+{
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "email_id": "",
+                "flag": {
+                    "flag_status": "notFlagged"
+                },
+                "vscode:request:oauth2": {
+                    "token": {
+                        "type": "OAuth2Secret",
+                        "provider": "microsoft",
+                        "scopes": [
+                            "Mail.ReadWrite"
+                        ],
+                        "access_token": "<access-token-will-be-requested-by-vscode>"
+                    }
+                }
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "flag_email",
+        "actionRelativePath": "microsoft_mail/email_action.py",
+        "schemaDescription": [
+            "email_id: string: The unique identifier of the email to flag.",
+            "flag.flag_status: ['notFlagged', 'flagged', 'complete']"
+        ],
+        "managedParamsSchemaDescription": {
+            "token": {
+                "type": "OAuth2Secret",
+                "provider": "microsoft",
+                "scopes": [
+                    "Mail.ReadWrite"
+                ],
+                "description": "The OAuth2 token for authentication."
+            }
+        },
+        "inputFileVersion": "v2"
+    }
+}

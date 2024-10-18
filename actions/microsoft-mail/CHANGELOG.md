@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Add
 
 - Action `flag_email` added.
+- Add parameter `max_emails_to_return` to action `list_emails` to minimize action response size
 
 ## [1.0.4] - 2024-10-03
 
