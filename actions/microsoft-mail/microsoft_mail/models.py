@@ -1,3 +1,4 @@
+from enum import Enum
 from pydantic import BaseModel, Field
 from typing import Optional, List, Annotated, Literal, Union, Dict
 
@@ -57,3 +58,16 @@ class Email(BaseModel):
 class Emails(BaseModel):
     items: List[Dict] = Field(description="List of emails")
     count: int = Field(description="Number of emails matching the search query")
+
+
+class FlagStatus(str, Enum):
+    not_flagged = "notFlagged"
+    flagged = "flagged"
+    complete = "complete"
+
+
+class MessageFlag(BaseModel):
+    flag_status: FlagStatus = Field(description="Flag status of the message")
+
+    class Config:
+        use_enum_values = True

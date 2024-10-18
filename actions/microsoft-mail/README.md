@@ -21,6 +21,7 @@ Currently supporting:
 - Deleting a specific subscription by ID.
 - Getting a list of active subscriptions.
 - Retrieving details of a specific folder in the user's mailbox.
+- Flagging emails in the user's mailbox.
 
 ## Prompt Examples
 
