@@ -5,7 +5,7 @@ name: Microsoft Mail
 description: Actions for Microsoft 365 Outlook emails.
 
 # Package version number, recommend using semver.org
-version: 1.0.4
+version: 1.1.0
 
 dependencies:
   conda-forge:

@@ -21,7 +21,7 @@ Currently supporting:
 """
 
 from sema4ai.actions import action, OAuth2Secret, Response, ActionError
-from microsoft_mail.models import Email, EmailAttachment, Emails
+from microsoft_mail.models import Email, EmailAttachment, Emails, MessageFlag
 from microsoft_mail.support import (
     _find_folder,
     _get_inbox_folder_id,
@@ -45,6 +45,7 @@ def list_emails(
     search_query: str,
     folder_to_search: str = "inbox",
     properties_to_return: str = "",
+    max_emails_to_return: int = -1,
     return_only_count: bool = False,
 ) -> Response[Emails]:
     """
@@ -64,7 +65,8 @@ def list_emails(
         token: OAuth2 token to use for the operation.
         search_query: query to search for emails. Keep spaces in folder names if user gives spaces.
         folder_to_search: The folder to search for emails. Default is 'inbox'.
-        properties_to_return: The properties to return in the response. Default is all properties. Comma separated list of properties, like 'subject,body,toRecipients'.
+        properties_to_return: The properties to return in the response. Default is all properties. Comma separated list of properties, like 'idsubject,body,toRecipients'.
+        max_emails_to_return: Maximum number of emails to return. Default is -1 (return all emails).
         return_only_count: Limit response size, but still return the count matching the query.
 
     Returns:
@@ -134,6 +136,9 @@ def list_emails(
                 for k in keys_to_pop:
                     message.pop(k, None)
             emails.items.append(message)
+            if max_emails_to_return > 0 and len(emails.items) >= max_emails_to_return:
+                query = None
+                break
         query = messages_result.get("@odata.nextLink", None)
     if return_only_count:
         emails.items = emails.items[:50]
@@ -282,7 +287,7 @@ def update_draft(
 
     Args:
         token: OAuth2 token to use for the operation.
-        email_id: The ID of the draft email to update.
+        email_id: The unique identifier of the email to update.
         email: The email content to update a draft.
         html_content: Whether the body content is HTML.
 
@@ -338,7 +343,7 @@ def add_attachment(
     The attachment
     Args:
         token: OAuth2 token to use for the operation.
-        email_id: The ID of the email to add the attachment to.
+        email_id: The unique identifier of the email to add the attachment to.
         attachment: The attachment to add.
 
     Returns:
@@ -426,7 +431,7 @@ def send_draft(
 
     Args:
         token: OAuth2 token to use for the operation.
-        email_id: The ID of the draft email to send.
+        email_id: The unique identifier of the email to send.
         save_to_sent_items: Whether to save the email to the sent items.
 
     Returns:
@@ -459,7 +464,7 @@ def reply_to_email(
 
     Args:
         token: OAuth2 token to use for the operation.
-        email_id: The ID of the email to reply to.
+        email_id: The unique identifier of the email to reply to.
         reply: The reply email properties that needs to be appended, set or deleted. Do not modify the body of the email.
         html_content: Whether the body content is HTML.
         reply_to_all: Whether to reply to all recipients.
@@ -505,7 +510,7 @@ def forward_email(
 
     Args:
         token: OAuth2 token to use for the operation.
-        email_id: The ID of the email to forward.
+        email_id: The unique identifier of the email to forward.
         to_recipients: Comma separated list of email addresses of the recipients to forward the message to.
         comment: A comment to include.
 
@@ -545,7 +550,7 @@ def move_email(
 
     Args:
         token: OAuth2 token to use for the operation.
-        email_id: The ID of the email to move.
+        email_id: The unique identifier of the email to move.
         destination_folder_id: The ID of the destination folder.
 
     Returns:
@@ -581,7 +586,7 @@ def get_email_by_id(
 
     Args:
         token: OAuth2 token to use for the operation.
-        email_id: The ID of the email to retrieve.
+        email_id: The unique identifier of the email to retrieve.
         show_full_body: Whether to show the full body content.
 
     Returns:
@@ -775,3 +780,44 @@ def get_folder(
     if folder is None:
         raise ActionError(f"Folder '{folder_to_search}' not found.")
     return Response(result=folder)
+
+
+@action
+def flag_email(
+    token: OAuth2Secret[Literal["microsoft"], list[Literal["Mail.ReadWrite"]]],
+    email_id: str,
+    flag: MessageFlag,
+) -> Response:
+    """
+    Flag email by setting the flag status.
+
+    Possible flag statuses are:
+    - 'notFlagged'
+    - 'flagged'
+    - 'complete'
+
+    Args:
+        token: The OAuth2 token for authentication.
+        email_id: The unique identifier of the email to flag.
+        flag: The flag status to set.
+
+    Returns:
+        Response indicating the result of the flagging operation.
+    """
+    headers = build_headers(token)
+    data = {
+        "flag": {
+            # "completedDateTime": {"@odata.type": "microsoft.graph.dateTimeTimeZone"},
+            # "dueDateTime": {"@odata.type": "microsoft.graph.dateTimeTimeZone"},
+            "flagStatus": flag.flag_status
+            # "startDateTime": {"@odata.type": "microsoft.graph.dateTimeTimeZone"},
+        }
+    }
+    flag_response = send_request(
+        "patch",
+        f"/me/messages/{email_id}",
+        "flag email",
+        data=data,
+        headers=headers,
+    )
+    return Response(result=flag_response)
