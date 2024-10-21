@@ -31,23 +31,17 @@ def generate_agents_manifest(
         if not os.path.isdir(agent_folder):
             continue
 
+        is_agent_valid = validate_agent(agent_folder, agent_cli_path)
+        if not is_agent_valid:
+            continue
+
         agent_spec_data = read_yaml_file(os.path.join(agent_folder, "agent-spec.yaml"))[
             "agent-package"
         ]["agents"][0]
         agent_name = agent_spec_data["name"]
         agent_version = agent_spec_data["version"]
 
-        if not (agent_name or agent_version):
-            print(
-                f"Agent name or version not found in agent-spec.yaml for folder: {agent_folder_name}. Skipping it."
-            )
-            continue
-
         if is_agent_published(published_manifest, agent_name, agent_version):
-            continue
-
-        is_agent_valid = validate_agent(agent_folder, agent_cli_path)
-        if not is_agent_valid:
             continue
 
         with open(os.path.join(agent_folder, "runbook.md")) as file:
