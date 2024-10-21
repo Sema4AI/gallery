@@ -1,0 +1,109 @@
+name: Agents - Initialize S3 Agent Gallery
+
+on:
+  workflow_dispatch:
+    # Enables manual triggering via GitHub Actions
+
+  push:
+    branches:
+      - main
+    paths:
+      - 'agents/**'
+
+jobs:
+  build_agents:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write # required by AWS aws-actions/configure-aws-credentials
+      contents: read
+    env:
+      RCC_VERSION: v18.1.1
+
+    outputs:
+      has_agents: ${{ steps.check_artifacts.outputs.has_agents }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check if manifest.json exists
+        run: |
+          if curl --head --silent --fail https://cdn.sema4.ai/gallery/agents/manifest.json; then
+            echo "manifest.json exists. Proceeding with the workflow."
+          else
+            echo "manifest.json does not exist. Stopping the workflow."
+          exit 1
+          fi
+
+      - name: Build all agents
+        run: |
+          cd bin
+          curl -L -o rcc "https://cdn.sema4.ai/rcc/releases/${{ env.RCC_VERSION }}/linux64/rcc"
+          chmod +x rcc
+          ./rcc run -r publisher/robot.yaml -t "Build all agents"
+
+      - name: Save Agents artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: agents-artifact
+          path: bin/publisher/agents
+
+      - name: Check artifacts
+        id: check_artifacts
+        run: |
+          if find bin/publisher/agents -mindepth 1 -maxdepth 1 | read; then
+            echo "has_agents=true" >> $GITHUB_OUTPUT
+          fi
+  publish:
+    runs-on: ubuntu-latest
+    needs: [build_agents]
+    if: ${{ needs.build_agents.outputs.has_agents == 'true' }}
+    permissions:
+      id-token: write # required by AWS aws-actions/configure-aws-credentials
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download Agents artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: agents-artifact
+          path: bin/publisher/agents
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: eu-west-1
+          role-to-assume: arn:aws:iam::710450854638:role/github-action-gallery
+
+      - name: Publish agents
+        if: ${{ needs.build_agents.outputs.has_agents == 'true' }}
+        run: |
+          echo "Updating Agents in S3"
+          S3_BASE_URL="s3://downloads.robocorp.com/gallery/agents"
+          cd bin/publisher/agents
+          ls -la
+
+          # Copy the Agents subdirectories. Note that since this is an update workflow,
+          # subdirectories will only contain agents which version's was actually bumped.
+          # cache-control max-age=31536000, because these should be immutable.
+          for dir in */; do
+            aws s3 cp "$dir" "$S3_BASE_URL/$dir" --recursive --cache-control max-age=31536000
+
+              returnCode=$?
+
+              # If the upload of any agent fails, we want to break the workflow, as to not update the manifest,
+              # which should be the only source of truth.
+              # Even if some agent will be uploaded before other one fails, manifest won't include them,
+              # and therefore they won't be available in clients to download, and will be eligible to re-upload
+              # on the next Gallery update run.
+              if [ $returnCode -ne 0 ]; then
+                echo "Upload of '$dir' agent failed, exiting..."
+                exit 1
+              fi
+
+          done
+
+          # Copy the updated manifest
+          aws s3 cp manifest.json $S3_BASE_URL/manifest.json --cache-control max-age=120 --content-type "text/plain"

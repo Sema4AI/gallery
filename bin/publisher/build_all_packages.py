@@ -1,11 +1,11 @@
-from robocorp.tasks import task
 import os
-from utils import clear_folders
-from tools import get_action_server, get_rcc
-from manifest import generate_manifest, save_manifest
-from extractor import extract_all
-from package_builder import build_action_packages
 
+from extractor import extract_all
+from actions_manifest import generate_actions_manifest, save_manifest
+from package_builder import build_action_packages
+from robocorp.tasks import task
+from tools import get_action_server, get_rcc
+from utils import clear_folders
 
 # Define the input, output, and extracted folders
 script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -16,7 +16,7 @@ base_url = "https://cdn.sema4.ai/gallery/actions/"
 
 @task
 def build_all_packages():
-    input_folder = os.path.abspath(os.path.join(script_dir, '../../actions'))
+    input_folder = os.path.abspath(os.path.join(script_dir, "../../actions"))
 
     rcc_path = get_rcc()
     action_server_path = get_action_server()
@@ -28,7 +28,7 @@ def build_all_packages():
 
     extract_all(zips_folder, gallery_actions_folder, rcc_path)
 
-    manifest = generate_manifest(gallery_actions_folder, base_url)
+    manifest = generate_actions_manifest(gallery_actions_folder, base_url)
 
     # Write manifest to file
     save_manifest(manifest, os.path.join(gallery_actions_folder, "manifest.json"))
@@ -36,5 +36,5 @@ def build_all_packages():
     print(f"\n\n-> Gallery generated in: {gallery_actions_folder}")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     build_all_packages()
