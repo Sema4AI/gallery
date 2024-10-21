@@ -8,6 +8,11 @@
       "type": "from-scratch"
     },
     {
+      "name": "Start from Scratch",
+      "description": "Basic Runbook structure to get you started.",
+      "url": "https://cdn.sema4.ai/gallery/runbooks/runbook-from-scratch.md"
+    },
+    {
       "name": "Action Writer Runbook",
       "description": "Helps you create new actions using public API documentation.",
       "url": "https://cdn.sema4.ai/gallery/runbooks/runbook-template-action-writer.md"
