@@ -11,18 +11,18 @@ agent-package:
     reasoning: disabled
     runbook: runbook.md
     action-packages:
-    - name: Wayback Machine
-      organization: Sema4.ai
-      type: folder
-      version: 1.0.1
-      whitelist: get_wayback_changes,get_wayback_snapshots
-      path: Sema4.ai/wayback-machine
-    - name: Browsing
-      organization: Sema4.ai
-      type: folder
-      version: 1.0.2
-      whitelist: get_website_content,download_file,fill_elements
-      path: Sema4.ai/browsing
+      - name: Wayback Machine
+        organization: Sema4.ai
+        type: folder
+        version: 1.0.1
+        whitelist: get_wayback_changes,get_wayback_snapshots
+        path: Sema4.ai/wayback-machine
+      - name: Browsing
+        organization: Sema4.ai
+        type: folder
+        version: 1.0.2
+        whitelist: get_website_content,download_file,fill_elements
+        path: Sema4.ai/browsing
     knowledge: []
     metadata:
       mode: conversational

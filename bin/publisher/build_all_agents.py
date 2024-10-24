@@ -7,7 +7,7 @@ from utils import clear_folders
 
 script_dir = os.path.dirname(os.path.abspath(__file__))
 dest_agents_folder = os.path.join(script_dir, "agents")
-manifest_file = os.path.join(script_dir, "manifest.json")
+manifest_file = os.path.join(dest_agents_folder, "manifest.json")
 
 
 @task
