@@ -26,8 +26,11 @@ def generate_agents_manifest(
     """
     manifest: AgentsManifest = {"agents": {}, "organization": "Sema4.ai"}
 
+    print("Input folder: ", input_folder)
     for agent_folder_name in os.listdir(input_folder):
         agent_folder = os.path.join(input_folder, agent_folder_name)
+
+        print("Processing agent: ", agent_folder)
         if not os.path.isdir(agent_folder):
             continue
 
