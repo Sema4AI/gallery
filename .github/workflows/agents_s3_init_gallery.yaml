@@ -1,4 +1,4 @@
-name: Agents - Update Agents to S3 Gallery
+name: Agents - Initialize Agents to S3 Gallery
 
 on:
   workflow_dispatch:
