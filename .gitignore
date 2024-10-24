@@ -9,5 +9,6 @@ __pycache__/
 *.zip
 manifest.json
 published_manifest.json
+published_agents_manifest.json
 **/.DS_STORE
 !runbooks/manifest.json

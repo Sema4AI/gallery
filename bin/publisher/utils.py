@@ -1,25 +1,27 @@
-import os
 import hashlib
-import shutil
-import requests
-import yaml
-import zipfile
 import json
 import logging
+import os
+import shutil
+import zipfile
 from typing import Any, Union
-from models import PackageInfo, Manifest
+
+import requests
+import yaml
+from models import ActionsManifest, PackageInfo
 
 logging.basicConfig(level=logging.INFO)
 
 
 def get_working_dir() -> str:
-    """ Return the directory current task was run in. """
+    """Return the directory current task was run in."""
     return os.path.abspath(".")
 
-def sha256(filepath: str, hash_type: str = 'sha256') -> str:
+
+def sha256(filepath: str, hash_type: str = "sha256") -> str:
     """Calculate the hash of a file using the specified hash algorithm (default is SHA256) and return the hex digest."""
     hash_obj = hashlib.new(hash_type)
-    with open(filepath, 'rb') as file:
+    with open(filepath, "rb") as file:
         for chunk in iter(lambda: file.read(4096), b""):
             hash_obj.update(chunk)
     return hash_obj.hexdigest()
@@ -27,24 +29,24 @@ def sha256(filepath: str, hash_type: str = 'sha256') -> str:
 
 def log_error(error_message: str, sub_folder_path: str = None) -> None:
     with open("log.txt", "a") as log_file:
-        message = f'Error in folder {sub_folder_path}: ' if sub_folder_path else ''
+        message = f"Error in folder {sub_folder_path}: " if sub_folder_path else ""
         message += f"{error_message}\n"
 
         log_file.write(message)
 
 
 def read_file_contents(file_path: str) -> str:
-    with open(file_path, 'r') as file:
+    with open(file_path, "r") as file:
         return file.read().strip()
 
 
 def read_json_file(file_path: str) -> dict[str, Any]:
-    with open(file_path, 'r') as file:
+    with open(file_path, "r") as file:
         return json.load(file)
 
 
 def read_yaml_file(file_path: str) -> dict[str, Any]:
-    with open(file_path, 'r') as file:
+    with open(file_path, "r") as file:
         return yaml.safe_load(file)
 
 
@@ -59,12 +61,12 @@ def ensure_folders(target_folder: str) -> None:
         os.makedirs(target_folder)
 
 
-def download_file(url: str, file_path: str = '') -> str:
+def download_file(url: str, file_path: str = "") -> str:
     response = requests.get(url, stream=True)
 
-    file_path = file_path if file_path is not None else url.split('/')[-1]
+    file_path = file_path if file_path is not None else url.split("/")[-1]
 
-    with open(file_path, 'wb') as file:
+    with open(file_path, "wb") as file:
         shutil.copyfileobj(response.raw, file)
 
     return file_path
@@ -79,7 +81,9 @@ def url_exists(url: str) -> bool:
         return False
 
 
-def package_yaml_from_zip(zip_ref: zipfile.ZipFile, extract_path: str) -> dict[str, Any]:
+def package_yaml_from_zip(
+    zip_ref: zipfile.ZipFile, extract_path: str
+) -> dict[str, Any]:
     """
     Extracts 'package.yaml' from a zip file, parses it, and returns the package data.
     It temporarily extracts the file to the provided path, parses it, and deletes the temporary file.
@@ -127,10 +131,10 @@ def download_and_parse_json(url: str) -> Union[dict[str, Any], None]:
 
 
 def get_version_strings_from_package_info(package_info: PackageInfo) -> list[str]:
-    versions = package_info.get('versions', [])
+    versions = package_info.get("versions", [])
 
-    return [version_info.get('version') for version_info in versions]
+    return [version_info.get("version") for version_info in versions]
 
 
-def is_manifest_empty(manifest: Manifest) -> bool:
-    return 'packages' not in manifest
+def is_manifest_empty(manifest: ActionsManifest) -> bool:
+    return "packages" not in manifest
