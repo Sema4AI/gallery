@@ -164,8 +164,7 @@ def validate_agent(agent_folder: str, agent_cli_path: str) -> bool:
     """
     command = f'"{agent_cli_path}" validate -j {agent_folder}'
     print(f"Validating agent: {command}")
-    print("Dirs", os.listdir(agent_folder))
-    print(read_yaml_file(os.path.join(agent_folder, "agent-spec.yaml")))
+
     try:
         result = subprocess.run(
             command, shell=True, cwd=agent_folder, capture_output=True, text=True
