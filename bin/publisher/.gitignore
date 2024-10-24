@@ -17,5 +17,6 @@ testrun/*
 *.pkl
 zips/
 gallery/
+agents/
 log.txt
 environments/
