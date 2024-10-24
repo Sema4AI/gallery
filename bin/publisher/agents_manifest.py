@@ -6,7 +6,7 @@ import subprocess
 from pathlib import Path
 
 from models import AgentActionPackage, AgentsManifest, AgentVersionInfo
-from utils import log_error, read_yaml_file
+from utils import read_yaml_file
 
 
 def generate_agents_manifest(
@@ -178,10 +178,7 @@ def validate_agent(agent_folder: str, agent_cli_path: str) -> bool:
             print(f"{agent_folder} -- Agent validation failed. Errors: {errors}")
             return False
     except Exception as e:
-        log_error(str(e), agent_folder)
-        print(
-            f"{agent_folder} -- Agent validation failed. Please check the logs for more details."
-        )
+        print(f"{agent_folder} -- Agent validation to run. Error: {str(e)}")
         return False
 
     return True
