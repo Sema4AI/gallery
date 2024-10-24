@@ -163,10 +163,10 @@ def validate_agent(agent_folder: str, agent_cli_path: str) -> bool:
         agent_cli_path (str): The path to the agent cli executable.
     """
     command = f'"{agent_cli_path}" validate -j {agent_folder}'
-    try:
-        print(f"Validating agent: {agent_folder}")
+    print(f"Validating agent: {command}")
+    print("Dirs", os.listdir(agent_folder))
 
-        # Run the command and capture output
+    try:
         result = subprocess.run(
             command, shell=True, cwd=agent_folder, capture_output=True, text=True
         )
