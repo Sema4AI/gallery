@@ -20,12 +20,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Build updated agents
+      - name: Build all agents
         run: |
           cd bin
           curl -L -o rcc "https://cdn.sema4.ai/rcc/releases/${{ env.RCC_VERSION }}/linux64/rcc"
           chmod +x rcc
-          ./rcc run -r publisher/robot.yaml -t "Build updated agents"
+          ./rcc run -r publisher/robot.yaml -t "Build all agents"
 
       - name: Save Agents artifact
         uses: actions/upload-artifact@v4
