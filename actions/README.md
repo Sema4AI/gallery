@@ -7,7 +7,7 @@ Contains the implementation of our prebuilt AI Actions available inside Sema4.ai
 | [Actions Bootstrapper](actions-bootstrapper/README.md) | Bootstrap new action packages                    | N/A              |
 | [Agent Connector](agent-connector/README.md)           | Communicate with other agents                    | N/A              |
 | [Browsing](browsing/README.md)                         | Get website contents and fill forms              | N/A              |
-| [Email](email/README.md)                               | Send emails with Sema4.ai (free for demos)       | SMTP credentials |
+| [Email](email/README.md)                               | Send emails with any SMTP service       | SMTP credentials |
 | [Excel](excel/README.md)                               | Operate on local Excel files                     | N/A              |
 | [Google Calendar](google-calendar/README.md)           | Interact with Google Calendar                    | OAuth2           |
 | [Google Docs](google-docs/README.md)                   | Interact with Google Docs                        | OAuth2           |
