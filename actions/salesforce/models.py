@@ -4,7 +4,9 @@ from pydantic import BaseModel, Field
 
 
 class BaseRecord(BaseModel, extra="allow"):
-    Id: Annotated[str | None, Field(description="Unique identifier for the contact")]
+    Id: Annotated[
+        str | None, Field(description="Unique identifier for the contact if selected")
+    ] = None
 
 
 class SalesforceResponse(BaseModel):
