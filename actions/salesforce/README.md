@@ -31,9 +31,28 @@ What are the biggest 3 deals closed this month?
 
 ## Authorization
 
-This action package uses OAuth2 flow to authenticate user.
+This action package uses OAuth2 client credentials flow to authenticate with Salesforce.
 
-Scopes in use:
+To authenticate with Salesforce, you need to create an external connected app in Salesforce and provide the following information:
 
-    - api
-    - refresh_token
+- client_id (Consumer Key)
+- client_secret (Consumer Secret)
+- domain (e.g.  `https://robocorp-dev-ed.develop.my.salesforce.com`)
+
+To create an external connected app in Salesforce, follow these steps:
+
+1. Go to Apps -> App Manager and click on the `New Connected App` button.
+2. Select `Create an External Client App`
+3. Fill in the required fields and enable Oauth Settings.
+
+Configure Oauth Settings:
+
+1. Callback URL can be your domain salesforce url (e.g. `https://robocorp-dev-ed.develop.my.salesforce.com`).
+2. Add `Manage user data via APIs (api)` scope.
+3. Click on the `Flow Enablement` -> `Enable Client Credentials Flow` checkbox.
+4. Uncheck the box `Require Proof Key for Code Exchange (PKCE) extension for Supported Authorization Flows`.
+5. Click `Create`.
+6. After creating the connected app, click on `Policies` -> `Edit` button, enable the `Enable Client Credentials Flow`, set the username you want to use and click `Save`.
+
+To find the `client_id` and `client_secret` click on `Settings` tab -> `OAuth Settings` -> `Consumer Key and Secret`.
+
