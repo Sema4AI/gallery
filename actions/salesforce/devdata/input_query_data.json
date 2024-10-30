@@ -1,0 +1,35 @@
+{
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "query": "SELECT Name, Amount, CloseDate FROM Opportunity WHERE StageName = 'Closed Won' AND CloseDate >= 2024-10-01 AND CloseDate <= 2024-10-31 ORDER BY Amount DESC",
+                "client_id": "<specify-secret>",
+                "client_secret": "<specify-secret>",
+                "domain_url": "<specify-secret>"
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "query_data",
+        "actionRelativePath": "actions.py",
+        "schemaDescription": [
+            "query: string: SOQL query to execute"
+        ],
+        "managedParamsSchemaDescription": {
+            "client_id": {
+                "type": "Secret",
+                "description": "Salesforce connected app client id."
+            },
+            "client_secret": {
+                "type": "Secret",
+                "description": "Salesforce connected app client secret."
+            },
+            "domain_url": {
+                "type": "Secret",
+                "description": "Salesforce domain url."
+            }
+        },
+        "inputFileVersion": "v2"
+    }
+}

@@ -10,9 +10,9 @@ from models import SalesforceResponse
 load_dotenv(Path(__file__).absolute().parent / "devdata" / ".env")
 
 
-def _auth_client_credentials(client_id, client_secret, domain) -> str:
+def _auth_client_credentials(client_id, client_secret, domain_url) -> str:
     response = requests.post(
-        f"{domain}/services/oauth2/token",
+        f"{domain_url}/services/oauth2/token",
         headers={"Content-Type": "application/x-www-form-urlencoded"},
         data={
             "client_id": client_id,
@@ -31,7 +31,7 @@ def query_data(
     query: str,
     client_id: Secret = Secret.model_validate(os.getenv("CLIENT_ID", "")),
     client_secret: Secret = Secret.model_validate(os.getenv("CLIENT_SECRET", "")),
-    domain: Secret = Secret.model_validate(os.getenv("DOMAIN", "")),
+    domain_url: Secret = Secret.model_validate(os.getenv("DOMAIN_URL", "")),
 ) -> Response[SalesforceResponse]:
     """Runs a Salesforce Object Query Language (SOQL) to search Salesforce data for specific information.
 
@@ -41,16 +41,16 @@ def query_data(
         query: SOQL query to execute
         client_id: Salesforce connected app client id.
         client_secret: Salesforce connected app client secret.
-        domain: Salesforce domain.
+        domain_url: Salesforce domain url.
 
     Returns:
         Objects that matched the search query.
     """
     access_token = _auth_client_credentials(
-        client_id.value, client_secret.value, domain.value
+        client_id.value, client_secret.value, domain_url.value
     )
 
-    url = f"{domain.value}/services/data/v62.0/query/"
+    url = f"{domain_url.value}/services/data/v62.0/query"
     headers = {
         "Authorization": f"Bearer {access_token}",
         "Content-Type": "application/json",

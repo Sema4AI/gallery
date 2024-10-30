@@ -37,7 +37,7 @@ To authenticate with Salesforce, you need to create an external connected app in
 
 - client_id (Consumer Key)
 - client_secret (Consumer Secret)
-- domain (e.g.  `https://robocorp-dev-ed.develop.my.salesforce.com`)
+- domain_url (e.g.  `https://robocorp-dev-ed.develop.my.salesforce.com`)
 
 To create an external connected app in Salesforce, follow these steps:
 
@@ -47,7 +47,7 @@ To create an external connected app in Salesforce, follow these steps:
 
 Configure Oauth Settings:
 
-1. Callback URL can be your domain salesforce url (e.g. `https://robocorp-dev-ed.develop.my.salesforce.com`).
+1. Callback URL can be your domain salesforce domain url (e.g. `https://robocorp-dev-ed.develop.my.salesforce.com`).
 2. Add `Manage user data via APIs (api)` scope.
 3. Click on the `Flow Enablement` -> `Enable Client Credentials Flow` checkbox.
 4. Uncheck the box `Require Proof Key for Code Exchange (PKCE) extension for Supported Authorization Flows`.
