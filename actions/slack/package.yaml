@@ -1,5 +1,5 @@
 # Required: A short name for the action package
-name: Slack
+name: XSlack
 
 # Required: A description of what's in the action package
 description: Prebuilt actions for reading and writing from/to Slack channels.

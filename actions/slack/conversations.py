@@ -5,6 +5,7 @@ from rapidfuzz.distance.Levenshtein import distance as levenshtein_distance
 from rapidfuzz.process import extract as rapidfuzz_extract
 from robocorp import log
 from slack_sdk import WebClient as SlackWebClient
+from slack_sdk.errors import SlackApiError
 from typing_extensions import Self
 
 
@@ -70,11 +71,14 @@ class ConversationsInfo:
 
         while True:
             cursor = None
-            response = client.conversations_list(
-                cursor=cursor,
-                types="public_channel,private_channel,mpim,im",
-            ).validate()
-
+            try:
+                response = client.conversations_list(
+                    cursor=cursor,
+                    types="public_channel,private_channel,mpim,im",
+                ).validate()
+            except SlackApiError as e:
+                if e.response.status_code == 429:
+                    break
             for channel in response["channels"]:
                 if channel.get("is_channel", False):
                     # We only add channels in the init, we will lazy-load the user info

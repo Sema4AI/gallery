@@ -60,7 +60,7 @@ def send_message_to_channel(
     """
     with _build_api_client(access_token) as client:
         response = client.chat_postMessage(
-            channel=get_conversation_id(channel_name, client=client), text=message
+            channel=f"#{channel_name}", text=message
         ).validate()
 
     return Response(result=bool(response.data.get("ok", False)))
