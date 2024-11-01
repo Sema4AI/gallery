@@ -67,14 +67,14 @@ class ConversationsInfo:
     def new(cls, *, client: SlackWebClient) -> Self:
         user_ids = {}
         conversations = {}
+        cursor = None
 
         while True:
-            cursor = None
             response = client.conversations_list(
                 cursor=cursor,
+                limit=999,
                 types="public_channel,private_channel,mpim,im",
             ).validate()
-
             for channel in response["channels"]:
                 if channel.get("is_channel", False):
                     # We only add channels in the init, we will lazy-load the user info
@@ -85,11 +85,7 @@ class ConversationsInfo:
                 else:
                     user_ids[channel["user"]] = channel["id"]
 
-            try:
-                cursor = response["response_metadata"]["next_cursor"]
-            except KeyError:
-                cursor = None
-
+            cursor = response.get("response_metadata", {}).get("next_cursor")
             if not cursor:
                 break
 

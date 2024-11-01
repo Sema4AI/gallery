@@ -5,7 +5,7 @@
             "inputValue": {
                 "channel_name": "#general",
                 "message": "Hello from Sema4 AI",
-                "access_token": "<specify-secret>"
+                "access_token": ""
             }
         }
     ],
