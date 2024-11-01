@@ -5,7 +5,6 @@ from rapidfuzz.distance.Levenshtein import distance as levenshtein_distance
 from rapidfuzz.process import extract as rapidfuzz_extract
 from robocorp import log
 from slack_sdk import WebClient as SlackWebClient
-from slack_sdk.errors import SlackApiError
 from typing_extensions import Self
 
 
