@@ -1,0 +1,31 @@
+# Required: A short name for the action package
+name: ServiceNow
+
+# Required: A description of what's in the action package.
+description: Prebuilt actions interacting with a ServiceNow instance.
+
+# Package version number, recommend using semver.org
+version: 0.0.1
+
+dependencies:
+  conda-forge:
+  - python=3.10.14
+  - uv=0.4.17
+  pypi:
+  - sema4ai-actions=1.0.1
+  - sema4ai-http-helper==1.0.2
+  - httpx=0.27.2
+
+packaging:
+  # By default, all files and folders in this directory are packaged when uploaded.
+  # Add exclusion rules below (expects glob format: https://docs.python.org/3/library/glob.html)
+  exclude:
+  - ./.git/**
+  - ./.vscode/**
+  - ./devdata/**
+  - ./output/**
+  - ./venv/**
+  - ./.venv/**
+  - ./.DS_store/**
+  - ./**/*.pyc
+  - ./**/*.zip
