@@ -20,7 +20,7 @@ def configure_logging(
     else:
         # Opened as a different environment, perhaps production
         config_path = os.path.join(
-            current_dir, "actions", "MyActions", ACTION_PACKAGE, log_config_path
+            current_dir, "actions", "Sema4.ai", ACTION_PACKAGE, log_config_path
         )
 
     try:
