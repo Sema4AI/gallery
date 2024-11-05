@@ -2,11 +2,13 @@
 *.zip
 .DS_Store
 .env
+.gitattributes
 .project
 .pydevproject
 .use
 .venv/
 .vscode
+devdata/
 metadata.json
 output/
 temp/
