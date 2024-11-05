@@ -19,13 +19,13 @@ agent-package:
     reasoning: disabled
     runbook: runbook.md
     action-packages:
-    - name: payment-remittance-reconcile-action
+    - name: Payment Remittance Reconcile Actions
       organization: Sema4.ai
       version: 0.0.4
       path: Sema4.ai/payment-remittance-reconcile-action
       type: folder
       whitelist: ''
-    - name: payment-remittance-validate-action
+    - name: Payment Remittance Validate Actions
       organization: Sema4.ai
       version: 0.0.4
       path: Sema4.ai/payment-remittance-validate-action
