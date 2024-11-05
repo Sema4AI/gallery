@@ -5,7 +5,7 @@ name: ServiceNow
 description: Prebuilt actions interacting with a ServiceNow instance.
 
 # Package version number, recommend using semver.org
-version: 0.0.1
+version: 1.0.0
 
 dependencies:
   conda-forge:
