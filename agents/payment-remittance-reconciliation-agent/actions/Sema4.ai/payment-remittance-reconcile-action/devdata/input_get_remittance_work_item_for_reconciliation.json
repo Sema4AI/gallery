@@ -1,0 +1,19 @@
+{
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "remittance_id": ""
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "get_remittance_work_item_for_reconciliation",
+        "actionRelativePath": "reconcile_actions.py",
+        "schemaDescription": [
+            "remittance_id: string: ID of the remittance"
+        ],
+        "managedParamsSchemaDescription": {},
+        "inputFileVersion": "v2"
+    }
+}

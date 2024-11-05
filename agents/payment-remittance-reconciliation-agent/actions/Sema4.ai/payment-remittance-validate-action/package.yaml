@@ -1,0 +1,33 @@
+# Required: A short name for the action package
+name: Payment Remittance Validate Actions
+
+# Required: A description of what's in the action package.
+description: Validates remittance documents by extracting, transforming, and checking data accuracy. Ensures remittance information meets expected standards before passing it for reconciliation.
+
+# Package version number, recommend using semver.org
+version: 0.0.4
+
+dependencies:
+  conda-forge:
+  - python=3.10.14
+  - uv=0.4.17
+  pypi:
+  - sema4ai-actions=1.0.1
+  - sema4ai-di-client=1.0.9
+  - pandas=2.2.2   
+  - duckdb=0.10.2
+  - pydantic=2.8.2
+     
+packaging:
+  # By default, all files and folders in this directory are packaged when uploaded.
+  # Add exclusion rules below (expects glob format: https://docs.python.org/3/library/glob.html)
+  exclude:
+  - ./.git/**
+  - ./.vscode/**
+  - ./devdata/**
+  - ./output/**
+  - ./venv/**
+  - ./.venv/**
+  - ./.DS_store/**
+  - ./**/*.pyc
+  - ./**/*.zip
