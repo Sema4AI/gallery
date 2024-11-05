@@ -13,7 +13,7 @@ dependencies:
   - uv=0.4.17
   pypi:
   - sema4ai-actions=1.0.1
-  - sema4ai-http-helper==1.0.2
+  - sema4ai-http-helper=1.0.2
   - httpx=0.27.2
 
 packaging:
