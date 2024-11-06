@@ -10,16 +10,16 @@ version: 0.0.4
 dependencies:
   conda-forge:
   - python=3.10.14
-  - uv=0.2.6
+  - uv=0.4.17
   pypi:
   - sema4ai-actions=1.0.1
-  - sema4ai-di-client=1.0.8
+  - sema4ai-di-client=1.0.9
   - pandas=2.2.2   
   - duckdb=0.10.2
-  - pytest 
-  - requests
+  - pytest=8.3.3 
+  - requests=2.32.3
   - pydantic=2.8.2
-  - natsort
+  - natsort=8.4.0
      
 packaging:
   # By default, all files and folders in this directory are packaged when uploaded.
@@ -34,3 +34,4 @@ packaging:
   - ./.DS_store/**
   - ./**/*.pyc
   - ./**/*.zip
+  - ./**/*.log
