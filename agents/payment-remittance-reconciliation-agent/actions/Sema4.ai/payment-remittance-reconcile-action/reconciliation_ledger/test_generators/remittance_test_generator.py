@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 from pathlib import Path
 import random
 import json
+from reconciliation_ledger.reconciliation_constants import BASE_ACTIONS_DIR
 from utils.commons.decimal_utils import DecimalHandler
 from utils.commons.path_utils import get_full_path
 from utils.logging.reconcile_logging_module import configure_logging
@@ -15,7 +16,7 @@ class RemittanceTestGenerator:
     the reconciliation agent.
     """
     
-    DEFAULT_DIR_FOR_TEST_CASES = "reconciliation_ledger/test_generators/test_cases"
+    DEFAULT_DIR_FOR_TEST_CASES = f"{BASE_ACTIONS_DIR}/reconciliation_ledger/test_generators/test_cases"
     
     # Default configurations
     DEFAULT_FACILITY_TYPES = [

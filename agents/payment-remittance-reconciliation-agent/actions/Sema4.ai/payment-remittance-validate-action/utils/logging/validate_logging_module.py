@@ -9,7 +9,7 @@ ACTION_PACKAGE = "payment-remittance-validate-action"
 
 
 def configure_logging(
-    logger_name=__name__, log_config_path="logging-validate-actions.conf"
+    logger_name=__name__, log_config_path="agent-validate-reconcile.conf"
 ):
     current_dir = os.getcwd()
 

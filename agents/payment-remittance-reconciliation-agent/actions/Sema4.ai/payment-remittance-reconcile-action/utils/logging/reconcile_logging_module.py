@@ -8,7 +8,7 @@ from utils.commons.path_utils import get_full_path
 
 
 def configure_logging(
-    logger_name=__name__, log_config_filename="logging-reconcile.conf"
+    logger_name=__name__, log_config_filename="agent-validate-reconcile.conf"
 ):
     """
     Configure logging using a configuration file with environment-aware path resolution.

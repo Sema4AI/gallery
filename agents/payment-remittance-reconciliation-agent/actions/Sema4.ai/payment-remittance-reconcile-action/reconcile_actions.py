@@ -1,5 +1,6 @@
 from decimal import Decimal
 
+
 import traceback
 
 from sema4ai.actions import action
@@ -34,7 +35,7 @@ from utils.commons.path_utils import get_full_path
 from utils.commons.formatting import parse_numeric_field
 
 logger = configure_logging(
-    logger_name=__name__, log_config_filename="logging-reconcile.conf"
+    logger_name=__name__, log_config_filename="agent-validate-reconcile.conf"
 )
 
 

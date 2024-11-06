@@ -12,3 +12,11 @@ published_manifest.json
 published_agents_manifest.json
 **/.DS_STORE
 !runbooks/manifest.json
+agents/payment-remittance-reconciliation-agent/agent-validate-reconcile.log
+agents/payment-remittance-reconciliation-agent/actions/Sema4.ai/payment-remittance-reconcile-action/context/db/reconciliation_context.duckdb
+agents/payment-remittance-reconciliation-agent/actions/Sema4.ai/payment-remittance-reconcile-action/reconciliation_ledger/reconciliation_ledger.duckdb
+agents/payment-remittance-reconciliation-agent/actions/Sema4.ai/payment-remittance-reconcile-action/reconciliation_ledger/test_generators/test_cases/reconciling_case/db_setup.json
+agents/payment-remittance-reconciliation-agent/actions/Sema4.ai/payment-remittance-reconcile-action/reconciliation_ledger/test_generators/test_cases/reconciling_case/db_setup.json
+agents/payment-remittance-reconciliation-agent/actions/Sema4.ai/payment-remittance-reconcile-action/reconciliation_ledger/test_generators/test_cases/single_facility_discrepancy/db_setup.json
+agents/payment-remittance-reconciliation-agent/actions/Sema4.ai/payment-remittance-reconcile-action/reconciliation_ledger/test_generators/test_cases/single_facility_discrepancy/remittance.md
+agents/payment-remittance-reconciliation-agent/actions/Sema4.ai/payment-remittance-validate-action/context/db/validation_context.duckdb

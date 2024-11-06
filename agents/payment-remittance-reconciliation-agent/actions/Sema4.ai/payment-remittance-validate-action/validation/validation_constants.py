@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from utils.commons.validate_path_utils import get_full_path
+from utils.commons.path_utils import get_full_path
 
 
 COLUMN_INVOICE_NUMBER = "Invoice Number"
@@ -20,11 +20,12 @@ COMPUTED_TOTAL_NUMBER_OF_INVOICES_IN_REMITTANCE = "Total Invoices in Remittance"
 INVOICE_TABLE_KEY = "invoice_table"
 SUBTOTALS_TABLE_KEY = "subtotals_table"
 
+BASE_ACTIONS_DIR = "actions/Sema4.ai/payment-remittance-validate-action"
 
 class DatabaseConstants:
     VALIDATION_CONTEXT_DB = "validation_context.duckdb"
 
-    VALIDATION_DB_BASE_PATH = "context/db"
+    VALIDATION_DB_BASE_PATH = f"{BASE_ACTIONS_DIR}/context/db"
 
     @staticmethod
     def get_validation_db_dir() -> Path:

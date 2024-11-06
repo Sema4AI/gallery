@@ -36,7 +36,7 @@ from utils.logging.ultimate_serializer import (
 
 # Configure logging
 logger = configure_logging(
-    logger_name=__name__, log_config_path="logging-validate-actions.conf"
+    logger_name=__name__, log_config_path="agent-validate-reconcile.conf"
 )
 
 

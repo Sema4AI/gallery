@@ -14,7 +14,7 @@ from utils.commons.formatting import DatabaseDataCleaner
 from utils.logging.reconcile_logging_module import configure_logging
 from utils.commons.path_utils import get_full_path
 from utils.commons.db_key_generator import DatabaseKeyGenerator
-
+from reconciliation_ledger.reconciliation_constants import BASE_ACTIONS_DIR
 
 class InvoiceLoader:
     def __init__(self, db_path: Optional[Union[str, Path]] = None):
@@ -204,13 +204,7 @@ class InvoiceLoader:
                         )
                         raise
 
-                ddl_path = get_full_path(
-                    str(
-                        self.get_db_dir()
-                        / FolderConstants.DDL
-                        / DatabaseConstants.DEFAULT_DDL_NAME
-                    )
-                )
+                ddl_path = DatabaseConstants.get_default_ddl_path()
                 self.logger.debug(f"Loading DDL from path: {ddl_path}")
 
                 with open(ddl_path) as f:
@@ -441,4 +435,4 @@ class InvoiceLoader:
     @staticmethod
     def get_db_dir() -> Path:
         """Get the database directory path."""
-        return Path(get_full_path("reconciliation_ledger/db"))
+        return Path(get_full_path(f"{BASE_ACTIONS_DIR}/reconciliation_ledger/"))

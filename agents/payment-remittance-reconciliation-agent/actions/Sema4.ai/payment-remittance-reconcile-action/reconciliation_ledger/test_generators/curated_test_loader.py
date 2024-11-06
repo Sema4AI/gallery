@@ -3,6 +3,7 @@ import json
 from typing import Dict, List, Optional
 
 from reconciliation_ledger.db.invoice_loader import InvoiceLoader
+from reconciliation_ledger.reconciliation_constants import BASE_ACTIONS_DIR
 from utils.commons.decimal_utils import DecimalJsonEncoder
 from utils.logging.reconcile_logging_module import configure_logging
 from utils.commons.path_utils import get_full_path
@@ -14,7 +15,7 @@ class CuratedTestLoader:
     and loads their db_setup.json files into the database.
     """
     
-    DEFAULT_CURATED_CASES_DIR = "reconciliation_ledger/test_generators/curated_test_cases"
+    DEFAULT_CURATED_CASES_DIR = f"{BASE_ACTIONS_DIR}/reconciliation_ledger/test_generators/curated_test_cases"
     
     def __init__(self, cases_dir: Optional[Path] = None):
         """

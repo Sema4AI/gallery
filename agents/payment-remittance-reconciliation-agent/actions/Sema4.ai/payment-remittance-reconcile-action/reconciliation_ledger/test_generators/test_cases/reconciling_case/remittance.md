@@ -1,13 +1,13 @@
 # AquaEnergy Solutions - Wire Transfer Remittance
 
-Payer Name: BioRise Innovations  
-Client ID: BRI-784762  
-Wire Transfer Date: 2024-10-21  
-Beneficiary Account Number: *****44452  
-Total Wire Amount: $3,706,396.98  
-Wire Transfer Reference: WIRE342130101524  
+Payer Name: GreenTech Dynamics  
+Client ID: GTD-258147  
+Wire Transfer Date: 2024-11-12  
+Beneficiary Account Number: *****5567  
+Total Wire Amount: $3,636,131.89  
+Wire Transfer Reference: WIRE202969010145  
 Payment Type: Wire Transfer  
-Additional Payment Notes: Q3 2024 Power Supply for Advanced Greenhouse Complexes
+Additional Payment Notes: Q3 2024 Power for Sustainable Agriculture Centers
 
 ## Remittance Details
 
@@ -21,28 +21,28 @@ Additional Payment Notes: Q3 2024 Power Supply for Advanced Greenhouse Complexes
 
 | Invoice Reference     | Amount Due           | Payment Sent         | Discounts           | Fees       | Date of Invoice     | Facility ID         | Service Type        | Usage (kWh/Gallons)          | CO2 Supplementation (kg)     |
 |:--------------------:|:-------------------:|:-------------------:|:------------------:|:---------------:|:------------------:|:------------------:|:------------------:|:---------------------------:|:---------------------------:|
-| INV-GH-005001   | $     83,394.36 | $     82,560.42 | $      833.94 | $   0.00 | 09/01/2024      | FAA-GH-001      | Electricity     | 668080 kWh           | 3680                 |
-| INV-GH-005002   | $     52,218.22 | $     51,696.04 | $      522.18 | $   0.00 | 09/03/2024      | FAA-GH-001      | Water           | 306113 Gallons       | N/A                  |
-| INV-GH-005003   | $     79,375.48 | $     78,581.73 | $      793.75 | $   0.00 | 09/05/2024      | FAA-GH-002      | Electricity     | 680151 kWh           | 3244                 |
-| INV-GH-005004   | $     49,845.32 | $     49,346.87 | $      498.45 | $   0.00 | 09/07/2024      | FAA-GH-002      | Water           | 366741 Gallons       | N/A                  |
-| INV-GH-005005   | $     87,266.05 | $     86,393.39 | $      872.66 | $   0.00 | 09/09/2024      | FAA-GH-003      | Electricity     | 640131 kWh           | 3603                 |
-| INV-GH-005006   | $     52,412.74 | $     51,888.61 | $      524.13 | $   0.00 | 09/11/2024      | FAA-GH-003      | Water           | 425168 Gallons       | N/A                  |
-| INV-GH-005007   | $     83,253.69 | $     82,421.15 | $      832.54 | $   0.00 | 09/13/2024      | FAA-GH-004      | Electricity     | 620938 kWh           | 3119                 |
-| INV-GH-005008   | $     38,892.93 | $     38,504.00 | $      388.93 | $   0.00 | 09/15/2024      | FAA-GH-004      | Water           | 334868 Gallons       | N/A                  |
-| INV-GH-005009   | $     92,567.88 | $     91,642.20 | $      925.68 | $   0.00 | 09/17/2024      | FAA-GH-005      | Electricity     | 706436 kWh           | 3553                 |
-| INV-GH-005010   | $     54,986.90 | $     54,437.03 | $      549.87 | $   0.00 | 09/19/2024      | FAA-GH-005      | Water           | 289209 Gallons       | N/A                  |
-| INV-GH-005011   | $     82,121.94 | $     81,300.72 | $      821.22 | $   0.00 | 09/21/2024      | FAA-GH-006      | Electricity     | 610701 kWh           | 3529                 |
-| INV-GH-005012   | $     53,509.34 | $     52,974.25 | $      535.09 | $   0.00 | 09/23/2024      | FAA-GH-006      | Water           | 335930 Gallons       | N/A                  |
-| INV-GH-005013   | $     81,823.54 | $     81,005.30 | $      818.24 | $   0.00 | 09/25/2024      | FAA-GH-007      | Electricity     | 628916 kWh           | 3449                 |
-| INV-GH-005014   | $     37,409.84 | $     37,035.74 | $      374.10 | $   0.00 | 09/27/2024      | FAA-GH-007      | Water           | 446182 Gallons       | N/A                  |
-| INV-GH-005015   | $     88,726.35 | $     87,839.09 | $      887.26 | $   0.00 | 09/29/2024      | FAA-GH-008      | Electricity     | 686840 kWh           | 3704                 |
-| INV-GH-005016   | $     46,554.65 | $     46,089.10 | $      465.55 | $   0.00 | 10/01/2024      | FAA-GH-008      | Water           | 472628 Gallons       | N/A                  |
+| INV-GH-005001   | $     82,220.40 | $     81,398.20 | $      822.20 | $   0.00 | 09/01/2024      | FAA-GH-001      | Electricity     | 663202 kWh           | 3739                 |
+| INV-GH-005002   | $     35,216.29 | $     34,864.13 | $      352.16 | $   0.00 | 09/03/2024      | FAA-GH-001      | Water           | 420551 Gallons       | N/A                  |
+| INV-GH-005003   | $     81,915.11 | $     81,095.96 | $      819.15 | $   0.00 | 09/05/2024      | FAA-GH-002      | Electricity     | 653335 kWh           | 3440                 |
+| INV-GH-005004   | $     48,440.29 | $     47,955.89 | $      484.40 | $   0.00 | 09/07/2024      | FAA-GH-002      | Water           | 318466 Gallons       | N/A                  |
+| INV-GH-005005   | $     92,619.38 | $     91,693.19 | $      926.19 | $   0.00 | 09/09/2024      | FAA-GH-003      | Electricity     | 612828 kWh           | 3360                 |
+| INV-GH-005006   | $     45,427.26 | $     44,972.99 | $      454.27 | $   0.00 | 09/11/2024      | FAA-GH-003      | Water           | 390851 Gallons       | N/A                  |
+| INV-GH-005007   | $     83,252.02 | $     82,419.50 | $      832.52 | $   0.00 | 09/13/2024      | FAA-GH-004      | Electricity     | 667322 kWh           | 3565                 |
+| INV-GH-005008   | $     42,048.15 | $     41,627.67 | $      420.48 | $   0.00 | 09/15/2024      | FAA-GH-004      | Water           | 474315 Gallons       | N/A                  |
+| INV-GH-005009   | $     89,418.53 | $     88,524.34 | $      894.19 | $   0.00 | 09/17/2024      | FAA-GH-005      | Electricity     | 615621 kWh           | 3065                 |
+| INV-GH-005010   | $     45,466.11 | $     45,011.45 | $      454.66 | $   0.00 | 09/19/2024      | FAA-GH-005      | Water           | 281792 Gallons       | N/A                  |
+| INV-GH-005011   | $     84,170.63 | $     83,328.92 | $      841.71 | $   0.00 | 09/21/2024      | FAA-GH-006      | Electricity     | 798001 kWh           | 3215                 |
+| INV-GH-005012   | $     49,921.80 | $     49,422.58 | $      499.22 | $   0.00 | 09/23/2024      | FAA-GH-006      | Water           | 438215 Gallons       | N/A                  |
+| INV-GH-005013   | $     84,218.01 | $     83,375.83 | $      842.18 | $   0.00 | 09/25/2024      | FAA-GH-007      | Electricity     | 790520 kWh           | 3687                 |
+| INV-GH-005014   | $     52,764.44 | $     52,236.80 | $      527.64 | $   0.00 | 09/27/2024      | FAA-GH-007      | Water           | 329074 Gallons       | N/A                  |
+| INV-GH-005015   | $     90,286.42 | $     89,383.56 | $      902.86 | $   0.00 | 09/29/2024      | FAA-GH-008      | Electricity     | 757062 kWh           | 3870                 |
+| INV-GH-005016   | $     37,576.73 | $     37,200.96 | $      375.77 | $   0.00 | 10/01/2024      | FAA-GH-008      | Water           | 361928 Gallons       | N/A                  |
 
 </div>
 
 
 
-Subtotal for Greenhouse Complexes: $1,053,715.64
+Subtotal for Greenhouse Complexes: $1,034,511.97
 
 
 ### Vertical Farming Units
@@ -55,28 +55,28 @@ Subtotal for Greenhouse Complexes: $1,053,715.64
 
 | Invoice Reference     | Amount Due           | Payment Sent         | Discounts           | Fees       | Date of Invoice     | Facility ID         | Service Type        | Usage (kWh/Gallons)          | LED Light Hours     |
 |:--------------------:|:-------------------:|:-------------------:|:------------------:|:---------------:|:------------------:|:------------------:|:------------------:|:---------------------------:|:------------------:|
-| INV-VF-006001   | $    137,601.83 | $    136,225.81 | $    1,376.02 | $   0.00 | 09/05/2024      | FAA-VF-001      | Electricity     | 939383 kWh           | 719             |
-| INV-VF-006002   | $     20,748.31 | $     20,540.83 | $      207.48 | $   0.00 | 09/07/2024      | FAA-VF-001      | Water           | 235101 Gallons       | N/A             |
-| INV-VF-006003   | $    127,357.45 | $    126,083.88 | $    1,273.57 | $   0.00 | 09/09/2024      | FAA-VF-002      | Electricity     | 966445 kWh           | 674             |
-| INV-VF-006004   | $     25,882.92 | $     25,624.09 | $      258.83 | $   0.00 | 09/11/2024      | FAA-VF-002      | Water           | 233252 Gallons       | N/A             |
-| INV-VF-006005   | $    114,626.43 | $    113,480.17 | $    1,146.26 | $   0.00 | 09/13/2024      | FAA-VF-003      | Electricity     | 1161178 kWh          | 674             |
-| INV-VF-006006   | $     34,196.67 | $     33,854.70 | $      341.97 | $   0.00 | 09/15/2024      | FAA-VF-003      | Water           | 237615 Gallons       | N/A             |
-| INV-VF-006007   | $    119,415.37 | $    118,221.22 | $    1,194.15 | $   0.00 | 09/17/2024      | FAA-VF-004      | Electricity     | 905614 kWh           | 679             |
-| INV-VF-006008   | $     29,601.06 | $     29,305.05 | $      296.01 | $   0.00 | 09/19/2024      | FAA-VF-004      | Water           | 295244 Gallons       | N/A             |
-| INV-VF-006009   | $    144,756.96 | $    143,309.39 | $    1,447.57 | $   0.00 | 09/21/2024      | FAA-VF-005      | Electricity     | 1045389 kWh          | 750             |
-| INV-VF-006010   | $     31,818.10 | $     31,499.92 | $      318.18 | $   0.00 | 09/23/2024      | FAA-VF-005      | Water           | 257722 Gallons       | N/A             |
-| INV-VF-006011   | $    145,686.72 | $    144,229.85 | $    1,456.87 | $   0.00 | 09/25/2024      | FAA-VF-006      | Electricity     | 1093393 kWh          | 780             |
-| INV-VF-006012   | $     34,674.39 | $     34,327.65 | $      346.74 | $   0.00 | 09/27/2024      | FAA-VF-006      | Water           | 214410 Gallons       | N/A             |
-| INV-VF-006013   | $    111,662.39 | $    110,545.77 | $    1,116.62 | $   0.00 | 09/29/2024      | FAA-VF-007      | Electricity     | 1027680 kWh          | 716             |
-| INV-VF-006014   | $     20,837.35 | $     20,628.98 | $      208.37 | $   0.00 | 10/01/2024      | FAA-VF-007      | Water           | 190616 Gallons       | N/A             |
-| INV-VF-006015   | $    118,557.29 | $    117,371.72 | $    1,185.57 | $   0.00 | 10/03/2024      | FAA-VF-008      | Electricity     | 933682 kWh           | 735             |
-| INV-VF-006016   | $     30,006.69 | $     29,706.62 | $      300.07 | $   0.00 | 10/05/2024      | FAA-VF-008      | Water           | 205879 Gallons       | N/A             |
+| INV-VF-006001   | $    124,224.07 | $    122,981.83 | $    1,242.24 | $   0.00 | 09/05/2024      | FAA-VF-001      | Electricity     | 1044675 kWh          | 678             |
+| INV-VF-006002   | $     32,406.32 | $     32,082.26 | $      324.06 | $   0.00 | 09/07/2024      | FAA-VF-001      | Water           | 223552 Gallons       | N/A             |
+| INV-VF-006003   | $    123,352.08 | $    122,118.56 | $    1,233.52 | $   0.00 | 09/09/2024      | FAA-VF-002      | Electricity     | 960477 kWh           | 776             |
+| INV-VF-006004   | $     22,198.28 | $     21,976.30 | $      221.98 | $   0.00 | 09/11/2024      | FAA-VF-002      | Water           | 254499 Gallons       | N/A             |
+| INV-VF-006005   | $    130,373.03 | $    129,069.30 | $    1,303.73 | $   0.00 | 09/13/2024      | FAA-VF-003      | Electricity     | 1198657 kWh          | 672             |
+| INV-VF-006006   | $     23,265.17 | $     23,032.52 | $      232.65 | $   0.00 | 09/15/2024      | FAA-VF-003      | Water           | 153309 Gallons       | N/A             |
+| INV-VF-006007   | $    126,687.61 | $    125,420.73 | $    1,266.88 | $   0.00 | 09/17/2024      | FAA-VF-004      | Electricity     | 1244193 kWh          | 663             |
+| INV-VF-006008   | $     20,456.32 | $     20,251.76 | $      204.56 | $   0.00 | 09/19/2024      | FAA-VF-004      | Water           | 203100 Gallons       | N/A             |
+| INV-VF-006009   | $    141,027.17 | $    139,616.90 | $    1,410.27 | $   0.00 | 09/21/2024      | FAA-VF-005      | Electricity     | 1183740 kWh          | 687             |
+| INV-VF-006010   | $     29,485.00 | $     29,190.15 | $      294.85 | $   0.00 | 09/23/2024      | FAA-VF-005      | Water           | 208932 Gallons       | N/A             |
+| INV-VF-006011   | $    114,253.25 | $    113,110.72 | $    1,142.53 | $   0.00 | 09/25/2024      | FAA-VF-006      | Electricity     | 1293386 kWh          | 756             |
+| INV-VF-006012   | $     33,590.95 | $     33,255.04 | $      335.91 | $   0.00 | 09/27/2024      | FAA-VF-006      | Water           | 167405 Gallons       | N/A             |
+| INV-VF-006013   | $    117,817.25 | $    116,639.08 | $    1,178.17 | $   0.00 | 09/29/2024      | FAA-VF-007      | Electricity     | 1006580 kWh          | 708             |
+| INV-VF-006014   | $     30,796.10 | $     30,488.14 | $      307.96 | $   0.00 | 10/01/2024      | FAA-VF-007      | Water           | 207794 Gallons       | N/A             |
+| INV-VF-006015   | $    110,130.05 | $    109,028.75 | $    1,101.30 | $   0.00 | 10/03/2024      | FAA-VF-008      | Electricity     | 1094889 kWh          | 687             |
+| INV-VF-006016   | $     25,892.66 | $     25,633.73 | $      258.93 | $   0.00 | 10/05/2024      | FAA-VF-008      | Water           | 238588 Gallons       | N/A             |
 
 </div>
 
 
 
-Subtotal for Vertical Farming Units: $1,234,955.65
+Subtotal for Vertical Farming Units: $1,193,895.77
 
 
 ### Hydroponics Systems
@@ -89,20 +89,20 @@ Subtotal for Vertical Farming Units: $1,234,955.65
 
 | Invoice Reference     | Amount Due           | Payment Sent         | Discounts           | Fees       | Date of Invoice     | Facility ID         | Service Type        | Usage (kWh/Gallons)          | Nutrient Solution (L)     |
 |:--------------------:|:-------------------:|:-------------------:|:------------------:|:---------------:|:------------------:|:------------------:|:------------------:|:---------------------------:|:------------------------:|
-| INV-HY-007001   | $     66,820.46 | $     66,152.26 | $      668.20 | $   0.00 | 09/09/2024      | FAA-HY-001      | Electricity     | 568398 kWh           | 25367                |
-| INV-HY-007002   | $     35,564.76 | $     35,209.11 | $      355.65 | $   0.00 | 09/13/2024      | FAA-HY-001      | Water           | 272384 Gallons       | N/A                  |
-| INV-HY-007003   | $     66,151.58 | $     65,490.06 | $      661.52 | $   0.00 | 09/17/2024      | FAA-HY-002      | Electricity     | 633949 kWh           | 21064                |
-| INV-HY-007004   | $     32,179.27 | $     31,857.48 | $      321.79 | $   0.00 | 09/21/2024      | FAA-HY-002      | Water           | 349950 Gallons       | N/A                  |
-| INV-HY-007005   | $     67,318.72 | $     66,645.53 | $      673.19 | $   0.00 | 09/25/2024      | FAA-HY-003      | Electricity     | 598643 kWh           | 25756                |
-| INV-HY-007006   | $     39,482.82 | $     39,087.99 | $      394.83 | $   0.00 | 09/29/2024      | FAA-HY-003      | Water           | 304237 Gallons       | N/A                  |
-| INV-HY-007007   | $     70,731.56 | $     70,024.24 | $      707.32 | $   0.00 | 10/03/2024      | FAA-HY-004      | Electricity     | 589401 kWh           | 21837                |
-| INV-HY-007008   | $     33,796.99 | $     33,459.02 | $      337.97 | $   0.00 | 10/07/2024      | FAA-HY-004      | Water           | 316175 Gallons       | N/A                  |
+| INV-HY-007001   | $     65,759.76 | $     65,102.16 | $      657.60 | $   0.00 | 09/09/2024      | FAA-HY-001      | Electricity     | 609929 kWh           | 23047                |
+| INV-HY-007002   | $     33,639.08 | $     33,302.69 | $      336.39 | $   0.00 | 09/13/2024      | FAA-HY-001      | Water           | 326156 Gallons       | N/A                  |
+| INV-HY-007003   | $     61,306.49 | $     60,693.43 | $      613.06 | $   0.00 | 09/17/2024      | FAA-HY-002      | Electricity     | 575189 kWh           | 20841                |
+| INV-HY-007004   | $     33,973.77 | $     33,634.03 | $      339.74 | $   0.00 | 09/21/2024      | FAA-HY-002      | Water           | 250558 Gallons       | N/A                  |
+| INV-HY-007005   | $     69,778.25 | $     69,080.47 | $      697.78 | $   0.00 | 09/25/2024      | FAA-HY-003      | Electricity     | 565776 kWh           | 23214                |
+| INV-HY-007006   | $     33,172.04 | $     32,840.32 | $      331.72 | $   0.00 | 09/29/2024      | FAA-HY-003      | Water           | 315055 Gallons       | N/A                  |
+| INV-HY-007007   | $     67,686.37 | $     67,009.51 | $      676.86 | $   0.00 | 10/03/2024      | FAA-HY-004      | Electricity     | 510317 kWh           | 21594                |
+| INV-HY-007008   | $     36,627.82 | $     36,261.54 | $      366.28 | $   0.00 | 10/07/2024      | FAA-HY-004      | Water           | 243445 Gallons       | N/A                  |
 
 </div>
 
 
 
-Subtotal for Hydroponics Systems: $407,925.69
+Subtotal for Hydroponics Systems: $397,924.15
 
 
 ### Sustainable Energy Solutions
@@ -162,9 +162,9 @@ Subtotal for AgriTech Services: $554,400.00
 
 
 Total Invoices: 60  
-Total Amount Due: $3,743,835.32  
-Total Payment Sent: $3,706,396.98  
-Total Discounts: $37,438.34  
+Total Amount Due: $3,672,860.46  
+Total Payment Sent: $3,636,131.89  
+Total Discounts: $36,728.57  
 Total Fees: $0.00
 
 
