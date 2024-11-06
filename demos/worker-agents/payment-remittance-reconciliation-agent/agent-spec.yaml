@@ -19,18 +19,18 @@ agent-package:
     reasoning: disabled
     runbook: runbook.md
     action-packages:
-    - name: payment-remittance-validate-action
-      organization: MyActions
-      type: folder
-      version: 0.0.4
-      whitelist: ""
-      path: MyActions/payment-remittance-validate-action
     - name: payment-remittance-reconcile-action
       organization: MyActions
-      type: folder
       version: 0.0.4
-      whitelist: ""
       path: MyActions/payment-remittance-reconcile-action
+      type: folder
+      whitelist: ''
+    - name: payment-remittance-validate-action
+      organization: MyActions
+      version: 0.0.4
+      path: MyActions/payment-remittance-validate-action
+      type: folder
+      whitelist: ''
     knowledge: []
     metadata:
       mode: worker
