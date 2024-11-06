@@ -1,199 +1,144 @@
-# Payment Remittance Reconciliation Agent
+# Payment Remittance Validation Action
 
 ## Overview
 
-The Payment Remittance Reconciliation Agent is an intelligent automation solution designed to handle the complex process of validating and reconciling payment remittances against accounts receivable records. This agent combines document intelligence capabilities with precise financial calculations to ensure accurate payment processing and reconciliation.
+The Payment Remittance Validation Action represents the first phase of document processing in the Worker Agent framework. This component ensures data integrity through comprehensive validation of extracted document content, enforcing business rules and preparing data for reconciliation.
 
-## Project Structure
+## Architecture
 
 ```
-payment-remittance-reconcile-agent/
-├── actions/
-│   └── MyActions/
-│       ├── payment-remittance-reconcile-action/    # Main reconciliation logic
-│       └── payment-remittance-validate-action/     # Validation processing
-├── reconciliation_ledger/                          # Database and data management
-│   └── test_generators/                           # Test data generation
-└── runbook.md                                     # Detailed processing instructions
+payment-remittance-validate-action/
+├── validation/
+│   ├── validation_processor.py        # Core validation logic
+│   └── validation_constants.py        # Validation rules and thresholds
+├── context/
+│   └── validate_agent_context_manager.py  # Processing context
+├── models/
+│   └── validate_models.py            # Validation data models
+└── utils/
+    ├── extraction/                   # Data extraction utilities
+    └── validation/                   # Validation helpers
 ```
 
 ## Key Components
 
-### 1. Payment Remittance Reconciliation Action
-
-**Location**: `/actions/MyActions/payment-remittance-reconcile-action`
-
-This component handles the core reconciliation process:
-
-- **Invoice Loading**: Processes invoice data into DuckDB with precise decimal handling
-- **Multi-Level Reconciliation**: Performs hierarchical analysis at payment, facility, and invoice levels
-- **Decimal Precision**: Maintains exact decimal calculations throughout processing
-- **Discrepancy Analysis**: Identifies and reports mismatches with detailed impact assessment
-
-Key Features:
-- Exact decimal precision for all monetary calculations
-- Hierarchical reconciliation with early exit on match
-- Comprehensive discrepancy reporting
-- Facility-type based analysis
-- Invoice-level matching
-
-### 2. Payment Remittance Validation Action
-
-**Location**: `/actions/MyActions/payment-remittance-validate-action`
-
-Handles document validation and data integrity:
-
-- **Document Extraction**: Processes remittance documents into structured data
-- **Data Validation**: Performs comprehensive validation checks
-- **Field Verification**: Ensures all required data is present and correctly formatted
-- **Total Verification**: Validates payment totals and facility subtotals
-
-Validation Checks:
-- Invoice count verification
-- Facility type subtotal validation
-- Total payment amount validation
-- Discounts and charges validation
-
-### 3. Test Generation Framework
-
-**Location**: `/reconciliation_ledger/test_generators`
-
-Provides comprehensive test case generation:
-
-- **Curated Test Cases**: Pre-defined scenarios for common reconciliation patterns
-- **Dynamic Test Generation**: Creates test cases with controlled discrepancies
-- **Database Setup**: Generates test database with precise decimal values
-- **Markdown Generation**: Creates human-readable test documentation
-
-Test Case Types:
-- Reconciling cases (exact matches)
-- Single facility discrepancies
-- Multi-facility discrepancies
-- Threshold adjustment cases
-
-## Usage
-
-### Installation
-
-```bash
-pip install -r requirements.txt
-```
-
-### Running Reconciliation
+### 1. Validation Processor
+Implements the three-stage validation pipeline:
 
 ```python
-from reconciliation_ledger.invoice_loader import InvoiceLoader
-from invoice_reconciliation_service import InvoiceReconciliationLedgerService
+class ValidationProcessor:
+    def extract_and_structure_content(self, raw_content) -> ExtractionResult:
+        """
+        Stage 1: Extract and structure document content
+        """
+        pass
 
-# Initialize services
-loader = InvoiceLoader()
-reconciliation_service = InvoiceReconciliationLedgerService(config, context_manager)
+    def transform_and_enrich_content(self, extracted_content) -> TransformationResult:
+        """
+        Stage 2: Transform and enrich extracted data
+        """
+        pass
 
-# Process remittance
-loader.load_reference_data()
-reconciliation_service.analyze_payment_reconciliation(
-    payment_reference="WIRE2024100502",
-    threshold=Decimal('0.01')
-)
+    def validate_and_finalize_content(self, transformed_content) -> ValidationFinalResult:
+        """
+        Stage 3: Validate transformed content against business rules
+        """
+        pass
 ```
 
-### Generating Test Cases
+### 2. Validation Rules
 
+Core validation checks include:
+
+1. **Invoice Count Validation**
 ```python
-from reconciliation_ledger.test_generators import RemittanceTestGenerator
-
-generator = RemittanceTestGenerator()
-generator.generate_reconciling_case(customer_data)
-generator.generate_single_facility_discrepancy(customer_data)
+def validate_invoice_count(self, content: Dict) -> ValidationResult:
+    """Verify total invoice count matches line items."""
+    stated_count = int(content['fields']['Total Invoices'])
+    actual_count = len(content['invoice_details'])
+    
+    return ValidationResult(
+        passed=(stated_count == actual_count),
+        difference=abs(stated_count - actual_count)
+    )
 ```
 
-## Key Features
-
-1. **Precise Financial Calculations**
-   - Exact decimal precision throughout processing
-   - Consistent rounding behavior
-   - Threshold-based comparison
-
-2. **Comprehensive Validation**
-   - Multi-level validation checks
-   - Detailed error reporting
-   - Early validation failure detection
-
-3. **Flexible Reconciliation**
-   - Hierarchical reconciliation process
-   - Early exit on successful matches
-   - Detailed discrepancy analysis
-
-4. **Robust Testing**
-   - Curated test case library
-   - Dynamic test case generation
-   - Controlled discrepancy injection
-
-## Configuration
-
-Key configuration options:
-
-```yaml
-reconciliation:
-  threshold: 0.01
-  decimal_precision: 2
-  early_exit: true
-  
-validation:
-  strict_mode: true
-  require_all_fields: true
-  
-database:
-  type: duckdb
-  decimal_handling: exact
+2. **Facility Type Subtotal Validation**
+```python
+def validate_facility_subtotals(self, content: Dict) -> ValidationResult:
+    """Verify facility type subtotals match sum of invoices."""
+    for facility_type, subtotal in content['summary']:
+        calculated_total = self._calculate_facility_total(
+            content['invoice_details'], 
+            facility_type
+        )
+        if abs(subtotal - calculated_total) > self.threshold:
+            return ValidationResult(
+                passed=False,
+                difference=abs(subtotal - calculated_total)
+            )
 ```
 
-## Development
-
-### Running Tests
-
-```bash
-pytest tests/
+3. **Total Payment Amount Validation**
+```python
+def validate_total_payment(self, content: Dict) -> ValidationResult:
+    """Verify total payment matches sum of invoice payments."""
+    stated_total = self._parse_monetary_value(
+        content['fields']['Total Payment Paid']
+    )
+    calculated_total = self._calculate_total_payments(
+        content['invoice_details']
+    )
+    
+    return ValidationResult(
+        passed=abs(stated_total - calculated_total) <= self.threshold,
+        difference=abs(stated_total - calculated_total)
+    )
 ```
 
-### Generating Test Data
+## Validation Reports
 
-```bash
-python -m reconciliation_ledger.test_generators.generate_test_cases
+### Success Report
+```markdown
+# Validation Report
+
+**Status**: SUCCESS
+**Document**: FirstRite Agriculture Association - Wire Transfer Payment.pdf
+**Timestamp**: 2024-10-22T14:30:27.891234
+
+## Results
+- All validation checks passed
+- Processed invoices: 42
+- Total amount: $2,636,905.41
+
+## Validation Metrics
+- Field completion: 100%
+- Numeric precision: 100%
+- Business rule compliance: 100%
 ```
 
-## Reporting
+### Failure Report
+```markdown
+# Validation Report
 
-The agent generates standardized reports for both validation and reconciliation phases:
+**Status**: FAILURE
+**Document**: FirstRite Agriculture Association - Wire Transfer Payment.pdf
+**Timestamp**: 2024-10-22T14:30:27.891234
 
-1. **Validation Reports**
-   - Document integrity status
-   - Field validation results
-   - Calculation verifications
+## Failed Validations
+1. Facility Type Subtotals
+   - Expected: $820,112.06
+   - Calculated: $828,396.12
+   - Difference: $8,284.06
 
-2. **Reconciliation Reports**
-   - Match/mismatch status
-   - Detailed discrepancy analysis
-   - Impact assessments
-   - Recommended actions
+2. Total Payment
+   - Expected: $2,636,905.41
+   - Calculated: $2,645,189.47
+   - Difference: $8,284.06
 
-## Error Handling
+## Impact Assessment
+- Material difference detected
+- Affects: Greenhouse Complexes facility type
+- 0.31% total payment variance
+```
 
-The system provides comprehensive error handling:
-
-- Detailed error messages
-- Context preservation
-- Graceful failure modes
-- Recovery recommendations
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Submit a pull request with detailed description
-4. Ensure all tests pass
-5. Follow the coding standards
-
-## License
-
-Licensed under the MIT License. See LICENSE file for details.
