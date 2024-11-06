@@ -16,7 +16,7 @@ class RemittanceTestGenerator:
     the reconciliation agent.
     """
     
-    DEFAULT_DIR_FOR_TEST_CASES = f"{BASE_ACTIONS_DIR}/reconciliation_ledger/test_generators/test_cases"
+    DEFAULT_DIR_FOR_TEST_CASES = f"{BASE_ACTIONS_DIR}reconciliation_ledger/test_generators/test_cases"
     
     # Default configurations
     DEFAULT_FACILITY_TYPES = [

@@ -14,20 +14,20 @@ agent-package:
     model:
       provider: OpenAI
       name: gpt-4o
-    version: 0.0.4
+    version: 0.0.5
     architecture: agent
     reasoning: disabled
     runbook: runbook.md
     action-packages:
     - name: Payment Remittance Reconcile Actions
       organization: Sema4.ai
-      version: 0.0.4
+      version: 0.0.5
       path: Sema4.ai/payment-remittance-reconcile-action
       type: folder
       whitelist: ''
     - name: Payment Remittance Validate Actions
       organization: Sema4.ai
-      version: 0.0.4
+      version: 0.0.5
       path: Sema4.ai/payment-remittance-validate-action
       type: folder
       whitelist: ''

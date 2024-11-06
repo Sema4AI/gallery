@@ -5,7 +5,7 @@ name: Payment Remittance Reconcile Actions
 description: Performs reconciliation of remittance documents by analyzing, storing, and updating payment data. Identifies discrepancies and updates work item status based on reconciliation results.
 
 # Package version number, recommend using semver.org
-version: 0.0.4
+version: 0.0.5
 
 dependencies:
   conda-forge:
@@ -17,6 +17,7 @@ dependencies:
   - pandas=2.2.2   
   - duckdb=0.10.2
   - pydantic=2.8.2
+  - pytest
      
 packaging:
   # By default, all files and folders in this directory are packaged when uploaded.

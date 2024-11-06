@@ -4,10 +4,11 @@ from utils.commons.path_utils import get_full_path
 
 
 THRESHOLD_DISPREPENCY = 0.10
-BASE_ACTIONS_DIR = "actions/Sema4.ai/payment-remittance-reconcile-action"
+# BASE_ACTIONS_DIR = "actions/Sema4.ai/payment-remittance-reconcile-action"
+BASE_ACTIONS_DIR = ""
 
 class DatabaseConstants:
-    RECONCILIATION_LEDGER_DB_BASE_PATH = f"{BASE_ACTIONS_DIR}/reconciliation_ledger/db"
+    RECONCILIATION_LEDGER_DB_BASE_PATH = f"{BASE_ACTIONS_DIR}reconciliation_ledger/db"
     RECONCILIATION_LEDGER_DDL_BASE_PATH = f"{RECONCILIATION_LEDGER_DB_BASE_PATH}/ddl"
 
     RECONCILIATION_LEDGER_DB = "reconciliation_ledger.duckdb"
@@ -15,7 +16,7 @@ class DatabaseConstants:
     COMPUTED_CONTENT_FILE = "computed_content.json"
 
     RECONCILIATION_CONTEXT_DB = "reconciliation_context.duckdb"
-    RECONCILIATION_CONTEXT_DB_BASE_PATH = f"{BASE_ACTIONS_DIR}/context/db"
+    RECONCILIATION_CONTEXT_DB_BASE_PATH = f"{BASE_ACTIONS_DIR}context/db"
     
 
     @staticmethod

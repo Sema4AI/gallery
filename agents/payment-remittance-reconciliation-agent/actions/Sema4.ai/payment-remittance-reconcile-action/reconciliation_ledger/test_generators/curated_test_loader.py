@@ -15,7 +15,7 @@ class CuratedTestLoader:
     and loads their db_setup.json files into the database.
     """
     
-    DEFAULT_CURATED_CASES_DIR = f"{BASE_ACTIONS_DIR}/reconciliation_ledger/test_generators/curated_test_cases"
+    DEFAULT_CURATED_CASES_DIR = f"{BASE_ACTIONS_DIR}reconciliation_ledger/test_generators/curated_test_cases"
     
     def __init__(self, cases_dir: Optional[Path] = None):
         """

@@ -435,4 +435,4 @@ class InvoiceLoader:
     @staticmethod
     def get_db_dir() -> Path:
         """Get the database directory path."""
-        return Path(get_full_path(f"{BASE_ACTIONS_DIR}/reconciliation_ledger/"))
+        return Path(get_full_path(f"{BASE_ACTIONS_DIR}reconciliation_ledger/"))
