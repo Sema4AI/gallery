@@ -1,0 +1,19 @@
+name: Demos - Initialize Demos to S3 Gallery
+
+on:
+  workflow_dispatch:
+    # Enables manual triggering via GitHub Actions
+
+jobs:
+  build_agents:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write # required by AWS aws-actions/configure-aws-credentials
+      contents: read
+    env:
+      RCC_VERSION: v18.1.1
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
