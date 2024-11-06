@@ -1,0 +1,36 @@
+# Required: A short name for the action package
+name: payment-remittance-reconcile-action
+
+# Required: A description of what's in the action package.
+description: Performs reconciliation of remittance documents by analyzing, storing, and updating payment data. Identifies discrepancies and updates work item status based on reconciliation results.
+
+# Package version number, recommend using semver.org
+version: 0.0.4
+
+dependencies:
+  conda-forge:
+  - python=3.10.14
+  - uv=0.2.6
+  pypi:
+  - sema4ai-actions=1.0.1
+  - sema4ai-di-client=1.0.9
+  - pandas=2.2.2   
+  - duckdb=0.10.2
+  - pytest 
+  - requests
+  - pydantic=2.8.2
+  - natsort
+     
+packaging:
+  # By default, all files and folders in this directory are packaged when uploaded.
+  # Add exclusion rules below (expects glob format: https://docs.python.org/3/library/glob.html)
+  exclude:
+  - ./.git/**
+  - ./.vscode/**
+  - ./devdata/**
+  - ./output/**
+  - ./venv/**
+  - ./.venv/**
+  - ./.DS_store/**
+  - ./**/*.pyc
+  - ./**/*.zip
