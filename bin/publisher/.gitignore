@@ -18,5 +18,6 @@ testrun/*
 zips/
 gallery/
 agents/
+demos/
 log.txt
 environments/
