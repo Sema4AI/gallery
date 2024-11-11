@@ -24,12 +24,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Build demos
+      - name: Update demos
         run: |
           cd bin
           curl -L -o rcc "https://cdn.sema4.ai/rcc/releases/${{ env.RCC_VERSION }}/linux64/rcc"
           chmod +x rcc
-          ./rcc run -r publisher/robot.yaml -t "Build demos"
+          ./rcc run -r publisher/robot.yaml -t "Build update demos"
 
       - name: Save Demos artifact
         uses: actions/upload-artifact@v4
