@@ -1,40 +1,40 @@
 agent-package:
   spec-version: v2
   agents:
-  - name: Payment Remittance Reconcilliation Agent
-    description: The Payment Remittance Reconciliation Agent autonomously handles
-      remittance documents from validation through reconciliation. In the initial
-      stage, the agent extracts, cleans, and validates remittance data, ensuring the
-      total payment amount aligns with individual line items and verifying that the
-      number of invoices matches the extracted data. Upon successful validation, the
-      agent moves to reconciliation, comparing validated data with Accounts Receivable
-      records to ensure payment accuracy across multiple levels. It identifies discrepancies,
-      generates detailed reconciliation reports, and operates independently, only
-      requesting human intervention for critical issues.
+  - name: Google Machine
+    description: Everything about Google.
     model:
       provider: OpenAI
       name: gpt-4o
-    version: 0.0.6
+    version: 0.0.1
     architecture: agent
     reasoning: disabled
     runbook: runbook.md
     action-packages:
-    - name: Payment Remittance Reconciliation -actions
-      organization: MyActions
-      version: 0.0.6
-      path: MyActions/payment-remittance-reconcile-action
+    - name: Google Mail
+      organization: Sema4.ai
       type: folder
-      whitelist: ''
-    - name: Payment Remittance Validation -action
-      organization: MyActions
-      version: 0.0.6
-      path: MyActions/payment-remittance-validate-action
+      version: 1.1.2
+      whitelist: ""
+      path: Sema4.ai/google-mail
+    - name: Google Calendar
+      organization: Sema4.ai
       type: folder
-      whitelist: ''
+      version: 1.0.3
+      whitelist: ""
+      path: Sema4.ai/google-calendar
+    - name: Google Docs
+      organization: Sema4.ai
+      type: folder
+      version: 1.3.1
+      whitelist: ""
+      path: Sema4.ai/google-docs
+    - name: action-one
+      organization: MyActions
+      type: folder
+      version: 0.0.1
+      whitelist: ""
+      path: MyActions/action-one
     knowledge: []
     metadata:
-      mode: worker
-      worker-config:
-        type: Document Intelligence
-        document-type: Payment Remittance Reconciliation for Customer Transactions
-          V6
+      mode: conversational
