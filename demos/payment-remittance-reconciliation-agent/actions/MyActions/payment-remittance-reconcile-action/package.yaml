@@ -2,7 +2,7 @@
 name: Payment Remittance Reconciliation -actions
 
 # Required: A description of what's in the action package.
-description: Validates remittance documents by extracting, transforming, and checking data accuracy. Ensures remittance information meets expected standards before passing it for reconciliation.
+description: Performs reconciliation of remittance documents by analyzing, storing, and updating payment data. Identifies discrepancies and updates work item status based on reconciliation results.
 
 # Package version number, recommend using semver.org
 version: 0.0.6

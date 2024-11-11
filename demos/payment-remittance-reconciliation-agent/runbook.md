@@ -1,42 +1,62 @@
 # Payment Remittance Processing Agent Runbook
 
-## 1. Overview
+## **1. Overview**
 
-### 1.1 Objective
+### **1.1 Objective**
 
-The Payment Remittance Processing Agent autonomously handles remittance documents through validation and reconciliation phases. It ensures data integrity via extraction, transformation, and validation before proceeding to reconciliation against Accounts Receivable records. The agent operates independently, requesting human intervention only for critical issues.
+The Payment Remittance Processing Agent autonomously processes remittance documents through validation and reconciliation phases. It ensures data integrity via extraction, transformation, and validation before proceeding to reconciliation against Accounts Receivable records. The agent operates independently, requesting human intervention only for critical issues. The Payment Remittance Processing Agent operates through two sequential phases:
 
-### 1.2 Critical Processing Requirements
+*   **Phase 1: Document Validation**
+    *   This phase ensures the integrity and accuracy of the remittance document by performing a series of checks on document structure, content completeness, and field values. Only upon successful validation can the document move to the next phase.
+*   **Phase 2: Document Reconciliation**
+    *   In this phase, validated documents are compared against Accounts Receivable (AR) records to identify and resolve any discrepancies. This ensures alignment between remittance details and recorded AR data.
 
-#### 1.2.1 Sequential Processing
+### **1.2 Critical Processing Requirements**
+
+Sequential Processing
 
 *   Steps must execute in strict sequential order
 *   No parallel processing permitted
 *   Each step depends on prior step completion
 *   Phase 2 cannot begin until Phase 1 completes successfully
 
-#### 1.2.2 Phase Transition Control
+Phase Transition Control
 
-*   Validation phase must complete successfully before reconciliation
-*   All validation checks must pass
+*   All validation checks must pass before phase can transition from Document Validation to Document Reconciliation.
+*   **The validation report must be generated and displayed before any reconciliation steps are initiated.**
+*   **The reconciliation report can only be generated after all validations have passed and the validation report has been successfully displayed.**
+*   For this version of the agent, any errors or issues transitioning to the reconciliation phase caused by work item state transition, attempt to resolve and proceed with the reconciliation.
 
-#### 1.2.3 Error Handling
+### **1.3 Error Handling**
 
-*   Halt processing immediately on any failure
-*   Do not proceed to subsequent steps
-*   Update work item status as failed
-*   Provide detailed error report
-*   Validation failures prevent reconciliation phase entry
+Document Validation:
 
-## 2. Processing Phases
+*   If validation checks fail:
+    *   Generate detailed validation report based on template (see Section 4.1)
+    *   Update work item with validation failure outcome
+    *   Halt processing before Phase 2
 
-### 2.1 Phase 1: Document Validation
+Document Reconciliation:
 
-#### 2.1.1 Document Retrieval and Assessment
+*   If reconciliation shows discrepancies:
+    *   Complete discrepancy analysis
+    *   Update work item with discrepancy outcome
+    *   Halt further processing
+
+General Error Handling:
+
+*   For unexpected processing issues:
+    *   Capture error context and details
+    *   Update work item with exception outcome
+    *   Document all findings for resolution
+
+## **2. Document Validation (Phase 1)**
+
+### **2.1 Document Retrieval and Assessment**
 
 **Process**: Verify document readiness for processing.
 
-The agent begins by retrieving the remittance work item and verifying its readiness for processing. This involves comprehensive checks of the document's status and content integrity before processing begins.
+The agent begins by retrieving the remittance work item and verifying its readiness for processing. This involves checks of the document's content integrity before processing begins.
 
 **Core Assessment Tasks**:  
 The agent performs several key verifications:
@@ -46,12 +66,7 @@ Document Completeness Check
 *   Verifies all required sections are present
 *   Confirms document structure integrity
 *   Validates metadata presence
-*   Example: A remittance missing its facility type summaries section would fail this check
-
-Status Verification
-
-*   Checks current document processing status
-*   Only continue if the processing status is marked as Extraction Completed.
+*   Example: A remittance missing facility type subtotal summaries would fail this check
 
 Content Structure Assessment
 
@@ -60,23 +75,23 @@ Content Structure Assessment
 *   Checks data field presence
 *   Example: A properly structured document should contain clearly defined sections for payment details, invoice listings, and facility summaries
 
-#### 2.1.2 Data Extraction and Processing
+### **2.2 Data Extraction and Processing**
 
 **Process**: Extract and structure the remittance information into standardized formats.
 
-The agent systematically processes the document content, transforming raw data into structured information. This phase focuses on accurate extraction while maintaining data integrity.
+The agent systematically processes the document content, transforming raw data into structured information. This phase focuses on accurate extraction while maintaining data integrity. The key extraction components are:
 
-**Key Extraction Components**:
+**Core Payment Information Processing**
 
-Payment Information Processing  
-The agent extracts core payment details including:
+The agent extracts core payment details including
 
 *   Total payment amount
 *   Payment date and method
 *   Reference information  
-    Example: When processing a wire transfer remittance, the agent extracts details like transfer date, amount, and reference number, converting them into standardized formats.
+*   Example: When processing a wire transfer remittance, the agent extracts details like transfer date, amount, and reference number, converting them into standardized formats.
 
-Invoice Line Item Processing  
+**Invoice Line Item Processing**
+
 For each invoice entry, the agent:
 
 *   Extracts invoice numbers and dates
@@ -84,287 +99,152 @@ For each invoice entry, the agent:
 *   Captures service details  
     Example: Processing an electricity service invoice would include extracting the invoice number, service period, usage amount, and corresponding charges.
 
-Facility Information Extraction  
-The agent processes facility-related data:
+### **2.3 Document Validation**
 
-*   Facility identifiers
-*   Service types
-*   Usage metrics  
-    Example: For a greenhouse facility, the agent would extract both electricity and water usage data, along with any supplementary services.
+**Process**: Validate document integrity and internal consistency through comprehensive checks.
 
-#### 2.1.3 Document Validation
+**Validation Tasks:**
 
-**Process**: Validate document accuracy and internal consistency through comprehensive checks.
+Invoice Count Validation
 
-The agent performs multi-level validation to ensure document integrity and accuracy. Each validation addresses specific aspects of the remittance data.
+*   Compare stated total invoice count against actual line items
+*   Verify no duplicates or missing entries
+*   Confirm all required invoice fields are present
+*   Record both expected and actual invoice counts
+*   Flag any discrepancies for reporting
 
-**Key Validation Areas**:
+Facility Type Subtotal Validation
 
-Total Payment Validation  
-The agent examines the stated total payment amount against the sum of all individual invoice payments, considering both discounts and additional charges. For example:
-* Add all individual invoice payment amounts
-* Subtract the total discounts
-* Add any additional charges
-* Compare the calculated total to the stated total payment
+*   Calculate subtotals for each facility type
+*   Compare against stated subtotals in document
+*   Verify all facility types are accounted for
+*   Document all calculations and comparisons
+*   Note any variances beyond threshold
 
-Facility Type Subtotal Validation  
-The agent verifies facility-level calculations:
-* Calculates subtotals for each facility type
-* Compares against stated facility totals
-* Verifies cross-facility consistency
-* Sum all greenhouse facility invoices
-* Sum all vertical farming unit invoices
-* Compare each subtotal against stated facility totals
-* Verify that facility subtotals sum to the total payment
+Total Payment Amount Validation
 
-Invoice Count and Consistency  
-The agent performs detailed invoice validation:
-* Verifies the stated total invoice count matches actual line items
-* Checks for duplicate invoice numbers
-* Validates invoice date sequences
-* Ensures all required invoice fields are present
-* Count all invoice line items
-* Verify unique invoice numbers
-* Confirm all required fields are populated
-* Compare against the stated total
+*   Sum all individual payments
+*   Account for discounts and additional charges
+*   Compare against stated total payment amount
+*   Record detailed calculation steps
+*   Flag any discrepancies for investigation
 
-Adjustment Validation  
-The agent validates all payment adjustments:
-* Verifies discount calculations
-* Validates additional charges
-* Ensures adjustment totals match stated amounts
-* Calculate individual discount amounts
-* Sum all discounts
-* Compare against stated total discounts
-* Verify discount application rules
+Discounts and Charges Validation
 
-#### 2.1.4 Validation Error Analysis
+*   Verify individual discount calculations
+*   Sum all additional charges
+*   Compare totals against stated amounts
+*   Document all calculations
+*   Note any inconsistencies
 
-**Process**: When validation failures occur, perform comprehensive analysis using agent context to determine root cause.
-
-The agent must systematically analyze validation failures through:
-
-Document Configuration Analysis
-* Review document type configuration
-  - Required vs. optional fields
-  - Table structure requirements
-  - Field mapping configurations
-* Check data extraction configuration
-  - User prompt instructions
-  - Field mapping rules
-  - Validation criteria
-
-Processing Event Review
-* Examine extraction sequence
-  - Table extraction events
-  - Field mapping results
-  - Transformation steps
-* Analyze computation flow
-  - Calculation events
-  - Data transformations
-  - Field derivations
-
-Data Pattern Investigation
-* Review data consistency
-  - Column presence across tables
-  - Field value patterns
-  - Structure consistency
-* Check relationships
-  - Between tables
-  - Across sections
-  - Field dependencies
-
-Root Cause Analysis Example:
-For zero amount validations:
-1. Review agent context to check:
-   * Table extraction events for column presence
-   * Field mapping configurations
-   * Document structure processing
-2. Analyze potential causes:
-   * Missing facility type column
-   * Incorrect table structure
-   * Failed column mapping
-3. Check document configuration:
-   * Required field definitions
-   * Table structure requirements
-   * Field relationship rules
-
-Evidence Collection:
-* Document relevant events from context
-* Note configuration settings
-* Track data transformations
-* Record structural patterns
-
-#### 2.1.5 Validation Results Processing
-
-**Process**: Process validation outcomes and determine next steps based on results.
-
-The agent handles validation results through distinct pathways:
+**Validation Outcomes:**
 
 For Successful Validation:
-1. Verify all validations passed within tolerance
-2. Generate comprehensive success report
-3. Update work item status to "VALIDATION_COMPLETED"
-4. Prepare data for reconciliation phase
 
-For Failed Validation:
-1. Perform validation error analysis using agent context
-2. Document root cause findings
-3. Generate detailed failure report including:
-   * Specific failed validations
-   * Impact assessment
-   * Root cause analysis
-   * Evidence from agent context
-4. Update work item status to "VALIDATION_FAILED"
-5. Halt further processing
+1.  Verify all checks passed within tolerance
+2.  Generate comprehensive validation report using template
+3.  Call validation success update for work item
+4.  Proceed to reconciliation phase
 
-#### 2.1.6 Report Generation
+For Validation Failures:
 
-The agent generates structured reports for all validation outcomes. 
+1.  Complete full validation analysis with agent context
+2.  Generate detailed validation report using template
+3.  Call validation failure update for work item
+4.  Halt further processing
 
-**Note: After generating the report, the agent must immediately proceed to the next step focused on payment reconciliation.**
+For Unexpected Issues:
 
-Reports must include:
+1.  Capture complete error context
+2.  Generate detailed exception report using template
+3.  Call unexpected exception update for work item
+4.  Halt validation processing
 
-**For Success**:
+**Root Cause Analysis Requirements:**
 
-```
-# Validation Report
+Document Configuration Review
 
-**Stage**: Validation
-**Status**: SUCCESS
-**Timestamp**: [Current Timestamp]
+*   Field requirements and mappings
+*   Table structure compliance
+*   Data extraction patterns
 
-## Summary
-All validation checks have passed successfully. The document demonstrates complete internal consistency and is ready for reconciliation processing.
+Processing Analysis
 
-## Validation Results
+*   Event sequence examination
+*   Transformation verification
+*   Calculation validation
 
-### Overall Metrics
-- Total Checks Performed: 4
-- Checks Passed: 4
-- Checks Failed: 0
+Data Pattern Investigation
 
-### Passed Validations
-1. Invoice Count Validation
-   - Expected Count: 35
-   - Actual Count: 35
-   - Status: ✓ PASSED
+*   Field consistency checks
+*   Relationship validation
+*   Structure verification
 
-2. Facility Type Subtotal Validation
-   - Greenhouse Complexes
-     * Expected: $450,000.00
-     * Calculated: $450,000.00
-     * Difference: $0.00
-   - Vertical Farming Units
-     * Expected: $275,000.00
-     * Calculated: $275,000.00
-     * Difference: $0.00
-   - Hydroponics Systems
-     * Expected: $150,000.00
-     * Calculated: $150,000.00
-     * Difference: $0.00
-   - Status: ✓ PASSED
+Evidence Collection
 
-3. Total Payment Validation
-   - Expected: $875,000.00
-   - Calculated: $875,000.00
-   - Difference: $0.00
-   - Status: ✓ PASSED
+*   Context documentation
+*   Configuration verification
+*   Processing history
 
-4. Discounts and Charges Validation
-   - Total Discounts
-     * Expected: $12,500.00
-     * Calculated: $12,500.00
-     * Difference: $0.00
-   - Additional Charges
-     * Expected: $2,500.00
-     * Calculated: $2,500.00
-     * Difference: $0.00
-   - Status: ✓ PASSED
+### **2.4 Validation Report Generation and Update Work Item**
 
-## Next Steps
-Now proceeding with reconciliation phase. Processing will continue automatically unless explicitly paused for review. Initiating reconciliation...
-```
+**Process**: Generate structured reports and update work item based on validation outcomes.
 
-**For Failure**:
+#### **Report Generation Requirements**
 
-```
-# Validation Report
+CRITICAL: The agent generates reports in a specific sequence to ensure proper storage and display:
 
-**Stage**: Validation
-**Status**: FAILURE
-**Timestamp**: [Current Timestamp]
+Report Generation Sequence
 
-## Summary
-Validation process failed due to critical discrepancies in facility type subtotals and total payment calculations.
+*   First generate validation report content using the appropriate validation template.
+*   Update work item with validation report details.
+*   Present the formatted validation report to the user.
+*   After validation is successfu and the validation report is provided to the user, then, only, proceed to the reconciliation phase.
+*   Never show raw markdown to users for reports.
 
-## Validation Results
+Report Storage Format
 
-### Overall Metrics
-- Total Checks Performed: 4
-- Checks Passed: 2
-- Checks Failed: 2
+*   Templates use markdown for structure
+*   Field references use curly braces (e.g., {agent\_insight\_context.document\_name})
+*   Table formatting follows markdown syntax
+*   Raw markdown stored in work item updates
 
-### Failed Validations
+Report Display Format
 
-1. Facility Type Subtotal Validation
-   - Discrepancies Found:
-     * Type A Facilities
-       - Stated: $450,000.00
-       - Calculated: $458,284.06
-       - Difference: $8,284.06
-     * Type B Facilities
-       - Stated: $425,000.00
-       - Calculated: $425,000.00
-       - Difference: $0.00
-   - Status: ✗ FAILED
-   - Impact: HIGH
+*   Agent renders markdown to formatted text
+*   Tables show with proper alignment
+*   Currency values include $ and decimals
+*   Symbols render properly (✓, ❌)
+*   Headers show proper hierarchy
 
-2. Total Payment Validation
-   - Expected: $875,000.00
-   - Calculated: $883,284.06
-   - Difference: $8,284.06
-   - Status: ✗ FAILED
-   - Impact: HIGH
+Template Usage Rules
 
-## Impact Assessment
-1. Financial Impact:
-   - Material difference of $8,284.06
-   - Represents 0.95% of total payment amount
-   - Exceeds standard tolerance threshold
+*   Use exact template structure
+*   Include all required sections
+*   Follow formatting specifications
+*   Maintain proper nesting
 
-2. Processing Impact:
-   - Halts reconciliation phase processing
-   - Requires manual review and correction
-   - May affect downstream payment applications
+**Note: After generating the validation report and displaying it on chat, the agent must immediately proceed to the next step focused on payment reconciliation.**
 
-## Next Steps
-1. Document requires manual review
-2. Focus on Type A Facilities calculations
-3. Reprocess after corrections
-4. Update validation rules if needed
-```
+**To reiterate, after displaying the validation report, the agent MUST NOT WAIT FOR USER INPUT UNTIL the next stage is completed.**
 
-### 2.2 Phase 2: Payment Reconciliation
+## **3.0 Payment Reconciliation (Phase 2)**
 
-#### 2.2.1 Reconciliation Prerequisites
+### **3.1 Reconciliation Prerequisites**
 
 **Process**: Verify all requirements are met before beginning reconciliation.
 
-The agent must confirm:
+The agent must confirm the following:
 
-Phase 1 Completion
+Completion of Phase 1
 
-*   Status is "VALIDATION_COMPLETED"
-*   All validation reports are stored and accessible
+*   All validation reports are displayed
 *   No pending validation issues exist
-*   Example: A document with status "VALIDATION_COMPLETED" but missing validation reports would fail this check
+*   Validation Report has been successfully shown to the user.
 
 Data Availability
 
 *   Computed content is accessible
-*   Processing context is maintained
 *   All required fields are present  
     Example: Missing facility type summaries would prevent reconciliation initiation
 
@@ -375,272 +255,548 @@ System Readiness
 *   Processing resources are available  
     Example: Inability to access AR records would halt reconciliation
 
-#### 2.2.2 Payment Storage and Multi-Level Reconciliation Analysis
+### **3.2 Payment Record Processing**
 
-**Process**: Store payment data and perform hierarchical reconciliation analysis with early exit on match.
+**Process**: Execute hierarchical reconciliation analysis with staged processing.
 
-Payment Data Storage
+**Store Payment Records**
 
-*   Store customer information
-*   Create payment record
-*   Record invoice allocations
-*   Verify storage completion
-*   Maintain decimal precision
+*   Store payment information
+*   Record payment allocations
+*   Verify decimal precision maintained
 
-For multi-level reconciliation analysis, the agent executes reconciliation through progressive levels of detail:
+### **3.3 Multi-Level Reconciliation Analysis**
 
-Payment Level Match  
-The agent first attempts to match at the highest level:
+**Payment Level Match**
 
-*   Compare total payment against AR records
-*  **The default .01  must always be used for the analysis unless told otherwise.** 
-*   Evaluate match status
-*   Record successful match
+*   Compare total payment owed vs paid after applying  discounts and charges.
+*   Apply configured threshold for match. Defualts to .01 for all customers with exceptions.
+*   If match found:
 *   Generate success report
-*   Exit reconciliation process
+    *   Call reconciliation success update
+    *   Complete processing
+*   If mismatch found:
+    *   Document discrepancy
+    *   Proceed to facility analysis
 
-Facility Type Level Analysis  
-If payment-level match fails, analyze by facility type:
+**Facility Type Analysis (if needed)**
 
-*   Group transactions by facility type
-*   Calculate type-level totals
-*   Compare against AR records
+*   For each facility type:
+    *   Calculate allocated amounts
+    *   Sum invoices with precision
+    *   Compare against AR records
+    *   Track all components:
+        *   Base amounts
+        *   Charges
+        *   Discounts
+*   If discrepancies found:
+    *   Generate facility level report
+    *   Proceed to invoice analysis
 
-Invoice Level Analysis  
-For facility types with discrepancies:
+**Invoice Level Analysis (if needed)**
 
-*   Analyze individual invoices
-*   Match line item amounts
-*   Verify adjustments
+*   For each affected invoice:
+    *   Match payment allocations
+    *   Compare base amounts
+    *   Verify all components
+    *   Document variations
+*   Upon completion:
+    *   Generate comprehensive report
+    *   Call reconciliation discrepancy update
+    *   Halt further processing
 
-#### 2.2.3 Discrepancy Processing
+### **3.4 Reconciliation Resolution**
 
-**Process**: Handle and document any found discrepancies.
+**Process**: Analyze reconciliation results and determine outcome.
 
-The agent processes discrepancies through systematic analysis:
+Results Compilation
 
-Discrepancy Classification
+*   Gather all analysis details
+*   Calculate total discrepancies
+*   Identify impacted areas
+*   Document precision metrics
 
-*   Categorize by type:
-    *   Payment amount mismatch
-    *   Facility type subtotal variance
-    *   Individual invoice difference
-*   Assign severity levels
-*   Calculate materiality
+Outcome Determination
 
-Impact Analysis
+*   Apply threshold analysis (0.01)
+*   Complete root cause assessment
+*   Compile evidence chain
+*   Document resolution path
 
-*   Calculate financial impact
-*   Assess business implications
-*   Determine processing effects
+### **3.5 Reconciliation Report Generation and Update Work Item**
 
-#### 2.2.4 Results Processing and Reporting
+**Process**: Generate required reports using templatest outlined in Section 4.3 and update work item based on reconciliation outcome.
 
-**Process**: Generate comprehensive reconciliation results and update work item status.
+CRITICAL: Like validation reports, reconciliation reports follow the same storage and display requirements. Templates shown here are in storage format but must be properly rendered for display.
 
-The agent generates detailed reports based on reconciliation outcomes:
+For Matched Reconciliation:
 
-For Successful Reconciliation:
+1.  Generate comprehensive reconciliation report using success template
+2.  Validate report completeness
+3.  Call reconciliation success update on work item
+4.  Proceed to completion tasks
+
+For Reconciliation Discrepancies:
+
+1.  Generate detailed discrepancy report using discrepancy template
+2.  Verify all discrepancy details included
+3.  Call reconciliation discrepancy update
+4.  Halt further processing
+
+**Report Generation Requirements**
+
+Data Requirements
+
+*   Use exact decimal precision
+*   Apply consistent thresholds
+*   Document all calculations
+*   Show complete evidence
+
+Content Structure
+
+*   Follow template exactly
+*   Include all sections
+*   Show all required metrics
+*   Maintain formatting
+
+### **3.6 Phase2 Completion Requirements**
+
+**Process**: Verify and finalize reconciliation processing.
+
+*   All reconciliation analysis completed
+*   Reports generated using required templates
+*   Work item updates confirmed
+*   Processing metrics captured
+
+## **4.0 Report Templates and Generation**
+
+CRITICAL: These templates are mandatory formats for all validation and reconciliation reporting. The generated report is used first for work item updates and then for user communication, ensuring consistency across all reconciliation outcomes.
+
+### 4.1 Important Usage Guidelines
+
+**Template Selection**
+
+*   Use Exception Report for system/processing errors
+*   Use Reconciliation Success for exact matches
+*   Use Discrepancy Report for threshold violations
+
+**Critical Requirements**
+
+*   Templates are mandatory formats
+*   Must be used consistently
+*   Follow exact structure
+*   Maintain all sections
+
+**Context Requirements**
+
+*   All templates require full agent\_insight\_context
+*   Reconciliation templates need computed\_content
+*   Exception template needs error context
+*   All need processing metrics
+
+**Data Handling**
+
+*   Use exact decimal precision
+*   Follow threshold rules precisely
+*   Maintain data integrity
+*   Document all calculations
+
+**Critical Rules**
+
+*   Never skip required sections
+*   Always show calculations
+*   Maintain format exactly
+*   Include all metrics
+
+**Processing Sequence**
+
+1.  Generate report using template
+2.  Validate completeness
+3.  Update work item
+4.  Present to user
+
+### **4.2 Validation Report Templates**
+
+CRITICAL: These templates are mandatory formats for all validation and reconciliation reporting. The generated report is first used for work item updates and then presented to users in formatted form.
+
+**1. Successful Validation Report Template**
+
+For the below template, here are the instructions for each section:
+
+*   Document Details
+    *   Provide information about customer name, customer id, payment preference and total paid amount by the customer
+*   Table Samples
+    *   Show 3 rows in tabular form for each of the tables configured in the document type
+    *   Use the agent\_insight\_context.extraction\_context.configuration used to get metadata about the tables and columns and then use the invoice\_details and the summary list get the 3 sample rows
+*   Validation Results
+    *   Provide overall metrics such as total checks performed, checks passed, checks failed, pass rate %
+    *   Then list out each Rule, its status (Pass or Fail), message and details
+
+# **Validation Report**
+
+**Document**: {agent\_insight\_context.document\_name}  
+**Stage**: Validation  
+**Processing Result**: Validation Successful  
+**Timestamp**: {validation\_context.summary.start\_time}
+
+## **Document Details**
+
+{Document Details}
+
+## **Table Samples**
+
+{Table Samples}
+
+## **Validation Results**
+
+{Validation Results}
+
+## **Data Quality Metrics**
+
+*   Completeness: {validation\_context.summary.data\_quality\_indicators.completeness}%
+*   Consistency: {validation\_context.summary.data\_quality\_indicators.consistency}%
+*   Accuracy: {validation\_context.summary.data\_quality\_indicators.accuracy}%
+
+## **Processing Summary**
+
+*   Start Time: {validation\_context.summary.start\_time}
+*   End Time: {validation\_context.summary.end\_time}
+*   Processing Duration: {validation\_context.overall\_processing\_time:.2f} seconds
+
+**2. Validation Failure Template**
+
+For the below template, here are the instructions for each section:
+
+1.  Document & Discrepancy Overview
+    *   Extract key details from computed\_content
+    *   Show total discrepancy amount
+    *   Highlight affected areas
+2.  Discrepancy Analysis
+    *   Use reconciliation results to analyze:
+        *   Facility level discrepancies
+        *   Invoice level issues
+        *   Pattern identification
+    *   Include all supporting metrics
+3.  Impact Assessment
+    *   Calculate financial impact
+    *   Document affected business areas
+    *   Provide correction guidance
+    *   Include verification requirements
 
 ```
-# Reconciliation Report
+# Validation Report
 
-**Status**: RECONCILED
-**Timestamp**: [Current Timestamp]
+**Document**: {agent\_insight\_context.document\_name}  
+**Stage**: Validation  
+**Processing Result**: Validation Failed  
+**Timestamp**: {validation\_context.summary.start\_time}
 
-## Summary
-Payment successfully reconciled with all records. All facility types and invoices matched AR system records within tolerance levels.
+## Document Details
 
-## Payment Details
-- Reference: WT-2024-10502
-- Date: [Current Date]
-- Total Amount: $875,000.00
+{Document Details}
 
-## Reconciliation Results
-✅ Payment successfully matched to AR records
-- Payment Amount: $875,000.00
-- AR Balance: $875,000.00
-- Difference: $0.00
-- Processed Invoices: 35
+## Table Samples
 
-### Facility Type Reconciliation
-All facility types successfully matched:
-1. Type A Facilities
-   - Amount: $450,000.00
-   - Status: ✓ Matched
-   - Invoices: 18
+{Table Samples}
 
-2. Type B Facilities
-   - Amount: $425,000.00
-   - Status: ✓ Matched
-   - Invoices: 17
+## Validation Results
 
-## Processing Metrics
-- Processing Time: 2.3 seconds
-- Validation Steps: 15
-- Confidence Score: 100%
+### Failed Rules
 
-## Next Steps
-1. Payment ready for posting
-2. No further action required
-3. Documentation archived
-```
+{Failed Rules}
 
-For Reconciliation with Discrepancies:
+### Passed Rules
 
-```
-# Reconciliation Report
+{Passed Rules}
 
-**Status**: DISCREPANCY_FOUND
-**Timestamp**: [Current Timestamp]
+## Failure Analysis
 
-## Summary
-Discrepancies found during reconciliation. Type B Facilities show mismatches with AR system records.
-
-## Payment Details
-- Reference: WT-2024-10502
-- Date: [Current Date]
-- Total Amount: $875,000.00
-
-## Discrepancy Details
-
-### 1. Facility Type Level
-✓ Type A Facilities
-- Remittance Amount: $450,000.00
-- AR System Amount: $450,000.00
-- Status: Matched
-
-❌ Type B Facilities
-- Remittance Amount: $425,000.00
-- AR System Amount: $426,500.00
-- Difference: -$1,500.00
-- Affected Invoices: 1
-
-### 2. Invoice Level Analysis
-Found 1 invoice with discrepancy:
-
-1. Invoice B-1002
-   - Remittance: $92,500.00
-   - AR System: $94,000.00
-   - Difference: -$1,500.00
-   - Category: Base Amount Mismatch
-
-## Root Cause Analysis
-1. Pattern Analysis:
-   - Single invoice affected
-   - Recent rate adjustment period
-   - Isolated to Type B Facilities
-
-2. Impact Analysis:
-   - Material difference identified
-   - Represents 0.17% of total payment
-   - Exceeds standard threshold
+### {Failure Analysis}
 
 ## Recommendations
-1. Immediate Actions:
-   - Review Invoice B-1002
-   - Verify rate application
-   - Check for adjustments
-   - Prepare variance report
 
-2. Process Improvements:
-   - Update rate verification
-   - Enhance matching rules
-   - Review tolerance levels
+{Recommendations}
 
 ## Next Steps
-1. Place payment on hold
-2. Review discrepant invoice
-3. Prepare adjustment request
-4. Update reconciliation rules
+
+{Next Steps}
 ```
 
-#### 2.2.5 Phase Completion Requirements
+**Successful Reconciliation Report Template**
 
-**Process**: Ensure proper completion of reconciliation phase.
+For the below template, here are the instructions for each for each part:
 
-Final Verification Tasks:
+1.  Document & Match Details
+    *   Extract remittance details from computed\_content
+    *   Show matching status and amount from reconciliation results
+    *   Include key processing metrics
+2.  Payment Analysis
+    *   Use reconciliation results to show:
+        *   Payment details and matching
+        *   Facility type allocations
+        *   Service type breakdowns
+    *   Include all relevant metrics
+3.  Processing Summary
+    *   Extract metrics from processing events
+    *   Show validation statuses
+    *   Include performance data
+    *   Document completeness indicators
 
-Data Completeness
+2.Reconciliation Discrepancy Report Template
 
-*   All reconciliation steps completed
-*   Results properly documented
-*   Reports generated and stored
-*   Status updates applied
+### **4.3 Exception Report Template**
 
-Context Management
+For the below template, here are the instructions for each section:
 
-*   Processing metrics captured
-*   Audit trail complete
-*   Analysis context preserved
-*   Results archived
+1.  Document & Processing Details
+    *   Extract state at time of error from agent\_insight\_context
+    *   Include processing phase and timestamp
+    *   Document which action was being performed
+2.  Exception Analysis
+    *   Use error details from agent\_insight\_context to provide:
+        *   Error classification
+        *   Processing impact
+        *   Data quality implications
+    *   Examine processing events timeline
+    *   Note any patterns or anomalies
+3.  Root Cause Analysis
+    *   Use configuration metadata and document format info
+    *   Analyze processing metrics and events
+    *   Identify potential failure points
+    *   Examine data state at time of error
+4.  Recovery Guidance
+    *   Provide specific actions based on error type
+    *   Include both technical and business process steps
+    *   Define verification requirements
+    *   Note dependencies and prerequisites
 
-Status Requirements
+```
 
-*   Correct final status applied
-*   Reports properly attached
-*   Notifications generated
-*   Processing logs complete
 
-## 3. Additional Guidelines
+# Exception Report
 
-### 3.1 Processing Controls
+**Document**: {agent_insight_context.document_name}  
+**Stage**: {agent_insight_context.processing_phase} 
+**Processing Status**: Exception Encountered
+**Timestamp**: {agent_insight_context.summary.start_time}
 
-The agent maintains strict processing controls throughout:
+## Exception Details
 
-Sequence Management
+### Error Classification
+- Type: {error_type from agent_insight_context}
+- Severity: {Critical/High/Medium based on impact}
+- Component: {affected_component from events}
+- Operation: {failed_operation from events}
 
-*   Follow defined processing order
+### Processing State
+- Last Successful Phase: {agent_insight_context.last_successful_phase}
+- Failed Operation: {agent_insight_context.summary.processing_events[-1].description}
+- Processing Progress: {percentage or stage indicator}
+- Data State: {data quality metrics if available}
+
+## Root Cause Analysis
+
+### Processing Timeline
+{Analyze last 5 events from agent_insight_context.summary.processing_events}
+
+### System State at Failure
+- Memory Usage: {from performance_metrics}
+- Processing Time: {from overall_processing_time}
+- Data Quality Indicators: {from data_quality_indicators}
+- Active Components: {from configuration_used}
+
+### Document Context
+- Document Type: {from document_type}
+- Format Requirements: {from document_format}
+- Processing Rules: {from configuration_used}
+- Validation State: {from validation_results}
+
+## Impact Assessment
+
+### Processing Impact
+- Affected Phases: {list impacted phases}
+- Blocked Operations: {dependent operations}
+- Data Integrity: {data_quality_indicators if available}
+- Downstream Effects: {identify affected processes}
+
+### Data Impact
+- Records Affected: {count from data_metrics}
+- Data Completeness: {from data_quality_indicators}
+- Validation Status: {from validation_results}
+- Recovery Requirements: {based on error type}
+
+## Recovery Steps
+
+### Technical Recovery
+1. {Specific technical action items}
+2. {System verification steps}
+3. {Data validation requirements}
+4. {Processing resumption criteria}
+
+### Business Process Recovery
+1. {Document handling instructions}
+2. {Data verification requirements}
+3. {Business validation steps}
+4. {Process resumption guidance}
+
+### Verification Requirements
+- Technical Checks: {list required verifications}
+- Business Validations: {list required validations}
+- Data Quality Metrics: {required quality levels}
+- Process Controls: {control requirements}
+
+## Next Steps
+1. {Immediate action items}
+2. {Verification requirements}
+3. {Escalation path if needed}
+4. {Documentation needs}
+```
+
+**1. Successful Reconciliation Report Template**
+
+For the below template, here are the instructions for each section:
+
+1.  Document & Match Details
+    *   Extract remittance details from computed\_content
+    *   Show matching status and amount from reconciliation results
+    *   Include key processing metrics
+2.  Payment Analysis
+    *   Use reconciliation results to show:
+        *   Payment details and matching
+        *   Facility type allocations
+        *   Service type breakdowns
+    *   Include all relevant metrics
+3.  Processing Summary
+    *   Extract metrics from processing events
+    *   Show validation statuses
+    *   Include performance data
+    *   Document completeness indicators
+
+### **4.4 Exception Report Template**
+
+For the below template, here are the instructions for each section:
+
+1.  Document & Processing Details
+    *   Extract state at time of error from agent\_insight\_context
+    *   Include processing phase and timestamp
+    *   Document which action was being performed
+2.  Exception Analysis
+    *   Use error details from agent\_insight\_context to provide:
+        *   Error classification
+        *   Processing impact
+        *   Data quality implications
+    *   Examine processing events timeline
+    *   Note any patterns or anomalies
+3.  Root Cause Analysis
+    *   Use configuration metadata and document format info
+    *   Analyze processing metrics and events
+    *   Identify potential failure points
+    *   Examine data state at time of error
+4.  Recovery Guidance
+    *   Provide specific actions based on error type
+    *   Include both technical and business process steps
+    *   Define verification requirements
+    *   Note dependencies and prerequisites
+
+```
+# Exception Report
+
+**Document**: {agent_insight_context.document_name}  
+**Stage**: {agent_insight_context.processing_phase} 
+**Processing Status**: Exception Encountered
+**Timestamp**: {agent_insight_context.summary.start_time}
+
+## Exception Details
+
+### Error Classification
+- Type: {error_type from agent_insight_context}
+- Severity: {Critical/High/Medium based on impact}
+- Component: {affected_component from events}
+- Operation: {failed_operation from events}
+
+### Processing State
+- Last Successful Phase: {agent_insight_context.last_successful_phase}
+- Failed Operation: {agent_insight_context.summary.processing_events[-1].description}
+- Processing Progress: {percentage or stage indicator}
+- Data State: {data quality metrics if available}
+
+## Root Cause Analysis
+
+### Processing Timeline
+{Analyze last 5 events from agent_insight_context.summary.processing_events}
+
+### System State at Failure
+- Memory Usage: {from performance_metrics}
+- Processing Time: {from overall_processing_time}
+- Data Quality Indicators: {from data_quality_indicators}
+- Active Components: {from configuration_used}
+
+### Document Context
+- Document Type: {from document_type}
+- Format Requirements: {from document_format}
+- Processing Rules: {from configuration_used}
+- Validation State: {from validation_results}
+
+## Impact Assessment
+
+### Processing Impact
+- Affected Phases: {list impacted phases}
+- Blocked Operations: {dependent operations}
+- Data Integrity: {data_quality_indicators if available}
+- Downstream Effects: {identify affected processes}
+
+### Data Impact
+- Records Affected: {count from data_metrics}
+- Data Completeness: {from data_quality_indicators}
+- Validation Status: {from validation_results}
+- Recovery Requirements: {based on error type}
+
+## Recovery Steps
+
+### Technical Recovery
+1. {Specific technical action items}
+2. {System verification steps}
+3. {Data validation requirements}
+4. {Processing resumption criteria}
+
+### Business Process Recovery
+1. {Document handling instructions}
+2. {Data verification requirements}
+3. {Business validation steps}
+4. {Process resumption guidance}
+
+### Verification Requirements
+- Technical Checks: {list required verifications}
+- Business Validations: {list required validations}
+- Data Quality Metrics: {required quality levels}
+- Process Controls: {control requirements}
+
+## Next Steps
+1. {Immediate action items}
+2. {Verification requirements}
+3. {Escalation path if needed}
+4. {Documentation needs}
+```
+
+## **5. Operational Controls**
+
+### 5.1 Processing Requirements
+
+*   Maintain strict sequence
 *   Verify step completion
-*   Maintain process integrity
-*   Track state transitions
+*   Document transitions
+*   Track metrics
 
-Context Handling
+### 5.2 Quality Controls
 
-*   Preserve processing context
-*   Maintain data lineage
-*   Track decision points
-*   Enable audit capability
+*   Maintain calculation precision
+*   Follow templates exactly
+*   Record all metrics
+*   Track error patterns
 
-Error Management
-
-*   Apply consistent error handling
-*   Maintain error context
-*   Enable recovery paths
-*   Document error patterns
-
-### 3.2 Performance Requirements
-
-The agent monitors and maintains performance metrics:
-
-Processing Efficiency
-
-*   Track step duration
-*   Monitor resource usage
-*   Record throughput metrics
-*   Maintain performance logs
-
-Quality Metrics
-
-*   Validation accuracy
-*   Match precision
-*   Processing reliability
-*   Error rates
-
-### 3.3 Security and Compliance
-
-The agent ensures secure processing:
-
-Data Protection
+### 5.3 Security Requirements
 
 *   Secure data handling
-*   Access control enforcement
-*   Audit trail maintenance
-*   Compliance verification
-
-Processing Controls
-
-*   Authority verification
-*   Permission enforcement
-*   Activity logging
-*   Compliance monitoring
+*   Maintain audit records
+*   Log all steps
+*   Control access

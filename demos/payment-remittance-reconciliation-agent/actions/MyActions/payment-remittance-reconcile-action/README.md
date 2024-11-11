@@ -1,144 +1,127 @@
-# Payment Remittance Validation Action
+# Payment Remittance Reconciliation Actions
 
 ## Overview
 
-The Payment Remittance Validation Action represents the first phase of document processing in the Worker Agent framework. This component ensures data integrity through comprehensive validation of extracted document content, enforcing business rules and preparing data for reconciliation.
+The Payment Remittance Reconciliation Action represents the core reconciliation phase of the Worker Agent, demonstrating advanced document-centric workflow automation. This component handles the complex task of matching payment remittances against accounts receivable records with precise financial calculations and comprehensive discrepancy analysis.
 
 ## Architecture
 
 ```
-payment-remittance-validate-action/
-├── validation/
-│   ├── validation_processor.py        # Core validation logic
-│   └── validation_constants.py        # Validation rules and thresholds
-├── context/
-│   └── validate_agent_context_manager.py  # Processing context
-├── models/
-│   └── validate_models.py            # Validation data models
-└── utils/
-    ├── extraction/                   # Data extraction utilities
-    └── validation/                   # Validation helpers
+payment-remittance-reconcile-action/
+├── reconciliation_ledger/              # Core reconciliation engine
+│   ├── db/                            # Database management
+│   ├── services/                      # Business logic services
+│   └── test_generators/               # Test case generation
+├── context/                           # Context management
+├── models/                            # Data models
+└── utils/                             # Utility functions
 ```
 
 ## Key Components
 
-### 1. Validation Processor
-Implements the three-stage validation pipeline:
+### 1. Reconciliation Ledger
+Core financial processing engine:
 
+- **Database Management**
+  - DuckDB/Neo4j integration 
+  - Exact decimal handling
+  - Transaction integrity
+  - Data persistence
+
+- **Services**
+  - Payment processing
+  - Multi-level reconciliation
+  - Discrepancy detection
+  - Report generation
+
+### 2. Multi-Level Reconciliation Analysis
+
+The reconciliation process follows a hierarchical approach:
+
+1. **Payment Level**
    ```python
-class ValidationProcessor:
-    def extract_and_structure_content(self, raw_content) -> ExtractionResult:
+   def analyze_payment_level(self, payment_data: Dict) -> MatchResult:
        """
-        Stage 1: Extract and structure document content
+       Performs top-level payment matching with early exit on success.
        """
-        pass
+       payment_amount = self._parse_monetary_value(payment_data['total_payment'])
+       ar_balance = self._calculate_ar_balance(payment_data['customer_id'])
        
-    def transform_and_enrich_content(self, extracted_content) -> TransformationResult:
-       """
-        Stage 2: Transform and enrich extracted data
-       """
-        pass
-       
-    def validate_and_finalize_content(self, transformed_content) -> ValidationFinalResult:
-       """
-        Stage 3: Validate transformed content against business rules
-       """
-        pass
+       if abs(payment_amount - ar_balance) <= self.threshold:
+           return MatchResult(status="SUCCESS", difference=Decimal('0.00'))
    ```
 
-### 2. Validation Rules
+2. **Facility Level**
+   ```python
+   def analyze_facility_level(self, payment_id: str) -> List[FacilityDiscrepancy]:
+       """
+       Analyzes discrepancies at facility type level.
+       """
+       facility_totals = self._calculate_facility_totals(payment_id)
+       ar_facility_totals = self._get_ar_facility_totals(payment_id)
+       
+       return self._compare_facility_totals(facility_totals, ar_facility_totals)
+   ```
 
-Core validation checks include:
+3. **Invoice Level**
+   ```python
+   def analyze_invoice_level(self, facility_discrepancies: List[FacilityDiscrepancy]) -> List[InvoiceDiscrepancy]:
+       """
+       Performs detailed invoice-level analysis for facilities with discrepancies.
+       """
+       invoice_discrepancies = []
+       for facility in facility_discrepancies:
+           invoices = self._get_facility_invoices(facility.facility_id)
+           discrepancies = self._analyze_invoices(invoices)
+           invoice_discrepancies.extend(discrepancies)
+       return invoice_discrepancies
+   ```
 
-1. **Invoice Count Validation**
+
+## Usage
+
+### Basic Reconciliation Flow
+
 ```python
-def validate_invoice_count(self, content: Dict) -> ValidationResult:
-    """Verify total invoice count matches line items."""
-    stated_count = int(content['fields']['Total Invoices'])
-    actual_count = len(content['invoice_details'])
-    
-    return ValidationResult(
-        passed=(stated_count == actual_count),
-        difference=abs(stated_count - actual_count)
-    )
-```
+from reconciliation_ledger.invoice_loader import InvoiceLoader
+from invoice_reconciliation_service import InvoiceReconciliationLedgerService
 
-2. **Facility Type Subtotal Validation**
-```python
-def validate_facility_subtotals(self, content: Dict) -> ValidationResult:
-    """Verify facility type subtotals match sum of invoices."""
-    for facility_type, subtotal in content['summary']:
-        calculated_total = self._calculate_facility_total(
-            content['invoice_details'], 
-            facility_type
-        )
-        if abs(subtotal - calculated_total) > self.threshold:
-            return ValidationResult(
-                passed=False,
-                difference=abs(subtotal - calculated_total)
+# Initialize services
+loader = InvoiceLoader()
+service = InvoiceReconciliationLedgerService(config, context_manager)
+
+# Perform reconciliation
+result = service.analyze_payment_reconciliation(
+    payment_reference="WIRE2024100502",
+    threshold=Decimal('0.01')
 )
+
+# Process results
+if result.status == "MATCHED":
+    service.process_successful_match(result)
+else:
+    service.handle_discrepancies(result)
 ```
 
-3. **Total Payment Amount Validation**
+### Handling Discrepancies
+
 ```python
-def validate_total_payment(self, content: Dict) -> ValidationResult:
-    """Verify total payment matches sum of invoice payments."""
-    stated_total = self._parse_monetary_value(
-        content['fields']['Total Payment Paid']
-    )
-    calculated_total = self._calculate_total_payments(
-        content['invoice_details']
+def handle_discrepancies(self, result: ReconciliationResult):
+    """
+    Process discrepancies found during reconciliation.
+    """
+    # Generate detailed report
+    report = self.generate_discrepancy_report(result)
+    
+    # Update work item status
+    self.update_work_item_status(
+        status="DISCREPANCY_FOUND",
+        details=report
     )
     
-    return ValidationResult(
-        passed=abs(stated_total - calculated_total) <= self.threshold,
-        difference=abs(stated_total - calculated_total)
-    )
+    # Notify relevant teams
+    self.send_notifications(result)
 ```
 
-## Validation Reports
     
-### Success Report
-```markdown
-# Validation Report
-
-**Status**: SUCCESS
-**Document**: FirstRite Agriculture Association - Wire Transfer Payment.pdf
-**Timestamp**: 2024-10-22T14:30:27.891234
-
-## Results
-- All validation checks passed
-- Processed invoices: 42
-- Total amount: $2,636,905.41
-
-## Validation Metrics
-- Field completion: 100%
-- Numeric precision: 100%
-- Business rule compliance: 100%
-```
-
-### Failure Report
-```markdown
-# Validation Report
-
-**Status**: FAILURE
-**Document**: FirstRite Agriculture Association - Wire Transfer Payment.pdf
-**Timestamp**: 2024-10-22T14:30:27.891234
-
-## Failed Validations
-1. Facility Type Subtotals
-   - Expected: $820,112.06
-   - Calculated: $828,396.12
-   - Difference: $8,284.06
-
-2. Total Payment
-   - Expected: $2,636,905.41
-   - Calculated: $2,645,189.47
-   - Difference: $8,284.06
-
-## Impact Assessment
-- Material difference detected
-- Affects: Greenhouse Complexes facility type
-- 0.31% total payment variance
-```
 
