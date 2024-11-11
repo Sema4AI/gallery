@@ -22,7 +22,7 @@ class InvoiceReconciliationLedgerService:
         self.logger = logging.getLogger(__name__)
         self.context_manager = context_manager
         self.loader = InvoiceLoader(config.get('db_path'))
-        
+
     def store_payment_with_allocations(
         self,
         payment_data: Dict[str, Any],
@@ -63,12 +63,12 @@ class InvoiceReconciliationLedgerService:
                     # Create allocation
                     allocation = self._create_allocation_record(
                         conn, customer_id, payment_id, {
-                        **invoice,
-                        'Amount Paid': float(amount_paid),
-                        'Invoice Amount': float(invoice_amount),
-                        'Discounts Applied': float(discounts),
-                        'Additional Charges': float(charges)
-                    }
+                            **invoice,
+                            'Amount Paid': float(amount_paid),
+                            'Invoice Amount': float(invoice_amount),
+                            'Discounts Applied': float(discounts),
+                            'Additional Charges': float(charges)
+                        }
                     )
                     allocation_results.append(allocation)
                     
@@ -77,7 +77,7 @@ class InvoiceReconciliationLedgerService:
                     if facility_type not in facility_totals:
                         facility_totals[facility_type] = Decimal('0')
                     facility_totals[facility_type] += amount_paid
-                
+
                 # Convert facility totals to float with proper rounding
                 facility_totals_float = {
                     k: float(v.quantize(Decimal('0.01')))
@@ -99,7 +99,7 @@ class InvoiceReconciliationLedgerService:
         except Exception as e:
             self.logger.error(f"Error storing payment: {str(e)}", exc_info=True)
             raise
-        
+
     def analyze_payment_reconciliation(
         self,
         payment_reference: str,
@@ -107,7 +107,7 @@ class InvoiceReconciliationLedgerService:
     ) -> ReconciliationResult:
         """Analyze payment reconciliation with proper match status tracking."""
         try:
-        with self.loader.get_connection() as conn:
+            with self.loader.get_connection() as conn:
                 # Get basic payment info
                 payment = self._get_payment_info(conn, payment_reference)
                 customer_payment = payment['total_payment']
@@ -135,7 +135,7 @@ class InvoiceReconciliationLedgerService:
                     # Calculate net AR amount
                     ar_net = DecimalHandler.round_decimal(ar_gross - discounts)
                     difference = DecimalHandler.round_decimal(remit_amount - ar_net)
-            
+                    
                     if abs(difference) > threshold:
                         all_matched = False  # Set to False if any discrepancy found
                         discrepancy_details.append(InvoiceDiscrepancyDetail(
@@ -147,10 +147,10 @@ class InvoiceReconciliationLedgerService:
                             ar_amount=ar_net,
                             difference=difference
                         ))
-            
+
                 # Calculate facility summaries
                 facility_summaries = self._calculate_facility_summaries(invoice_data, threshold)
-            
+                
                 # Calculate total difference
                 total_difference = DecimalHandler.round_decimal(customer_payment - total_ar_net)
                 has_discrepancy = abs(total_difference) > threshold
@@ -181,23 +181,23 @@ class InvoiceReconciliationLedgerService:
                     invoice_discrepancies=discrepancy_details if has_discrepancy else None,
                     remittance_fields=self._get_remittance_fields(payment),
                     threshold=threshold
-            )
-            
+                )
+
                 return result
-            
+
         except Exception as e:
             self.logger.error(f"Error in reconciliation: {str(e)}", exc_info=True)
             raise
-            
-        
+
+
     def _calculate_facility_summaries(
-        self,
+        self, 
         invoice_data: List[Dict],
         threshold: Decimal
     ) -> List[FacilityAmountSummary]:
         """Calculate facility summaries using net amounts."""
-            facility_totals = {}
-            
+        facility_totals = {}
+        
         # First pass: aggregate amounts by facility
         for invoice in invoice_data:
             ftype = invoice['facility_type']
@@ -210,7 +210,7 @@ class InvoiceReconciliationLedgerService:
                     'count': 0,
                     'has_discrepancy': False  # Track discrepancies at facility level
                 }
-                
+            
             ft = facility_totals[ftype]
             ft['remit_total'] += invoice['allocated_amount']
             ft['ar_gross'] += invoice['ar_amount']
@@ -238,10 +238,10 @@ class InvoiceReconciliationLedgerService:
                 invoice_count=totals['count'],
                 has_discrepancy=has_discrepancy
             ))
-                
+
         return sorted(summaries, key=lambda x: abs(x.difference), reverse=True)
-                
-                
+    
+    
     def _calculate_processing_metrics(self, invoice_data: List[Dict]) -> Dict[str, Any]:
         """Calculate initial processing metrics."""
         if not invoice_data:
@@ -253,13 +253,13 @@ class InvoiceReconciliationLedgerService:
                 "service_type_count": 0,
                 "all_matched": False  # Default to False if no invoices
             }
-                
+            
         # Get unique facility types
         facility_types = sorted(set(inv['facility_type'] for inv in invoice_data))
-            
+        
         # Get unique service types
         service_types = sorted(set(inv['service_type'] for inv in invoice_data if inv['service_type']))
-            
+        
         return {
             "total_invoices": len(invoice_data),
             "facility_types": facility_types,
@@ -268,9 +268,9 @@ class InvoiceReconciliationLedgerService:
             "service_type_count": len(service_types),
             "all_matched": True  # Initial value, will be updated based on discrepancy checks
         }
-            
-        
-                
+
+
+
     def _get_payment_info(self, conn, payment_reference: str) -> Dict[str, Any]:
         """Get payment information with proper decimal handling."""
         query = """
@@ -294,7 +294,7 @@ class InvoiceReconciliationLedgerService:
         result = conn.execute(query, [payment_reference]).fetchone()
         if not result:
             raise ValueError(f"Payment not found: {payment_reference}")
-                
+            
         return {
             "payment_id": result[0],
             "customer_id": result[1],
@@ -308,32 +308,32 @@ class InvoiceReconciliationLedgerService:
             "customer_name": result[9],
             "remittance_notes": result[10]
         }
-                
+
     def _get_invoice_data(self, conn, payment_id: str) -> List[Dict]:
         """Get invoice data with proper decimal handling."""
         query = """
-                    WITH payment_allocations AS (
-                        SELECT 
-                            i.invoice_number,
-                            i.invoice_id,
-                        f.facility_id,
-                        i.facility_type,
-                        i.service_type,
+            WITH payment_allocations AS (
+                SELECT 
+                    i.invoice_number,
+                    i.invoice_id,
+                    f.facility_id,
+                    i.facility_type,
+                    i.service_type,
                     CAST(pa.amount_applied AS DECIMAL(18, 2)) as allocated_amount,
                     CAST(i.invoice_amount AS DECIMAL(18, 2)) as ar_amount,
-                        CAST(COALESCE(i.discounts_applied, 0) AS DECIMAL(18, 2)) as discounts
+                    CAST(COALESCE(i.discounts_applied, 0) AS DECIMAL(18, 2)) as discounts
                 FROM payment_allocation pa
                 JOIN invoice i ON pa.invoice_id = i.invoice_id
-                    JOIN facility f ON i.internal_facility_id = f.internal_facility_id
+                JOIN facility f ON i.internal_facility_id = f.internal_facility_id
                 WHERE pa.payment_id = ?
-                    )
+            )
             SELECT *
             FROM payment_allocations
             ORDER BY facility_type, invoice_number
         """
-                    
+        
         results = conn.execute(query, [payment_id]).fetchall()
-                
+        
         return [{
             "invoice_number": row[0],
             "invoice_id": row[1],
@@ -344,7 +344,7 @@ class InvoiceReconciliationLedgerService:
             "ar_amount": DecimalHandler.from_str(str(row[6])),         # Gross AR amount
             "discounts": DecimalHandler.from_str(str(row[7]))          # Discounts
         } for row in results]
-                
+
     def _get_remittance_fields(self, payment: Dict) -> RemittanceFields:
         """Create RemittanceFields from payment data."""
         try:
@@ -360,7 +360,7 @@ class InvoiceReconciliationLedgerService:
                 total_charges=payment['total_charges'],
                 bank_account=payment['bank_account'],
                 remittance_notes=payment.get('remittance_notes')
-                )
+            )
         except Exception as e:
             self.logger.error(f"Error creating RemittanceFields: {str(e)}")
             raise ValueError(f"Failed to create RemittanceFields: {str(e)}")
@@ -484,7 +484,7 @@ class InvoiceReconciliationLedgerService:
             "discounts": float(discounts),
             "charges": float(charges)
         }
-
+        
     def _parse_monetary_value(self, value: Any) -> Decimal:
         """Parse monetary values with consistent decimal handling."""
         if isinstance(value, str):
