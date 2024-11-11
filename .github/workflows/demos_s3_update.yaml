@@ -73,7 +73,7 @@ jobs:
               returnCode=$?
 
               if [ $returnCode -ne 0 ]; then
-                echo "Upload of '$dir' agent failed."
+                echo "Upload of '$zip_file' agent failed."
               fi
-
+            fi
           done
