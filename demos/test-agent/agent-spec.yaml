@@ -1,0 +1,40 @@
+agent-package:
+  spec-version: v2
+  agents:
+  - name: Payment Remittance Reconcilliation Agent
+    description: The Payment Remittance Reconciliation Agent autonomously handles
+      remittance documents from validation through reconciliation. In the initial
+      stage, the agent extracts, cleans, and validates remittance data, ensuring the
+      total payment amount aligns with individual line items and verifying that the
+      number of invoices matches the extracted data. Upon successful validation, the
+      agent moves to reconciliation, comparing validated data with Accounts Receivable
+      records to ensure payment accuracy across multiple levels. It identifies discrepancies,
+      generates detailed reconciliation reports, and operates independently, only
+      requesting human intervention for critical issues.
+    model:
+      provider: OpenAI
+      name: gpt-4o
+    version: 0.0.6
+    architecture: agent
+    reasoning: disabled
+    runbook: runbook.md
+    action-packages:
+    - name: Payment Remittance Reconciliation -actions
+      organization: MyActions
+      version: 0.0.6
+      path: MyActions/payment-remittance-reconcile-action
+      type: folder
+      whitelist: ''
+    - name: Payment Remittance Validation -action
+      organization: MyActions
+      version: 0.0.6
+      path: MyActions/payment-remittance-validate-action
+      type: folder
+      whitelist: ''
+    knowledge: []
+    metadata:
+      mode: worker
+      worker-config:
+        type: Document Intelligence
+        document-type: Payment Remittance Reconciliation for Customer Transactions
+          V6
