@@ -2,7 +2,7 @@ import os
 import subprocess
 
 from robocorp.tasks import task
-from tools import get_agent_cli
+from tools import get_action_server, get_agent_cli
 from utils import clear_folders
 
 script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -45,6 +45,7 @@ def package_agents(
 @task
 def update_demos():
     agent_cli_path = get_agent_cli()
+    get_action_server()
 
     clear_folders(dest_folder)
     input_folder = os.path.abspath(os.path.join(script_dir, "../../demos"))
