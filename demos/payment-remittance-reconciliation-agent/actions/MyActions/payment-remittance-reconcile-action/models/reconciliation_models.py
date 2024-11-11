@@ -1,12 +1,14 @@
-from typing import Optional, Dict, List, Any, Type, TypeVar
+from typing import Optional, Dict, List, Any, Type, TypeVar, Union
 from decimal import Decimal
-from datetime import datetime
-from pydantic import BaseModel, Field, ConfigDict
+from datetime import date, datetime
+from pydantic import BaseModel, Field, ConfigDict, validator
 
 from pandas import Series
 from enum import Enum
 import numpy as np
 import json
+
+from utils.commons.decimal_utils import DecimalHandler
 
 class ReconciliationPhase(str, Enum):
     PAYMENT_DATA_LOADING = "Payment Data Loading"
@@ -162,6 +164,8 @@ class ReconciliationAgentInsightContext(BaseModel):
         
 T = TypeVar('T', bound='ActionResponse')
 
+
+
 class ActionResponse(BaseModel):
     status: ActionStatus = Field(..., description="The overall status of the action")
     message: str = Field(..., description="A brief summary or instruction for the agent")
@@ -237,272 +241,217 @@ class ActionResponse(BaseModel):
         return self.__str__()
 
 
+
+
+# ----------------------------------------------------------- Reconciliation Related Models -------------------------------------------------------#
+
+
 class RemittanceFields(BaseModel):
-    """Fields specific to a remittance document"""
-    customer_name: str = Field(
-        default="Sample Customer",
-        description="Name of the customer making the payment"
-    )
-    customer_id: str = Field(
-        default="CUS-00000",
-        description="Unique identifier for the customer"
-    )
-    payment_date: str = Field(
-        default=datetime.now().strftime("%Y-%m-%d"),
-        description="Date when the payment was made"
-    )
-    payment_method: str = Field(
-        default="Wire Transfer",
-        description="Method of payment (e.g., Wire Transfer, ACH)"
-    )
-    payment_reference: str = Field(
-        default="PMT-00000",
-        description="Unique reference number for the payment"
-    )
+    """Core remittance information with explicit net/gross amounts."""
+    customer_name: str
+    customer_id: str
+    payment_date: Union[str, date, datetime]
+    payment_method: str
+    payment_reference: str
+    
+    # Net amount - what customer actually paid after discounts
     total_payment: Decimal = Field(
-        default=Decimal('0.00'),
-        description="Total amount of the payment"
+        ...,
+        description="Net amount paid by customer (after discounts applied)"
     )
+    
+    # Gross amount - original invoice amounts before any discounts/charges
     total_invoice_amount: Decimal = Field(
-        default=Decimal('0.00'),
-        description="Total amount of all invoices being paid"
+        ...,
+        description="Gross AR amount before discounts/charges (sum of original invoice amounts)"
     )
+    
+    # Adjustment components
     total_discounts: Decimal = Field(
-        default=Decimal('0.00'),
-        description="Total discounts applied across all invoices"
+        ...,
+        description="Total discounts applied (reduces gross to net)"
     )
     total_charges: Decimal = Field(
-        default=Decimal('0.00'),
-        description="Total additional charges across all invoices"
-    )
-    bank_account: str = Field(
-        default="*****0000",
-        description="Masked bank account number"
-    )
-    remittance_notes: Optional[str] = Field(
-        default=None,
-        description="Additional notes provided with the remittance"
+        ...,
+        description="Total additional charges applied (adds to gross)"
     )
 
-class PaymentMatchResult(BaseModel):
-    """Result of payment matching analysis"""
-    payment_id: str = Field(
-        default="PMT-00000",
-        description="Unique identifier for the payment record"
-    )
-    matching_status: str = Field(
-        default="Pending",
-        description="Match or Mismatch"
-    )
-    payment_amount: Decimal = Field(
-        default=Decimal('0.00'),
-        description="Total amount of the payment"
-    )
-    outstanding_balance: Decimal = Field(
-        default=Decimal('0.00'),
-        description="Total outstanding balance in AR system"
-    )
-    base_amount: Decimal = Field(
-        default=Decimal('0.00'),
-        description="Base amount before adjustments"
-    )
-    total_charges: Decimal = Field(
-        default=Decimal('0.00'),
-        description="Sum of all additional charges"
-    )
-    total_discounts: Decimal = Field(
-        default=Decimal('0.00'),
-        description="Sum of all applied discounts"
-    )
-    threshold: Decimal = Field(
-        default=Decimal('0.01'),
-        description="Acceptable difference threshold for matching"
-    )
-    discrepancy: Decimal = Field(
-        default=Decimal('0.00'),
-        description="Difference between payment and outstanding balance"
-    )
+    bank_account: str
+    remittance_notes: Optional[str] = None
 
-class FacilityComponents(BaseModel):
-    """Detailed components of facility amounts"""
-    base: Decimal = Field(
-        default=Decimal('0.00'),
-        description="Base amount component"
-    )
-    charges: Decimal = Field(
-        default=Decimal('0.00'),
-        description="Additional charges component"
-    )
-    discounts: Decimal = Field(
-        default=Decimal('0.00'),
-        description="Applied discounts component"
-    )
+    @validator('payment_date')
+    def validate_payment_date(cls, v):
+        """Convert any date input to YYYY-MM-DD string format."""
+        if isinstance(v, datetime):
+            return v.date().isoformat()
+        elif isinstance(v, date):
+            return v.isoformat()
+        elif isinstance(v, str):
+            try:
+                # Try to parse the string to validate it's a proper date
+                parsed_date = datetime.strptime(v, "%Y-%m-%d").date()
+                return parsed_date.isoformat()
+            except ValueError:
+                try:
+                    # Try alternate format MM/DD/YYYY
+                    parsed_date = datetime.strptime(v, "%m/%d/%Y").date()
+                    return parsed_date.isoformat()
+                except ValueError:
+                    raise ValueError("Invalid date format. Use YYYY-MM-DD or MM/DD/YYYY")
+        raise ValueError("Invalid date type")
 
-class FacilityComponentDetail(BaseModel):
-    """Components for both allocated and outstanding amounts"""
-    allocated: FacilityComponents = Field(
-        default_factory=FacilityComponents,
-        description="Components of allocated amount"
-    )
-    outstanding: FacilityComponents = Field(
-        default_factory=FacilityComponents,
-        description="Components of outstanding amount"
-    )
+    @validator('total_payment', 'total_invoice_amount', 'total_discounts', 'total_charges')
+    def validate_decimal_amounts(cls, v):
+        """Ensure all monetary values are properly handled as decimals."""
+        if isinstance(v, (int, float)):
+            v = str(v)
+        return DecimalHandler.from_str(str(v))
 
-class FacilityAmounts(BaseModel):
-    """Amounts for a facility type"""
-    allocated: Decimal = Field(
-        default=Decimal('0.00'),
-        description="Amount allocated to the facility"
-    )
-    outstanding: Decimal = Field(
-        default=Decimal('0.00'),
-        description="Outstanding amount for the facility"
-    )
+    @validator('total_discounts')
+    def validate_discounts(cls, v, values):
+        """Ensure discounts don't exceed gross amount."""
+        if 'total_invoice_amount' in values:
+            gross = DecimalHandler.from_str(str(values['total_invoice_amount']))
+            discounts = DecimalHandler.from_str(str(v))
+            if discounts > gross:
+                raise ValueError("Discounts cannot exceed total invoice amount")
+        return v
 
-class FacilityDiscrepancy(BaseModel):
-    """Details of facility type discrepancy"""
-    ledger_amount: Decimal = Field(
-        default=Decimal('0.00'),
-        description="Amount recorded in the ledger"
-    )
-    remittance_amount: Decimal = Field(
-        default=Decimal('0.00'),
-        description="Amount stated in the remittance"
-    )
-    difference: Decimal = Field(
-        default=Decimal('0.00'),
-        description="Difference between ledger and remittance amounts"
-    )
-    components: FacilityComponentDetail = Field(
-        default_factory=FacilityComponentDetail,
-        description="Detailed breakdown of amount components"
-    )
+    @property
+    def net_ar_amount(self) -> Decimal:
+        """Calculate net AR amount (gross - discounts + charges) using DecimalHandler."""
+        # Convert each value to ensure proper decimal handling
+        gross = DecimalHandler.from_str(str(self.total_invoice_amount))
+        discounts = DecimalHandler.from_str(str(self.total_discounts))
+        charges = DecimalHandler.from_str(str(self.total_charges))
+        
+        # Perform calculations with proper rounding
+        net = DecimalHandler.round_decimal(gross - discounts)
+        if charges > Decimal('0'):
+            net = DecimalHandler.round_decimal(net + charges)
 
-class FacilityAnalysisResult(BaseModel):
-    """Result of facility type analysis"""
-    facility_totals: Dict[str, FacilityAmounts] = Field(
-        default_factory=dict,
-        description="Totals by facility type"
-    )
-    discrepancies: Dict[str, FacilityDiscrepancy] = Field(
-        default_factory=dict,
-        description="Discrepancies found by facility type"
-    )
-    threshold: Decimal = Field(
-        default=Decimal('0.01'),
-        description="Threshold used for discrepancy detection"
-    )
-
-class InvoiceDetail(BaseModel):
-    """Details for a single invoice"""
-    allocated_net: Decimal = Field(
-        default=Decimal('0.00'),
-        description="Net amount allocated to the invoice"
-    )
-    invoice_net: Decimal = Field(
-        default=Decimal('0.00'),
-        description="Net amount on the invoice"
-    )
-    facility_id: str = Field(
-        default="FAC-00000",
-        description="ID of the facility associated with the invoice"
-    )
-    facility_type: str = Field(
-        default="Unknown",
-        description="Type of facility (e.g., Greenhouse, Hydroponics)"
-    )
-    service_type: str = Field(
-        default="Unknown",
-        description="Type of service provided (e.g., Electricity, Water)"
-    )
-
-class InvoiceDiscrepancy(BaseModel):
-    """Details of invoice level discrepancy"""
-    invoice_number: str = Field(
-        default="INV-00000",
-        description="Invoice reference number"
-    )
-    difference: Decimal = Field(
-        default=Decimal('0.00'),
-        description="Total discrepancy amount for the invoice"
-    )
-    facility_id: str = Field(
-        default="FAC-00000",
-        description="Facility ID associated with the invoice"
-    )
-    service_type: str = Field(
-        default="Unknown",
-        description="Type of service on the invoice"
-    )
-    discount_discrepancy: Optional[Decimal] = Field(
-        default=None,
-        description="Difference in discount amounts, if applicable"
-    )
-    charges_discrepancy: Optional[Decimal] = Field(
-        default=None,
-        description="Difference in additional charges, if applicable"
-    )
-
-class InvoiceAnalysisResult(BaseModel):
-    """Result of invoice level analysis"""
-    invoice_details: Dict[str, InvoiceDetail] = Field(
-        default_factory=dict,
-        description="Details for all analyzed invoices"
-    )
-    discrepancies: List[InvoiceDiscrepancy] = Field(
-        default_factory=list,
-        description="List of found invoice discrepancies"
-    )
-    threshold: Decimal = Field(
-        default=Decimal('0.01'),
-        description="Threshold used for discrepancy detection"
-    )
-
-class ReconciliationSummaryMetrics(BaseModel):
-    """Summary metrics for the reconciliation"""
-    total_discrepancy: Decimal = Field(
-        default=Decimal('0.00'),
-        description="Total amount of all discrepancies found"
-    )
-    facility_types_with_issues: int = Field(
-        default=0,
-        description="Number of facility types with discrepancies"
-    )
-    invoices_with_issues: int = Field(
-        default=0,
-        description="Number of invoices with discrepancies"
-    )
-
-class ReconciliationResult(BaseModel):
-    """Complete reconciliation analysis result including remittance details"""
-    status: str = Field(
-        default="PENDING",
-        description="MATCHED or DISCREPANCY_FOUND"
-    )
-    customer_results: PaymentMatchResult = Field(
-        default_factory=PaymentMatchResult,
-        description="Results of customer-level payment matching"
-    )
-    facility_results: Optional[FacilityAnalysisResult] = Field(
-        default=None,
-        description="Results of facility-level analysis, if performed"
-    )
-    invoice_results: Optional[InvoiceAnalysisResult] = Field(
-        default=None,
-        description="Results of invoice-level analysis, if performed"
-    )
-    summary_metrics: Optional[ReconciliationSummaryMetrics] = Field(
-        default=None,
-        description="Summary metrics of the reconciliation process"
-    )
-    remittance_fields: RemittanceFields = Field(
-        default_factory=RemittanceFields,
-        description="Original remittance document fields"
-    )
+        return net
 
     class Config:
-        """Pydantic model configuration"""
+        """Pydantic model configuration."""
+        arbitrary_types_allowed = True
         json_encoders = {
-            Decimal: str  # Ensure Decimals serialize properly
+            Decimal: str,
+            date: lambda d: d.isoformat(),
+            datetime: lambda dt: dt.date().isoformat()
         }
+
+class FacilityAmountSummary(BaseModel):
+    """Summary of amounts for a facility type."""
+    facility_type: str
+    remittance_amount: Decimal  # Net amount from customer payment
+    ar_system_amount: Decimal   # Net AR amount (gross - discounts)
+    difference: Decimal         # remittance - ar_system
+    service_types: List[str]
+    invoice_count: int
+    has_discrepancy: bool
+
+    class Config:
+        """Pydantic model configuration."""
+        arbitrary_types_allowed = True
+        json_encoders = {
+            Decimal: str
+        }
+
+
+class InvoiceDiscrepancyDetail(BaseModel):
+    """Detailed invoice discrepancy information."""
+    invoice_number: str
+    facility_id: str
+    facility_type: str
+    service_type: str
+    remittance_amount: Decimal  # Net amount from remittance
+    ar_amount: Decimal         # Net AR amount (after discounts)
+    difference: Decimal        # remittance - ar
+
+    class Config:
+        """Pydantic model configuration."""
+        arbitrary_types_allowed = True
+        json_encoders = {
+            Decimal: str
+        }
+
+class DiscrepancySummary(BaseModel):
+    """Complete discrepancy analysis summary."""
+    total_difference: Decimal
+    affected_facility_count: int
+    affected_invoice_count: int
+    total_remittance_amount: Decimal
+    total_ar_amount: Decimal
+    facility_differences: List[FacilityAmountSummary]
+    affected_service_types: List[str]
+
+    class Config:
+        """Pydantic model configuration."""
+        arbitrary_types_allowed = True
+        json_encoders = {
+            Decimal: str
+        }
+
+class ReconciliationResult(BaseModel):
+    """Complete reconciliation analysis result."""
+    status: str = Field(..., description="MATCHED or DISCREPANCY_FOUND")
+    payment_reference: str
+    payment_amount: Decimal  # Net amount paid by customer
+    ar_balance: Decimal     # Net AR balance (gross - discounts)
+    total_difference: Decimal
+    discrepancy_summary: Optional[DiscrepancySummary] = None
+    invoice_discrepancies: Optional[List[InvoiceDiscrepancyDetail]] = None
+    remittance_fields: Optional[RemittanceFields] = None
+    threshold: Optional[Decimal] = Field(default=Decimal('0.01'))
+
+    class Config:
+        """Pydantic model configuration."""
+        arbitrary_types_allowed = True
+        json_encoders = {
+            Decimal: str
+        }
+
+class ReconciliationResponse(ActionResponse):
+    """Response model for reconciliation actions."""
+    reconciliation_result: Optional[Union[ReconciliationResult, Dict[str, Any]]] = Field(
+        default=None,
+        description="Reconciliation analysis result"
+    )
+
+    @validator('reconciliation_result')
+    def validate_reconciliation_result(cls, v):
+        """Validate and convert reconciliation result."""
+        if isinstance(v, dict):
+            return ReconciliationResult(**v)
+        return v
+
+    class Config:
+        """Pydantic model configuration."""
+        arbitrary_types_allowed = True
+        json_encoders = {
+            Decimal: str
+        }
+        
+        
+class ProcessingMetrics(BaseModel):
+    """Model for processing summary metrics."""
+    total_invoices: int
+    facility_types: List[str]
+    facility_type_count: int
+    service_types: List[str]
+    service_type_count: int
+    all_matched: bool
+
+class ReconciliationResult(BaseModel):
+    """Enhanced reconciliation result model with processing metrics."""
+    status: str
+    payment_reference: str
+    payment_amount: Decimal
+    ar_balance: Decimal
+    total_difference: Decimal
+    processing_metrics: ProcessingMetrics
+    discrepancy_summary: Optional[DiscrepancySummary]
+    invoice_discrepancies: Optional[List[InvoiceDiscrepancyDetail]]
+    remittance_fields: RemittanceFields
+    threshold: Decimal

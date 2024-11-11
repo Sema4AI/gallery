@@ -1,6 +1,6 @@
 # Payment Remittance Processing Agent Runbook
 
-## 1\. Overview
+## 1. Overview
 
 ### 1.1 Objective
 
@@ -28,7 +28,7 @@ The Payment Remittance Processing Agent autonomously handles remittance document
 *   Provide detailed error report
 *   Validation failures prevent reconciliation phase entry
 
-## 2\. Processing Phases
+## 2. Processing Phases
 
 ### 2.1 Phase 1: Document Validation
 
@@ -356,10 +356,10 @@ The agent must confirm:
 
 Phase 1 Completion
 
-*   Status is "VALIDATION\_COMPLETED"
+*   Status is "VALIDATION_COMPLETED"
 *   All validation reports are stored and accessible
 *   No pending validation issues exist
-*   Example: A document with status "VALIDATION\_COMPLETED" but missing validation reports would fail this check
+*   Example: A document with status "VALIDATION_COMPLETED" but missing validation reports would fail this check
 
 Data Availability
 
@@ -582,7 +582,7 @@ Status Requirements
 *   Notifications generated
 *   Processing logs complete
 
-## 3\. Additional Guidelines
+## 3. Additional Guidelines
 
 ### 3.1 Processing Controls
 

@@ -15,7 +15,7 @@ class DatabaseConstants:
     COMPUTED_CONTENT_FILE = "computed_content.json"
     
     RECONCILIATION_CONTEXT_DB = "reconciliation_context.duckdb"
-    RECONCILIATION_CONTEXT_DB_BASE_PATH = "context/db"
+    RECONCILIATION_CONTEXT_DB_BASE_PATH = "context"
 
     
     @staticmethod

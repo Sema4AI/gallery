@@ -114,7 +114,23 @@ class InvoiceLoader:
                 discounts_applied, amount_paid, facility_type,
                 service_type, usage_amount, usage_unit,
                 co2_supplementation, status
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ) VALUES (?, ?, ?, ?, ?,
+                CAST(? AS DECIMAL(18, 2)),
+                CAST(? AS DECIMAL(18, 2)),
+                CAST(? AS DECIMAL(18, 2)),
+                CAST(0 AS DECIMAL(18, 2)),  -- Fixed amount_paid as constant
+                ?, ?, ?, ?, ?, ?)
+            ON CONFLICT (customer_id, invoice_number) DO UPDATE SET
+                invoice_date = EXCLUDED.invoice_date,
+                invoice_amount = CAST(EXCLUDED.invoice_amount AS DECIMAL(18, 2)),
+                additional_charges = CAST(EXCLUDED.additional_charges AS DECIMAL(18, 2)),
+                discounts_applied = CAST(EXCLUDED.discounts_applied AS DECIMAL(18, 2)),
+                facility_type = EXCLUDED.facility_type,
+                service_type = EXCLUDED.service_type,
+                usage_amount = EXCLUDED.usage_amount,
+                usage_unit = EXCLUDED.usage_unit,
+                co2_supplementation = EXCLUDED.co2_supplementation,
+                status = EXCLUDED.status
             """
             
             conn.execute(query, [
@@ -122,11 +138,10 @@ class InvoiceLoader:
                 clean_invoice['invoice_number'],
                 clean_invoice['customer_id'],
                 internal_facility_id,
-                invoice['invoice_date'],  # Date format is already standardized
+                invoice['invoice_date'],
                 float(base_amount),
                 float(charges),
                 float(discounts),
-                float(clean_invoice.get('amount_paid', 0)),
                 clean_invoice['facility_type'],
                 clean_invoice['service_type'],
                 clean_invoice.get('usage_amount'),
@@ -359,7 +374,9 @@ class InvoiceLoader:
                 facility_name,
                 facility_type
             ) VALUES (?, ?, ?, ?, ?)
-            ON CONFLICT (internal_facility_id) DO NOTHING
+            ON CONFLICT (customer_id, facility_id) DO UPDATE SET
+                facility_name = EXCLUDED.facility_name,
+                facility_type = EXCLUDED.facility_type
             """
             
             conn.execute(query, [
@@ -400,7 +417,8 @@ class InvoiceLoader:
                 effective_date,
                 rate
             ) VALUES (?, ?, ?, CAST(? AS DECIMAL(18, 2)))
-            ON CONFLICT (rate_id) DO NOTHING
+            ON CONFLICT (internal_facility_id, effective_date) DO UPDATE SET
+                rate = CAST(EXCLUDED.rate AS DECIMAL(18, 2))
             """
             
             conn.execute(query, [

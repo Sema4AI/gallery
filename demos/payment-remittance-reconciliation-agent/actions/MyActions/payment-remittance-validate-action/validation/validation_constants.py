@@ -24,8 +24,7 @@ SUBTOTALS_TABLE_KEY = 'subtotals_table'
 class DatabaseConstants:
 
     VALIDATION_CONTEXT_DB = "validation_context.duckdb"
-
-    VALIDATION_DB_BASE_PATH = "context/db"
+    VALIDATION_DB_BASE_PATH = "context"
 
     
     @staticmethod

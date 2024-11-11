@@ -1,3 +1,4 @@
+from decimal import Decimal
 from enum import Enum
 import json
 import numpy as np
@@ -9,6 +10,8 @@ from typing import Any, Union
 
 class SerializableJSONEncoder(json.JSONEncoder):
     def default(self, obj):
+        if isinstance(obj, Decimal):
+            return float(obj)  # or str(obj) if you prefer string representation
         if isinstance(obj, np.integer):
             return int(obj)
         elif isinstance(obj, np.floating):

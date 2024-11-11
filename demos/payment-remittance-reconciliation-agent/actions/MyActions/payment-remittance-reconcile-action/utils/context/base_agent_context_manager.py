@@ -14,7 +14,6 @@ class BaseAgentContextManager(ABC):
     Base class for managing agent context across processing phases.
     Provides common functionality for context management and database operations.
     """
-    
     def __init__(self, document_id: str, document_name: str, db_path: str):
         if not document_id:
             raise ValueError("document_id cannot be None or empty")
@@ -46,7 +45,6 @@ class BaseAgentContextManager(ABC):
                 self.logger.error(f"Failed to initialize database: {str(e)}")
                 raise
             
-
     @staticmethod
     def track_method_execution(method_name):
         """
@@ -143,34 +141,15 @@ class BaseAgentContextManager(ABC):
 
     def _log_event(self, event_type: str, description: str, details: Optional[Dict[str, Any]] = None):
         """Common logging functionality."""
-        try:
-            with self.duckdb_connection() as conn:
-                query = """
-                INSERT INTO agent_events (
-                    document_id, event_type, description, details
-                ) VALUES (?, ?, ?, ?);
-                """
-                conn.execute(query, [
-                    self.document_id,
-                    event_type,
-                    description,
-                    json.dumps(details) if details else None
-                ])
-        except Exception as e:
-            self.logger.error(f"Error logging event: {str(e)}")
+        # Just log to logger, don't try to store in database
+        self.logger.info(f"Event: {event_type} - {description}")
+        if details:
+            self.logger.debug(f"Event details: {json.dumps(details)}")
 
     def _store_metrics(self, metrics: Dict[str, Any]):
         """Common metrics storage functionality."""
-        try:
-            with self.duckdb_connection() as conn:
-                query = """
-                INSERT INTO agent_metrics (
-                    document_id, metrics_data
-                ) VALUES (?, ?);
-                """
-                conn.execute(query, [self.document_id, json.dumps(metrics)])
-        except Exception as e:
-            self.logger.error(f"Error storing metrics: {str(e)}")
+        # Just log metrics, don't try to store in separate table
+        self.logger.info(f"Updating metrics: {json.dumps(metrics)}")
 
     @staticmethod
     def _format_duration(duration_seconds: float) -> str:
@@ -186,6 +165,7 @@ class BaseAgentContextManager(ABC):
         parts.append(f"{seconds}s")
         
         return " ".join(parts)
+    
     
     def get_agent_context(self):
         """

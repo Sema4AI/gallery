@@ -63,8 +63,8 @@ class ReconciliationAgentContextManager(BaseAgentContextManager):
                 customer_id VARCHAR NOT NULL,
                 document_name VARCHAR NOT NULL,
                 context_data JSON,
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                created_at TIMESTAMP DEFAULT (CURRENT_TIMESTAMP),
+                updated_at TIMESTAMP DEFAULT (CURRENT_TIMESTAMP)
             )
             """)
             self.logger.info("Reconciliation tables created successfully")
@@ -78,9 +78,18 @@ class ReconciliationAgentContextManager(BaseAgentContextManager):
             context_json = self.agent_context.model_dump_json()
             with self.duckdb_connection() as conn:
                 query = """
-                INSERT OR REPLACE INTO reconciliation_context (
-                    document_id, customer_id, document_name, context_data, updated_at
-                ) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP);
+                INSERT INTO reconciliation_context (
+                    document_id, 
+                    customer_id, 
+                    document_name, 
+                    context_data, 
+                    updated_at
+                ) VALUES (?, ?, ?, ?, NOW())
+                ON CONFLICT (document_id) DO UPDATE SET
+                    customer_id = EXCLUDED.customer_id,
+                    document_name = EXCLUDED.document_name,
+                    context_data = EXCLUDED.context_data,
+                    updated_at = NOW()
                 """
                 conn.execute(query, [
                     self.document_id,
@@ -90,7 +99,7 @@ class ReconciliationAgentContextManager(BaseAgentContextManager):
                 ])
             self.logger.info(f"Stored reconciliation context for document_id: {self.document_id}")
         except Exception as e:
-            self.logger.error(f"Error storing reconciliation context: {str(e)}")
+            self.logger.error(f"Error storing reconciliation context for document_id {self.document_id}: {str(e)}")
             raise
 
     def load_context(self) -> Optional[ReconciliationAgentInsightContext]:

@@ -144,7 +144,8 @@ def run_remittance_extraction(remittance_id: str) -> ActionResponse:
         )
     except Exception as e:
         _add_document_format_to_context(remittance_work_item, doc_intel_client, agent_context_manager)
-        return handle_action_exception(remittance_id, e, agent_context_manager)
+        message=f"An error occurred when running extraction on remittance document {remittance_id}: {str(e)}",
+        return handle_action_exception(remittance_id, e, agent_context_manager, custom_message=message)
 
 @action
 def run_remittance_transformation(remittance_id: str) -> ActionResponse:
@@ -253,7 +254,7 @@ def run_remittance_validation(remittance_id: str) -> ActionResponse:
         logger.info(f"Validation completed for document: {document_name}")
         
         # If there are validatino errors, then computed content will be the validation results, otherwise it will be the transformed content
-        # RFAArdless, save the the computed content in document database. If there are failures, we'l need to acess the validation results on the next call
+        # Regardless, save the the computed content in document database. If there are failures, we'l need to acess the validation results on the next call
         computed_content: ComputedDocumentContent = validation_final_result.document_content
         # Store teh computed content which is the same as transformed into document database
         logger.info(f"Storing computed content for document: {document_name}")
@@ -281,15 +282,79 @@ def run_remittance_validation(remittance_id: str) -> ActionResponse:
         agent_context_manager.store_context()
 
         logger.info(f"Validation process completed with status: {status} for document: {document_name}")
-        return ActionResponse(
+        action_response =  ActionResponse(
             status=status,
             message=message,
-            agent_insight_context=agent_context        
+            agent_insight_context=agent_context,
+            additional_data={"document_content": computed_content}
         )
+        logger.info(f"Returning action response from : {serialize_any_object_safely(action_response)}")
+        return action_response
     except Exception as e:
         _add_document_format_to_context(remittance_work_item, doc_intel_client, agent_context_manager)
         return handle_action_exception(remittance_id, e, agent_context_manager)
         
+
+@action
+def update_work_item_with_validation_failure(remittance_id: str, validation_failure_summary: str, validation_failure_detailed_report: str) -> ActionResponse:
+    """
+    Update the work item status to 'FAILURE' with validation failure details.
+
+    Args:
+        remittance_id (str): The ID of the remittance.
+        validation_failure_summary (str): Summary of the validation failure.
+        validation_failure_detailed_report (str): Detailed report of the validation failure by providing a detailed summary of the agent context along with the Validation Report.
+
+    Returns:
+        ActionResponse: The response indicating the success or failure of the action.
+    """
+    return _update_work_item_status(
+        remittance_id,
+        "VALIDATION_FAILURE",
+        validation_failure_summary,
+        validation_failure_detailed_report
+    )
+
+@action
+def update_work_item_with_validation_success(remittance_id: str, validation_success_summary: str, validation_success_detailed_report: str) -> ActionResponse:
+    """
+    Update the work item status to 'SUCCESS' after validation succeeds.
+
+    Args:
+        remittance_id (str): The ID of the remittance.
+        validation_success_summary (str): Summary of the validation success report.
+        validation_success_detailed_report (str): Detailed report of the validation success.
+
+    Returns:
+        ActionResponse: The response indicating the success or failure of the action.
+    """
+    return _update_work_item_status(
+        remittance_id,
+        "SUCCESS",
+        validation_success_summary,
+        validation_success_detailed_report
+    )
+
+@action
+def update_work_item_with_unexpected_exeception(remittance_id: str, error_summary: str, error_detailed_report: str) -> ActionResponse:
+    """
+    Update the work item status to 'ERROR' with details on the exception that occurred and the detailed summary of the agent context along with the Exception Report.
+
+    Args:
+        remittance_id (str): The ID of the remittance.
+        error_summary (str): Summary of the error
+        error_detailed_report (str): Detailed report of the error by providing a detailed summary of the agent context
+
+    Returns:
+        ActionResponse: The response indicating the success or failure of the action.
+    """
+    return _update_work_item_status(
+        remittance_id,
+        "ERROR",
+        error_summary,
+        error_detailed_report
+    )
+
 
 def _update_work_item_status(remittance_id: str, status: str, message: str, details: Optional[str]) -> ActionResponse:
     logger.info(f"Updating status for remittance ID: {remittance_id} to {status}, status message: {message}")
@@ -319,48 +384,8 @@ def _update_work_item_status(remittance_id: str, status: str, message: str, deta
                 "error": str(e),
                 "traceback": traceback.format_exc().splitlines()
             }
+            
         )
-
-@action
-def update_work_item_with_validation_failure(remittance_id: str, validation_failure_summary: str, validation_failure_detailed_report: str) -> ActionResponse:
-    """
-    Update the work item status to 'FAILURE' with validation failure details.
-
-    Args:
-        remittance_id (str): The ID of the remittance.
-        validation_failure_summary (str): Summary of the validation failure.
-        validation_failure_detailed_report (str): Detailed report of the validation failure.
-
-    Returns:
-        ActionResponse: The response indicating the success or failure of the action.
-    """
-    return _update_work_item_status(
-        remittance_id,
-        "FAILURE",
-        validation_failure_summary,
-        validation_failure_detailed_report
-    )
-
-@action
-def update_work_item_with_validation_success(remittance_id: str, validation_success_summary: str, validation_success_detailed_report: str) -> ActionResponse:
-    """
-    Update the work item status to 'SUCCESS' after validation succeeds.
-
-    Args:
-        remittance_id (str): The ID of the remittance.
-        validation_success_summary (str): Summary of the validation success report.
-        validation_success_detailed_report (str): Detailed report of the validation success.
-
-    Returns:
-        ActionResponse: The response indicating the success or failure of the action.
-    """
-    return _update_work_item_status(
-        remittance_id,
-        "SUCCESS",
-        validation_success_summary,
-        validation_success_detailed_report
-    )
-
 
         
 def clean_pydantic_object(obj: BaseModel) -> BaseModel:
@@ -418,7 +443,7 @@ def handle_action_exception(remittance_id: str,  e: Exception, agent_context_man
     doc_intel_client : DocumentIntelligenceClient = create_di_client()
     logger.error(f"Marking work item as failure for remittance ID: {remittance_id}")
     doc_intel_client.work_items_complete_stage(remittance_id, 
-                                                status = "FAILURE", 
+                                                status = "ERROR", 
                                                 status_reason=custom_message or f"An error occurred during processing: {str(e)}",
                                                 log_details_path = error_msg)       
     logger.error(f"Finishing marking Work item as failied: {remittance_id}")

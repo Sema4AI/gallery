@@ -58,8 +58,8 @@ class ValidationAgentContextManager(BaseAgentContextManager):
                 document_id VARCHAR PRIMARY KEY,
                 document_name VARCHAR NOT NULL,
                 context_data JSON,
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                created_at TIMESTAMP DEFAULT (CURRENT_TIMESTAMP),
+                updated_at TIMESTAMP DEFAULT (CURRENT_TIMESTAMP)
             )
             """)
             self.logger.info("Validation tables created successfully")
@@ -72,10 +72,15 @@ class ValidationAgentContextManager(BaseAgentContextManager):
         try:
             context_json = self.agent_context.model_dump_json()
             with self.duckdb_connection() as conn:
+                # Note: Using NOW() for timestamp in DuckDB
                 query = """
-                INSERT OR REPLACE INTO validation_context (
+                INSERT INTO validation_context (
                     document_id, document_name, context_data, updated_at
-                ) VALUES (?, ?, ?, CURRENT_TIMESTAMP);
+                ) VALUES (?, ?, ?, NOW())
+                ON CONFLICT (document_id) DO UPDATE SET
+                    document_name = EXCLUDED.document_name,
+                    context_data = EXCLUDED.context_data,
+                    updated_at = NOW()
                 """
                 conn.execute(query, [
                     self.document_id,
@@ -84,7 +89,7 @@ class ValidationAgentContextManager(BaseAgentContextManager):
                 ])
             self.logger.info(f"Stored validation context for document_id: {self.document_id}")
         except Exception as e:
-            self.logger.error(f"Error storing validation context: {str(e)}")
+            self.logger.error(f"Error storing validation context for document_id {self.document_id}: {str(e)}")
             raise
 
     def load_context(self) -> Optional[AgentInsightContext]:
@@ -187,6 +192,7 @@ class ValidationAgentContextManager(BaseAgentContextManager):
     def add_document_format_config(self, doc_format_config: Dict[str, Any]):
         """
         Add document format configuration.
+        
 
         Args:
             doc_format_config (Dict[str, Any]): The document format configuration to add.
