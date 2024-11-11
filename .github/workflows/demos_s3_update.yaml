@@ -66,8 +66,9 @@ jobs:
           cd bin/publisher/demos
           ls -la
 
-          for dir in */; do
-            aws s3 cp "$dir" "$S3_BASE_URL/$dir" --recursive --cache-control max-age=180
+          for zip_file in *.zip; do
+            if [ -f "$zip_file" ]; then
+              aws s3 cp "$zip_file" "$S3_BASE_URL/" --cache-control max-age=180
 
               returnCode=$?
 
