@@ -31,6 +31,7 @@ packaging:
   - ./output/**
   - ./venv/**
   - ./.venv/**
+  - ./.env/**
   - ./.DS_store/**
   - ./**/*.pyc
   - ./**/*.zip

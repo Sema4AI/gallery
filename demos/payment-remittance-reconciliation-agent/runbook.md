@@ -214,7 +214,7 @@ Report Display Format
 *   Agent renders markdown to formatted text
 *   Tables show with proper alignment
 *   Currency values include $ and decimals
-*   Symbols render properly (✓, ❌)
+*   Symbols render properly (✓, X)
 *   Headers show proper hierarchy
 
 Template Usage Rules
