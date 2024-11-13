@@ -1,14 +1,21 @@
-name: Demos - Initialize Demos to S3 Gallery
+name: Demos - Update Demos to S3 Gallery
 
 on:
   workflow_dispatch:
     # Enables manual triggering via GitHub Actions
 
+  push:
+    branches:
+      - main
+    # Automatic builds on push. Activate later once we know this is the way.
+    # paths:
+    #   - 'demos/**'
+
 jobs:
-  build_agents:
+  build_demos:
     runs-on: ubuntu-latest
     permissions:
-      id-token: write # required by AWS aws-actions/configure-aws-credentials
+      id-token: write
       contents: read
     env:
       RCC_VERSION: v18.1.1
@@ -17,3 +24,56 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Update demos
+        run: |
+          cd bin
+          curl -L -o rcc "https://cdn.sema4.ai/rcc/releases/${{ env.RCC_VERSION }}/linux64/rcc"
+          chmod +x rcc
+          ./rcc run -r publisher/robot.yaml -t "Build update demos"
+
+      - name: Save Demos artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: demos-artifact
+          path: bin/publisher/demos
+
+  publish:
+    runs-on: ubuntu-latest
+    needs: [build_demos]
+    permissions:
+      id-token: write # required by AWS aws-actions/configure-aws-credentials
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download demos artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: demos-artifact
+          path: bin/publisher/demos
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: eu-west-1
+          role-to-assume: arn:aws:iam::710450854638:role/github-action-gallery
+
+      - name: Publish demos
+        run: |
+          echo "Updating demos in S3"
+          S3_BASE_URL="s3://downloads.robocorp.com/gallery/demos"
+          cd bin/publisher/demos
+          ls -la
+
+          for zip_file in *.zip; do
+            if [ -f "$zip_file" ]; then
+              aws s3 cp "$zip_file" "$S3_BASE_URL/" --cache-control max-age=180
+
+              returnCode=$?
+
+              if [ $returnCode -ne 0 ]; then
+                echo "Upload of '$zip_file' agent failed."
+              fi
+            fi
+          done

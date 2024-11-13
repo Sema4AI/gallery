@@ -14,6 +14,9 @@ tasks:
   Build updated agents:
     shell: python -m robocorp.tasks run build_updated_agents.py
 
+  Build update demos:
+    shell: python -m robocorp.tasks run update_demos.py
+
   Build environments:
     shell: python -m robocorp.tasks run build_environments.py
 
