@@ -1,6 +1,4 @@
-
-
-# The prefix for the validation rule name for missing required fields. 
+# The prefix for the validation rule name for missing required fields.
 # What shoudl follow is the field name in uppercase with underscores instead of spaces.
 RULE_PREFIX_FOR_MISSING_REQUIRED_FIELD = "MISSING_REQUIRED_FIELD_"
 

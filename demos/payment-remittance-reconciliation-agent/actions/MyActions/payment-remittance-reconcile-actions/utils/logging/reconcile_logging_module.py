@@ -1,4 +1,3 @@
-
 import io
 import logging
 import logging.config
@@ -7,14 +6,17 @@ import traceback
 import sys
 from utils.commons.path_utils import get_full_path
 
-def configure_logging(logger_name=__name__, log_config_filename="logging-reconcile.conf"):
+
+def configure_logging(
+    logger_name=__name__, log_config_filename="logging-reconcile.conf"
+):
     """
     Configure logging using a configuration file with environment-aware path resolution.
-    
+
     Args:
         logger_name (str): Name of the logger (defaults to module name)
         log_config_filename (str): Name of the logging config file
-        
+
     Returns:
         logging.Logger: Configured logger instance
     """
@@ -27,14 +29,14 @@ def configure_logging(logger_name=__name__, log_config_filename="logging-reconci
             raise FileNotFoundError(f"Configuration file not found: {config_path}")
 
         # Print the content of the config file for debugging
-        with open(config_path, 'r') as f:
+        with open(config_path, "r") as f:
             print(f"Content of {config_path}:")
             print(f.read())
 
         logging.config.fileConfig(config_path)
         logger = logging.getLogger(logger_name)
         logger.info(f"Logging configured using config file: {config_path}")
-        
+
     except Exception as e:
         traceback_buffer = io.StringIO()
         traceback.print_exc(file=traceback_buffer)
@@ -43,13 +45,13 @@ def configure_logging(logger_name=__name__, log_config_filename="logging-reconci
         # Fallback to basic configuration
         logging.basicConfig(
             level=logging.DEBUG,
-            format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-            stream=sys.stdout
+            format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+            stream=sys.stdout,
         )
         logger = logging.getLogger(logger_name)
         logger.warning(
             f"Failed to configure logging using {config_path}. "
             f"Using default configuration. Traceback: {traceback_str}"
         )
-    
+
     return logger
