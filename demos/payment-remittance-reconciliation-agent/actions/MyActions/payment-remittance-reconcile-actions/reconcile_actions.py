@@ -217,21 +217,21 @@ def store_and_analyze_payment(
             work_item.source_document.document_name,
             content.computed_content["fields"]["Customer ID"],
             load_existing=True,
-            )
+        )
 
-            # Initialize ledger service
-            db_path = get_full_path(
+        # Initialize ledger service
+        db_path = get_full_path(
             str(InvoiceLoader.get_db_dir() / DatabaseConstants.RECONCILIATION_LEDGER_DB)
-            )
-            ledger_db_config = {"db_path": db_path}
-            ledger_service = InvoiceReconciliationLedgerService(
-                ledger_db_config, context_manager
-            )
+        )
+        ledger_db_config = {"db_path": db_path}
+        ledger_service = InvoiceReconciliationLedgerService(
+            ledger_db_config, context_manager
+        )
 
         # Part 1: Store payment data
         storage_result = _store_payment_data(
             content.computed_content, context_manager, ledger_service
-            )
+        )
         if not storage_result:
             error_msg = "Failed to store payment data"
             context_manager.add_event("Error", error_msg)
@@ -247,7 +247,7 @@ def store_and_analyze_payment(
         analysis_result = ledger_service.analyze_payment_reconciliation(
             content.computed_content["fields"]["Payment Reference Number"],
             Decimal(str(threshold)),
-                )
+        )
 
         # Store final context and create response with proper model instance
         context_manager.store_context()
