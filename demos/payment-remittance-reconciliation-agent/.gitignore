@@ -1,0 +1,13 @@
+.env
+.idea
+.venv
+.vscode
+.pyc
+__pycache__/
+*.exe
+*.zip
+*.log
+**/.DS_STORE
+
+actions/MyActions/payment-remittance-reconcile-actions/context/reconciliation_context.duckdb
+actions/MyActions/payment-remittance-validate-actions/context/validation_context.duckdb

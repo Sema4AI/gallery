@@ -1,12 +1,12 @@
 import os
 
 
-
 # Ensure these constants are defined
 ACTIONS_DIR = "actions"
 GALLERY = "gallery"
 MY_ACTIONS_DIR = "MyActions"
-WORKSPACE_HOME_DIR = "payment-remittance-reconcile-action"
+WORKSPACE_HOME_DIR = "payment-remittance-reconcile-actions"
+
 
 def get_full_path(relative_path):
     """
@@ -35,6 +35,8 @@ def get_full_path(relative_path):
         complete_path = relative_path
     else:
         # Opened as a different environment, perhaps production
-        complete_path = os.path.join(current_dir, ACTIONS_DIR, MY_ACTIONS_DIR, WORKSPACE_HOME_DIR, relative_path)
-    
+        complete_path = os.path.join(
+            current_dir, ACTIONS_DIR, MY_ACTIONS_DIR, WORKSPACE_HOME_DIR, relative_path
+        )
+
     return complete_path

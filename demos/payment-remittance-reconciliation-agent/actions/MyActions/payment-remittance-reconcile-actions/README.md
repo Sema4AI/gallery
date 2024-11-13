@@ -114,7 +114,7 @@ def handle_discrepancies(self, result: ReconciliationResult):
     report = self.generate_discrepancy_report(result)
     
     # Update work item status
-    self.update_work_item_status(
+    self.update_work_item_with_reconciliation_success(
         status="DISCREPANCY_FOUND",
         details=report
     )

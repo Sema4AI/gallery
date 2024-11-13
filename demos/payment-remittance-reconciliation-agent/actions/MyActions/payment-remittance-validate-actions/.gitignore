@@ -7,7 +7,6 @@
 .use
 .venv/
 .vscode
-metadata.json
 output/
 temp/
 venv/
