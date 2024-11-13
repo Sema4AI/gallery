@@ -49,7 +49,7 @@ def update_ticket(
 
     Args:
         zendesk_credentials: Zendesk OAuth2 credentials
-        ticket_id: Ticket id to update
+        ticket_id (str): Ticket id to update
         updates: json containing the new properties of the ticket
 
     Returns:
@@ -75,7 +75,7 @@ def get_ticket_comments(
 
     Args:
         zendesk_credentials: Zendesk OAuth2 credentials
-        ticket_id: The ticket ID to pull comments for
+        ticket_id (str): The ticket ID to pull comments for
 
     Returns:
         The ticket comments.
@@ -123,8 +123,8 @@ def add_comment(
 
     Args:
         zendesk_credentials: Zendesk OAuth2 credentials
-        ticket_id:The unique identifier of the ticket to add the comment to
-        comment: JSON representation of the comment to be added.
+        ticket_id (str): The unique identifier of the ticket to add the comment to
+        comment (str): JSON representation of the comment to be added.
 
     Returns:
         Success message if the comment was added or an error message.
@@ -157,4 +157,31 @@ def list_groups(
     )
 
     response = client.list()
+    return Response(result=response)
+
+@action(is_consequential=True)
+def create_ticket(
+    zendesk_credentials: OAuth2Secret[
+    Literal["zendesk"], list[Literal["tickets:write"]]],
+    comment: str,
+    priority: str,
+    subject: str
+) -> Response[str]:
+    """
+    Create a ticket in Zendesk
+
+    Args:
+        zendesk_credentials: Zendesk OAuth2 credentials
+        comment (str): Comment to be added to the ticket
+        priority (str): Priority of the ticket
+        subject (str): Subject of the ticket
+
+    Returns:
+        Success message if the ticket was created or an error message.
+    """
+    client = TicketsApi(
+        zendesk_credentials.access_token, zendesk_credentials.metadata["server"]
+    )
+
+    response = client.create(comment, priority, subject)
     return Response(result=response)
