@@ -165,7 +165,8 @@ def create_ticket(
     Literal["zendesk"], list[Literal["tickets:write"]]],
     comment: str,
     priority: str,
-    subject: str
+    subject: str,
+    tags: str
 ) -> Response[str]:
     """
     Create a ticket in Zendesk
@@ -175,6 +176,7 @@ def create_ticket(
         comment (str): Comment to be added to the ticket
         priority (str): Priority of the ticket
         subject (str): Subject of the ticket
+        tags (str): Tags to be added to the ticket
 
     Returns:
         Success message if the ticket was created or an error message.
@@ -183,5 +185,5 @@ def create_ticket(
         zendesk_credentials.access_token, zendesk_credentials.metadata["server"]
     )
 
-    response = client.create(comment, priority, subject)
+    response = client.create(comment, priority, subject, tags)
     return Response(result=response)
