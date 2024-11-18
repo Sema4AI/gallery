@@ -47,3 +47,11 @@ Yes I need the exact count
 ## Authorization
 
 This action package uses the username and password of the user to authenticate against the ServiceNow instance.
+
+
+## Development Instance
+
+For development and testing you can create a test instance by:
+1. Vising https://developer.servicenow.com/dev.do, click on "Sign In", click on "Get a ServiceNow ID" and fill out the signup form. 
+2. Once you have the developer account, sing in again and click on the "Request Instance" in the top right of the page.
+3. Select your target release. As of time of writing "Xanadu" was the latest release. This will set up your new development instance. 

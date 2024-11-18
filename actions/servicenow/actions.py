@@ -123,7 +123,7 @@ def get_recent_incidents(
     Returns:
         A structure representing the incidents.
     """
-    today = datetime.today()
+    today = datetime.today().strftime("%Y-%m-%d")
 
     with get_client(instance_url, username, password) as client:
         incidents = _get_incidents(
