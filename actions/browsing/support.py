@@ -5,7 +5,22 @@ from models import (
     FormElement,
     Option,
 )
+import re
 from urllib.parse import unquote, urlparse
+
+
+def _clean_text(text):
+    # Normalize line endings to '\n'
+    text = re.sub(r"\r\n|\r", "\n", text)
+    # Replace multiple spaces and tabs with a single space
+    text = re.sub(r"[ \t]+", " ", text)
+    # Replace multiple line breaks (possibly separated by spaces) with a single line break
+    text = re.sub(
+        r"(\n[ \t]*){2,}", "\n", text
+    )  # Change here to match line breaks with spaces
+    # Strip leading and trailing whitespace
+    text = text.strip()
+    return text
 
 
 def _get_form_elements(page, url) -> Form:
@@ -25,7 +40,7 @@ def _get_page_links(page, url) -> Links:
         if not element.is_visible():
             continue
         href = element.get_attribute("href")
-        text = element.text_content().strip()
+        text = _clean_text(element.text_content())
         if href and "http" not in href:
             parsed_url = urlparse(url)
             href = f"{parsed_url.scheme}://{parsed_url.netloc}{href}"
@@ -44,14 +59,14 @@ def _get_elements_by_type(page, element_type, page_form):
             options = [
                 Option(
                     value=option.get_attribute("value"),
-                    text=option.text_content().strip(),
+                    text=_clean_text(option.text_content()),
                 )
                 for option in select_options
             ]
 
         fe = FormElement(
             type=element_type,
-            text=element.text_content(),
+            text=_clean_text(element.text_content()),
             placeholder=element.get_attribute("placeholder") or "",
             aria_label=element.get_attribute("aria-label") or "",
             value_type=element.get_attribute("type") or "",
