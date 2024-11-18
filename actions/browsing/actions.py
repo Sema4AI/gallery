@@ -8,7 +8,7 @@ Currently supporting:
 
 from sema4ai.actions import action, Response
 from robocorp import browser
-
+from playwright.sync_api import TimeoutError
 from dotenv import load_dotenv
 
 
@@ -26,15 +26,17 @@ from support import (
     _get_page_links,
     _locator_action,
     _get_filename_from_cd,
+    _clean_text,
 )
 
 load_dotenv(Path(__file__).absolute().parent / "devdata" / ".env")
 
 HEADLESS_BROWSER = not os.getenv("HEADLESS_BROWSER")
+MAX_WAIT_FOR_NETWORK_IDLE = 5000
 
 
 @action
-def get_website_content(url: str, user_agent: UserAgent) -> Response[WebPage]:
+def get_website_content(url: str, user_agent: UserAgent = {}) -> Response[WebPage]:
     """
     Gets the text content, form elements, links and other elements of a website.
     If content-type is not "text/html" then just URL content is returned.
@@ -51,22 +53,29 @@ def get_website_content(url: str, user_agent: UserAgent) -> Response[WebPage]:
     page = browser.page()
     response = page.goto(url)
     page.wait_for_load_state("domcontentloaded")
-    page.wait_for_load_state("networkidle")
+    try:
+        # Wait for network to be idle for 5 seconds, but continue even if not idle
+        page.wait_for_load_state("networkidle", timeout=MAX_WAIT_FOR_NETWORK_IDLE)
+    except TimeoutError as _:
+        pass
     content_type = response.headers.get("content-type", "").lower()
     print(f"content type: {content_type}")
     if "text/html" in content_type:
         text_contents = page.locator("//body").inner_text()
+        text_contents = _clean_text(text_contents)
         form = _get_form_elements(page, url)
         links = _get_page_links(page, url)
         wb = WebPage(url=url, text_content=text_contents, form=form, links=links)
     else:
+        content = response.body()
         wb = WebPage(
             url=url,
-            text_content=response.body(),
+            text_content=_clean_text(content),
             links=Links(links=[]),
             form=Form(url=url, elements=[]),
         )
     print(f"len text_contents: {len(wb.text_content)}")
+    print(f"total size: {wb.calculate_total_size()}")
     return wb
 
 
@@ -152,7 +161,6 @@ def fill_elements(
     browser.configure(browser_engine="chromium", headless=HEADLESS_BROWSER)
     page = browser.goto(web_page.url)
     page.wait_for_load_state("domcontentloaded")
-    page.wait_for_load_state("networkidle")
     locator = None
     submit_locator = None
     for element in web_page.form.elements:
@@ -183,10 +191,18 @@ def fill_elements(
         print("Enter the locator")
         locator.press("Enter")
         page.wait_for_load_state("domcontentloaded")
-        page.wait_for_load_state("networkidle")
+        try:
+            # Wait for network to be idle for 5 seconds, but continue even if not idle
+            page.wait_for_load_state("networkidle", timeout=MAX_WAIT_FOR_NETWORK_IDLE)
+        except TimeoutError as _:
+            pass
     elif submit_locator:
         print("Click the submit locator")
         submit_locator.click()
         page.wait_for_load_state("domcontentloaded")
-        page.wait_for_load_state("networkidle")
+        try:
+            # Wait for network to be idle for 5 seconds, but continue even if not idle
+            page.wait_for_load_state("networkidle", timeout=MAX_WAIT_FOR_NETWORK_IDLE)
+        except TimeoutError as _:
+            pass
     return page.locator("//body").inner_text()

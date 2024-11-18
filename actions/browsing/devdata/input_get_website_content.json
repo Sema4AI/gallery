@@ -1,12 +1,25 @@
 {
     "inputs": [
         {
-            "inputName": "input-1",
+            "inputName": "user agent empty - sendgrid pricing",
             "inputValue": {
-                "url": "https://sema4.ai",
+                "url": "https://sendgrid.com/pricing/",
+                "user_agent": {}
+            }
+        },
+        {
+            "inputName": "user agent name empty - sema4.ai docs",
+            "inputValue": {
+                "url": "https://sema4.ai/docs",
                 "user_agent": {
                     "name": ""
                 }
+            }
+        },
+        {
+            "inputName": "no user agent - sema4.ai",
+            "inputValue": {
+                "url": "https://sema4.ai"
             }
         }
     ],
