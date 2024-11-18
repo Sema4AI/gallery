@@ -1,0 +1,38 @@
+{
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "sysparm_query": "sys_created_on>=2014-01-01^sys_created_on<2024-01-01",
+                "pagination": {
+                    "limit": 0,
+                    "next_page": ""
+                },
+                "instance_url": "<specify-secret>",
+                "username": "<specify-secret>",
+                "password": "<specify-secret>"
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "search_incidents",
+        "actionRelativePath": "actions.py",
+        "schemaDescription": [
+            "sysparm_query: string",
+            "pagination.limit: integer",
+            "pagination.next_page: string"
+        ],
+        "managedParamsSchemaDescription": {
+            "instance_url": {
+                "type": "Secret"
+            },
+            "username": {
+                "type": "Secret"
+            },
+            "password": {
+                "type": "Secret"
+            }
+        },
+        "inputFileVersion": "v2"
+    }
+}
