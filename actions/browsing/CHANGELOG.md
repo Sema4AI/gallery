@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Added
 
-- Improved text content clean up for all 'text' properties
+- Improved text content cleanup for all 'text' properties
 
 ### Fixed
 
