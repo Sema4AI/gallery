@@ -15,9 +15,7 @@ def _clean_text(text):
     # Replace multiple spaces and tabs with a single space
     text = re.sub(r"[ \t]+", " ", text)
     # Replace multiple line breaks (possibly separated by spaces) with a single line break
-    text = re.sub(
-        r"(\n[ \t]*){2,}", "\n", text
-    )  # Change here to match line breaks with spaces
+    text = re.sub(r"(\n[ \t]*){2,}", "\n", text)
     # Strip leading and trailing whitespace
     text = text.strip()
     return text
