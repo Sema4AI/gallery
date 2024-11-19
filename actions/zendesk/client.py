@@ -86,6 +86,24 @@ class TicketsApi(BaseApi):
         ).json()
 
         return Ticket.model_validate(response["ticket"])
+    
+    def create(self, comment: str, priority: str, subject: str, tags: str) -> Ticket:
+        response = self._call_api(
+            requests.post,
+            "/api/v2/tickets.json",
+            {
+                "ticket": {
+                    "comment": {
+                        "body": comment
+                    },
+                    "priority": priority,
+                    "subject": subject,
+                    "tags": [tags]
+                }
+            },
+        ).json()
+
+        return Ticket.model_validate(response["ticket"])
 
 
 class CommentsApi(BaseApi):
