@@ -20,8 +20,8 @@
             "inputName": "add issue for a project",
             "inputValue": {
                 "issue_details": {
-                    "title": "kovaa hommaa",
-                    "description": "",
+                    "title": "timanttinen issue",
+                    "description": "# This will require a lot of work\n\n## This is a description\n\n### This is a sub-description",
                     "team": {
                         "name": "Test"
                     },
@@ -30,6 +30,9 @@
                     },
                     "state": {
                         "name": "In Progress"
+                    },
+                    "assignee": {
+                        "name": "beissi"
                     }
                 },
                 "api_key": ""

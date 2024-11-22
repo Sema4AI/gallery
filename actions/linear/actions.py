@@ -110,7 +110,7 @@ def create_issue(
     if issue_details.description:
         input_vars["description"] = issue_details.description
     if issue_details.assignee:
-        input_vars["assigneeId"] = issue_details.assignee.id
+        input_vars["assigneeId"] = _get_assignee_id(issue_details, api_key)
     if issue_details.project:
         input_vars["projectId"] = _get_project_id(issue_details, projects)
     if issue_details.state:
@@ -398,3 +398,56 @@ def get_projects(api_key: Secret) -> Response[ProjectList]:
         for project in response_json["data"]["projects"]["nodes"]
     ]
     return Response(result=projects)
+
+
+def _get_assignee_id(issue_details: Issue, api_key: Secret) -> str:
+    """Get user ID from assignee name
+
+    Args:
+        issue_details: Issue details
+        api_key: The API key to use to authenticate with the Linear API
+    Returns:
+        User ID if found, None otherwise
+    """
+    query = """
+    query Users {
+        users {
+            nodes {
+                id
+                name
+                email
+                displayName
+            }
+        }
+    }
+    """
+
+    response = requests.post(
+        API_URL,
+        json={"query": query},
+        headers={
+            "Authorization": _get_api_key(api_key),
+            "Content-Type": "application/json",
+        },
+    )
+
+    response_json = response.json()
+    if "errors" in response_json:
+        raise Exception(f"Failed to fetch users: {response_json['errors']}")
+
+    users = response_json["data"]["users"]["nodes"]
+
+    # Try to match by exact name first
+    user = next(
+        (
+            user
+            for user in users
+            if user["name"].lower() == issue_details.assignee.name.lower()
+            or user.get("displayName", "").lower()
+            == issue_details.assignee.name.lower()
+            or issue_details.assignee.name.lower() in user["name"].lower()
+        ),
+        None,
+    )
+
+    return user["id"] if user else None
