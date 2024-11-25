@@ -1,17 +1,22 @@
 from sema4ai.actions import action, Response, Secret
 import json
-import requests
-from models import Issue, IssueList, FilterOptions, Team, TeamList, Project, ProjectList
+from models import Issue, IssueList, FilterOptions
 from support import (
-    GRAPHQL_API_URL,
-    _get_api_key,
+    _get_assignee_id,
     _set_query_variables,
-    query_search_issues,
-    query_get_issues,
+    _make_graphql_request,
     _get_label_ids,
     _get_state_id,
     _get_team_id,
+    _get_teams,
     _get_project_id,
+    _get_projects,
+)
+from queries import (
+    query_search_issues,
+    query_get_issues,
+    query_create_issue,
+    query_add_comment,
 )
 
 
@@ -31,20 +36,11 @@ def search_issues(
         List of issues.
     """
     variables = _set_query_variables(filter_options)
-    query_data = {"query": query_search_issues if variables else query_get_issues}
+    query_to_use = query_search_issues if variables else query_get_issues
     variables["orderBy"] = "updatedAt"
-    query_data["variables"] = json.dumps(variables)
-    response = requests.post(
-        GRAPHQL_API_URL,
-        json=query_data,  # Add variables to the request
-        headers={
-            "Authorization": _get_api_key(api_key),
-            "Content-Type": "application/json",
-        },
-    )
     tickets = IssueList()
-    response_json = response.json()
-    for issue in response_json["data"]["issues"]["nodes"]:
+    search_response = _make_graphql_request(query_to_use, variables, api_key)
+    for issue in search_response["data"]["issues"]["nodes"]:
         ticket = Issue.create(issue)
         tickets.add_ticket(ticket)
 
@@ -64,49 +60,9 @@ def create_issue(
     Returns:
         The created issue details
     """
-    mutation = """
-    mutation CreateIssue($input: IssueCreateInput!) {
-        issueCreate(input: $input) {
-            success
-            issue {
-                id
-                identifier
-                title
-                description
-                team {
-                    id
-                    name
-                }
-                project {
-                    id
-                    name
-                }
-                assignee {
-                    name
-                }
-                creator {
-                    name
-                }
-                state {
-                    id
-                    name
-                }
-                labels {
-                    nodes {
-                        id
-                        name
-                    }
-                }
-                url
-            }
-        }
-    }
-    """
     projects_result = _get_projects(api_key)
-    projects = projects_result.result
     teams_result = _get_teams(api_key)
-    teams = teams_result.result
-    team_id = _get_team_id(issue_details, teams)
+    team_id = _get_team_id(issue_details, teams_result)
     input_vars = {
         "teamId": team_id,
         "title": issue_details.title,
@@ -118,30 +74,17 @@ def create_issue(
     if issue_details.assignee:
         input_vars["assigneeId"] = _get_assignee_id(issue_details, api_key)
     if issue_details.project:
-        input_vars["projectId"] = _get_project_id(issue_details, projects)
+        input_vars["projectId"] = _get_project_id(issue_details, projects_result)
     if issue_details.state:
-        input_vars["stateId"] = _get_state_id(issue_details, team_id, teams)
+        input_vars["stateId"] = _get_state_id(issue_details, team_id, teams_result)
     if issue_details.labels:
         label_ids = _get_label_ids(issue_details, api_key)
         if label_ids:
             input_vars["labelIds"] = label_ids
     variables = {"input": input_vars}
 
-    response = requests.post(
-        GRAPHQL_API_URL,
-        json={"query": mutation, "variables": variables},
-        headers={
-            "Authorization": _get_api_key(api_key),
-            "Content-Type": "application/json",
-        },
-    )
-
-    response_json = response.json()
-
-    if "errors" in response_json:
-        raise Exception(f"Failed to create issue: {response_json['errors']}")
-
-    return Response(result=json.dumps(response_json))
+    issue_response = _make_graphql_request(query_create_issue, variables, api_key)
+    return Response(result=json.dumps(issue_response))
 
 
 @action
@@ -155,227 +98,7 @@ def add_comment(issue_id: str, body: str, api_key: Secret) -> str:
     Returns:
         The created comment details
     """
-    mutation = """
-    mutation CreateComment($input: CommentCreateInput!) {
-        commentCreate(input: $input) {
-            success
-            comment {
-                id
-                body
-                createdAt
-                user {
-                    name
-                }
-            }
-        }
-    }
-    """
 
     variables = {"input": {"issueId": issue_id, "body": body}}
-
-    response = requests.post(
-        GRAPHQL_API_URL,
-        json={"query": mutation, "variables": variables},
-        headers={
-            "Authorization": _get_api_key(api_key),
-            "Content-Type": "application/json",
-        },
-    )
-
-    response_json = response.json()
-    if "errors" in response_json:
-        raise Exception(f"Failed to create comment: {response_json['errors']}")
-
+    _make_graphql_request(query_add_comment, variables, api_key)
     return "Comment added"
-
-
-def _get_workflow_states(team_id: str, api_key: Secret) -> Response[str]:
-    """Get all workflow states for a team
-
-    Args:
-        team_id: ID of the team
-        api_key: The API key to use to authenticate with the Linear API
-    Returns:
-        List of workflow states with their IDs and names
-    """
-    query = """
-    query WorkflowStates($teamId: String!) {
-        team(id: $teamId) {
-            states {
-                nodes {
-                    id
-                    name
-                    type
-                    color
-                }
-            }
-        }
-    }
-    """
-
-    variables = {"teamId": team_id}
-
-    response = requests.post(
-        GRAPHQL_API_URL,
-        json={"query": query, "variables": variables},
-        headers={
-            "Authorization": _get_api_key(api_key),
-            "Content-Type": "application/json",
-        },
-    )
-
-    response_json = response.json()
-    return Response(result=json.dumps(response_json))
-
-
-def _get_teams(api_key: Secret) -> Response[TeamList]:
-    """Get all teams from Linear
-
-    Args:
-        api_key: The API key to use to authenticate with the Linear API
-    Returns:
-        List of teams with their IDs and names
-    """
-    query = """
-    query Teams {
-        teams {
-            nodes {
-                id
-                name
-                key
-                description
-                states {
-                    nodes {
-                        id
-                        name
-                        type
-                        color
-                    }
-                }
-            }
-        }
-    }
-    """
-
-    response = requests.post(
-        GRAPHQL_API_URL,
-        json={"query": query},
-        headers={
-            "Authorization": _get_api_key(api_key),
-            "Content-Type": "application/json",
-        },
-    )
-
-    response_json = response.json()
-    if "errors" in response_json:
-        raise Exception(f"Failed to fetch teams: {response_json['errors']}")
-    teams = [
-        Team.model_validate(team) for team in response_json["data"]["teams"]["nodes"]
-    ]
-    return Response(result=teams)
-
-
-def _get_projects(api_key: Secret) -> Response[ProjectList]:
-    """Get all projects from Linear
-
-    Args:
-        api_key: The API key to use to authenticate with the Linear API
-    Returns:
-        List of projects with their IDs, names, and team info
-    """
-    query = """
-    query Projects {
-        projects {
-            nodes {
-                id
-                name
-                description
-                startDate
-                targetDate
-            }
-        }
-    }
-    """
-
-    response = requests.post(
-        GRAPHQL_API_URL,
-        json={"query": query},
-        headers={
-            "Authorization": _get_api_key(api_key),
-            "Content-Type": "application/json",
-        },
-    )
-
-    response_json = response.json()
-    if "errors" in response_json:
-        raise Exception(f"Failed to fetch projects: {response_json['errors']}")
-
-    projects = [
-        Project.model_validate(project)
-        for project in response_json["data"]["projects"]["nodes"]
-    ]
-    return Response(result=projects)
-
-
-def _get_assignee_id(issue_details: Issue, api_key: Secret) -> str:
-    """Get user ID from assignee name
-
-    Args:
-        issue_details: Issue details
-        api_key: The API key to use to authenticate with the Linear API
-    Returns:
-        User ID if found, None otherwise
-    """
-    query = """
-    query Users($after: String) {
-        users(first: 250, after: $after) {
-            nodes {
-                id
-                name
-                email
-                displayName
-            }
-            pageInfo {
-                hasNextPage
-                endCursor
-            }
-        }
-    }
-    """
-
-    all_users = []
-    has_next_page = True
-    after = None
-    # Fetch all users using pagination
-    while has_next_page:
-        response = requests.post(
-            GRAPHQL_API_URL,
-            json={"query": query, "variables": {"after": after}},
-            headers={
-                "Authorization": _get_api_key(api_key),
-                "Content-Type": "application/json",
-            },
-        )
-        response_json = response.json()
-        if "errors" in response_json:
-            raise Exception(f"Failed to fetch users: {response_json['errors']}")
-        data = response_json["data"]["users"]
-        all_users.extend(data["nodes"])
-
-        has_next_page = data["pageInfo"]["hasNextPage"]
-        after = data["pageInfo"]["endCursor"]
-
-    # Try to match by exact name first
-    user = next(
-        (
-            user
-            for user in all_users
-            if user["name"].lower() == issue_details.assignee.name.lower()
-            or user.get("displayName", "").lower()
-            == issue_details.assignee.name.lower()
-            or issue_details.assignee.name.lower() in user["name"].lower()
-        ),
-        None,
-    )
-
-    return user["id"] if user else None

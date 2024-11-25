@@ -1,69 +1,23 @@
 from sema4ai.actions import Secret
 from dotenv import load_dotenv
+import json
 import os
 from pathlib import Path
 import requests
-from models import FilterOptions, Issue, TeamList, ProjectList
+from models import FilterOptions, Issue, TeamList, ProjectList, Project, Team
+from queries import (
+    query_get_labels,
+    query_get_states,
+    query_get_teams,
+    query_get_projects,
+    query_get_users,
+    query_create_label,
+)
 from typing import List
 
 GRAPHQL_API_URL = "https://api.linear.app/graphql"
 
 load_dotenv(Path(__file__).absolute().parent / "devdata" / ".env")
-
-nodes = """
-    {
-        id
-        title
-        description
-        state {
-            id
-            name
-        }
-        assignee {
-            id
-            name
-        }
-        creator {
-            id
-            name
-        }
-        project {
-            id
-            name
-        }
-        priority
-        team {
-            id
-            name
-        }
-        labels {
-            nodes {
-                id
-                name
-                color
-            }
-        }
-        url
-        createdAt
-        updatedAt
-    }
-"""
-
-query_search_issues = f"""
-    query SearchIssues($filter: IssueFilter) {{
-        issues(filter: $filter) {{
-            nodes {nodes}
-        }}
-    }}
-"""
-
-query_get_issues = f"""
-    query GetIssues($orderBy: PaginationOrderBy) {{
-        issues(orderBy: $orderBy) {{
-            nodes {nodes}
-        }}
-    }}
-"""
 
 
 def _set_query_variables(filter_options: FilterOptions) -> dict:
@@ -153,57 +107,9 @@ def _get_label_ids(issue_details: Issue, api_key: Secret) -> List[str]:
         List of label IDs
     """
     # First get existing labels
-    query = """
-    query Labels($after: String) {
-        issueLabels(first: 250, after: $after) {
-            nodes {
-                id
-                name
-            }
-            pageInfo {
-                hasNextPage
-                endCursor
-            }
-        }
-    }
-    """
-    existing_labels = []
-    has_next_page = True
-    after = None
-    # Fetch all labels using pagination
-    while has_next_page:
-        response = requests.post(
-            GRAPHQL_API_URL,
-            json={"query": query, "variables": {"after": after}},
-            headers={
-                "Authorization": _get_api_key(api_key),
-                "Content-Type": "application/json",
-            },
-        )
-        response_json = response.json()
-        if "errors" in response_json:
-            raise Exception(f"Failed to fetch labels: {response_json['errors']}")
-        data = response_json["data"]["issueLabels"]
-        existing_labels.extend(data["nodes"])
-
-        has_next_page = data["pageInfo"]["hasNextPage"]
-        after = data["pageInfo"]["endCursor"]
-
+    response_data = _make_graphql_request(query_get_labels, {}, api_key, paginated=True)
+    existing_labels = response_data["issueLabels"]["nodes"]
     label_ids = []
-
-    # Mutation to create new label
-    create_label_mutation = """
-    mutation CreateLabel($input: IssueLabelCreateInput!) {
-        issueLabelCreate(input: $input) {
-            success
-            issueLabel {
-                id
-                name
-            }
-        }
-    }
-    """
-
     for issue_label in issue_details.labels:
         # Try to find existing label
         label = next(
@@ -225,25 +131,133 @@ def _get_label_ids(issue_details: Issue, api_key: Secret) -> List[str]:
                     "color": "#000000",  # Default color, you might want to make this configurable
                 }
             }
-
-            create_response = requests.post(
-                GRAPHQL_API_URL,
-                json={"query": create_label_mutation, "variables": variables},
-                headers={
-                    "Authorization": _get_api_key(api_key),
-                    "Content-Type": "application/json",
-                },
+            create_response = _make_graphql_request(
+                query_create_label,
+                variables,
+                api_key,
             )
-
-            create_response_json = create_response.json()
-            if "errors" in create_response_json:
-                raise Exception(
-                    f"Failed to create label: {create_response_json['errors']}"
-                )
-
-            new_label_id = create_response_json["data"]["issueLabelCreate"][
-                "issueLabel"
-            ]["id"]
+            new_label_id = create_response["issueLabelCreate"]["issueLabel"]["id"]
             label_ids.append(new_label_id)
+            if "errors" in create_response:
+                raise Exception(f"Failed to create label: {create_response['errors']}")
 
     return label_ids
+
+
+def _make_graphql_request(
+    query: str, variables: dict, api_key: Secret, paginated: bool = False
+) -> dict:
+    """Make a GraphQL request to the Linear API, handling pagination if needed
+
+    Args:
+        query: The GraphQL query or mutation to execute
+        variables: Variables to pass to the query
+        api_key: The API key to use for authentication
+        paginated: Whether to handle pagination for this request
+    Returns:
+        The JSON response data from the API, with all pages combined if paginated
+    """
+    all_data = []
+    has_next_page = True
+    after = None
+    while has_next_page:
+        current_variables = {**variables}
+        if paginated:
+            current_variables["after"] = after
+        response = requests.post(
+            GRAPHQL_API_URL,
+            json={"query": query, "variables": current_variables},
+            headers={
+                "Authorization": _get_api_key(api_key),
+                "Content-Type": "application/json",
+            },
+        )
+        response_json = response.json()
+        if "errors" in response_json:
+            raise Exception(f"GraphQL request failed: {response_json['errors']}")
+        if not paginated:
+            return response_json["data"]
+        # Handle pagination
+        # Assume the first key in data is the one we want to paginate
+        data_key = next(iter(response_json["data"]))
+        data = response_json["data"][data_key]
+        all_data.extend(data["nodes"])
+
+        has_next_page = data["pageInfo"]["hasNextPage"]
+        after = data["pageInfo"]["endCursor"]
+    return {next(iter(response_json["data"])): {"nodes": all_data}}
+
+
+def _get_assignee_id(issue_details: Issue, api_key: Secret) -> str:
+    """Get user ID from assignee name
+
+    Args:
+        issue_details: Issue details
+        api_key: The API key to use to authenticate with the Linear API
+    Returns:
+        User ID if found, None otherwise
+    """
+
+    user_response = _make_graphql_request(query_get_users, {}, api_key, paginated=True)
+    all_users = user_response["users"]["nodes"]
+
+    # Try to match by exact name first
+    user = next(
+        (
+            user
+            for user in all_users
+            if user["name"].lower() == issue_details.assignee.name.lower()
+            or user.get("displayName", "").lower()
+            == issue_details.assignee.name.lower()
+            or issue_details.assignee.name.lower() in user["name"].lower()
+        ),
+        None,
+    )
+
+    return user["id"] if user else None
+
+
+def _get_workflow_states(team_id: str, api_key: Secret) -> str:
+    """Get all workflow states for a team
+
+    Args:
+        team_id: ID of the team
+        api_key: The API key to use to authenticate with the Linear API
+    Returns:
+        List of workflow states with their IDs and names
+    """
+    variables = {"teamId": team_id}
+    states_response = _make_graphql_request(query_get_states, variables, api_key)
+    return json.dumps(states_response)
+
+
+def _get_teams(api_key: Secret) -> TeamList:
+    """Get all teams from Linear
+
+    Args:
+        api_key: The API key to use to authenticate with the Linear API
+    Returns:
+        List of teams with their IDs and names
+    """
+    teams_response = _make_graphql_request(query_get_teams, {}, api_key)
+    teams = [
+        Team.model_validate(team) for team in teams_response["data"]["teams"]["nodes"]
+    ]
+    return teams
+
+
+def _get_projects(api_key: Secret) -> ProjectList:
+    """Get all projects from Linear
+
+    Args:
+        api_key: The API key to use to authenticate with the Linear API
+    Returns:
+        List of projects with their IDs, names, and team info
+    """
+
+    projects_response = _make_graphql_request(query_get_projects, {}, api_key)
+    projects = [
+        Project.model_validate(project)
+        for project in projects_response["data"]["projects"]["nodes"]
+    ]
+    return projects
