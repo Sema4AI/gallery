@@ -102,9 +102,9 @@ def create_issue(
         }
     }
     """
-    projects_result = get_projects(api_key)
+    projects_result = _get_projects(api_key)
     projects = projects_result.result
-    teams_result = get_teams(api_key)
+    teams_result = _get_teams(api_key)
     teams = teams_result.result
     team_id = _get_team_id(issue_details, teams)
     input_vars = {
@@ -189,8 +189,7 @@ def add_comment(issue_id: str, body: str, api_key: Secret) -> str:
     return "Comment added"
 
 
-@action
-def get_workflow_states(team_id: str, api_key: Secret) -> Response[str]:
+def _get_workflow_states(team_id: str, api_key: Secret) -> Response[str]:
     """Get all workflow states for a team
 
     Args:
@@ -229,8 +228,7 @@ def get_workflow_states(team_id: str, api_key: Secret) -> Response[str]:
     return Response(result=json.dumps(response_json))
 
 
-@action
-def get_teams(api_key: Secret) -> Response[TeamList]:
+def _get_teams(api_key: Secret) -> Response[TeamList]:
     """Get all teams from Linear
 
     Args:
@@ -277,8 +275,7 @@ def get_teams(api_key: Secret) -> Response[TeamList]:
     return Response(result=teams)
 
 
-@action
-def get_projects(api_key: Secret) -> Response[ProjectList]:
+def _get_projects(api_key: Secret) -> Response[ProjectList]:
     """Get all projects from Linear
 
     Args:
@@ -330,38 +327,49 @@ def _get_assignee_id(issue_details: Issue, api_key: Secret) -> str:
         User ID if found, None otherwise
     """
     query = """
-    query Users {
-        users {
+    query Users($after: String) {
+        users(first: 250, after: $after) {
             nodes {
                 id
                 name
                 email
                 displayName
             }
+            pageInfo {
+                hasNextPage
+                endCursor
+            }
         }
     }
     """
 
-    response = requests.post(
-        GRAPHQL_API_URL,
-        json={"query": query},
-        headers={
-            "Authorization": _get_api_key(api_key),
-            "Content-Type": "application/json",
-        },
-    )
+    all_users = []
+    has_next_page = True
+    after = None
+    # Fetch all users using pagination
+    while has_next_page:
+        response = requests.post(
+            GRAPHQL_API_URL,
+            json={"query": query, "variables": {"after": after}},
+            headers={
+                "Authorization": _get_api_key(api_key),
+                "Content-Type": "application/json",
+            },
+        )
+        response_json = response.json()
+        if "errors" in response_json:
+            raise Exception(f"Failed to fetch users: {response_json['errors']}")
+        data = response_json["data"]["users"]
+        all_users.extend(data["nodes"])
 
-    response_json = response.json()
-    if "errors" in response_json:
-        raise Exception(f"Failed to fetch users: {response_json['errors']}")
-
-    users = response_json["data"]["users"]["nodes"]
+        has_next_page = data["pageInfo"]["hasNextPage"]
+        after = data["pageInfo"]["endCursor"]
 
     # Try to match by exact name first
     user = next(
         (
             user
-            for user in users
+            for user in all_users
             if user["name"].lower() == issue_details.assignee.name.lower()
             or user.get("displayName", "").lower()
             == issue_details.assignee.name.lower()

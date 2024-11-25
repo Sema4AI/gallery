@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 import os
 from pathlib import Path
 import requests
-from models import FilterOptions, Issue, TeamList, ProjectList, LabelList
+from models import FilterOptions, Issue, TeamList, ProjectList
 from typing import List
 
 GRAPHQL_API_URL = "https://api.linear.app/graphql"
@@ -98,18 +98,15 @@ def _get_api_key(api_key: Secret) -> str:
 
 
 def _get_team_id(issue_details: Issue, teams_data: TeamList) -> str:
-    team_id = issue_details.team.id
-    if not team_id:
-        team = next(
-            (
-                team
-                for team in teams_data
-                if issue_details.team.name.lower() in team.name.lower()
-            ),
-            None,
-        )
-        team_id = team.id
-    return team_id
+    team = next(
+        (
+            team
+            for team in teams_data
+            if issue_details.team.name.lower() in team.name.lower()
+        ),
+        None,
+    )
+    return team.id if team else None
 
 
 def _get_state_id(issue_details: Issue, team_id: str, teams_data: TeamList) -> str:
@@ -157,30 +154,41 @@ def _get_label_ids(issue_details: Issue, api_key: Secret) -> List[str]:
     """
     # First get existing labels
     query = """
-    query Labels {
-        issueLabels {
+    query Labels($after: String) {
+        issueLabels(first: 250, after: $after) {
             nodes {
                 id
                 name
             }
+            pageInfo {
+                hasNextPage
+                endCursor
+            }
         }
     }
     """
+    existing_labels = []
+    has_next_page = True
+    after = None
+    # Fetch all labels using pagination
+    while has_next_page:
+        response = requests.post(
+            GRAPHQL_API_URL,
+            json={"query": query, "variables": {"after": after}},
+            headers={
+                "Authorization": _get_api_key(api_key),
+                "Content-Type": "application/json",
+            },
+        )
+        response_json = response.json()
+        if "errors" in response_json:
+            raise Exception(f"Failed to fetch labels: {response_json['errors']}")
+        data = response_json["data"]["issueLabels"]
+        existing_labels.extend(data["nodes"])
 
-    response = requests.post(
-        GRAPHQL_API_URL,
-        json={"query": query},
-        headers={
-            "Authorization": _get_api_key(api_key),
-            "Content-Type": "application/json",
-        },
-    )
+        has_next_page = data["pageInfo"]["hasNextPage"]
+        after = data["pageInfo"]["endCursor"]
 
-    response_json = response.json()
-    if "errors" in response_json:
-        raise Exception(f"Failed to fetch labels: {response_json['errors']}")
-
-    existing_labels = response_json["data"]["issueLabels"]["nodes"]
     label_ids = []
 
     # Mutation to create new label
