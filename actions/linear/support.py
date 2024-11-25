@@ -1,8 +1,12 @@
 from sema4ai.actions import Secret
 from dotenv import load_dotenv
-from pathlib import Path
 import os
-from models import FilterOptions, Issue, TeamList, ProjectList
+from pathlib import Path
+import requests
+from models import FilterOptions, Issue, TeamList, ProjectList, LabelList
+from typing import List
+
+GRAPHQL_API_URL = "https://api.linear.app/graphql"
 
 load_dotenv(Path(__file__).absolute().parent / "devdata" / ".env")
 
@@ -31,6 +35,13 @@ nodes = """
         team {
             id
             name
+        }
+        labels {
+            nodes {
+                id
+                name
+                color
+            }
         }
         url
         createdAt
@@ -73,6 +84,8 @@ def _set_query_variables(filter_options: FilterOptions) -> dict:
         filter_dict["state"] = {"name": {"contains": filter_options.state}}
     if filter_options.team_name:
         filter_dict["team"] = {"name": {"contains": filter_options.team_name}}
+    if filter_options.label:
+        filter_dict["labels"] = {"some": {"name": {"contains": filter_options.label}}}
     variables = {"filter": filter_dict} if filter_dict else {}
     return variables
 
@@ -131,3 +144,98 @@ def _get_project_id(issue_details: Issue, projects_data: ProjectList) -> str:
         )
         return project.id if project else None
     return project_id
+
+
+def _get_label_ids(issue_details: Issue, api_key: Secret) -> List[str]:
+    """Get label IDs from label names, creating new labels if they don't exist
+
+    Args:
+        issue_details: Issue details containing labels
+        api_key: The API key to use to authenticate with the Linear API
+    Returns:
+        List of label IDs
+    """
+    # First get existing labels
+    query = """
+    query Labels {
+        issueLabels {
+            nodes {
+                id
+                name
+            }
+        }
+    }
+    """
+
+    response = requests.post(
+        GRAPHQL_API_URL,
+        json={"query": query},
+        headers={
+            "Authorization": _get_api_key(api_key),
+            "Content-Type": "application/json",
+        },
+    )
+
+    response_json = response.json()
+    if "errors" in response_json:
+        raise Exception(f"Failed to fetch labels: {response_json['errors']}")
+
+    existing_labels = response_json["data"]["issueLabels"]["nodes"]
+    label_ids = []
+
+    # Mutation to create new label
+    create_label_mutation = """
+    mutation CreateLabel($input: IssueLabelCreateInput!) {
+        issueLabelCreate(input: $input) {
+            success
+            issueLabel {
+                id
+                name
+            }
+        }
+    }
+    """
+
+    for issue_label in issue_details.labels:
+        # Try to find existing label
+        label = next(
+            (
+                label
+                for label in existing_labels
+                if label["name"].lower() == issue_label.name.lower()
+            ),
+            None,
+        )
+
+        if label:
+            label_ids.append(label["id"])
+        else:
+            # Create new label if it doesn't exist
+            variables = {
+                "input": {
+                    "name": issue_label.name,
+                    "color": "#000000",  # Default color, you might want to make this configurable
+                }
+            }
+
+            create_response = requests.post(
+                GRAPHQL_API_URL,
+                json={"query": create_label_mutation, "variables": variables},
+                headers={
+                    "Authorization": _get_api_key(api_key),
+                    "Content-Type": "application/json",
+                },
+            )
+
+            create_response_json = create_response.json()
+            if "errors" in create_response_json:
+                raise Exception(
+                    f"Failed to create label: {create_response_json['errors']}"
+                )
+
+            new_label_id = create_response_json["data"]["issueLabelCreate"][
+                "issueLabel"
+            ]["id"]
+            label_ids.append(new_label_id)
+
+    return label_ids

@@ -17,6 +17,24 @@
             }
         },
         {
+            "inputName": "add issue with label",
+            "inputValue": {
+                "issue_details": {
+                    "title": "X2",
+                    "description": "",
+                    "team": {
+                        "name": "Test"
+                    },
+                    "labels": [
+                        {
+                            "name": "X1"
+                        }
+                    ]
+                },
+                "api_key": ""
+            }
+        },
+        {
             "inputName": "add issue for a project",
             "inputValue": {
                 "issue_details": {

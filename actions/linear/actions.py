@@ -3,16 +3,16 @@ import json
 import requests
 from models import Issue, IssueList, FilterOptions, Team, TeamList, Project, ProjectList
 from support import (
+    GRAPHQL_API_URL,
     _get_api_key,
     _set_query_variables,
     query_search_issues,
     query_get_issues,
+    _get_label_ids,
     _get_state_id,
     _get_team_id,
     _get_project_id,
 )
-
-API_URL = "https://api.linear.app/graphql"
 
 
 @action
@@ -35,7 +35,7 @@ def search_issues(
     variables["orderBy"] = "updatedAt"
     query_data["variables"] = json.dumps(variables)
     response = requests.post(
-        API_URL,
+        GRAPHQL_API_URL,
         json=query_data,  # Add variables to the request
         headers={
             "Authorization": _get_api_key(api_key),
@@ -91,6 +91,12 @@ def create_issue(
                     id
                     name
                 }
+                labels {
+                    nodes {
+                        id
+                        name
+                    }
+                }
                 url
             }
         }
@@ -115,11 +121,14 @@ def create_issue(
         input_vars["projectId"] = _get_project_id(issue_details, projects)
     if issue_details.state:
         input_vars["stateId"] = _get_state_id(issue_details, team_id, teams)
-
+    if issue_details.labels:
+        label_ids = _get_label_ids(issue_details, api_key)
+        if label_ids:
+            input_vars["labelIds"] = label_ids
     variables = {"input": input_vars}
 
     response = requests.post(
-        API_URL,
+        GRAPHQL_API_URL,
         json={"query": mutation, "variables": variables},
         headers={
             "Authorization": _get_api_key(api_key),
@@ -165,7 +174,7 @@ def add_comment(issue_id: str, body: str, api_key: Secret) -> str:
     variables = {"input": {"issueId": issue_id, "body": body}}
 
     response = requests.post(
-        API_URL,
+        GRAPHQL_API_URL,
         json={"query": mutation, "variables": variables},
         headers={
             "Authorization": _get_api_key(api_key),
@@ -178,94 +187,6 @@ def add_comment(issue_id: str, body: str, api_key: Secret) -> str:
         raise Exception(f"Failed to create comment: {response_json['errors']}")
 
     return "Comment added"
-
-
-# @action
-# def update_issue(
-#     api_key: Secret,
-#     issue_id: str,
-#     title: str = None,
-#     description: str = None,
-#     state_id: str = None,
-#     assignee_id: str = None,
-#     priority: int = None,
-# ) -> Response[Issue]:
-#     """Update a Linear issue
-
-#     Args:
-#         issue_id: ID of the issue to update
-#         title: New title for the issue
-#         description: New description for the issue
-#         state_id: ID of the new state
-#         assignee_id: ID of the user to assign the issue to
-#         priority: Priority level (0-4)
-#         api_key: The API key to use to authenticate with the Linear API
-#     Returns:
-#         The updated issue details
-#     """
-#     mutation = """
-#     mutation UpdateIssue($id: String!, $input: IssueUpdateInput!) {
-#         issueUpdate(id: $id, input: $input) {
-#             success
-#             issue {
-#                 id
-#                 title
-#                 description
-#                 state {
-#                     name
-#                 }
-#                 assignee {
-#                     name
-#                 }
-#                 priority
-#                 project {
-#                     name
-#                 }
-#             }
-#         }
-#     }
-#     """
-
-#     # Build input variables with only provided fields
-#     input_vars = {}
-#     if title is not None:
-#         input_vars["title"] = title
-#     if description is not None:
-#         input_vars["description"] = description
-#     if state_id is not None:
-#         input_vars["stateId"] = state_id
-#     if assignee_id is not None:
-#         input_vars["assigneeId"] = assignee_id
-#     if priority is not None:
-#         input_vars["priority"] = priority
-
-#     variables = {"id": issue_id, "input": input_vars}
-
-#     response = requests.post(
-#         API_URL,
-#         json={"query": mutation, "variables": variables},
-#         headers={
-#             "Authorization": _get_api_key(api_key),
-#             "Content-Type": "application/json",
-#         },
-#     )
-
-#     response_json = response.json()
-#     if "errors" in response_json:
-#         raise Exception(f"Failed to update issue: {response_json['errors']}")
-
-#     issue_data = response_json["data"]["issueUpdate"]["issue"]
-
-#     issue = Issue(
-#         id=issue_data["id"],
-#         title=issue_data["title"],
-#         description=issue_data.get("description"),
-#         assignee=issue_data["assignee"]["name"] if issue_data.get("assignee") else None,
-#         project=issue_data["project"]["name"] if issue_data.get("project") else None,
-#         state=issue_data["state"]["name"] if issue_data.get("state") else None,
-#     )
-
-#     return Response(result=issue)
 
 
 @action
@@ -296,7 +217,7 @@ def get_workflow_states(team_id: str, api_key: Secret) -> Response[str]:
     variables = {"teamId": team_id}
 
     response = requests.post(
-        API_URL,
+        GRAPHQL_API_URL,
         json={"query": query, "variables": variables},
         headers={
             "Authorization": _get_api_key(api_key),
@@ -306,7 +227,6 @@ def get_workflow_states(team_id: str, api_key: Secret) -> Response[str]:
 
     response_json = response.json()
     return Response(result=json.dumps(response_json))
-    # return Response(result=response_json["data"]["team"]["states"]["nodes"])
 
 
 @action
@@ -340,7 +260,7 @@ def get_teams(api_key: Secret) -> Response[TeamList]:
     """
 
     response = requests.post(
-        API_URL,
+        GRAPHQL_API_URL,
         json={"query": query},
         headers={
             "Authorization": _get_api_key(api_key),
@@ -381,7 +301,7 @@ def get_projects(api_key: Secret) -> Response[ProjectList]:
     """
 
     response = requests.post(
-        API_URL,
+        GRAPHQL_API_URL,
         json={"query": query},
         headers={
             "Authorization": _get_api_key(api_key),
@@ -423,7 +343,7 @@ def _get_assignee_id(issue_details: Issue, api_key: Secret) -> str:
     """
 
     response = requests.post(
-        API_URL,
+        GRAPHQL_API_URL,
         json={"query": query},
         headers={
             "Authorization": _get_api_key(api_key),

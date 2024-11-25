@@ -13,7 +13,7 @@
             "inputName": "filter by title",
             "inputValue": {
                 "filter_options": {
-                    "title": "Control Room"
+                    "title": "X"
                 },
                 "api_key": ""
             }
@@ -59,6 +59,15 @@
             "inputName": "get issues",
             "inputValue": {
                 "filter_options": {},
+                "api_key": ""
+            }
+        },
+        {
+            "inputName": "filter by label 'Studio'",
+            "inputValue": {
+                "filter_options": {
+                    "label": "Studio"
+                },
                 "api_key": ""
             }
         }

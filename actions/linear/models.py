@@ -11,6 +11,7 @@ class FilterOptions(BaseModel):
     title: Optional[str] = None
     description: Optional[str] = None
     state: Optional[str] = None
+    label: Optional[str] = None
 
 
 class NameAndId(BaseModel):
@@ -30,6 +31,7 @@ class Issue(BaseModel):
     url: Optional[str] = None
     created_at: Optional[str] = None
     updated_at: Optional[str] = None
+    labels: Optional[List[NameAndId]] = None
 
     @classmethod
     def create(cls, data: dict) -> "Issue":
@@ -84,6 +86,14 @@ class Issue(BaseModel):
                 if data.get("state")
                 else None
             ),
+            labels=(
+                [
+                    NameAndId(name=label.get("name", ""), id=label.get("id", ""))
+                    for label in data.get("labels", {}).get("nodes", [])
+                ]
+                if data.get("labels")
+                else None
+            ),
             url=data.get("url"),
             created_at=data.get("createdAt"),
             updated_at=data.get("updatedAt"),
@@ -135,3 +145,14 @@ class Project(BaseModel):
 
 class ProjectList(BaseModel):
     nodes: List[Project]
+
+
+class LabelList(BaseModel):
+    labels: Annotated[List[str], Field(default_factory=list)] = []
+
+    def add_label(self, label: str):
+        """Add a label to the list
+        Args:
+            label: The label to add
+        """
+        self.labels.append(label)
