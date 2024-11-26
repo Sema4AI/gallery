@@ -40,8 +40,19 @@ def _set_query_variables(filter_options: FilterOptions) -> dict:
         filter_dict["team"] = {"name": {"contains": filter_options.team_name}}
     if filter_options.label:
         filter_dict["labels"] = {"some": {"name": {"contains": filter_options.label}}}
-    variables = {"filter": filter_dict} if filter_dict else {}
-    return variables
+    return filter_dict
+
+
+def _set_default_variables(filter_options: FilterOptions, filter_dict: dict):
+    query_variables = {
+        "first": filter_options.limit if filter_options.limit else 50,
+        "orderBy": (
+            filter_options.ordering.value if filter_options.ordering else "updatedAt"
+        ),
+    }
+    if filter_dict:
+        query_variables["filter"] = filter_dict
+    return query_variables
 
 
 def _get_api_key(api_key: Secret) -> str:

@@ -1,6 +1,12 @@
 from datetime import datetime
+from enum import Enum
 from pydantic import BaseModel, Field
 from typing import Annotated, List, Optional
+
+
+class OrderType(str, Enum):
+    CREATED_AT = "createdAt"
+    UPDATED_AT = "updatedAt"
 
 
 class FilterOptions(BaseModel):
@@ -12,6 +18,8 @@ class FilterOptions(BaseModel):
     description: Optional[str] = None
     state: Optional[str] = None
     label: Optional[str] = None
+    limit: Optional[int] = None  # Number of issues to return, default is 50
+    ordering: OrderType = OrderType.UPDATED_AT
 
 
 class NameAndId(BaseModel):

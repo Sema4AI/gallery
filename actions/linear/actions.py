@@ -3,6 +3,7 @@ import json
 from models import Issue, IssueList, FilterOptions
 from support import (
     _get_assignee_id,
+    _set_default_variables,
     _set_query_variables,
     _make_graphql_request,
     _get_label_ids,
@@ -28,6 +29,9 @@ def search_issues(
     """
     Search issues from Linear.
 
+    The values for "ordering" can be "createdAt" or "updatedAt".
+    Returns by default 50 issues matching the filter options.
+
     Args:
         api_key: The API key to use to authenticate with the Linear API.
         filter_options: The filter options to use to search for issues.
@@ -35,12 +39,18 @@ def search_issues(
     Returns:
         List of issues.
     """
-    variables = _set_query_variables(filter_options)
-    query_to_use = query_search_issues if variables else query_get_issues
-    variables["orderBy"] = "updatedAt"
+    filter_dict = _set_query_variables(filter_options)
+    query_to_use = query_search_issues if filter_dict else query_get_issues
+    query_variables = _set_default_variables(filter_options, filter_dict)
+
     tickets = IssueList()
-    search_response = _make_graphql_request(query_to_use, variables, api_key)
-    for issue in search_response["data"]["issues"]["nodes"]:
+    search_response = _make_graphql_request(query_to_use, query_variables, api_key)
+    issues = (
+        search_response["data"]["issues"]["nodes"]
+        if "data" in search_response
+        else search_response["issues"]["nodes"]
+    )
+    for issue in issues:
         ticket = Issue.create(issue)
         tickets.add_ticket(ticket)
 
@@ -100,5 +110,5 @@ def add_comment(issue_id: str, body: str, api_key: Secret) -> str:
     """
 
     variables = {"input": {"issueId": issue_id, "body": body}}
-    _make_graphql_request(query_add_comment, variables, api_key)
-    return "Comment added"
+    comment_response = _make_graphql_request(query_add_comment, variables, api_key)
+    return f"Comment added - link {comment_response['commentCreate']['comment']['url']}"

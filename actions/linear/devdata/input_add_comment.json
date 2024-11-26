@@ -1,0 +1,27 @@
+{
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "issue_id": "0dcc7a8b-f61f-4e4c-a912-c049a56d4168",
+                "body": "This is a test comment",
+                "api_key": ""
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "add_comment",
+        "actionRelativePath": "actions.py",
+        "schemaDescription": [
+            "issue_id: string: ID of the issue to comment on",
+            "body: string: Text content of the comment"
+        ],
+        "managedParamsSchemaDescription": {
+            "api_key": {
+                "type": "Secret",
+                "description": "The API key to use to authenticate with the Linear API"
+            }
+        },
+        "inputFileVersion": "v2"
+    }
+}

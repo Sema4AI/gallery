@@ -38,16 +38,16 @@ nodes = """
 """
 
 query_search_issues = f"""
-query SearchIssues($filter: IssueFilter) {{
-    issues(filter: $filter) {{
+query SearchIssues($filter: IssueFilter, $orderBy: PaginationOrderBy, $first: Int = 50) {{
+    issues(filter: $filter, orderBy: $orderBy, first: $first) {{
         nodes {nodes}
     }}
 }}
 """
 
 query_get_issues = f"""
-query GetIssues($orderBy: PaginationOrderBy) {{
-    issues(orderBy: $orderBy) {{
+query GetIssues($orderBy: PaginationOrderBy, $first: Int = 50) {{
+    issues(orderBy: $orderBy, first: $first) {{
         nodes {nodes}
     }}
 }}
@@ -147,6 +147,7 @@ mutation CreateComment($input: CommentCreateInput!) {
             user {
                 name
             }
+            url
         }
     }
 }

@@ -70,6 +70,25 @@
                 },
                 "api_key": ""
             }
+        },
+        {
+            "inputName": "return 3 issues",
+            "inputValue": {
+                "filter_options": {
+                    "limit": 3
+                },
+                "api_key": ""
+            }
+        },
+        {
+            "inputName": "return 2 issues ordered by createdAt",
+            "inputValue": {
+                "filter_options": {
+                    "limit": 2,
+                    "ordering": "createdAt"
+                },
+                "api_key": ""
+            }
         }
     ],
     "metadata": {
