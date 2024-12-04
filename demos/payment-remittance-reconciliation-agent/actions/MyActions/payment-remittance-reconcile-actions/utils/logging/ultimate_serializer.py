@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 from pydantic import BaseModel
 from datetime import date, datetime, time
-from typing import Any
+from typing import Any, Union
 
 
 class SerializableJSONEncoder(json.JSONEncoder):
@@ -54,7 +54,7 @@ def clean_any_object_safely(obj: Any) -> Any:
         return obj.to_dict()
     elif pd.isna(obj):
         return None
-    return obj
+    return obj    
 
 
 def serialize_any_object_safely(obj: Any, indent: int = 4) -> str:
@@ -76,5 +76,7 @@ def serialize_any_object_safely(obj: Any, indent: int = 4) -> str:
     return json.dumps(cleaned_obj, cls=SerializableJSONEncoder, indent=indent)
 
 
-# E.g: Example Usage
-# logger.debug(serialize_pydantic(extraction_result, indent=4))
+
+
+#E.g: Example Usage
+#logger.debug(serialize_pydantic(extraction_result, indent=4))

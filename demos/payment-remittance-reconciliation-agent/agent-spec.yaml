@@ -14,23 +14,23 @@ agent-package:
     model:
       provider: OpenAI
       name: gpt-4o
-    version: 0.0.7
+    version: 0.1.0
     architecture: agent
     reasoning: disabled
     runbook: runbook.md
     action-packages:
     - name: Payment Remittance Reconcile Actions
       organization: MyActions
-      version: 0.0.7
-      path: MyActions/payment-remittance-reconcile-actions
       type: folder
-      whitelist: ''
+      version: 0.0.8
+      whitelist: ""
+      path: MyActions/payment-remittance-reconcile-actions
     - name: Payment Remittance Validate Actions
       organization: MyActions
-      version: 0.0.7
-      path: MyActions/payment-remittance-validate-actions
       type: folder
-      whitelist: ''
+      version: 0.0.8
+      whitelist: ""
+      path: MyActions/payment-remittance-validate-actions
     knowledge: []
     metadata:
       mode: worker
