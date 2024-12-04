@@ -23,7 +23,7 @@ class DatabaseSetupGenerator:
         """
         Generate database setup using pre-adjusted invoices.
         """
-        self.logger.info(f"Generating database setup for case: {case_name}")
+        self.logger.debug(f"Generating database setup for case: {case_name}")
         
         try:
             # Generate setup with already adjusted amounts
@@ -60,7 +60,7 @@ class DatabaseSetupGenerator:
     ) -> Tuple[DecimalHandler, Dict[str, DecimalHandler], List[Dict]]:
         """Calculate amounts with consistent decimal handling."""
         logger = self.logger
-        logger.info("\n=== Calculating Database Amounts ===")
+        logger.debug("\n=== Calculating Database Amounts ===")
         
         # Initialize tracking with DecimalHandler
         facility_types = set(inv['Facility Type'] for inv in invoices)
@@ -244,13 +244,13 @@ class DatabaseSetupGenerator:
             original = DecimalHandler.from_str(
                 str(invoice['Amount Due']).replace(",", "")
             )
-            logger.info(f"Original amount for {invoice['Invoice Reference']}: {original}")
+            logger.debug(f"Original amount for {invoice['Invoice Reference']}: {original}")
             
             # Track after adjustment
             adjusted = DecimalHandler.round_decimal(original * DecimalHandler.from_str("1.02"))
-            logger.info(f"Adjusted amount for {invoice['Invoice Reference']}: {adjusted}")
+            logger.debug(f"Adjusted amount for {invoice['Invoice Reference']}: {adjusted}")
             
             total = DecimalHandler.round_decimal(total + adjusted)
             
-        logger.info(f"Total for {facility_type}: {total}")
+        logger.debug(f"Total for {facility_type}: {total}")
         return str(total)

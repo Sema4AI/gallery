@@ -123,5 +123,5 @@ def handle_discrepancies(self, result: ReconciliationResult):
     self.send_notifications(result)
 ```
 
-    
+
 
