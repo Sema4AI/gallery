@@ -284,6 +284,8 @@ def update_cell_value(
 ) -> None:
     """Updates cell value while preserving all formatting
 
+    If cell contains a formula, do not set overwrite to True unless user
+    specifies that they want to overwrite the formula.
     Args:
         ws: Worksheet object
         cell_reference: Cell reference (e.g., 'A1')
