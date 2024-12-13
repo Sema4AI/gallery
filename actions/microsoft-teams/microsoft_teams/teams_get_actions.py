@@ -51,7 +51,7 @@ def search_team_by_name(
         list[Literal["Group.Read.All"]],
     ],
     search_request: TeamSearchRequest,
-) -> Response[dict]:
+) -> Response[list[dict]]:
     """
     Search for a Microsoft Team by its name.
 
@@ -193,11 +193,11 @@ def get_channel_messages(
     Get messages from a specific channel in a Microsoft Team. Message replies not included but you can use "get_message_replies" if needed.
 
     Args:
-        messages_request: Pydantic model containing the team ID, channel ID, and an optional limit for the number of messages to retrieve.
+        messages_request: Pydantic model containing the team ID, channel ID, and an limit for the number of messages to retrieve. Use 10 if not specified.
         token: OAuth2 token to use for the operation.
 
     Returns:
-        Result of the operation, including a list of parsed messages if successful.
+        Result of the operation.
     """
     headers = build_headers(token)
 
