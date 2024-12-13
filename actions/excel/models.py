@@ -1,6 +1,17 @@
-from typing import Annotated
+from datetime import datetime
+from typing import Annotated, List, Union
 
 from pydantic import BaseModel, Field
+
+
+class Header(BaseModel):
+    value: Union[str, list]
+
+
+class CrossReferenceResult(BaseModel):
+    """Model for the result of cross-reference intersections"""
+
+    intersections: List[str]
 
 
 class Row(BaseModel):
@@ -22,8 +33,16 @@ class Table(BaseModel):
 
 class Sheet(BaseModel):
     name: Annotated[str, Field(description="Sheet name")]
-    top_row: Annotated[Row, Field(description="First row which may be a header")]
+    data_range: Annotated[str, Field(description="Data range")]
+    # top_row: Annotated[Row, Field(description="First row which may be a header")]
+
+
+class UserAndTime(BaseModel):
+    user: Annotated[str, Field(description="User name")]
+    time: Annotated[datetime, Field(description="Creation time")]
 
 
 class Schema(BaseModel):
+    created: UserAndTime = Field(description="Created by and time")
+    last_modified: UserAndTime = Field(description="Last modified by and time")
     sheets: Annotated[list[Sheet], Field(description="Workbook sheets")]

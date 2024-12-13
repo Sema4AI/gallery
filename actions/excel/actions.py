@@ -5,14 +5,27 @@ retrieving and setting data from/into their cells.
 """
 
 import contextlib
+from copy import copy
 import re
 from pathlib import Path
 
 from robocorp import excel, log
 from robocorp.excel.tables import Table as ExcelTable
 from sema4ai.actions import ActionError, Response, action
-
-from models import Row, Schema, Sheet, Table
+from openpyxl import load_workbook
+from datetime import datetime
+import openpyxl.utils
+from models import (
+    Row,
+    Schema,
+    Sheet,
+    Table,
+    Header,
+    CrossReferenceResult,
+    UserAndTime,
+)
+from robocorp.excel.worksheet import Worksheet
+from sema4ai.crossplatform import trigger_excel_save_on_app
 
 
 def _search_excel_file(file_path: str, is_expected: bool = True) -> Path:
@@ -216,7 +229,11 @@ def add_rows(file_path: str, sheet_name: str, data_table: Table) -> Response[str
 
 @action(is_consequential=True)
 def update_sheet_rows(
-    file_path: str, sheet_name: str, start_cell: str, data: Table
+    file_path: str,
+    sheet_name: str,
+    start_cell: str,
+    data: Table,
+    overwrite: bool = False,
 ) -> Response[str]:
     """Update a cell or a range of cells in a worksheet using A1 notation.
 
@@ -225,6 +242,7 @@ def update_sheet_rows(
         sheet_name: The name of the sheet you want to store the rows into.
         start_cell: The cell from where to start the update. The end will be determined based on each row's length.
         data: Data to be inserted into the cell or cells.
+        overwrite: If True, the data will overwrite the existing data in the cells.
 
     Example:
         ```python
@@ -240,20 +258,92 @@ def update_sheet_rows(
     start_column_number = _column_to_number(start_column)
     start_row = int(start_row)
 
-    with _open_workbook(file_path, sheet_name, sheet_required=True) as (_, worksheet):
-        for i, row_values in enumerate(data.as_list()):
+    data = data if isinstance(data, list) else data.as_list()
+    with _open_workbook(file_path, sheet_name, sheet_required=True) as (
+        workbook,
+        worksheet,
+    ):
+        for i, row_values in enumerate(data):
             current_row = start_row + i  # Move down rows
 
             for j, value in enumerate(row_values):
                 column_number = start_column_number + j  # Move across columns
-
-                worksheet.set_cell_value(
-                    row=current_row,
-                    column=column_number,
-                    value=str(value),
+                start_column_letter = openpyxl.utils.get_column_letter(column_number)
+                update_cell_value(
+                    worksheet,
+                    f"{start_column_letter}{current_row}",
+                    str(value),
+                    overwrite,
                 )
-
+        workbook.save(file_path)
     return Response(result="Rows were successfully updated.")
+
+
+def update_cell_value(
+    ws: Worksheet, cell_reference: str, value: str, overwrite: bool = False
+) -> None:
+    """Updates cell value while preserving all formatting
+
+    If cell contains a formula, do not set overwrite to True unless user
+    specifies that they want to overwrite the formula.
+    Args:
+        ws: Worksheet object
+        cell_reference: Cell reference (e.g., 'A1')
+        value: Value to insert into the cell
+        overwrite: If True, the data will overwrite the existing formula in the cells.
+    """
+    worksheet = ws._workbook.excel.book.active
+    cell = worksheet[cell_reference]
+
+    # Check if the cell contains a formula
+    has_existing_formula = isinstance(cell.value, str) and cell.value.startswith("=")
+    if has_existing_formula and not overwrite:
+        print(f"Cannot overwrite formula in {cell_reference}")
+        return
+    # Store all formatting attributes
+    font = copy(cell.font)
+    fill = copy(cell.fill)
+    border = copy(cell.border)
+    alignment = copy(cell.alignment)
+    number_format = cell.number_format
+
+    # Store comment if exists
+    comment = cell.comment
+    # Convert value to appropriate type based on current cell format
+    if isinstance(value, str):
+        if value.startswith("="):  # Formula
+            converted_value = value
+        elif number_format.endswith("%"):  # Percentage
+            try:
+                converted_value = float(value.rstrip("%")) / 100
+            except ValueError:
+                converted_value = value
+        elif "General" in number_format or "0" in number_format:  # Number
+            try:
+                if "." in value:
+                    converted_value = float(value)
+                else:
+                    converted_value = int(value)
+            except ValueError:
+                converted_value = value
+        else:  # Default to string
+            converted_value = value
+    else:
+        converted_value = value
+
+    # Set the new value
+    cell.value = converted_value
+
+    # Reapply all formatting
+    cell.font = font
+    cell.fill = fill
+    cell.border = border
+    cell.alignment = alignment
+    cell.number_format = number_format
+
+    # Reapply comment if it existed
+    if comment:
+        cell.comment = comment
 
 
 @action(is_consequential=False)
@@ -280,7 +370,7 @@ def get_cell(
     ):
         value = worksheet.get_cell_value(row, column)
 
-    return Response(result=value)
+    return Response(result=str(value))
 
 
 @action(is_consequential=False)
@@ -315,27 +405,250 @@ def get_workbook_schema(file_path: str) -> Response[Schema]:
     """Retrieve the workbook overview defined as schema.
 
     This action identifies the sheets found in the given workbook and for each one of
-    them it presents the first row which usually represents the header of the sheet.
+    them it presents the first non-empty row which usually represents the header of the sheet.
 
     Args:
         file_path: The file name or a local path pointing to the workbook file.
 
     Returns:
-        A list of sheets where for every sheet its name and first row are given.
+        A list of sheets where for every sheet its name and first non-empty row are given.
     """
     sheets = []
+    path = _search_excel_file(file_path)
 
-    with _open_workbook(file_path, save=False) as (workbook, _):
-        sheet_names = workbook.list_worksheets()
-        for sheet_name in sheet_names:
-            worksheet = workbook.worksheet(sheet_name)
-            try:
-                first_row = next(worksheet.as_table().iter_lists(with_index=False))
-            except StopIteration:
-                first_row = []
+    # Use openpyxl directly for better performance
 
-            top_row = Row(cells=list(filter(lambda cell: cell is not None, first_row)))
-            sheet = Sheet(name=sheet_name, top_row=top_row)
-            sheets.append(sheet)
+    try:
+        workbook = load_workbook(filename=path, read_only=True)
+        created = UserAndTime(
+            user=workbook.properties.creator.encode("utf-8"),
+            time=workbook.properties.created,
+        )
+        last_modified = UserAndTime(
+            user=workbook.properties.last_modified_by.encode("utf-8"),
+            time=workbook.properties.modified,
+        )
+        for sheet_name in workbook.sheetnames:
+            worksheet = workbook[sheet_name]
+            min_col_letter = openpyxl.utils.get_column_letter(worksheet.min_column)
+            max_col_letter = openpyxl.utils.get_column_letter(worksheet.max_column)
+            data_range = f"{min_col_letter}{worksheet.min_row}:{max_col_letter}{worksheet.max_row}"
+            sheets.append(
+                Sheet(
+                    name=sheet_name,
+                    data_range=data_range,
+                )
+            )
+    finally:
+        workbook.close()
 
-    return Response(result=Schema(sheets=sheets))
+    return Response(
+        result=Schema(
+            sheets=sheets,
+            created=created,
+            last_modified=last_modified,
+        )
+    )
+
+
+@action
+def find_cross_reference(
+    file_path: str, sheet_name: str, header1: Header, header2: Header
+) -> CrossReferenceResult:
+    """Find the cell references where header1 and header2 intersect in the same row.
+
+    Args:
+        file_path: Path to the Excel file
+        sheet_name: Name of the sheet to search
+        header1: First header value(s) to find (can be a string or list of strings)
+        header2: Second header value(s) to find (can be a string or list of strings)
+    Returns:
+        List of dictionaries containing the intersection descriptions and cell references
+    """
+    if isinstance(header1.value, list) and isinstance(header2.value, list):
+        raise ValueError("Only one of header1 or header2 can be a list, not both.")
+
+    # Ensure headers are lists for uniform processing
+    if isinstance(header1.value, list):
+        h1_list = header1.value
+    else:
+        h1_list = [header1.value]
+
+    if isinstance(header2.value, list):
+        h2_list = header2.value
+    else:
+        h2_list = [header2.value]
+
+    # Dictionary to store all occurrences of each header
+    header_positions = {h: {"rows": [], "cols": []} for h in h1_list + h2_list}
+
+    # Load both normal and data_only workbooks
+    wb = load_workbook(file_path, data_only=False)
+    trigger_excel_save_on_app(file_path)
+    wb_data = load_workbook(file_path, data_only=True)
+
+    ws = wb[sheet_name]
+    ws_data = wb_data[sheet_name]
+
+    # Search for all headers in the worksheet
+    for row_idx, row in enumerate(ws.iter_rows(), 1):
+        for col_idx, cell in enumerate(row, 1):
+            # Get both formula and calculated value
+            cell_data = ws_data.cell(row=row_idx, column=col_idx)
+            calculated_value = cell_data.value
+
+            # Get the formatted value as it appears in Excel
+            formatted_value = None
+            if calculated_value is not None:
+                if cell_data.is_date:
+                    try:
+                        format_str = _excel_format_to_strftime(cell.number_format)
+                        formatted_value = calculated_value.strftime(format_str)
+                    except (AttributeError, ValueError):
+                        formatted_value = str(calculated_value)
+                elif isinstance(calculated_value, (int, float)):
+                    try:
+                        formatted_value = format(calculated_value, cell.number_format)
+                    except (ValueError, KeyError):
+                        formatted_value = str(calculated_value)
+                else:
+                    formatted_value = str(calculated_value)
+            elif isinstance(cell.value, str) and cell.value.startswith("="):
+                # if cell value contains formula then that needs to be followed until a value is found
+                final_value, number_format = _resolve_formula_value(
+                    wb_data, cell.value, ws_data, wb
+                )
+
+                if final_value is not None:
+                    if isinstance(final_value, datetime):
+                        try:
+                            format_str = _excel_format_to_strftime(
+                                number_format or cell.number_format
+                            )
+                            formatted_value = final_value.strftime(format_str)
+                        except (AttributeError, ValueError):
+                            formatted_value = str(final_value)
+                    elif isinstance(final_value, (int, float)) and number_format:
+                        try:
+                            formatted_value = format(final_value, number_format)
+                        except (ValueError, KeyError):
+                            formatted_value = str(final_value)
+                    else:
+                        formatted_value = str(final_value)
+                else:
+                    continue
+
+            # Check against both raw and formatted values
+            if formatted_value in header_positions:
+                header_positions[formatted_value]["rows"].append(row_idx)
+                header_positions[formatted_value]["cols"].append(col_idx)
+
+    # Verify that headers were found and track which ones are missing
+    missing_headers = []
+    for header in h1_list + h2_list:
+        if not header_positions[header]["rows"]:
+            missing_headers.append(header)
+
+    # Determine the intersection points
+    results = CrossReferenceResult(intersections=[])
+    for h1 in h1_list:
+        for h2 in h2_list:
+            # If either header is missing, add None as the cell reference
+            if h1 in missing_headers or h2 in missing_headers:
+                results.intersections.append(None)
+                continue
+
+            if min(header_positions[h1]["cols"]) < min(header_positions[h2]["cols"]):
+                row = header_positions[h1]["rows"][0]  # Use the row where h1 appears
+                col = header_positions[h2]["cols"][0]  # Use the column where h2 appears
+            else:
+                row = header_positions[h2]["rows"][0]  # Use the row where h2 appears
+                col = header_positions[h1]["cols"][0]  # Use the column where h1 appears
+
+            column_letter = openpyxl.utils.get_column_letter(col)
+            cell_ref = f"{column_letter}{row}"
+            results.intersections.append(cell_ref)
+
+    return results
+
+
+def _resolve_formula_value(wb_data, cell_value, current_sheet=None, data_book=None):
+    """Recursively resolves formula references until finding a non-formula value.
+
+    Args:
+        wb_data: Workbook with data_only=True
+        cell_value: The formula string to resolve
+
+    Returns:
+        The final resolved value and its number format
+    """
+    try:
+        if not isinstance(cell_value, str) or not cell_value.startswith("="):
+            return cell_value, None
+
+        data_cell = None
+        formula = cell_value.lstrip("=")
+        if "!" in formula:
+            sheet_ref, cell_ref = formula.split("!")
+            sheet_name = sheet_ref.strip("'")
+            ref_sheet = wb_data[sheet_name]
+            ref_cell = ref_sheet[cell_ref]
+            current_sheet = ref_sheet
+            if data_book is not None:
+                data_sheet = data_book[sheet_name]
+                data_cell = data_sheet[cell_ref]
+        else:
+            if current_sheet is None:
+                return None, None
+            ref_cell = current_sheet[formula]
+            if data_book is not None:
+                data_sheet = data_book[current_sheet.title]
+                data_cell = data_sheet[cell_ref]
+        cell_to_check = ref_cell if ref_cell.value else data_cell
+
+        # Recursively follow the reference chain
+        if isinstance(cell_to_check.value, str) and cell_to_check.value.startswith("="):
+            return _resolve_formula_value(
+                wb_data,
+                cell_to_check.value,
+                cell_to_check.parent,
+                data_book,
+            )
+        else:
+            return cell_to_check.value, cell_to_check.number_format
+    except Exception as e:
+        print(str(e))
+        return None, None
+
+
+def _excel_format_to_strftime(excel_format: str) -> str:
+    """Converts Excel date format to Python strftime format
+
+    Args:
+        excel_format: Excel format string (e.g., 'mmm\'yy')
+    Returns:
+        Python strftime format string (e.g., '%b\'%y')
+    """
+    # Common Excel to Python format mappings
+    format_mapping = {
+        "yyyy": "%Y",  # 2024
+        "yy": "%y",  # 24
+        "mmmm": "%B",  # January
+        "mmm": "%b",  # Jan
+        "mm": "%m",  # 01
+        "m": "%-m",  # 1
+        "dddd": "%A",  # Monday
+        "ddd": "%a",  # Mon
+        "dd": "%d",  # 01
+        "d": "%-d",  # 1
+    }
+
+    # Handle special case for Excel's escaped characters
+    python_format = excel_format.replace("\\'", "'")
+
+    # Replace Excel format codes with Python ones
+    for excel_code, python_code in format_mapping.items():
+        python_format = python_format.replace(excel_code.lower(), python_code)
+        python_format = python_format.replace(excel_code.upper(), python_code)
+
+    return python_format

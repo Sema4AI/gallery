@@ -1,5 +1,4 @@
 *.pyc
-*.xls*
 *.zip
 .DS_Store
 .env
