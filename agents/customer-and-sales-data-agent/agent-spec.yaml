@@ -1,0 +1,23 @@
+agent-package:
+  spec-version: v2
+  agents:
+  - name: Customer and Sales Data Agent
+    description: Template agent that can query sales and customer data from Postgres
+      and a static CSV file.
+    model:
+      provider: OpenAI
+      name: gpt-4o
+    version: 1.1.0
+    architecture: agent
+    reasoning: enabled
+    runbook: runbook.md
+    action-packages:
+    - name: customer-sales-data
+      organization: MyActions
+      type: folder
+      version: 1.1.0
+      whitelist: ""
+      path: MyActions/customer-sales-data
+    knowledge: []
+    metadata:
+      mode: conversational
