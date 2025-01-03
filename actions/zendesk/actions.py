@@ -189,3 +189,27 @@ def create_ticket(
 
     response = client.create(comment, priority, subject, tags)
     return Response(result=response)
+
+
+@action(is_consequential=True)
+def delete_ticket(
+    zendesk_credentials: OAuth2Secret[
+        Literal["zendesk"], list[Literal["tickets:write"]]
+    ],
+    ticket_id: str,
+) -> Response[str]:
+    """
+    Deletes a ticket in Zendesk
+
+    Args:
+        zendesk_credentials: Zendesk OAuth2 credentials
+        ticket_id: The unique identifier of the ticket to delete
+
+    Returns:
+        Success message if the ticket was deleted or an error message.
+    """
+    client = TicketsApi(
+        zendesk_credentials.access_token, zendesk_credentials.metadata["server"]
+    )
+    client.delete(ticket_id)
+    return Response(result=f"Ticket {ticket_id} deleted successfully")

@@ -43,7 +43,7 @@ class BaseApi:
 
             return self._call_api(http_method, endpoint, params)
 
-        if response.status_code != 200:
+        if response.status_code not in [200, 204]:
             raise ActionError(response.text)
 
         return response
@@ -86,24 +86,29 @@ class TicketsApi(BaseApi):
         ).json()
 
         return Ticket.model_validate(response["ticket"])
-    
+
     def create(self, comment: str, priority: str, subject: str, tags: str) -> Ticket:
         response = self._call_api(
             requests.post,
             "/api/v2/tickets.json",
             {
                 "ticket": {
-                    "comment": {
-                        "body": comment
-                    },
+                    "comment": {"body": comment},
                     "priority": priority,
                     "subject": subject,
-                    "tags": [tags]
+                    "tags": [tags],
                 }
             },
         ).json()
 
         return Ticket.model_validate(response["ticket"])
+
+    def delete(self, ticket_id: str) -> bool:
+        self._call_api(
+            requests.delete,
+            f"/api/v2/tickets/{ticket_id}.json",
+        )
+        return True
 
 
 class CommentsApi(BaseApi):
