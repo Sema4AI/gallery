@@ -53,7 +53,7 @@ def update_ticket(
         updates: json containing the new properties of the ticket
 
     Returns:
-
+        The updated ticket.
     """
     client = TicketsApi(
         zendesk_credentials.access_token, zendesk_credentials.metadata["server"]
@@ -123,7 +123,7 @@ def add_comment(
 
     Args:
         zendesk_credentials: Zendesk OAuth2 credentials
-        ticket_id:The unique identifier of the ticket to add the comment to
+        ticket_id: The unique identifier of the ticket to add the comment to
         comment: JSON representation of the comment to be added.
 
     Returns:
@@ -158,3 +158,58 @@ def list_groups(
 
     response = client.list()
     return Response(result=response)
+
+
+@action(is_consequential=True)
+def create_ticket(
+    zendesk_credentials: OAuth2Secret[
+        Literal["zendesk"], list[Literal["tickets:write"]]
+    ],
+    comment: str,
+    priority: str,
+    subject: str,
+    tags: str,
+) -> Response[str]:
+    """
+    Create a ticket in Zendesk
+
+    Args:
+        zendesk_credentials: Zendesk OAuth2 credentials
+        comment: Comment to be added to the ticket
+        priority: Priority of the ticket
+        subject: Subject of the ticket
+        tags: Tags to be added to the ticket
+
+    Returns:
+        Success message if the ticket was created or an error message.
+    """
+    client = TicketsApi(
+        zendesk_credentials.access_token, zendesk_credentials.metadata["server"]
+    )
+
+    response = client.create(comment, priority, subject, tags)
+    return Response(result=response)
+
+
+@action(is_consequential=True)
+def delete_ticket(
+    zendesk_credentials: OAuth2Secret[
+        Literal["zendesk"], list[Literal["tickets:write"]]
+    ],
+    ticket_id: str,
+) -> Response[str]:
+    """
+    Deletes a ticket in Zendesk
+
+    Args:
+        zendesk_credentials: Zendesk OAuth2 credentials
+        ticket_id: The unique identifier of the ticket to delete
+
+    Returns:
+        Success message if the ticket was deleted or an error message.
+    """
+    client = TicketsApi(
+        zendesk_credentials.access_token, zendesk_credentials.metadata["server"]
+    )
+    client.delete(ticket_id)
+    return Response(result=f"Ticket {ticket_id} deleted successfully")
