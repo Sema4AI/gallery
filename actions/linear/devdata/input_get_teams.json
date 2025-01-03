@@ -1,0 +1,22 @@
+{
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "api_key": ""
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "get_teams",
+        "actionRelativePath": "actions.py",
+        "schemaDescription": [],
+        "managedParamsSchemaDescription": {
+            "api_key": {
+                "type": "Secret",
+                "description": "The API key to use to authenticate with the Linear API"
+            }
+        },
+        "inputFileVersion": "v2"
+    }
+}

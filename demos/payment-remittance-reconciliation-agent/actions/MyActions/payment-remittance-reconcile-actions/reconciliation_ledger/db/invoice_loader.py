@@ -16,7 +16,7 @@ class InvoiceLoader:
     
     def __init__(self, db_path: Optional[Union[str, Path]] = None):
         self.logger = configure_logging(__name__)
-        self.logger.info("Initializing InvoiceLoader")
+        self.logger.debug("Initializing InvoiceLoader")
         self.data_cleaner = DatabaseDataCleaner()
         
         try:
@@ -24,14 +24,14 @@ class InvoiceLoader:
                 db_path = get_full_path(str(self.get_db_dir() / DatabaseConstants.RECONCILIATION_LEDGER_DB))
             
             self.db_path = str(db_path) if isinstance(db_path, Path) else db_path
-            self.logger.info(f"Database path set to: {self.db_path}")
+            self.logger.debug(f"Database path set to: {self.db_path}")
             
         except Exception as e:
             self.logger.error(f"Failed to initialize InvoiceLoader: {str(e)}", exc_info=True)
             raise
 
     def load_test_case(self, test_case_dir: Path) -> Dict:
-        self.logger.info(f"Loading test case from {test_case_dir}")
+        self.logger.debug(f"Loading test case from {test_case_dir}")
         
         setup_file = test_case_dir / "db_setup.json"
         if not setup_file.exists():
@@ -175,7 +175,7 @@ class InvoiceLoader:
             Initialize database schema from DDL file.
             Handles table drops in correct dependency order.
             """
-            self.logger.info("Starting database initialization")
+            self.logger.debug("Starting database initialization")
             
             with self.get_connection() as conn:
                 try:
@@ -220,7 +220,7 @@ class InvoiceLoader:
                             conn.execute(statement)
                             self.logger.debug("Statement executed successfully")
                     
-                    self.logger.info(f"Database initialized successfully at {self.db_path}")
+                    self.logger.debug(f"Database initialized successfully at {self.db_path}")
                     
                 except Exception as e:
                     self.logger.error(f"Failed to initialize database: {str(e)}")
@@ -237,7 +237,7 @@ class InvoiceLoader:
         Returns:
             True if all data verified successfully, False otherwise
         """
-        self.logger.info("Verifying loaded test data")
+        self.logger.debug("Verifying loaded test data")
         
         try:
             with self.get_connection() as conn:
@@ -309,7 +309,7 @@ class InvoiceLoader:
                         )
                         return False
                 
-                self.logger.info("Data verification passed successfully")
+                self.logger.debug("Data verification passed successfully")
                 return True
                 
         except Exception as e:
@@ -420,7 +420,7 @@ class InvoiceLoader:
             ON CONFLICT (internal_facility_id, effective_date) DO UPDATE SET
                 rate = CAST(EXCLUDED.rate AS DECIMAL(18, 2))
             """
-            
+
             conn.execute(query, [
                 rate_id,
                 internal_facility_id,

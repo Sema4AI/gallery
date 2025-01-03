@@ -36,7 +36,7 @@ class ReconciliationAgentContextManager(BaseAgentContextManager):
         self.customer_id = customer_id
         
         if load_existing:
-            self.logger.info(f"Loading existing reconciliation context for document_id: {document_id}")
+            self.logger.debug(f"Loading existing reconciliation context for document_id: {document_id}")
             self.agent_context = self.load_context()
             if self.agent_context is None:
                 self.logger.warning(f"No existing context found. Creating new reconciliation context.")
@@ -67,7 +67,7 @@ class ReconciliationAgentContextManager(BaseAgentContextManager):
                 updated_at TIMESTAMP DEFAULT (CURRENT_TIMESTAMP)
             )
             """)
-            self.logger.info("Reconciliation tables created successfully")
+            self.logger.debug("Reconciliation tables created successfully")
         except Exception as e:
             self.logger.error(f"Error creating reconciliation tables: {str(e)}")
             raise
@@ -97,7 +97,7 @@ class ReconciliationAgentContextManager(BaseAgentContextManager):
                     self.document_name,
                     context_json
                 ])
-            self.logger.info(f"Stored reconciliation context for document_id: {self.document_id}")
+            self.logger.debug(f"Stored reconciliation context for document_id: {self.document_id}")
         except Exception as e:
             self.logger.error(f"Error storing reconciliation context for document_id {self.document_id}: {str(e)}")
             raise
@@ -128,7 +128,7 @@ class ReconciliationAgentContextManager(BaseAgentContextManager):
             start_time=datetime.utcnow()
         )
         self.agent_context.set_phase_context(phase, context)
-        self.logger.info(f"Started reconciliation phase: {phase}")
+        self.logger.debug(f"Started reconciliation phase: {phase}")
 
     def end_phase(self):
         """End current reconciliation phase."""
@@ -138,7 +138,7 @@ class ReconciliationAgentContextManager(BaseAgentContextManager):
                 context.end_time = datetime.utcnow()
                 duration = (context.end_time - context.start_time).total_seconds()
                 self.agent_context.overall_processing_time += duration
-                self.logger.info(f"Ended reconciliation phase: {self.current_phase}. Duration: {self._format_duration(duration)}")
+                self.logger.debug(f"Ended reconciliation phase: {self.current_phase}. Duration: {self._format_duration(duration)}")
 
     def add_event(self, event_type: str, description: str, details: Optional[Dict[str, Any]] = None):
         """Add event to current reconciliation phase."""

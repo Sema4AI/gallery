@@ -1,5 +1,5 @@
 
-BASE_PATH_FOR_TEST_DATA="actions/MyActions/payment-remittance-validate-action/devdata/tests/test_cases"
+BASE_PATH_FOR_TEST_DATA="actions/MyActions/payment-remittance-validate-actions/devdata/tests/test_cases"
 
 
 # For test case 1

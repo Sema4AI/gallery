@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [3.1.0] - 2024-12-12
+
+### Added
+
+- Add `find_cross_reference` action which will seek for cell(s) that cross given headers vertically and horizontally
+
+### Fixed
+
+- Modify cell update to keep any cell formatting and just modify the value. The parameter `overwrite=True` for action `update_sheet_rows` can be used to overwrite the cell formula.
+
+### Changed
+
+- The `get_workbook_schema` no longer gets the first row with values. Instead the action will get the list of all sheets within the workbook listing their names and data ranges. The returned information contains the workbook's creation time and creator, and last modified time, and who modified the workbook.
+
 ## [3.0.1] - 2024-10-08
 
 ### Changed

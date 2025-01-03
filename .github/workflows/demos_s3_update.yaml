@@ -4,9 +4,9 @@ on:
   workflow_dispatch:
     # Enables manual triggering via GitHub Actions
 
-  push:
-    branches:
-      - main
+  #push:
+    # branches:
+    #  - main
     # Automatic builds on push. Activate later once we know this is the way.
     # paths:
     #   - 'demos/**'

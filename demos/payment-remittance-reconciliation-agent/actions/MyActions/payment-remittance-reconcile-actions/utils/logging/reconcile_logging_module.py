@@ -7,7 +7,7 @@ import traceback
 import sys
 from utils.commons.path_utils import get_full_path
 
-def configure_logging(logger_name=__name__, log_config_filename="logging-reconcile.conf"):
+def configure_logging(logger_name=__name__, log_config_filename="logging-notification.conf"):
     """
     Configure logging using a configuration file with environment-aware path resolution.
     
@@ -26,14 +26,9 @@ def configure_logging(logger_name=__name__, log_config_filename="logging-reconci
         if not os.path.exists(config_path):
             raise FileNotFoundError(f"Configuration file not found: {config_path}")
 
-        # Print the content of the config file for debugging
-        with open(config_path, 'r') as f:
-            print(f"Content of {config_path}:")
-            print(f.read())
-
         logging.config.fileConfig(config_path)
         logger = logging.getLogger(logger_name)
-        logger.info(f"Logging configured using config file: {config_path}")
+        logger.debug(f"Logging configured using config file: {config_path}")
         
     except Exception as e:
         traceback_buffer = io.StringIO()

@@ -5,7 +5,7 @@ import os
 import traceback
 import sys
 
-ACTION_PACKAGE = "payment-remittance-validate-action"
+ACTION_PACKAGE = "payment-remittance-validate-actions"
 def configure_logging(logger_name=__name__, log_config_path="logging-validate-actions.conf"):
     current_dir = os.getcwd()
 
@@ -22,14 +22,10 @@ def configure_logging(logger_name=__name__, log_config_path="logging-validate-ac
         if not os.path.exists(config_path):
             raise FileNotFoundError(f"Configuration file not found: {config_path}")
 
-        # Print the content of the config file for debugging
-        with open(config_path, 'r') as f:
-            print(f"Content of {config_path}:")
-            print(f.read())
 
         logging.config.fileConfig(config_path)
         logger = logging.getLogger(logger_name)
-        logger.info(f"Logging configured using config file: {config_path}")
+        logger.debug(f"Logging configured using config file: {config_path}")
     except Exception as e:
         traceback_buffer = io.StringIO()
         traceback.print_exc(file=traceback_buffer)

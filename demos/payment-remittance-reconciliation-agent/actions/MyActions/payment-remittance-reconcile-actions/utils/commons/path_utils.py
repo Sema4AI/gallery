@@ -6,7 +6,7 @@ import os
 ACTIONS_DIR = "actions"
 GALLERY = "gallery"
 MY_ACTIONS_DIR = "MyActions"
-WORKSPACE_HOME_DIR = "payment-remittance-reconcile-action"
+WORKSPACE_HOME_DIR = "payment-remittance-reconcile-actions"
 
 def get_full_path(relative_path):
     """

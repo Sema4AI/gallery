@@ -1,0 +1,111 @@
+{
+    "inputs": [
+        {
+            "inputName": "filter by assignee",
+            "inputValue": {
+                "filter_options": {
+                    "assignee_name": "Kari Harju"
+                },
+                "api_key": ""
+            }
+        },
+        {
+            "inputName": "filter by title",
+            "inputValue": {
+                "filter_options": {
+                    "title": "X"
+                },
+                "api_key": ""
+            }
+        },
+        {
+            "inputName": "filter by project and assignee",
+            "inputValue": {
+                "filter_options": {
+                    "project_name": "Control Room and ACE 1.0",
+                    "assignee_name": "Ben"
+                },
+                "api_key": ""
+            }
+        },
+        {
+            "inputName": "filter by creator",
+            "inputValue": {
+                "filter_options": {
+                    "creator_name": "Olli Vättö"
+                },
+                "api_key": ""
+            }
+        },
+        {
+            "inputName": "filter by description",
+            "inputValue": {
+                "filter_options": {
+                    "description": "should be changeable"
+                },
+                "api_key": ""
+            }
+        },
+        {
+            "inputName": "filter by team",
+            "inputValue": {
+                "filter_options": {
+                    "team_name": "DevTools"
+                },
+                "api_key": ""
+            }
+        },
+        {
+            "inputName": "get issues",
+            "inputValue": {
+                "filter_options": {},
+                "api_key": ""
+            }
+        },
+        {
+            "inputName": "filter by label 'Studio'",
+            "inputValue": {
+                "filter_options": {
+                    "label": "Studio"
+                },
+                "api_key": ""
+            }
+        },
+        {
+            "inputName": "return 3 issues",
+            "inputValue": {
+                "filter_options": {
+                    "limit": 3
+                },
+                "api_key": ""
+            }
+        },
+        {
+            "inputName": "return 2 issues ordered by createdAt",
+            "inputValue": {
+                "filter_options": {
+                    "limit": 2,
+                    "ordering": "createdAt"
+                },
+                "api_key": ""
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "search_issues",
+        "actionRelativePath": "actions.py",
+        "schemaDescription": [
+            "filter_options.assignee_name: string",
+            "filter_options.creator_name: string",
+            "filter_options.project_name: string",
+            "filter_options.title: string"
+        ],
+        "managedParamsSchemaDescription": {
+            "api_key": {
+                "type": "Secret",
+                "description": "The API key to use to authenticate with the Linear API."
+            }
+        },
+        "inputFileVersion": "v2"
+    }
+}

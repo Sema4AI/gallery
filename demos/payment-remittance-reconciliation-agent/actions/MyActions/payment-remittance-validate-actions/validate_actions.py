@@ -5,6 +5,7 @@ import numpy as np
 import pandas as pd
 from pydantic import BaseModel
 
+
 from sema4ai.actions import action
 from sema4ai.di_client import DocumentIntelligenceClient
 from sema4ai.di_client.document_intelligence_client.models.content_state import ContentState
@@ -17,6 +18,7 @@ from utils.logging.validate_logging_module import configure_logging
 from models.validate_models import ProcessingPhase, ExtractionResult, ValidationFinalResult, ValidationStatus,ActionResponse, ActionStatus
 from context.validate_agent_context_manager import ValidationAgentContextManager
 from utils.logging.ultimate_serializer import serialize_any_object_safely, clean_any_object_safely
+
 
 
 # Configure logging
@@ -52,7 +54,7 @@ def get_remittance_work_item_for_validation(remittance_id: str)  -> DocumentWork
     Example:
         work_item = get_remittance_work_item("REM-2024-001")
     """
-    logger.info(f"Starting to fetch work item for remittance ID: {remittance_id}")    
+    logger.debug(f"Starting to fetch work item for remittance ID: {remittance_id}")    
     try:
         # Initialize the Document Intelligence client
         doc_intel_client : DocumentIntelligenceClient = create_di_client()
@@ -60,7 +62,7 @@ def get_remittance_work_item_for_validation(remittance_id: str)  -> DocumentWork
 
         # Retrieve the remittance work item
         remittance_work_item: DocumentWorkItem = doc_intel_client.get_document_work_item(remittance_id)
-        logger.info(f"Retrieved work item for remittance ID: {remittance_id}")
+        logger.debug(f"Retrieved work item for remittance ID: {remittance_id}")
         return remittance_work_item
 
     except Exception as e:
@@ -83,7 +85,7 @@ def run_remittance_extraction(remittance_id: str) -> ActionResponse:
         ActionResponse: An object containing the status, message, agent insight context, and additional data.
     """
 
-    logger.info(f"Starting extraction process for remittance ID: {remittance_id}")
+    logger.debug(f"Starting extraction process for remittance ID: {remittance_id}")
     doc_intel_client: DocumentIntelligenceClient = create_di_client()
     agent_context_manager = None
     try:
@@ -92,22 +94,22 @@ def run_remittance_extraction(remittance_id: str) -> ActionResponse:
         # Retrieve the remittance work item
         remittance_work_item = doc_intel_client.get_document_work_item(remittance_id)
         document_name = remittance_work_item.source_document.document_name
-        logger.info(f"Retrieved work item for document: {document_name}")
+        logger.debug(f"Retrieved work item for document: {document_name}")
 
         # Get the Agent context and send back to agent
         agent_context_manager = ValidationAgentContextManager(remittance_id, document_name, load_existing=True)
         
         # Fetch the raw content for the remittance document
         raw_content = doc_intel_client.get_document_content(remittance_id, ContentState.RAW)
-        logger.info(f"Fetched raw content for document: {document_name}")
+        logger.debug(f"Fetched raw content for document: {document_name}")
 
         # Initialize the Remittance Processor and run extraction
         remittance_processor = ValidationProcessor(remittance_work_item, agent_context_manager=agent_context_manager)
     
         extraction_result: ExtractionResult = remittance_processor.extract_and_structure_content(raw_content)
         agent_context_manager.add_event("Extraction Complete", f"Extraction process completed successfully for document: {document_name}")
-        logger.info(f"Extraction and structuring completed for document: {document_name}")
-        logger.info(f"Extracted content from Processor is : {serialize_any_object_safely(extraction_result.document_content)}")
+        logger.debug(f"Extraction and structuring completed for document: {document_name}")
+        logger.debug(f"Extracted content from Processor is : {serialize_any_object_safely(extraction_result.document_content)}")
         
         # Clean the content before passing the ExtractedContent to DI service
         cleaned_extracted_content = clean_any_object_safely(extraction_result.document_content)
@@ -115,7 +117,7 @@ def run_remittance_extraction(remittance_id: str) -> ActionResponse:
         # Store the cleaned extracted content
         doc_intel_client.store_extracted_content(cleaned_extracted_content)
         agent_context_manager.add_event("Extracted Content Stored", f"Stored extracted content for document: {document_name}")
-        logger.info(f"Stored extracted content for document: {document_name}")
+        logger.debug(f"Stored extracted content for document: {document_name}")
 
         # Get the updated agent context
         agent_context = agent_context_manager.get_agent_context()
@@ -135,7 +137,7 @@ def run_remittance_extraction(remittance_id: str) -> ActionResponse:
         # Store the Agent Context before returning
         agent_context_manager.store_context()
         
-        logger.info(f"Extraction process completed with status: {status} for document: {document_name}")
+        logger.debug(f"Extraction process completed with status: {status} for document: {document_name}")
         return ActionResponse(
             status=status,
             message=message,
@@ -162,7 +164,7 @@ def run_remittance_transformation(remittance_id: str) -> ActionResponse:
         ActionResponse: An ActionResponse object containing the status, message, agent insight context, and additional data.
 
     """
-    logger.info(f"Starting transformation process for remittance ID: {remittance_id}")
+    logger.debug(f"Starting transformation process for remittance ID: {remittance_id}")
     agent_context_manager = None
     try:
         doc_intel_client: DocumentIntelligenceClient = create_di_client()
@@ -172,7 +174,7 @@ def run_remittance_transformation(remittance_id: str) -> ActionResponse:
         remittance_work_item = doc_intel_client.get_document_work_item(remittance_id)
         document_name = remittance_work_item.source_document.document_name
         extracted_content = doc_intel_client.get_document_content(remittance_id, ContentState.EXTRACTED)
-        logger.info(f"Retrieved extracted content for document: {document_name}")
+        logger.debug(f"Retrieved extracted content for document: {document_name}")
 
         # Initialize the Remittance Processor and run transformation
         agent_context_manager = ValidationAgentContextManager(remittance_id, document_name, load_existing=True)
@@ -180,13 +182,13 @@ def run_remittance_transformation(remittance_id: str) -> ActionResponse:
         
         transformation_result = remittance_processor.transform_and_enrich_content(extracted_content)
         agent_context_manager.add_event("Transformation Complete", f"Transformation process completed successfully for document: {document_name}")
-        logger.info(f"Transformation and enrichment completed for document: {document_name}")
+        logger.debug(f"Transformation and enrichment completed for document: {document_name}")
 
         # Clean and store the transformed content
         cleaned_transformed_content = clean_pydantic_object(transformation_result.document_content)
         doc_intel_client.store_transformed_content(cleaned_transformed_content)
         agent_context_manager.add_event("Transformed Content Stored", f"Stored transformed content for document: {document_name}")
-        logger.info(f"Stored transformed content for document: {document_name}")
+        logger.debug(f"Stored transformed content for document: {document_name}")
 
         # Get the updated agent context
         agent_context = agent_context_manager.get_agent_context()
@@ -206,7 +208,7 @@ def run_remittance_transformation(remittance_id: str) -> ActionResponse:
         # Store the Agent Context before returning
         agent_context_manager.store_context()
 
-        logger.info(f"Transformation process completed with status: {status} for document: {document_name}")
+        logger.debug(f"Transformation process completed with status: {status} for document: {document_name}")
         return ActionResponse(
             status=status,
             message=message,
@@ -226,12 +228,12 @@ def run_remittance_validation(remittance_id: str) -> ActionResponse:
     after successful transformation. It applies business rules and checks data integrity.
 
     Args:
-        remittance_id (str): The ID of the remittance.
+        remittance_id (str): The ID of the remittance. 
 
     Returns:
         ActionResponse: An ActionResponse object containing the status, message, agent insight context, and additional data.
     """
-    logger.info(f"Starting validation process for remittance ID: {remittance_id}")
+    logger.debug(f"Starting validation process for remittance ID: {remittance_id}")
     agent_context_manager = None
     try:
         doc_intel_client: DocumentIntelligenceClient = create_di_client()
@@ -243,7 +245,7 @@ def run_remittance_validation(remittance_id: str) -> ActionResponse:
         
         # Retrieve the transformed content
         transformed_content = doc_intel_client.get_document_content(remittance_id, ContentState.TRANSFORMED)
-        logger.info(f"Retrieved transformed content for document: {document_name}")
+        logger.debug(f"Retrieved transformed content for document: {document_name}")
 
         # Initialize the Remittance Processor and run validation
         agent_context_manager = ValidationAgentContextManager(remittance_id, document_name, load_existing=True)
@@ -251,15 +253,15 @@ def run_remittance_validation(remittance_id: str) -> ActionResponse:
         
         validation_final_result: ValidationFinalResult = remittance_processor.validate_and_finalize_content(transformed_content)
         agent_context_manager.add_event("Validation Complete", f"Validation process completed for document: {document_name}")
-        logger.info(f"Validation completed for document: {document_name}")
+        logger.debug(f"Validation completed for document: {document_name}")
         
         # If there are validatino errors, then computed content will be the validation results, otherwise it will be the transformed content
         # Regardless, save the the computed content in document database. If there are failures, we'l need to acess the validation results on the next call
         computed_content: ComputedDocumentContent = validation_final_result.document_content
         # Store teh computed content which is the same as transformed into document database
-        logger.info(f"Storing computed content for document: {document_name}")
+        logger.debug(f"Storing computed content for document: {document_name}")
         doc_intel_client.store_computed_content(computed_content)
-        logger.info(f"Stored computed content for document: {document_name}")
+        logger.debug(f"Stored computed content for document: {document_name}")
         agent_context_manager.add_event("Computed Content Stored", f"Stored computed content for document: {document_name}")
         
         
@@ -281,29 +283,30 @@ def run_remittance_validation(remittance_id: str) -> ActionResponse:
         # Store the Agent Context before returning
         agent_context_manager.store_context()
 
-        logger.info(f"Validation process completed with status: {status} for document: {document_name}")
+        logger.debug(f"Validation process completed with status: {status} for document: {document_name}")
         action_response =  ActionResponse(
             status=status,
             message=message,
             agent_insight_context=agent_context,
             additional_data={"document_content": computed_content}
         )
-        logger.info(f"Returning action response from : {serialize_any_object_safely(action_response)}")
+        logger.debug(f"Returning action response from : {serialize_any_object_safely(action_response)}")
         return action_response
     except Exception as e:
         _add_document_format_to_context(remittance_work_item, doc_intel_client, agent_context_manager)
         return handle_action_exception(remittance_id, e, agent_context_manager)
         
-
 @action
 def update_work_item_with_validation_failure(remittance_id: str, validation_failure_summary: str, validation_failure_detailed_report: str) -> ActionResponse:
     """
     Update the work item status to 'FAILURE' with validation failure details.
 
+    Note: The `remittance_id` field is mandatory for identifying the document.
+
     Args:
-        remittance_id (str): The ID of the remittance.
-        validation_failure_summary (str): Summary of the validation failure.
-        validation_failure_detailed_report (str): Detailed report of the validation failure by providing a detailed summary of the agent context along with the Validation Report.
+        remittance_id (str): The ID of the remittance. (required)
+        validation_failure_summary (str): Summary of the validation failure. (required)
+        validation_failure_detailed_report (str): Detailed report of the validation failure by providing a detailed summary of the agent context along with the Validation Report. (required)
 
     Returns:
         ActionResponse: The response indicating the success or failure of the action.
@@ -314,16 +317,18 @@ def update_work_item_with_validation_failure(remittance_id: str, validation_fail
         validation_failure_summary,
         validation_failure_detailed_report
     )
-
+    
 @action
 def update_work_item_with_validation_success(remittance_id: str, validation_success_summary: str, validation_success_detailed_report: str) -> ActionResponse:
     """
     Update the work item status to 'SUCCESS' after validation succeeds.
 
+    Note: The `remittance_id` field is mandatory for identifying the document.
+
     Args:
-        remittance_id (str): The ID of the remittance.
-        validation_success_summary (str): Summary of the validation success report.
-        validation_success_detailed_report (str): Detailed report of the validation success.
+        remittance_id (str): The ID of the remittance. (required)
+        validation_success_summary (str): Summary of the validation success report. (required)
+        validation_success_detailed_report (str): Detailed report of the validation success. (required)
 
     Returns:
         ActionResponse: The response indicating the success or failure of the action.
@@ -340,10 +345,12 @@ def update_work_item_with_unexpected_exeception(remittance_id: str, error_summar
     """
     Update the work item status to 'ERROR' with details on the exception that occurred and the detailed summary of the agent context along with the Exception Report.
 
+    Note: The `remittance_id` field is mandatory for identifying the document.
+
     Args:
-        remittance_id (str): The ID of the remittance.
-        error_summary (str): Summary of the error
-        error_detailed_report (str): Detailed report of the error by providing a detailed summary of the agent context
+        remittance_id (str): The ID of the remittance. (required)
+        error_summary (str): Summary of the error (required)
+        error_detailed_report (str): Detailed report of the error by providing a detailed summary of the agent context (required)
 
     Returns:
         ActionResponse: The response indicating the success or failure of the action.
@@ -357,9 +364,9 @@ def update_work_item_with_unexpected_exeception(remittance_id: str, error_summar
 
 
 def _update_work_item_status(remittance_id: str, status: str, message: str, details: Optional[str]) -> ActionResponse:
-    logger.info(f"Updating status for remittance ID: {remittance_id} to {status}, status message: {message}")
+    logger.debug(f"Updating status for remittance ID: {remittance_id} to {status}, status message: {message}")
     if details:
-        logger.info(f"Details: {details}")
+        logger.debug(f"Details: {details}")
     try:
         doc_intel_client: DocumentIntelligenceClient = create_di_client()
         logger.debug("Document Intelligence client created successfully.")

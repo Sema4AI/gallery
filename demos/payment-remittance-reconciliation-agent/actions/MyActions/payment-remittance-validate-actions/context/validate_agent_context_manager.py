@@ -34,7 +34,7 @@ class ValidationAgentContextManager(BaseAgentContextManager):
         super().__init__(document_id, document_name, db_path)
         
         if load_existing:
-            self.logger.info(f"Loading existing validation context for document_id: {document_id}")
+            self.logger.debug(f"Loading existing validation context for document_id: {document_id}")
             self.agent_context = self.load_context()
             if self.agent_context is None:
                 self.logger.warning(f"No existing context found. Creating new validation context.")
@@ -62,7 +62,7 @@ class ValidationAgentContextManager(BaseAgentContextManager):
                 updated_at TIMESTAMP DEFAULT (CURRENT_TIMESTAMP)
             )
             """)
-            self.logger.info("Validation tables created successfully")
+            self.logger.debug("Validation tables created successfully")
         except Exception as e:
             self.logger.error(f"Error creating validation tables: {str(e)}")
             raise
@@ -87,7 +87,7 @@ class ValidationAgentContextManager(BaseAgentContextManager):
                     self.document_name,
                     context_json
                 ])
-            self.logger.info(f"Stored validation context for document_id: {self.document_id}")
+            self.logger.debug(f"Stored validation context for document_id: {self.document_id}")
         except Exception as e:
             self.logger.error(f"Error storing validation context for document_id {self.document_id}: {str(e)}")
             raise
@@ -120,7 +120,7 @@ class ValidationAgentContextManager(BaseAgentContextManager):
             summary=ProcessingSummary(phase=phase, start_time=datetime.utcnow())
         )
         setattr(self.agent_context, f"{phase.value.lower()}_context", context)
-        self.logger.info(f"Started validation phase: {phase}")
+        self.logger.debug(f"Started validation phase: {phase}")
 
     def end_phase(self):
         """End current validation phase."""
@@ -131,7 +131,7 @@ class ValidationAgentContextManager(BaseAgentContextManager):
                 context.summary.end_time = datetime.utcnow()
                 duration = (context.summary.end_time - context.summary.start_time).total_seconds()
                 self.agent_context.overall_processing_time += duration
-                self.logger.info(f"Ended validation phase: {self.current_phase}. Duration: {self._format_duration(duration)}")
+                self.logger.debug(f"Ended validation phase: {self.current_phase}. Duration: {self._format_duration(duration)}")
 
     def add_event(self, event_type: str, description: str, details: Optional[Dict[str, Any]] = None):
         """Add event to current validation phase."""

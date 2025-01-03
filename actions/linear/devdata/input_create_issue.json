@@ -1,0 +1,84 @@
+{
+    "inputs": [
+        {
+            "inputName": "add issue for a team",
+            "inputValue": {
+                "issue_details": {
+                    "title": "JEES new issue from vscode",
+                    "description": "",
+                    "team": {
+                        "name": "Test"
+                    },
+                    "state": {
+                        "name": "Backlog"
+                    }
+                },
+                "api_key": ""
+            }
+        },
+        {
+            "inputName": "add issue with label",
+            "inputValue": {
+                "issue_details": {
+                    "title": "X2",
+                    "description": "",
+                    "team": {
+                        "name": "Test"
+                    },
+                    "labels": [
+                        {
+                            "name": "X1"
+                        }
+                    ]
+                },
+                "api_key": ""
+            }
+        },
+        {
+            "inputName": "add issue for a project",
+            "inputValue": {
+                "issue_details": {
+                    "title": "timanttinen issue",
+                    "description": "# This will require a lot of work\n\n## This is a description\n\n### This is a sub-description",
+                    "team": {
+                        "name": "Test"
+                    },
+                    "project": {
+                        "name": "Action package test"
+                    },
+                    "state": {
+                        "name": "In Progress"
+                    },
+                    "assignee": {
+                        "name": "beissi"
+                    }
+                },
+                "api_key": ""
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "create_issue",
+        "actionRelativePath": "actions.py",
+        "schemaDescription": [
+            "issue_details.id: string",
+            "issue_details.title: string",
+            "issue_details.assignee: string",
+            "issue_details.creator: string",
+            "issue_details.project: string",
+            "issue_details.description: string",
+            "issue_details.team: string",
+            "issue_details.state: string",
+            "issue_details.url: string",
+            "issue_details.created_at: string",
+            "issue_details.updated_at: string"
+        ],
+        "managedParamsSchemaDescription": {
+            "api_key": {
+                "type": "Secret",
+                "description": "The API key to use to authenticate with the Linear API"
+            }
+        },
+        "inputFileVersion": "v2"
+    }
+}

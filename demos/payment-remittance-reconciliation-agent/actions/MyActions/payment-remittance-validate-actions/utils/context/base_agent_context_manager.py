@@ -9,6 +9,8 @@ from datetime import datetime
 import functools
 import time
 
+from utils.logging.ultimate_serializer import serialize_any_object_safely
+
 class BaseAgentContextManager(ABC):
     """
     Base class for managing agent context across processing phases.
@@ -34,13 +36,13 @@ class BaseAgentContextManager(ABC):
         
     def initialize_database(self):
         """Initialize database schema."""
-        self.logger.info("Starting database initialization")
+        self.logger.debug("Starting database initialization")
         
         with self.duckdb_connection() as conn:
             try:
                 # Create tables
                 self._create_tables(conn)
-                self.logger.info("Database initialization completed successfully")
+                self.logger.debug("Database initialization completed successfully")
             except Exception as e:
                 self.logger.error(f"Failed to initialize database: {str(e)}")
                 raise
@@ -142,14 +144,14 @@ class BaseAgentContextManager(ABC):
     def _log_event(self, event_type: str, description: str, details: Optional[Dict[str, Any]] = None):
         """Common logging functionality."""
         # Just log to logger, don't try to store in database
-        self.logger.info(f"Event: {event_type} - {description}")
+        self.logger.debug(f"Event: {event_type} - {description}")
         if details:
-            self.logger.debug(f"Event details: {json.dumps(details)}")
+            self.logger.debug(f"Event details: {serialize_any_object_safely(details)}")
 
     def _store_metrics(self, metrics: Dict[str, Any]):
         """Common metrics storage functionality."""
         # Just log metrics, don't try to store in separate table
-        self.logger.info(f"Updating metrics: {json.dumps(metrics)}")
+        self.logger.debug(f"Updating metrics: {serialize_any_object_safely(metrics)}")
 
     @staticmethod
     def _format_duration(duration_seconds: float) -> str:

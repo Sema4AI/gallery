@@ -4,6 +4,8 @@ Action Package operating on local Excel files directly, without requiring any pr
 
 This is currently capable of managing workbooks (Excel files) and their worksheets (sheets), while adding rows, changing cell values and retrieving info about the workbook/sheet content itself.
 
+On Windows and Mac machines with Excel installation, the action `find_cross_reference` will use Excel to trigger save on workbook so that visible cell values can be detected.
+
 ## Prompts
 
 ```
@@ -26,10 +28,10 @@ Awesome! You've really done a great job, now get me back the full table content 
 
 > The full table content of "MySheet" in the "data.xlsx" workbook located in the "output" folder has been successfully retrieved. Here's the content:
 >
-> | Name   | Age  |
-> |--------|------|
-> | Cosmin | 31   |
-> | Mark   | 6    |
+> | Name   | Age |
+> | ------ | --- |
+> | Cosmin | 31  |
+> | Mark   | 6   |
 
 ## Caveats
 

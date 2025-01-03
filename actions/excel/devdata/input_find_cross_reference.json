@@ -1,0 +1,29 @@
+{
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "file_path": "./devdata/BetterFi-startup-financial-model3.xlsx",
+                "sheet_name": "Financial Model",
+                "header1": {
+                    "value": "Jun'20"
+                },
+                "header2": {
+                    "value": "Gross profit"
+                }
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "find_cross_reference",
+        "actionRelativePath": "actions.py",
+        "schemaDescription": [
+            "file_path: string: Path to the Excel file",
+            "sheet_name: string: Name of the sheet to search",
+            "header1.value: string",
+            "header2.value: string"
+        ],
+        "managedParamsSchemaDescription": {},
+        "inputFileVersion": "v2"
+    }
+}

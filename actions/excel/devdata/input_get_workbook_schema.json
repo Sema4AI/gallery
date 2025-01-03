@@ -1,9 +1,15 @@
 {
     "inputs": [
         {
-            "inputName": "input-1",
+            "inputName": "complex schema",
             "inputValue": {
-                "file_path": "/Users/username/Documents/MyWorkbook.xlsx"
+                "file_path": "./devdata/BetterFi-startup-financial-model3.xlsx"
+            }
+        },
+        {
+            "inputName": "simple schema",
+            "inputValue": {
+                "file_path": "./devdata/simple.xlsx"
             }
         }
     ],

@@ -84,7 +84,7 @@ class ValidationProcessor(DocumentProcessorBase):
             and the agent insight context.
         """
         with self.agent_insight_context_manager.phase_context(ProcessingPhase.EXTRACTION):
-            self.logger.info(f"Starting extraction process for document: {self.source_document.document_name}")
+            self.logger.debug(f"Starting extraction process for document: {self.source_document.document_name}")
 
             self.agent_insight_context_manager.add_event("Extraction Start", 
                                                         f"Beginning extraction process for document: {self.source_document.document_name}")
@@ -167,7 +167,7 @@ class ValidationProcessor(DocumentProcessorBase):
                 document_content=extracted_document_content, 
                 agent_insight_context=self.agent_insight_context_manager.get_agent_context()
             )
-            self.logger.info(f"Completed extraction process for document: {self.source_document.document_name}")
+            self.logger.debug(f"Completed extraction process for document: {self.source_document.document_name}")
 
             return extraction_result
 
@@ -235,7 +235,7 @@ class ValidationProcessor(DocumentProcessorBase):
             
             self.agent_insight_context_manager.add_event("Transformation Complete", "Completed content transformation and enrichment")
             
-            self.logger.info("transformed_document_content being return as part of Trasnforemd REsult is: " + serialize_any_object_safely(transformed_document_content))
+            self.logger.debug("transformed_document_content being return as part of Trasnforemd REsult is: " + serialize_any_object_safely(transformed_document_content))
             return TransformationResult(
                 document_content=transformed_document_content,
                 agent_insight_context=self.agent_insight_context_manager.get_agent_context()
@@ -396,8 +396,8 @@ class ValidationProcessor(DocumentProcessorBase):
         )
 
         # Log validation results
-        self.logger.info(f"Discounts validation: {'Passed' if discounts_match else 'Failed'}")
-        self.logger.info(f"Charges validation: {'Passed' if charges_match else 'Failed'}")
+        self.logger.debug(f"Discounts validation: {'Passed' if discounts_match else 'Failed'}")
+        self.logger.debug(f"Charges validation: {'Passed' if charges_match else 'Failed'}")
 
         # Add event to agent context
         self.agent_insight_context_manager.add_event(
@@ -456,9 +456,9 @@ class ValidationProcessor(DocumentProcessorBase):
         Returns:
             Dict[str, float]: Dictionary mapping facility types to their total paid amounts
         """
-        self.logger.info("Computing invoice totals by facility type")
-        self.logger.info(f"Invoice Amount is: {df['Invoice Amount']}. Type is {type(df['Invoice Amount'])}")
-        self.logger.info(f"Discounts Applied is: {df['Discounts Applied']}. Type is {type(df['Discounts Applied'])}")
+        self.logger.debug("Computing invoice totals by facility type")
+        self.logger.debug(f"Invoice Amount is: {df['Invoice Amount']}. Type is {type(df['Invoice Amount'])}")
+        self.logger.debug(f"Discounts Applied is: {df['Discounts Applied']}. Type is {type(df['Discounts Applied'])}")
         # Calculate net amount paid per row (Invoice Amount - Discounts Applied)
         df['Net Amount'] = df['Invoice Amount'] - df['Discounts Applied']
         
@@ -476,9 +476,9 @@ class ValidationProcessor(DocumentProcessorBase):
 
     def _compute_total_amount_paid(self, df: pd.DataFrame) -> float:
         # Log all values and compute the sum in one go using apply
-        self.logger.info("Computing total amount paid")
-        total_amount_paid = df['Amount Paid'].apply(lambda x: self.logger.info(f"Adding: {x}") or x).sum()
-        self.logger.info(f"Total amount paid: {total_amount_paid}")
+        self.logger.debug("Computing total amount paid")
+        total_amount_paid = df['Amount Paid'].apply(lambda x: self.logger.debug(f"Adding: {x}") or x).sum()
+        self.logger.debug(f"Total amount paid: {total_amount_paid}")
         return total_amount_paid
 
     def _add_document_configs_to_agent_context(self):
@@ -516,11 +516,11 @@ class ValidationProcessor(DocumentProcessorBase):
         num_non_tabular_fields = len(non_tabular_data)
 
         # Log the start of the transformation process and the metrics
-        self.logger.info("Starting content transformation and enrichment")
-        self.logger.info(f"Document ID: {document_id}")
-        self.logger.info(f"Invoice Details - Rows: {invoice_details_rows}, Columns: {invoice_details_columns}")
-        self.logger.info(f"Summary - Rows: {summary_rows}, Columns: {summary_columns}")
-        self.logger.info(f"Non-Tabular Data - Fields: {num_non_tabular_fields}")
+        self.logger.debug("Starting content transformation and enrichment")
+        self.logger.debug(f"Document ID: {document_id}")
+        self.logger.debug(f"Invoice Details - Rows: {invoice_details_rows}, Columns: {invoice_details_columns}")
+        self.logger.debug(f"Summary - Rows: {summary_rows}, Columns: {summary_columns}")
+        self.logger.debug(f"Non-Tabular Data - Fields: {num_non_tabular_fields}")
 
         # Add event to agent context
         self.agent_insight_context_manager.add_event(
@@ -743,7 +743,7 @@ class ValidationProcessor(DocumentProcessorBase):
                 )
                 raise ValueError(error_msg)
                 
-            self.logger.info(f"Successfully identified remittance tables: Invoice={invoice_table_name}, Subtotals={subtotals_table_name}")
+            self.logger.debug(f"Successfully identified remittance tables: Invoice={invoice_table_name}, Subtotals={subtotals_table_name}")
             
             self.agent_insight_context_manager.add_event(
                 "Remittance Table Names Retrieved",

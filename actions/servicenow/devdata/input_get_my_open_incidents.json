@@ -1,0 +1,36 @@
+{
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "pagination": {
+                    "limit": 0,
+                    "next_page": ""
+                },
+                "instance_url": "<specify-secret>",
+                "username": "<specify-secret>",
+                "password": "<specify-secret>"
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "get_my_open_incidents",
+        "actionRelativePath": "actions.py",
+        "schemaDescription": [
+            "pagination.limit: integer",
+            "pagination.next_page: string"
+        ],
+        "managedParamsSchemaDescription": {
+            "instance_url": {
+                "type": "Secret"
+            },
+            "username": {
+                "type": "Secret"
+            },
+            "password": {
+                "type": "Secret"
+            }
+        },
+        "inputFileVersion": "v2"
+    }
+}

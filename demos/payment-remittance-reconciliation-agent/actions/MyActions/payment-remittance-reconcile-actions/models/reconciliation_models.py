@@ -15,7 +15,7 @@ class ReconciliationPhase(str, Enum):
     PAYMENT_MATCHING = "Payment Matching"
     FACILITY_TYPE_RECONCILIATION = "Facility Type Reconciliation"
     INVOICE_LEVEL_RECONCILIATION = "Invoice Level Reconciliation"
-    PAYMENT_RECONCILIATION = "PAYMENT_RECONCILIATION"
+    PAYMENT_RECONCILIATION = "Payment Reconciliation"
     
     
 class ValidationSeverity(str, Enum):
@@ -139,6 +139,8 @@ class ReconciliationAgentInsightContext(BaseModel):
     payment_matching: Optional[ReconciliationContext] = None
     facility_type_reconciliation: Optional[ReconciliationContext] = None
     invoice_level_reconciliation: Optional[ReconciliationContext] = None
+    payment_reconciliation: Optional[ReconciliationContext] = None
+    
     overall_status: Optional[str] = None
     overall_processing_time: float = 0.0
 
@@ -275,7 +277,7 @@ class RemittanceFields(BaseModel):
         ...,
         description="Total additional charges applied (adds to gross)"
     )
-
+    
     bank_account: str
     remittance_notes: Optional[str] = None
 
@@ -329,7 +331,7 @@ class RemittanceFields(BaseModel):
         net = DecimalHandler.round_decimal(gross - discounts)
         if charges > Decimal('0'):
             net = DecimalHandler.round_decimal(net + charges)
-
+            
         return net
 
     class Config:
@@ -357,8 +359,8 @@ class FacilityAmountSummary(BaseModel):
         json_encoders = {
             Decimal: str
         }
-
-
+        
+        
 class InvoiceDiscrepancyDetail(BaseModel):
     """Detailed invoice discrepancy information."""
     invoice_number: str

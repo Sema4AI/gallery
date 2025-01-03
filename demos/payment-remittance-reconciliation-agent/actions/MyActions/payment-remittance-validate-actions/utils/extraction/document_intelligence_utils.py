@@ -103,7 +103,7 @@ class DocumentIntelligenceUtility:
 
 
     def standardize_tabular_to_doc_type_schema(self, data: Dict[str, List[Dict[str, Any]]], table_name: str) -> Dict[str, pd.DataFrame]:
-        self._logger.info("Starting standardization of tabular data to document type schema")
+        self._logger.debug("Starting standardization of tabular data to document type schema")
         self.insight_tracker.add_event(
             "Tabular Schema Standardization Start", 
             "Beginning standardization of tabular data to document type schema", 
@@ -118,7 +118,7 @@ class DocumentIntelligenceUtility:
         
         # Handle each table (assuming there's one table per entry in the dictionary)
         for table_name, table_data in data.items():
-            self._logger.info(f"Standardizing table: {table_name}")
+            self._logger.debug(f"Standardizing table: {table_name}")
             
             # Convert the table data into a DataFrame for easier manipulation
             df = pd.DataFrame(table_data)
@@ -153,7 +153,7 @@ class DocumentIntelligenceUtility:
                 {"mapped_columns": mapped_columns, "unmapped_columns": unmapped_columns}
             )
 
-        self._logger.info("Completed standardization of tabular data to document type schema")
+        self._logger.debug("Completed standardization of tabular data to document type schema")
         return standardized_tables
 
     def map_format_to_type_field(self, format_field: str, multiple_mappings: Dict[str, List[str]] = None) -> Optional[str]:
@@ -215,14 +215,14 @@ class DocumentIntelligenceUtility:
         return None
 
     def validate_and_clean_tabular(self, data: List[Dict[str, Any]], table_type: str, exclude_field_validate_list: List[str] = []) -> Tuple[pd.DataFrame, ValidationResults]:
-        self._logger.info(f"Starting Validate and Clean for tabular data: {table_type}")
+        self._logger.debug(f"Starting Validate and Clean for tabular data: {table_type}")
         self.insight_tracker.add_event(f"{table_type} Validation Start", f"Beginning validation and cleaning of {table_type} data")
         
         validation_results = ValidationResults()
         df = pd.DataFrame(data)
         
         # Log the columns present in the DataFrame
-        self._logger.info(f"Columns present in {table_type} data: {df.columns.tolist()}")
+        self._logger.debug(f"Columns present in {table_type} data: {df.columns.tolist()}")
 
         table_fields_for_type = [field for field in self._document_type.tbl_fields if field.name == table_type]
 
@@ -280,11 +280,11 @@ class DocumentIntelligenceUtility:
                                     {"total_fields": len(df.columns),
                                         "rules_passed": validation_results.rules_passed,
                                         "rules_failed": validation_results.rules_failed})
-        self._logger.info(f"Completed Validate and Clean for tabular data: {table_type}")
+        self._logger.debug(f"Completed Validate and Clean for tabular data: {table_type}")
         return df, validation_results
 
     def validate_and_clean_non_tabular(self, data: Dict[str, Any], exclude_field_validate_list: List[str] = []) -> Tuple[Dict[str, Any], ValidationResults]:
-        self._logger.info("Starting Validate and Clean for non-tabular data")
+        self._logger.debug("Starting Validate and Clean for non-tabular data")
         self.insight_tracker.add_event("Non-tabular Validation Start", "Beginning validation and cleaning of non-tabular data")
         
         validation_results = ValidationResults()
@@ -318,7 +318,7 @@ class DocumentIntelligenceUtility:
                                        {"total_fields": len(data),
                                         "cleaned_fields": len(cleaned_data),
                                         "validation_issues": validation_results.rules_failed})
-        self._logger.info("Completed Validate and Clean for non-tabular data")
+        self._logger.debug("Completed Validate and Clean for non-tabular data")
         return cleaned_data, validation_results
 
     def _get_doc_type_field(self, field_name: str) -> Any:
@@ -332,7 +332,7 @@ class DocumentIntelligenceUtility:
     def convert_field_based_on_type(self, df: pd.DataFrame, format_field: str, field_name: str, validation_results: ValidationResults, table_type: str) -> pd.DataFrame:
         try:
             original_values = df[format_field].copy()
-            self._logger.info(f"Field Conversion Start, Converting field: '{format_field}' (mapped to '{field_name}')")
+            self._logger.debug(f"Field Conversion Start, Converting field: '{format_field}' (mapped to '{field_name}')")
             
             def convert_value(value):
                 try:
