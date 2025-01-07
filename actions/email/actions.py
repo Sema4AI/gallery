@@ -56,7 +56,7 @@ def send_email(
     )
     username = smtp_username.value or os.getenv("SEMA4_SMTP_USERNAME")
     password = smtp_password.value or os.getenv("SEMA4_SMTP_PASSWORD")
-    print(host, smtp_port_value, username, password)
+
     if not host or not smtp_port_value or not username or not password:
         raise ActionError("SMTP server details are missing.")
 
