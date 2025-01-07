@@ -14,6 +14,8 @@
             "file_path: string: The file name or a local path pointing to the workbook file."
         ],
         "managedParamsSchemaDescription": {},
-        "inputFileVersion": "v2"
+        "inputFileVersion": "v3",
+        "kind": "action",
+        "actionSignature": "action/args: 'file_path: str'"
     }
 }

@@ -16,6 +16,8 @@
             "sheet_name: string: The name of the new sheet to be added in the workbook."
         ],
         "managedParamsSchemaDescription": {},
-        "inputFileVersion": "v2"
+        "inputFileVersion": "v3",
+        "kind": "action",
+        "actionSignature": "action/args: 'file_path: str, sheet_name: str'"
     }
 }

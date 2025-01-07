@@ -10,7 +10,8 @@
                     "rows": [
                         {
                             "cells": [
-                                "1", "Russia"
+                                "1",
+                                "Russia"
                             ]
                         }
                     ]
@@ -27,9 +28,12 @@
             "start_cell: string: The cell from where to start the update. The end will be determined based on each row's length.",
             "data.rows: array: The rows that need to be added",
             "data.rows.0.cells: array: Row cells",
-            "data.rows.0.cells.0: string: Row cells"
+            "data.rows.0.cells.0: string: Row cells",
+            "overwrite: boolean: If True, the data will overwrite the existing data in the cells."
         ],
         "managedParamsSchemaDescription": {},
-        "inputFileVersion": "v2"
+        "inputFileVersion": "v3",
+        "kind": "action",
+        "actionSignature": "action/args: 'file_path: str, sheet_name: str, start_cell: str, data: Table, overwrite: bool=False'"
     }
 }
