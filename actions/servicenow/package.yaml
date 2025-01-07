@@ -9,10 +9,10 @@ version: 1.0.0
 
 dependencies:
   conda-forge:
-  - python=3.10.14
+  - python=3.11.11
   - uv=0.4.17
   pypi:
-  - sema4ai-actions=1.0.1
+  - sema4ai-actions=1.3.0
   - sema4ai-http-helper=1.0.2
   - httpx=0.27.2
 
