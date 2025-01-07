@@ -7,6 +7,9 @@ description: Create, read and update sheets on local Excel files.
 # Package version number, recommend using semver.org
 version: 3.1.0
 
+# The version of the `package.yaml` format.
+spec-version: v2
+
 dependencies:
   conda-forge:
     - python=3.11.11
