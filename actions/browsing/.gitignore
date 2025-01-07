@@ -21,3 +21,4 @@ output/
 temp/
 testrun/*
 venv/
+devdata/data.csv

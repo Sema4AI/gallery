@@ -77,6 +77,8 @@
             "web_page.links.links.0.text: string: The text of the link"
         ],
         "managedParamsSchemaDescription": {},
-        "inputFileVersion": "v2"
+        "inputFileVersion": "v3",
+        "kind": "action",
+        "actionSignature": "action/args: 'web_page: WebPage'"
     }
 }

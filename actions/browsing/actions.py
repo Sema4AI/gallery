@@ -148,7 +148,7 @@ def download_file(
 @action(is_consequential=True)
 def fill_elements(
     web_page: WebPage,
-) -> Response[str]:
+) -> str:
     """
     Fill form elements according to input values given in the Form object.
 
