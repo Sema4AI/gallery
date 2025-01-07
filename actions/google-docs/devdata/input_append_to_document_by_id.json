@@ -34,6 +34,8 @@
                 ]
             }
         },
-        "inputFileVersion": "v2"
+        "inputFileVersion": "v3",
+        "kind": "action",
+        "actionSignature": "action/args: \"document_id: str, body: str, oauth_access_token: OAuth2Secret[Literal['google'], list[Literal['https://www.googleapis.com/auth/drive.file']]]\""
     }
 }
