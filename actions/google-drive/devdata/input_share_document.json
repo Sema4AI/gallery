@@ -30,13 +30,15 @@
         "managedParamsSchemaDescription": {
             "google_credentials": {
                 "type": "OAuth2Secret",
+                "description": "JSON containing Google OAuth2 credentials.",
                 "provider": "google",
                 "scopes": [
                     "https://www.googleapis.com/auth/drive.file"
-                ],
-                "description": "JSON containing Google OAuth2 credentials."
+                ]
             }
         },
-        "inputFileVersion": "v2"
+        "inputFileVersion": "v3",
+        "kind": "action",
+        "actionSignature": "action/args: \"google_credentials: OAuth2Secret[Literal['google'], list[Literal['https://www.googleapis.com/auth/drive.file']]], name: str, role: str, email_address: str\""
     }
 }
