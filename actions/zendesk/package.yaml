@@ -12,7 +12,7 @@ spec-version: v2
 
 dependencies:
   conda-forge:
-    - python=3.11.11
+    - python=3.10.16
     - python-dotenv=1.0.1
     - uv=0.4.17
   pypi:

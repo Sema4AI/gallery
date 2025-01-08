@@ -9,7 +9,7 @@ version: 0.1.1
 
 dependencies:
   conda-forge:
-    - python=3.11.11
+    - python=3.10.16
     - uv=0.4.17
     - tesseract=5.3.4
     - pdf2image=1.17.0

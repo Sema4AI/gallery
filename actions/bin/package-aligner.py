@@ -16,7 +16,7 @@ from pathlib import Path
 RE_DIRECTIVE = re.compile(r"^\s*\w+:")
 EXPECTED_DEPS = {
     # Conda-forge deps:
-    "python": ("3.11.11", 1),
+    "python": ("3.10.16", 1),
     "python-dotenv": ("1.0.1", 2),
     "uv": ("0.4.17", 3),
     # PyPI deps:
