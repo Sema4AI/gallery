@@ -34,13 +34,15 @@
         "managedParamsSchemaDescription": {
             "token": {
                 "type": "OAuth2Secret",
+                "description": "An OAuth2 Public App (client) token structure used to make API calls.",
                 "provider": "hubspot",
                 "scopes": [
                     "crm.objects.contacts.write"
-                ],
-                "description": "An OAuth2 Public App (client) token structure used to make API calls."
+                ]
             }
         },
-        "inputFileVersion": "v2"
+        "inputFileVersion": "v3",
+        "kind": "action",
+        "actionSignature": "action/args: \"contact_id: str, contact_data: UpdateContact, token: OAuth2Secret[Literal['hubspot'], list[Literal['crm.objects.contacts.write']]]=DEV_OAUTH2_TOKEN\""
     }
 }
