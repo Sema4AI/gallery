@@ -28,13 +28,15 @@
         "managedParamsSchemaDescription": {
             "token": {
                 "type": "OAuth2Secret",
+                "description": "the OAuth2 token for the user",
                 "provider": "google",
                 "scopes": [
                     "https://www.googleapis.com/auth/gmail.readonly"
-                ],
-                "description": "the OAuth2 token for the user"
+                ]
             }
         },
-        "inputFileVersion": "v2"
+        "inputFileVersion": "v3",
+        "kind": "action",
+        "actionSignature": "action/args: \"query: str, token: OAuth2Secret[Literal['google'], list[Literal['https://www.googleapis.com/auth/gmail.readonly']]], max_results: int=DEFAULT_EMAIL_QUERY_COUNT\""
     }
 }
