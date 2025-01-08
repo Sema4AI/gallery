@@ -42,14 +42,16 @@
         "managedParamsSchemaDescription": {
             "oauth_access_token": {
                 "type": "OAuth2Secret",
+                "description": "The OAuth2 access token .",
                 "provider": "google",
                 "scopes": [
                     "https://www.googleapis.com/auth/spreadsheets",
                     "https://www.googleapis.com/auth/drive.file"
-                ],
-                "description": "The OAuth2 access token ."
+                ]
             }
         },
-        "inputFileVersion": "v2"
+        "inputFileVersion": "v3",
+        "kind": "action",
+        "actionSignature": "action/args: \"oauth_access_token: OAuth2Secret[Literal['google'], list[Literal['https://www.googleapis.com/auth/spreadsheets', 'https://www.googleapis.com/auth/drive.file'],]], spreadsheet: str, worksheet: str, rows_to_add: RowData\""
     }
 }

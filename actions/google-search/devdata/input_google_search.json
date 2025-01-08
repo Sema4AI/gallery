@@ -27,6 +27,8 @@
                 "description": "the Custom Search Engine ID"
             }
         },
-        "inputFileVersion": "v2"
+        "inputFileVersion": "v3",
+        "kind": "action",
+        "actionSignature": "action/args: \"topic: str, count: int=10, api_key: Secret=Secret.model_validate(os.getenv(API_KEY_FIELD, '')), context: Secret=Secret.model_validate(os.getenv(CONTEXT_FIELD, ''))\""
     }
 }

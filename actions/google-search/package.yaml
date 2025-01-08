@@ -5,7 +5,10 @@ name: Google Search
 description: Agent can make Google searches using a custom search engine (requires API key).
 
 # Package version number, recommend using semver.org
-version: 1.0.1
+version: 2.0.0
+
+# The version of the `package.yaml` format.
+spec-version: v2
 
 dependencies:
   conda-forge:
@@ -15,7 +18,7 @@ dependencies:
   pypi:
     - sema4ai-actions=1.3.0
     - pydantic=2.10.4
-    - requests=2.31.0
+    - requests=2.32.3
 
 packaging:
   # By default, all files and folders in this directory are packaged when uploaded.
