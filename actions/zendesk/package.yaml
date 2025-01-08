@@ -1,11 +1,14 @@
 # Required: A short name for the action package
-name: Zendesk
+name: XZendesk
 
 # Required: A description of what's in the action package.
 description: Operate Zendesk tickets, assignments and comments with Agents.
 
 # Package version number, recommend using semver.org
-version: 1.1.0
+version: 2.0.0
+
+# The version of the `package.yaml` format.
+spec-version: v2
 
 dependencies:
   conda-forge:
