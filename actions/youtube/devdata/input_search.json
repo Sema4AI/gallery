@@ -16,6 +16,8 @@
             "max_results: integer: How many results to return, default 3."
         ],
         "managedParamsSchemaDescription": {},
-        "inputFileVersion": "v2"
+        "inputFileVersion": "v3",
+        "kind": "action",
+        "actionSignature": "action/args: 'search_term: str, max_results: int=3'"
     }
 }
