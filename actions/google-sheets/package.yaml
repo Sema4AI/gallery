@@ -5,7 +5,10 @@ name: Google Sheets
 description: Create and read spreadsheets. Add/update rows.
 
 # Package version number, recommend using semver.org
-version: 2.0.0
+version: 1.0.4
+
+# The version of the `package.yaml` format.
+spec-version: v2
 
 dependencies:
   conda-forge:

@@ -5,7 +5,10 @@ name: Google Drive
 description: Interact with Google Drive resources - search files, get comments, get contents and more!
 
 # Package version number, recommend using semver.org
-version: 2.0.0
+version: 1.0.5
+
+# The version of the `package.yaml` format.
+spec-version: v2
 
 dependencies:
   conda-forge:
