@@ -102,7 +102,7 @@ def get_my_open_incidents(
             pagination=pagination,
         )
 
-    return Response[ServiceNowResponse](result=incidents)
+    return incidents
 
 
 @action(is_consequential=False)
@@ -134,7 +134,7 @@ def get_recent_incidents(
             pagination=pagination,
         )
 
-    return Response[ServiceNowResponse](result=incidents)
+    return incidents
 
 
 @action(is_consequential=False)
@@ -168,7 +168,7 @@ def search_incidents(
             pagination=pagination,
         )
 
-    return Response[ServiceNowResponse](result=incidents)
+    return incidents
 
 
 @action(is_consequential=False)
@@ -198,11 +198,7 @@ def get_users(
                 params=pagination.as_params(),
             )
 
-        return Response[ServiceNowResponse](
-            result=ServiceNowResponse.from_http_response(
-                raw_response.raise_for_status()
-            )
-        )
+        return ServiceNowResponse.from_http_response(raw_response.raise_for_status())
 
 
 def _get_incidents(
