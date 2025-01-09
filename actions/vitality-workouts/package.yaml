@@ -5,7 +5,10 @@ name: Vitality Workouts
 description: Explore the dummy Workouts data
 
 # Package version number, recommend using semver.org
-version: 1.0.1
+version: 1.0.2
+
+# The version of the `package.yaml` format.
+spec-version: v2
 
 dependencies:
   conda-forge:
