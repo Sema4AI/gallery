@@ -34,13 +34,15 @@
         "managedParamsSchemaDescription": {
             "token": {
                 "type": "OAuth2Secret",
+                "description": "OAuth2 token to use for the operation",
                 "provider": "microsoft",
                 "scopes": [
                     "Files.Read"
-                ],
-                "description": "OAuth2 token to use for the operation"
+                ]
             }
         },
-        "inputFileVersion": "v2"
+        "inputFileVersion": "v3",
+        "kind": "action",
+        "actionSignature": "action/args: \"filename: str, token: OAuth2Secret[Literal['microsoft'], list[Literal['Files.Read']]], site_id: str='', location: str='', target_folder: str='', download_all_matching: bool=False\""
     }
 }

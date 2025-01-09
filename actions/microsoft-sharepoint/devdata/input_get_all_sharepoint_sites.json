@@ -23,13 +23,15 @@
         "managedParamsSchemaDescription": {
             "token": {
                 "type": "OAuth2Secret",
+                "description": "OAuth2 token to use for the operation.",
                 "provider": "microsoft",
                 "scopes": [
                     "Sites.Read.All"
-                ],
-                "description": "OAuth2 token to use for the operation."
+                ]
             }
         },
-        "inputFileVersion": "v2"
+        "inputFileVersion": "v3",
+        "kind": "action",
+        "actionSignature": "action/args: \"token: OAuth2Secret[Literal['microsoft'], list[Literal['Sites.Read.All']]]\""
     }
 }
