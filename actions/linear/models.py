@@ -18,8 +18,8 @@ class FilterOptions(BaseModel):
     description: Optional[str] = None
     state: Optional[str] = None
     label: Optional[str] = None
-    limit: Optional[int] = None  # Number of issues to return, default is 50
-    ordering: OrderType = OrderType.UPDATED_AT
+    limit: Optional[int] = None
+    ordering: Optional[OrderType] = Field(default=OrderType.UPDATED_AT)
 
 
 class NameAndId(BaseModel):

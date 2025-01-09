@@ -251,9 +251,7 @@ def _get_teams(api_key: Secret) -> TeamList:
         List of teams with their IDs and names
     """
     teams_response = _make_graphql_request(query_get_teams, {}, api_key)
-    teams = [
-        Team.model_validate(team) for team in teams_response["data"]["teams"]["nodes"]
-    ]
+    teams = [Team.model_validate(team) for team in teams_response["teams"]["nodes"]]
     return teams
 
 
@@ -269,6 +267,6 @@ def _get_projects(api_key: Secret) -> ProjectList:
     projects_response = _make_graphql_request(query_get_projects, {}, api_key)
     projects = [
         Project.model_validate(project)
-        for project in projects_response["data"]["projects"]["nodes"]
+        for project in projects_response["projects"]["nodes"]
     ]
     return projects
