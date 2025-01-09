@@ -18,6 +18,8 @@
             "case_sensitive: boolean: Whether the search should be case sensitive (default False)"
         ],
         "managedParamsSchemaDescription": {},
-        "inputFileVersion": "v2"
+        "inputFileVersion": "v3",
+        "kind": "action",
+        "actionSignature": "action/args: 'text_to_find: str, filename: str, case_sensitive: bool=False'"
     }
 }
