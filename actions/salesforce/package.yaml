@@ -7,6 +7,9 @@ description: Doing basic queries on Salesforce data
 # Package version number, recommend using semver.org
 version: 1.0.1
 
+# The version of the `package.yaml` format.
+spec-version: v2
+
 dependencies:
   conda-forge:
     - python=3.10.16

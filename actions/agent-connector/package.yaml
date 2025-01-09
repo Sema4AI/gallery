@@ -7,6 +7,9 @@ description: Actions to connect agents with each other
 # Package version number, recommend using semver.org
 version: 2.0.1
 
+# The version of the `package.yaml` format.
+spec-version: v2
+
 # Required: A link to where the documentation on the package lives.
 documentation: https://sema4.ai/
 
