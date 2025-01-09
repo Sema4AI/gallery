@@ -15,7 +15,7 @@ load_dotenv(Path(__file__).absolute().parent / "devdata" / ".env")
 DEFAULT_SMTP_PORT = "587"
 
 
-@action(is_consequential=False)
+@action(is_consequential=True)
 def send_email(
     sender: str,
     to: str,
