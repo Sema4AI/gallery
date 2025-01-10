@@ -28,6 +28,8 @@
                 "description": "The Slack application access token."
             }
         },
-        "inputFileVersion": "v2"
+        "inputFileVersion": "v3",
+        "kind": "action",
+        "actionSignature": "action/args: \"channel_name: str, messages_limit: int=20, newer_than: str='', saved_only: bool=False, with_replies: bool=False, access_token: Secret=DEV_SLACK_ACCESS_TOKEN\""
     }
 }

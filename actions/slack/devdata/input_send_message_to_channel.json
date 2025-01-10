@@ -22,6 +22,8 @@
                 "description": "The Slack application access token."
             }
         },
-        "inputFileVersion": "v2"
+        "inputFileVersion": "v3",
+        "kind": "action",
+        "actionSignature": "action/args: 'channel_name: str, message: str, access_token: Secret=DEV_SLACK_ACCESS_TOKEN'"
     }
 }

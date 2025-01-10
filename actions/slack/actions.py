@@ -15,8 +15,7 @@ from slack_sdk import WebClient as SlackWebClient
 from slack_sdk.errors import SlackApiError
 
 from conversations import ConversationNotFoundError, get_conversation_id
-from models import Messages, ThreadMessage, ThreadMessages
-
+from models import Messages, ThreadMessage, ThreadMessageList
 
 load_dotenv(Path(__file__).absolute().parent / "devdata" / ".env")
 
@@ -88,7 +87,7 @@ def read_messages_from_channel(
     saved_only: bool = False,
     with_replies: bool = False,
     access_token: Secret = DEV_SLACK_ACCESS_TOKEN,
-) -> Response[ThreadMessages]:
+) -> Response[ThreadMessageList]:
     """Read a message from a given Slack channel.
 
     Newer messages than the `newer_than` will be retrieved when this is set, then these
@@ -129,7 +128,7 @@ def read_messages_from_channel(
             "channel_name": channel_name,
             "channel_id": channel_id,
         }
-        messages_result = ThreadMessages.model_validate(
+        messages_result = ThreadMessageList.model_validate(
             response.data, from_attributes=True, context=context
         )
         messages = messages_result.messages
@@ -153,7 +152,7 @@ def read_messages_from_channel(
                     {"messages": replies}, from_attributes=True, context=context
                 )
 
-    return Response(result=messages_result)
+    return messages_result
 
 
 @action(is_consequential=False)

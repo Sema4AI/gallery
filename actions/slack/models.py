@@ -110,7 +110,7 @@ class ThreadMessage(Message):
     ]
 
 
-class ThreadMessages(BaseMessages):
+class ThreadMessageList(BaseMessages):
     messages: Annotated[
         list[ThreadMessage], Field(description="List of thread messages")
     ]
