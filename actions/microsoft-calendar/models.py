@@ -5,7 +5,6 @@ from pydantic import (
     Field,
     field_serializer,
     field_validator,
-    model_serializer,
 )
 from typing_extensions import Annotated
 

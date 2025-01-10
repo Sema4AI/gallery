@@ -113,17 +113,6 @@ class UpdateTicket(BaseModel):
     hubspot_owner_id: Annotated[str | None, Field(description="Owner ID")] = None
 
 
-class _ObjectResult(BaseModel):
-    """Object entity data."""
-
-    id: Annotated[str, Field(description="Object ID")]
-    hs_createdate: Annotated[str, Field(description="Object create date")]
-
-    @classmethod
-    def get_properties(cls) -> list[str]:
-        return list(cls.model_fields.keys())
-
-
 class TaskInfo(BaseModel):
     hs_task_subject: Annotated[str | None, Field(description="Task title")] = None
     hs_task_body: Annotated[str | None, Field(description="Task notes")] = None
@@ -143,10 +132,16 @@ class CreateTask(TaskInfo):
     hs_timestamp: Annotated[str, Field(description="Task due date")]
 
 
-class Task(_ObjectResult):
+class Task(TaskInfo):
     """Task object entity data."""
 
+    id: Annotated[str, Field(description="Object ID")]
     hs_timestamp: Annotated[str, Field(description="Task due date")]
+    hs_createdate: Annotated[str, Field(description="Object create date")]
+
+    @classmethod
+    def get_properties(cls) -> list[str]:
+        return list(cls.model_fields.keys())
 
     def __str__(self):
         props = {

@@ -20,18 +20,20 @@
         "actionName": "list_all_onedrive_folders_recursively",
         "actionRelativePath": "microsoft_onedrive/onedrive_get_action.py",
         "schemaDescription": [
-            "params.root_folder: string: The root folder to start listing folders from. Use '/' for the root of OneDrive."
+            "root_folder: string: The root folder to start listing folders from. Use \"/\" for the root of OneDrive."
         ],
         "managedParamsSchemaDescription": {
             "token": {
                 "type": "OAuth2Secret",
+                "description": "OAuth2 token.",
                 "provider": "microsoft",
                 "scopes": [
                     "Files.Read"
-                ],
-                "description": "OAuth2 token."
+                ]
             }
         },
-        "inputFileVersion": "v2"
+        "inputFileVersion": "v3",
+        "kind": "action",
+        "actionSignature": "action/args: \"token: OAuth2Secret[Literal['microsoft'], List[Literal['Files.Read']]], root_folder: str='/'\""
     }
 }

@@ -7,8 +7,8 @@
 .use
 .venv/
 .vscode
+/venv/
 metadata.json
 output/
 temp/
 venv/
-/venv/

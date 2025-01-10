@@ -3,15 +3,16 @@
         {
             "inputName": "input-1",
             "inputValue": {
-                "to": "TARGET_EMAIL_ADDRESS",
+                "sender": "mika@sema4.ai",
+                "to": "mika@sema4.ai",
                 "subject": "Email subject",
                 "body": "Email body message",
                 "cc": "",
                 "bcc": "",
-                "smtp_host": "<specify-secret>",
-                "smtp_port": "<specify-secret>",
-                "smtp_username": "<specify-secret>",
-                "smtp_password": "<specify-secret>"
+                "smtp_host": "",
+                "smtp_port": "",
+                "smtp_username": "",
+                "smtp_password": ""
             }
         }
     ],
@@ -44,6 +45,8 @@
                 "description": "SMTP server password"
             }
         },
-        "inputFileVersion": "v2"
+        "inputFileVersion": "v3",
+        "kind": "action",
+        "actionSignature": "action/args: \"sender: str, to: str, subject: str, body: str, smtp_host: Secret, smtp_port: Secret, smtp_username: Secret, smtp_password: Secret, cc: str='', bcc: str=''\""
     }
 }

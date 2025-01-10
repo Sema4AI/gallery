@@ -14,6 +14,8 @@
             "video_url: string: Youtube video URL as a complete URL, example: \"https://www.youtube.com/watch?v=YOUR_VIDEO_ID\""
         ],
         "managedParamsSchemaDescription": {},
-        "inputFileVersion": "v2"
+        "inputFileVersion": "v3",
+        "kind": "action",
+        "actionSignature": "action/args: 'video_url: str'"
     }
 }

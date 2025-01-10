@@ -43,8 +43,6 @@ def create_event(
     Returns:
         The newly created event.
     """
-    headers = _build_headers(credentials)
-
     url = EVENTS_ENDPOINT
     if calendar_id:
         url = f"{CALENDARS_ENDPOINT}/{calendar_id}/events"
@@ -79,7 +77,6 @@ def update_event(
     Returns:
         Updated event details.
     """
-
     headers = _build_headers(credentials)
     updates_json = updates.model_dump(
         mode="json", exclude_none=True, exclude={"timeZone"}

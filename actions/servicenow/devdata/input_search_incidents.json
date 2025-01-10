@@ -5,7 +5,7 @@
             "inputValue": {
                 "sysparm_query": "sys_created_on>=2014-01-01^sys_created_on<2024-01-01",
                 "pagination": {
-                    "limit": 0,
+                    "limit": 3,
                     "next_page": ""
                 },
                 "instance_url": "<specify-secret>",
@@ -33,6 +33,8 @@
                 "type": "Secret"
             }
         },
-        "inputFileVersion": "v2"
+        "inputFileVersion": "v3",
+        "kind": "action",
+        "actionSignature": "action/args: 'instance_url: Secret, username: Secret, password: Secret, sysparm_query: str, pagination: Pagination=Pagination.default()'"
     }
 }

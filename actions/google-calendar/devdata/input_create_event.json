@@ -8,7 +8,7 @@
                     "summary": "Team sync",
                     "description": "Discuss the upcoming sprint and unblock people.",
                     "start": "2024-10-03T18:45:00+03:00",
-                    "end": "2024-10-03T19:15:00+03:00",
+                    "end": "2024-10-03T19:15:00+03:00"
                 },
                 "vscode:request:oauth2": {
                     "google_credentials": {
@@ -41,13 +41,15 @@
         "managedParamsSchemaDescription": {
             "google_credentials": {
                 "type": "OAuth2Secret",
+                "description": "JSON containing Google OAuth2 credentials.",
                 "provider": "google",
                 "scopes": [
                     "https://www.googleapis.com/auth/calendar.events"
-                ],
-                "description": "JSON containing Google OAuth2 credentials."
+                ]
             }
         },
-        "inputFileVersion": "v2"
+        "inputFileVersion": "v3",
+        "kind": "action",
+        "actionSignature": "action/args: \"google_credentials: OAuth2Secret[Literal['google'], list[Literal['https://www.googleapis.com/auth/calendar.events']]], event: CreateEvent, calendar_id='primary'\""
     }
 }

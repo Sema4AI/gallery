@@ -4,14 +4,19 @@ name: Microsoft 365 Excel
 # Required: A description of what's in the action package.
 description: Actions for manipulating Microsoft 365 Excel files.
 
-version: 1.0.1
+# Package version number, recommend using semver.org
+version: 1.0.2
+
+# The version of the `package.yaml` format.
+spec-version: v2
 
 dependencies:
   conda-forge:
-  - python=3.10.14
+  - python=3.10.16
   - uv=0.4.17
   pypi:
-  - sema4ai-actions=1.0.1
+  - sema4ai-actions=1.3.0
+  - pydantic=2.10.4
   - httpx=0.27.0
   - XlsxWriter=3.2.0
 

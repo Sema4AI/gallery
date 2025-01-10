@@ -5,15 +5,18 @@ name: Wayback Machine
 description: Uses the Wayback Machine to detect changes to websites.
 
 # Package version number, recommend using semver.org
-version: 1.0.1
+version: 1.0.2
+
+# The version of the `package.yaml` format.
+spec-version: v2
 
 dependencies:
   conda-forge:
-    - python=3.10.14
+    - python=3.10.16
     - uv=0.4.17
   pypi:
-    - sema4ai-actions=1.0.1
-    - pytz=2024.1
+    - sema4ai-actions=1.3.0
+    - pytz=2024.2
     - waybackpy=3.0.6
 
 packaging:

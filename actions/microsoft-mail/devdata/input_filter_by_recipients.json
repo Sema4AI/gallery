@@ -39,14 +39,16 @@
         "managedParamsSchemaDescription": {
             "token": {
                 "type": "OAuth2Secret",
+                "description": "OAuth2 token to use for the operation.",
                 "provider": "microsoft",
                 "scopes": [
                     "Mail.Read",
                     "User.Read"
-                ],
-                "description": "OAuth2 token to use for the operation."
+                ]
             }
         },
-        "inputFileVersion": "v2"
+        "inputFileVersion": "v3",
+        "kind": "action",
+        "actionSignature": "action/args: \"token: OAuth2Secret[Literal['microsoft'], list[Literal['Mail.Read', 'User.Read']]], search_query: str='*', from_: str='', to_recipients: str='', cc_recipients: str='', bcc_recipients: str='', folder_to_search: str='inbox', return_only_count: bool=False\""
     }
 }

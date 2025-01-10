@@ -98,7 +98,13 @@
             "filter_options.assignee_name: string",
             "filter_options.creator_name: string",
             "filter_options.project_name: string",
-            "filter_options.title: string"
+            "filter_options.team_name: string",
+            "filter_options.title: string",
+            "filter_options.description: string",
+            "filter_options.state: string",
+            "filter_options.label: string",
+            "filter_options.limit: string",
+            "filter_options.ordering: ['createdAt', 'updatedAt']"
         ],
         "managedParamsSchemaDescription": {
             "api_key": {
@@ -106,6 +112,8 @@
                 "description": "The API key to use to authenticate with the Linear API."
             }
         },
-        "inputFileVersion": "v2"
+        "inputFileVersion": "v3",
+        "kind": "action",
+        "actionSignature": "action/args: 'filter_options: FilterOptions, api_key: Secret'"
     }
 }

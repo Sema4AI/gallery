@@ -5,25 +5,28 @@ from sema4ai.actions import action, Secret, Response, ActionError
 
 from dotenv import load_dotenv
 import os
+from pathlib import Path
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
-load_dotenv()
+load_dotenv(Path(__file__).absolute().parent / "devdata" / ".env")
+
+DEFAULT_SMTP_PORT = "587"
 
 
-@action(is_consequential=False)
+@action(is_consequential=True)
 def send_email(
     sender: str,
     to: str,
     subject: str,
     body: str,
+    smtp_host: Secret,
+    smtp_port: Secret,
+    smtp_username: Secret,
+    smtp_password: Secret,
     cc: str = "",
     bcc: str = "",
-    smtp_host: Secret = Secret.model_validate(os.getenv("SEMA4_SMTP_HOST", "")),
-    smtp_port: Secret = Secret.model_validate(os.getenv("SEMA4_SMTP_PORT", "587")),
-    smtp_username: Secret = Secret.model_validate(os.getenv("SEMA4_SMTP_USERNAME", "")),
-    smtp_password: Secret = Secret.model_validate(os.getenv("SEMA4_SMTP_PASSWORD", "")),
 ) -> Response[str]:
     """Send email to set recipients with subject and body using SMTP server.
 
@@ -47,19 +50,17 @@ def send_email(
     Returns:
         Text "Email sent successfully!" or error message if email sending fails
     """
-    if (
-        not smtp_host.value
-        or not smtp_port.value
-        or not smtp_username.value
-        or not smtp_password.value
-    ):
-        raise ActionError("SMTP server details are missing.")
-    # Email server details
-    host = smtp_host.value
-    port = int(smtp_port.value)
-    username = smtp_username.value
-    password = smtp_password.value
+    host = smtp_host.value or os.getenv("SEMA4_SMTP_HOST")
+    smtp_port_value = (
+        smtp_port.value or os.getenv("SEMA4_SMTP_PORT") or DEFAULT_SMTP_PORT
+    )
+    username = smtp_username.value or os.getenv("SEMA4_SMTP_USERNAME")
+    password = smtp_password.value or os.getenv("SEMA4_SMTP_PASSWORD")
 
+    if not host or not smtp_port_value or not username or not password:
+        raise ActionError("SMTP server details are missing.")
+
+    port = int(smtp_port_value)
     # Create list of all recipients (including BCC)
     recipients = to.split(",")
 

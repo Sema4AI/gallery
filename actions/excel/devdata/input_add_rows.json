@@ -9,7 +9,8 @@
                     "rows": [
                         {
                             "cells": [
-                                "1", "Japan"
+                                "1",
+                                "Japan"
                             ]
                         }
                     ]
@@ -28,6 +29,8 @@
             "data_table.rows.0.cells.0: string: Row cells"
         ],
         "managedParamsSchemaDescription": {},
-        "inputFileVersion": "v2"
+        "inputFileVersion": "v3",
+        "kind": "action",
+        "actionSignature": "action/args: 'file_path: str, sheet_name: str, data_table: Table'"
     }
 }

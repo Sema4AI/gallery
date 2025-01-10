@@ -24,6 +24,8 @@
             "header2.value: string"
         ],
         "managedParamsSchemaDescription": {},
-        "inputFileVersion": "v2"
+        "inputFileVersion": "v3",
+        "kind": "action",
+        "actionSignature": "action/args: 'file_path: str, sheet_name: str, header1: Header, header2: Header'"
     }
 }

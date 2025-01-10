@@ -16,6 +16,8 @@
             "days: integer: Number of days to go back looking for changes\nExample: \"7\""
         ],
         "managedParamsSchemaDescription": {},
-        "inputFileVersion": "v2"
+        "inputFileVersion": "v3",
+        "kind": "action",
+        "actionSignature": "action/args: 'url: str, days: int'"
     }
 }

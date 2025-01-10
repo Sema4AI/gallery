@@ -1,7 +1,9 @@
+!test/README.md
 *.pyc
 *.zip
 .DS_Store
 .env
+.gitattributes
 .project
 .pydevproject
 .use
@@ -10,7 +12,5 @@
 metadata.json
 output/
 temp/
-venv/
-.gitattributes
 test/**
-!test/README.md
+venv/

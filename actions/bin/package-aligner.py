@@ -16,12 +16,12 @@ from pathlib import Path
 RE_DIRECTIVE = re.compile(r"^\s*\w+:")
 EXPECTED_DEPS = {
     # Conda-forge deps:
-    "python": ("3.10.14", 1),
+    "python": ("3.10.16", 1),
     "python-dotenv": ("1.0.1", 2),
     "uv": ("0.4.17", 3),
     # PyPI deps:
-    "sema4ai-actions": ("1.0.1", 1),
-    "pydantic": ("2.9.2", 2),
+    "sema4ai-actions": ("1.3.0", 1),
+    "pydantic": ("2.10.4", 2),
 }
 LOWEST_PRIO = sys.maxsize
 

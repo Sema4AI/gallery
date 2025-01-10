@@ -20,6 +20,8 @@
             "column: string: The column letter or index."
         ],
         "managedParamsSchemaDescription": {},
-        "inputFileVersion": "v2"
+        "inputFileVersion": "v3",
+        "kind": "action",
+        "actionSignature": "action/args: 'file_path: str, sheet_name: str, row: str, column: str'"
     }
 }

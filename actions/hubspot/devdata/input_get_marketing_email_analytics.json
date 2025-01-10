@@ -30,13 +30,15 @@
         "managedParamsSchemaDescription": {
             "token": {
                 "type": "OAuth2Secret",
+                "description": "An OAuth2 Public App (client) token structure used to make API calls.",
                 "provider": "hubspot",
                 "scopes": [
                     "content"
-                ],
-                "description": "An OAuth2 Public App (client) token structure used to make API calls."
+                ]
             }
         },
-        "inputFileVersion": "v2"
+        "inputFileVersion": "v3",
+        "kind": "action",
+        "actionSignature": "action/args: \"query: MarketingEmailQueryParams, token: OAuth2Secret[Literal['hubspot'], list[Literal['content']]]=DEV_OAUTH2_TOKEN\""
     }
 }

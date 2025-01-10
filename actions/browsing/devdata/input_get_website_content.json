@@ -31,6 +31,8 @@
             "user_agent.name: string: The user agent to use for browsing"
         ],
         "managedParamsSchemaDescription": {},
-        "inputFileVersion": "v2"
+        "inputFileVersion": "v3",
+        "kind": "action",
+        "actionSignature": "action/args: 'url: str, user_agent: UserAgent={}'"
     }
 }

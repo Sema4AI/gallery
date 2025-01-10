@@ -22,6 +22,8 @@
                 "description": "The API key to use to authenticate with the Linear API"
             }
         },
-        "inputFileVersion": "v2"
+        "inputFileVersion": "v3",
+        "kind": "action",
+        "actionSignature": "action/args: 'issue_id: str, body: str, api_key: Secret'"
     }
 }

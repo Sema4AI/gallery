@@ -71,7 +71,8 @@
             "issue_details.state: string",
             "issue_details.url: string",
             "issue_details.created_at: string",
-            "issue_details.updated_at: string"
+            "issue_details.updated_at: string",
+            "issue_details.labels: string"
         ],
         "managedParamsSchemaDescription": {
             "api_key": {
@@ -79,6 +80,8 @@
                 "description": "The API key to use to authenticate with the Linear API"
             }
         },
-        "inputFileVersion": "v2"
+        "inputFileVersion": "v3",
+        "kind": "action",
+        "actionSignature": "action/args: 'api_key: Secret, issue_details: Issue'"
     }
 }

@@ -4,7 +4,7 @@
             "inputName": "input-1",
             "inputValue": {
                 "pagination": {
-                    "limit": 0,
+                    "limit": 3,
                     "next_page": ""
                 },
                 "instance_url": "<specify-secret>",
@@ -31,6 +31,8 @@
                 "type": "Secret"
             }
         },
-        "inputFileVersion": "v2"
+        "inputFileVersion": "v3",
+        "kind": "action",
+        "actionSignature": "action/args: 'instance_url: Secret, username: Secret, password: Secret, pagination: Pagination=Pagination.default()'"
     }
 }
