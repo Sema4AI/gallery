@@ -1,5 +1,5 @@
 # Required: A short name for the action package
-name: HubSpotzz
+name: HubSpot
 
 # Required: A description of what's in the action package
 description: Search and manage all aspects of CRM objects, including companies, contacts, deals, and more.
