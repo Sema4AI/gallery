@@ -421,11 +421,19 @@ def get_workbook_schema(file_path: str) -> Response[Schema]:
     try:
         workbook = load_workbook(filename=path, read_only=True)
         created = UserAndTime(
-            user=workbook.properties.creator.encode("utf-8"),
+            user=(
+                workbook.properties.creator.encode("utf-8")
+                if workbook.properties.creator
+                else ""
+            ),
             time=workbook.properties.created,
         )
         last_modified = UserAndTime(
-            user=workbook.properties.last_modified_by.encode("utf-8"),
+            user=(
+                workbook.properties.last_modified_by.encode("utf-8")
+                if workbook.properties.last_modified_by
+                else ""
+            ),
             time=workbook.properties.modified,
         )
         for sheet_name in workbook.sheetnames:

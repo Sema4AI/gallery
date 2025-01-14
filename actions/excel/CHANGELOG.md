@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [3.1.2] - 2025-01-14
+
+### Fixed
+
+- The `get_workbook_schema` fail if workbook "creator" or "last modified" user is missing
+
 ## [3.1.1] - 2025-01-09
 
 ### Changed
