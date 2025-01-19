@@ -55,7 +55,7 @@ This package uses OAuth for user authenticaion. In Sema4.ai Studio you can eithe
 
 ### Creating a Microsoft Entra Enterprise app for authentication
 
-In order to use the action package you need to go into https://portal.azure.com and register new Azure Entra ID (formerly Azure AD) application. Follow the detailed instructions [here](https://sema4.ai/docs/actions/auth/microsoft).
+In order to use the action package you need to go into https://portal.azure.com and register new Azure Entra ID (formerly Azure AD) application. Follow the detailed instructions [here](https://sema4.ai/docs/build-agents/prebuilt-actions/authentication/microsoft).
 
 Scopes in use:
 
