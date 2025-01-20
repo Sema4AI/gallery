@@ -153,6 +153,8 @@ api_key.value
 If an action is required to communicate with an external service, you can either use Secrets and pass the api keys directly or you can use OAuth2Secret for oauth2 authentication. The OAuth2Secret is a special type of Secret that is used to authenticate with an external service. The OAuth2Secret is used in the following syntax:
 ```
 token: OAuth2Secret[Literal["hubspot"], list[Literal["crm.objects.contacts.write"]]]
+
+# usage: token.access_token to access the token when making requests
 ```
 where the first argument is the name of the service and the second argument is the list of scopes that the function is allowed to access.
 
