@@ -1,0 +1,21 @@
+{
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "pack_result_zip_path": "/Users/ovidiu/agents_bootstrapper/JamesBond/agent-package.zip"
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "publish_to_sema4_ai_studio",
+        "actionRelativePath": "actions.py",
+        "schemaDescription": [
+            "pack_result_zip_path: string: The path to the agent package zip file."
+        ],
+        "managedParamsSchemaDescription": {},
+        "inputFileVersion": "v3",
+        "kind": "action",
+        "actionSignature": "action/args: 'pack_result_zip_path: str'"
+    }
+}

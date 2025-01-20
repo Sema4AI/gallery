@@ -1,0 +1,82 @@
+{
+    "inputs": [
+        {
+            "inputName": "Fill elements with values",
+            "inputValue": {
+                "web_page": {
+                    "url": "https://mikahanninen.dev/form-test",
+                    "text_content": "  ",
+                    "form": {
+                        "url": "https://mikahanninen.dev/form-test",
+                        "elements": [
+                            {
+                                "type": "input",
+                                "placeholder": "Username",
+                                "aria_label": "",
+                                "id": "",
+                                "name": "username",
+                                "class_": "",
+                                "value_type": "text",
+                                "value_to_fill": "hessu",
+                                "options": []
+                            },
+                            {
+                                "type": "input",
+                                "placeholder": "Email",
+                                "aria_label": "",
+                                "id": "",
+                                "name": "email",
+                                "class_": "",
+                                "value_type": "email",
+                                "value_to_fill": "hessu@hopo.com",
+                                "options": []
+                            },
+                            {
+                                "type": "input",
+                                "placeholder": "",
+                                "aria_label": "",
+                                "id": "",
+                                "name": "",
+                                "class_": "",
+                                "value_type": "submit",
+                                "value_to_fill": "",
+                                "options": []
+                            }
+                        ]
+                    },
+                    "links": {
+                        "links": []
+                    }
+                }
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "fill_elements",
+        "actionRelativePath": "actions.py",
+        "schemaDescription": [
+            "web_page.url: string: The URL of the website",
+            "web_page.text_content: string: The text content of the website",
+            "web_page.form.url: string: The URL of the website",
+            "web_page.form.elements: array: A list of form elements",
+            "web_page.form.elements.0.type: string: The type of the form element",
+            "web_page.form.elements.0.text: string: The text of the form element",
+            "web_page.form.elements.0.placeholder: string: The placeholder of the form element",
+            "web_page.form.elements.0.aria_label: string: The aria label of the form element",
+            "web_page.form.elements.0.id: string: The id of the form element",
+            "web_page.form.elements.0.name: string: The name of the form element",
+            "web_page.form.elements.0.class_: string: The class of the form element",
+            "web_page.form.elements.0.value_type: string: The type of the form element value",
+            "web_page.form.elements.0.value_to_fill: string: The value to fill in the form element",
+            "web_page.form.elements.0.options: array: A list of select options",
+            "web_page.form.elements.0.options.0.value: string: The value of the option",
+            "web_page.form.elements.0.options.0.text: string: The text of the option",
+            "web_page.form.elements.0.count: integer: The count of the form element",
+            "web_page.links.links: array: A list of links",
+            "web_page.links.links.0.href: string: The URL of the link",
+            "web_page.links.links.0.text: string: The text of the link"
+        ],
+        "managedParamsSchemaDescription": {},
+        "inputFileVersion": "v2"
+    }
+}
