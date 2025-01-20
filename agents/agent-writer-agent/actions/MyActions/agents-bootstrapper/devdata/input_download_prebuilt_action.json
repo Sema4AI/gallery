@@ -4,7 +4,7 @@
             "inputName": "input-1",
             "inputValue": {
                 "action_name": "hubspot",
-                "agent_name": "Gagarin"
+                "agent_name": "HubspotAPI"
             }
         }
     ],
