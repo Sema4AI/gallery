@@ -1,0 +1,118 @@
+{
+    "inputs": [
+        {
+            "inputName": "save attachments to current directory",
+            "inputValue": {
+                "email_id": "",
+                "show_full_body": false,
+                "save_attachments": ".",
+                "vscode:request:oauth2": {
+                    "token": {
+                        "type": "OAuth2Secret",
+                        "provider": "microsoft",
+                        "scopes": [
+                            "Mail.Read"
+                        ],
+                        "access_token": ""
+                    }
+                }
+            }
+        },
+        {
+            "inputName": "save attachments to Downloads directory",
+            "inputValue": {
+                "email_id": "",
+                "show_full_body": false,
+                "save_attachments": "downloads",
+                "vscode:request:oauth2": {
+                    "token": {
+                        "type": "OAuth2Secret",
+                        "provider": "microsoft",
+                        "scopes": [
+                            "Mail.Read"
+                        ],
+                        "access_token": ""
+                    }
+                }
+            }
+        },
+        {
+            "inputName": "save attachments to custom directory",
+            "inputValue": {
+                "email_id": "",
+                "show_full_body": false,
+                "save_attachments": "e:\\temp",
+                "vscode:request:oauth2": {
+                    "token": {
+                        "type": "OAuth2Secret",
+                        "provider": "microsoft",
+                        "scopes": [
+                            "Mail.Read"
+                        ],
+                        "access_token": ""
+                    }
+                }
+            }
+        },
+        {
+            "inputName": "save attachments to custom directory and create the directory if it doesn't exist",
+            "inputValue": {
+                "email_id": "",
+                "show_full_body": false,
+                "save_attachments": "e:\\temp\\xyz",
+                "make_dirs": true,
+                "vscode:request:oauth2": {
+                    "token": {
+                        "type": "OAuth2Secret",
+                        "provider": "microsoft",
+                        "scopes": [
+                            "Mail.Read"
+                        ],
+                        "access_token": ""
+                    }
+                }
+            }
+        },
+        {
+            "inputName": "save attachments to custom directory fails because the directory doesn't exist",
+            "inputValue": {
+                "email_id": "",
+                "show_full_body": false,
+                "save_attachments": "e:\\temp\\xyz2",
+                "vscode:request:oauth2": {
+                    "token": {
+                        "type": "OAuth2Secret",
+                        "provider": "microsoft",
+                        "scopes": [
+                            "Mail.Read"
+                        ],
+                        "access_token": ""
+                    }
+                }
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "get_email_by_id",
+        "actionRelativePath": "microsoft_mail/email_action.py",
+        "schemaDescription": [
+            "email_id: string: The unique identifier of the email to retrieve.",
+            "show_full_body: boolean: Whether to show the full body content.",
+            "save_attachments: string: Whether to save the attachments to the local file system.",
+            "make_dirs: boolean: Whether to create the directory for saving attachments if it doesn't exist."
+        ],
+        "managedParamsSchemaDescription": {
+            "token": {
+                "type": "OAuth2Secret",
+                "description": "OAuth2 token to use for the operation.",
+                "provider": "microsoft",
+                "scopes": [
+                    "Mail.Read"
+                ]
+            }
+        },
+        "inputFileVersion": "v3",
+        "kind": "action",
+        "actionSignature": "action/args: \"token: OAuth2Secret[Literal['microsoft'], list[Literal['Mail.Read']]], email_id: str, show_full_body: bool=False, save_attachments: str=None, make_dirs: bool=False\""
+    }
+}
