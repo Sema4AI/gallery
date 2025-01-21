@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 - Add parameters `save_attachments` and `make_dirs` to action `get_email_by_id`.
   The former can be given `downloads` as value and then attachments will be saved
-  to target machine Downloads folder.
+  to user's Downloads folder.
 
 ## [1.1.1] - 2025-01-09
 
