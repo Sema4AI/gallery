@@ -31,9 +31,16 @@ from microsoft_mail.support import (
     _get_folder_structure,
     _get_me,
 )
+from dotenv import load_dotenv
 from typing import Literal
+from pathlib import Path
+import os
+import base64
 
 from microsoft_mail.support import build_headers, send_request
+
+
+load_dotenv(Path(__file__).absolute().parent.parent / "devdata" / ".env")
 
 
 @action
@@ -340,7 +347,6 @@ def add_attachment(
     If possible pass attachment as local file absolute filepath, or
     pass the content_bytes directly.
 
-    The attachment
     Args:
         token: OAuth2 token to use for the operation.
         email_id: The unique identifier of the email to add the attachment to.
@@ -575,9 +581,11 @@ def get_email_by_id(
     ],
     email_id: str,
     show_full_body: bool = False,
+    save_attachments: str = None,
+    make_dirs: bool = False,
 ) -> Response:
     """
-    Get the details of a specific email.
+    Get the details of a specific email and save attachments to the local file system.
 
     By default shows email's body preview. If you want to see the full body,
     set 'show_full_body' to True.
@@ -588,10 +596,16 @@ def get_email_by_id(
         token: OAuth2 token to use for the operation.
         email_id: The unique identifier of the email to retrieve.
         show_full_body: Whether to show the full body content.
+        save_attachments: Whether to save the attachments to the local file system.
+        make_dirs: Whether to create the directory for saving attachments if it doesn't exist.
 
     Returns:
         The message details.
     """
+    # The environment variable is used to test the action
+    email_id = email_id or os.getenv("EMAIL_WITH_ATTACHMENTS")
+    if not email_id:
+        raise ActionError("Email ID is required")
     headers = build_headers(token)
     message = send_request(
         "get",
@@ -603,6 +617,41 @@ def get_email_by_id(
         message.pop("bodyPreview", None)
     else:
         message.pop("body", None)
+
+    if save_attachments:
+        # Fetch attachments separately
+        attachments_response = send_request(
+            "get",
+            f"/me/messages/{email_id}/attachments",
+            "get email attachments",
+            headers=headers,
+        )
+        attachments = attachments_response.get("value", [])
+
+        if save_attachments == ".":
+            save_path = os.getcwd()
+        elif save_attachments.lower() == "downloads":
+            save_path = os.path.join(os.path.expanduser("~"), "Downloads")
+        else:
+            save_path = save_attachments
+
+        if make_dirs:
+            os.makedirs(save_path, exist_ok=True)
+
+        message["attachments"] = []
+        for attachment in attachments:
+            attachment_name = attachment["name"]
+            attachment_content = attachment["contentBytes"]
+            file_path = os.path.join(save_path, attachment_name)
+            base_name, extension = os.path.splitext(attachment_name)
+            index = 1
+            while os.path.exists(file_path):
+                file_path = os.path.join(save_path, f"{base_name}_{index}{extension}")
+                index += 1
+            with open(file_path, "wb") as file:
+                file.write(base64.b64decode(attachment_content))
+            message["attachments"].append(file_path)
+
     return Response(result=message)
 
 

@@ -22,6 +22,7 @@ Currently supporting:
 - Getting a list of active subscriptions.
 - Retrieving details of a specific folder in the user's mailbox.
 - Flagging emails in the user's mailbox.
+- Saving attachments of an email.
 
 ## Prompt Examples
 
