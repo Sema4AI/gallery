@@ -247,6 +247,8 @@ def bootstrap_action_package(agent_name: str, action_package_name: str) -> str:
     command = f"action-server new --name '{action_package_name}' --template minimal"
     subprocess.run(command, shell=True, cwd=str(new_action_package_path.parent))
 
+    refresh_agent_package_spec(agent_name)
+
     return f"Action successfully bootstrapped! Code available at {str(new_action_package_path)}"
 
 
@@ -319,5 +321,7 @@ def update_action_code(
         actions_py.write(formatted_code)
     finally:
         actions_py.close()
+
+    refresh_agent_package_spec(agent_name)
 
     return f"Successfully updated the actions at {actions_py_path}"
