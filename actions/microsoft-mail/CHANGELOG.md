@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.2.0] - 2025-01-21
+
+### Add
+
+- Add parameters `save_attachments` and `make_dirs` to action `get_email_by_id`.
+  The former can be given `downloads` as value and then attachments will be saved
+  to user's Downloads folder.
+
 ## [1.1.1] - 2025-01-09
 
 ### Changed
