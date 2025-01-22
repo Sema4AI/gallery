@@ -1,0 +1,28 @@
+agent-package:
+  spec-version: v2
+  agents:
+  - name: Agent Writer Agent
+    description: Helps you create new agents with actions using public API documentation and prebuild action packages.
+    model:
+      provider: OpenAI
+      name: gpt-4o
+    version: 0.0.1
+    architecture: agent
+    reasoning: disabled
+    runbook: runbook.md
+    action-packages:
+    - name: Browsing
+      organization: Sema4.ai
+      version: 1.0.2
+      path: Sema4.ai/browsing
+      type: folder
+      whitelist: get_website_content,download_file,fill_elements
+    - name: Agents Bootstrapper
+      organization: MyActions
+      version: 1.0.0
+      path: MyActions/agents-bootstrapper
+      type: folder
+      whitelist: ''
+    knowledge: []
+    metadata:
+      mode: conversational
