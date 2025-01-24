@@ -2,7 +2,8 @@ agent-package:
   spec-version: v2
   agents:
   - name: Agent Writer Agent
-    description: Helps you create new agents with actions using public API documentation and prebuild action packages.
+    description: Helps you create new agents with actions using public API documentation
+      and prebuild action packages.
     model:
       provider: OpenAI
       name: gpt-4o
@@ -18,11 +19,11 @@ agent-package:
       type: folder
       whitelist: get_website_content,download_file,fill_elements
     - name: Agents Bootstrapper
-      organization: MyActions
+      organization: Sema4.ai
       version: 1.0.0
-      path: MyActions/agents-bootstrapper
+      path: Sema4.ai/agents-bootstrapper
       type: folder
-      whitelist: ''
+      whitelist: 'bootstrap_agent_package,open_agent_code,refresh_agent_package_spec,list_available_prebuilt_actions,read_prebuild_action_capabilities,download_prebuilt_action,publish_to_sema4_ai_studio,bootstrap_action_package,update_action_package_dependencies,update_action_code'
     knowledge: []
     metadata:
       mode: conversational
