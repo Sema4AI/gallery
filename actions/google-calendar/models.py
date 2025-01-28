@@ -33,7 +33,7 @@ class Attendee(BaseModel):
             description="The response status of the attendee. "
             "Possible values: 'needsAction', 'declined', 'tentative', 'accepted'."
         ),
-    ] = "needsAction"
+    ] = None
     organizer: Annotated[
         bool | None,
         Field(description="Whether the attendee is the organizer of the event"),
