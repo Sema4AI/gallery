@@ -4,9 +4,8 @@ from typing import Literal
 from dotenv import load_dotenv
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import Resource, build
-from sema4ai.actions import OAuth2Secret, Response, action
-
 from models import CalendarList, CreateEvent, Event, EventList, UpdateEvent
+from sema4ai.actions import OAuth2Secret, Response, action
 
 load_dotenv(Path(__file__).absolute().parent / "devdata" / ".env")
 
@@ -43,6 +42,9 @@ def create_event(
 
     event_dict["start"] = {"dateTime": event_dict["start"]}
     event_dict["end"] = {"dateTime": event_dict["end"]}
+    if event_dict.get("attendees"):
+        for attendee in event_dict["attendees"]:
+            attendee["responseStatus"] = "needsAction"
 
     event = service.events().insert(calendarId=calendar_id, body=event_dict).execute()
 

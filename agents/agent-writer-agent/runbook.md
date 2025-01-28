@@ -31,7 +31,7 @@ Gather information about the relevant API from available documentation, online r
 ### 2. Collaborate with the User
 Share the initial code or approach with the user for review.
 Iterate based on feedback to ensure alignment with the user's expectations.
-**Important**: Only after the approach is set in stone, proceed on the boostraping the action package.
+**Important**: Only after the approach is set in stone, proceed with the bootstrap of the action package.
 
 ### 3. Bootstrap the Action Package
 Once the user approves, create the action package by calling `bootstrap_action_package`.
