@@ -6,6 +6,19 @@ class ActionInfo(TypedDict):
     description: str
 
 
+class ActionParameter(TypedDict):
+    name: str
+    description: str
+    required: bool
+    type: str
+
+
+class ActionMethodInfo(TypedDict):
+    method_name: str
+    description: str
+    parameters: list[ActionParameter]
+
+
 class ActionVersionInfo(TypedDict):
     version: str
     description: str
@@ -64,3 +77,7 @@ class AgentInfo(TypedDict):
 class AgentsManifest(TypedDict):
     agents: dict[str, AgentInfo]
     organization: str
+
+
+class ActionVersionInfoWithMethods(ActionVersionInfo):
+    methods: list[ActionMethodInfo]
