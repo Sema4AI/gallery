@@ -6,7 +6,7 @@ https://github.com/sema4ai/actions/blob/master/README.md
 
 """
 
-from sema4ai.actions import action, Response, ActionError
+from sema4ai.actions import action, Response
 from models import PDFContent, Matches, Match
 from support import _get_pdf_content
 
