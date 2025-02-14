@@ -4,6 +4,7 @@ from robocorp.tasks import task
 
 from actions_manifest import (
     generate_actions_manifest,
+    generate_actions_manifest_for_sai,
     generate_consolidated_manifest,
     save_manifest,
 )
@@ -82,6 +83,8 @@ def build_updated_packages():
     # one later on in the pipeline.
     update_manifest = generate_actions_manifest(gallery_actions_folder, base_url)
 
+    update_manifest_for_sai = generate_actions_manifest_for_sai(gallery_actions_folder, base_url)
+
     # We consolidate existing manifest with the updates, getting a manifest including updated packages.
     new_manifest: ActionsManifest = generate_consolidated_manifest(
         published_manifest, update_manifest
@@ -91,7 +94,7 @@ def build_updated_packages():
 
     # Write manifests to file.
     save_manifest(new_manifest, os.path.join(gallery_actions_folder, "manifest.json"))
-
+    save_manifest(update_manifest_for_sai, os.path.join(gallery_actions_folder, "manifest_for_sai.json"))
 
 if __name__ == "__main__":
     build_updated_packages()
