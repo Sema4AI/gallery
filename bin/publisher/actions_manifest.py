@@ -24,9 +24,14 @@ def generate_actions_manifest(
     manifest: ActionsManifest = {"packages": {}, "organization": "Sema4.ai"}
     all_package_hashes = []
 
-    # Load whitelist
+    # Load whitelist and pre-process actions lists
     with open('whitelist.json', 'r') as f:
         whitelist = json.load(f)
+        # Pre-process whitelist actions to kebab-case once
+        whitelist_lookup = {
+            filter_name: set(action.lower() for action in filter_data.get("actions", []))
+            for filter_name, filter_data in whitelist.items()
+        }
 
     for action_package_name in os.listdir(gallery_actions_folder):
         action_package_path = os.path.join(gallery_actions_folder, action_package_name)
@@ -69,14 +74,14 @@ def generate_actions_manifest(
 
             if versions_info:
                 package_name = package_data.get("name", action_package_name)
-
-                # Determine filters based on whitelist inclusion
-                filters = []
                 package_kebab = to_kebab_case(package_name)
-                for filter_name, filter_data in whitelist.items():
-                    whitelist_actions = [action.lower() for action in filter_data.get("actions", [])]
-                    if package_kebab in whitelist_actions:
-                        filters.append(filter_name)
+
+                # Check against pre-processed whitelist
+                filters = [
+                    filter_name
+                    for filter_name, actions in whitelist_lookup.items()
+                    if package_kebab in actions
+                ]
 
                 action_package: PackageInfo = {
                     "name": package_name,
@@ -102,9 +107,14 @@ def generate_consolidated_manifest(
         published_manifest: The manifest currently stored in S3.
         update_manifest: The manifest generated as a result of building updated packages.
     """
-    # Load whitelist
+    # Load whitelist and pre-process actions lists
     with open('whitelist.json', 'r') as f:
         whitelist = json.load(f)
+        # Pre-process whitelist actions to kebab-case once
+        whitelist_lookup = {
+            filter_name: set(action.lower() for action in filter_data.get("actions", []))
+            for filter_name, filter_data in whitelist.items()
+        }
 
     new_manifest: ActionsManifest = published_manifest.copy()
 
@@ -139,15 +149,13 @@ def generate_consolidated_manifest(
 
     # Update filters for all packages based on current whitelist
     for package_name, package_info in new_manifest["packages"].items():
-        filters = []
         package_kebab = to_kebab_case(package_name)
-        for filter_name, filter_data in whitelist.items():
-            whitelist_actions = [action.lower() for action in filter_data.get("actions", [])]
-            if package_kebab in whitelist_actions:
-                filters.append(filter_name)
-            print(f"Checking {package_kebab} against {filter_name} whitelist: {whitelist_actions}")
+        filters = [
+            filter_name
+            for filter_name, actions in whitelist_lookup.items()
+            if package_kebab in actions
+        ]
         package_info["filters"] = filters
-        print(f"Final filters for {package_name}: {filters}")
 
     new_manifest["total_hash"] = generate_total_hash(new_manifest)
 
