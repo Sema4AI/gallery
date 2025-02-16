@@ -7,6 +7,7 @@ from utils import (
     get_version_strings_from_package_info,
     read_file_contents,
     read_yaml_file,
+    to_kebab_case,
 )
 
 
@@ -23,11 +24,9 @@ def generate_actions_manifest(
     manifest: ActionsManifest = {"packages": {}, "organization": "Sema4.ai"}
     all_package_hashes = []
 
-    # Load whitelists
-    with open('whitelist-standard.json', 'r') as f:
-        standard_whitelist = json.load(f).get("actions", [])
-    with open('whitelist-snowflake.json', 'r') as f:
-        sf_whitelist = json.load(f).get("actions", [])
+    # Load whitelist
+    with open('whitelist.json', 'r') as f:
+        whitelist = json.load(f)
 
     for action_package_name in os.listdir(gallery_actions_folder):
         action_package_path = os.path.join(gallery_actions_folder, action_package_name)
@@ -43,19 +42,10 @@ def generate_actions_manifest(
                     env_hash_path = os.path.join(version_path, "env.hash")
                     package_hash_path = os.path.join(version_path, "package.hash")
 
-                    # If reading of any file fails, we want to let it throw,
-                    # so it can be dealt with higher up if needed.
                     package_data = read_yaml_file(package_yaml_path)
                     actions = get_actions_info(metadata_path)
                     python_env_hash = read_file_contents(env_hash_path)
                     zip_hash = read_file_contents(package_hash_path)
-
-                    # Determine filters based on whitelist inclusion
-                    filters = []
-                    if action_package_name in standard_whitelist:
-                        filters.append('standard')
-                    if action_package_name in sf_whitelist:
-                        filters.append('snowflake')
 
                     version_info: ActionVersionInfo = {
                         "version": package_data.get("version", version_dir),
@@ -67,7 +57,6 @@ def generate_actions_manifest(
                         "metadata": f"{base_url}{action_package_name}/{version_dir}/metadata.json",
                         "readme": f"{base_url}{action_package_name}/{version_dir}/README.md",
                         "changelog": f"{base_url}{action_package_name}/{version_dir}/CHANGELOG.md",
-                        "filters": filters,
                         "actions": actions,
                         "python_env_hash": python_env_hash,
                         "zip_hash": zip_hash,
@@ -81,14 +70,22 @@ def generate_actions_manifest(
             if versions_info:
                 package_name = package_data.get("name", action_package_name)
 
+                # Determine filters based on whitelist inclusion
+                filters = []
+                package_kebab = to_kebab_case(package_name)
+                for filter_name, filter_data in whitelist.items():
+                    whitelist_actions = [action.lower() for action in filter_data.get("actions", [])]
+                    if package_kebab in whitelist_actions:
+                        filters.append(filter_name)
+
                 action_package: PackageInfo = {
                     "name": package_name,
+                    "filters": filters,
                     "versions": versions_info,
                 }
 
                 manifest["packages"][package_name] = action_package
 
-        # We only want to calculate the total hash if there are any packages in the manifest.
         if len(manifest["packages"].keys()) > 0:
             manifest["total_hash"] = generate_total_hash(manifest)
 
@@ -105,14 +102,19 @@ def generate_consolidated_manifest(
         published_manifest: The manifest currently stored in S3.
         update_manifest: The manifest generated as a result of building updated packages.
     """
+    # Load whitelist
+    with open('whitelist.json', 'r') as f:
+        whitelist = json.load(f)
+
     new_manifest: ActionsManifest = published_manifest.copy()
 
-    for updated_package_name, updated_package_info in update_manifest[
-        "packages"
-    ].items():
+    # Then handle updates and new packages
+    for updated_package_name, updated_package_info in update_manifest["packages"].items():
         if updated_package_name not in new_manifest["packages"]:
+            # For new packages
             new_manifest["packages"][updated_package_name] = updated_package_info
         else:
+            # For existing packages
             new_package_info = new_manifest["packages"][updated_package_name].copy()
             new_versions_info = new_package_info.get("versions", []).copy()
 
@@ -127,14 +129,6 @@ def generate_consolidated_manifest(
                     updated_version is not None
                     and updated_version not in published_versions
                 ):
-                    # Ensure the filters field is preserved when adding new versions
-                    if "filters" not in updated_version_info:
-                        # Copy filters from an existing version if available
-                        if new_versions_info and "filters" in new_versions_info[0]:
-                            updated_version_info["filters"] = new_versions_info[0]["filters"]
-                        else:
-                            updated_version_info["filters"] = []
-                            
                     new_versions_info.append(updated_version_info)
 
             new_package_info["versions"] = sorted(
@@ -142,6 +136,18 @@ def generate_consolidated_manifest(
             )
 
             new_manifest["packages"][updated_package_name] = new_package_info
+
+    # Update filters for all packages based on current whitelist
+    for package_name, package_info in new_manifest["packages"].items():
+        filters = []
+        package_kebab = to_kebab_case(package_name)
+        for filter_name, filter_data in whitelist.items():
+            whitelist_actions = [action.lower() for action in filter_data.get("actions", [])]
+            if package_kebab in whitelist_actions:
+                filters.append(filter_name)
+            print(f"Checking {package_kebab} against {filter_name} whitelist: {whitelist_actions}")
+        package_info["filters"] = filters
+        print(f"Final filters for {package_name}: {filters}")
 
     new_manifest["total_hash"] = generate_total_hash(new_manifest)
 

@@ -1,0 +1,62 @@
+{
+    "standard": {
+        "actions": [
+            "actions-bootstrapper",
+            "agent-connector",
+            "agents-bootstrapper",
+            "browsing",
+            "email",
+            "excel",
+            "google-calendar",
+            "google-docs",
+            "google-drive",
+            "google-mail",
+            "google-search",
+            "google-sheets",
+            "hubspot",
+            "linear",
+            "microsoft-calendar",
+            "microsoft-excel",
+            "microsoft-mail",
+            "microsoft-onedrive",
+            "microsoft-sharepoint",
+            "microsoft-teams",
+            "pdf",
+            "salesforce",
+            "servicenow",
+            "slack",
+            "vitality-lab-results",
+            "vitality-medications",
+            "vitality-workouts",
+            "wayback-machine",
+            "youtube",
+            "zendesk"
+        ],
+        "agents": [
+            "agent-writer-agent",
+            "action-writer-agent",
+            "wayback-machine-agent"
+        ],
+        "runbooks": []
+    },
+    "snowflake": {
+        "actions": [
+            "browsing",
+            "email",
+            "excel",
+            "hubspot",
+            "linear",
+            "pdf",
+            "salesforce",
+            "servicenow",
+            "slack",
+            "wayback-machine",
+            "youtube",
+            "zendesk"
+        ],
+        "agents": [
+            "wayback-machine-agent"
+        ],
+        "runbooks": []
+    }
+} 
