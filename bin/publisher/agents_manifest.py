@@ -1,12 +1,12 @@
 import json
 import os
-import re
+
 import shutil
 import subprocess
 from pathlib import Path
 
 from models import AgentActionPackage, AgentsManifest, AgentVersionInfo
-from utils import read_yaml_file
+from utils import read_yaml_file, to_kebab_case
 
 
 def generate_agents_manifest(
@@ -26,9 +26,14 @@ def generate_agents_manifest(
     """
     manifest: AgentsManifest = {"agents": {}, "organization": "Sema4.ai"}
 
-    # Load whitelist
+    # Load whitelist and pre-process agents lists
     with open('whitelist.json', 'r') as f:
         whitelist = json.load(f)
+        # Pre-process whitelist agents to kebab-case once
+        whitelist_lookup = {
+            filter_name: set(agent.lower() for agent in filter_data.get("agents", []))
+            for filter_name, filter_data in whitelist.items()
+        }
 
     print("Input folder: ", input_folder)
     for agent_folder_name in os.listdir(input_folder):
@@ -56,10 +61,11 @@ def generate_agents_manifest(
 
         # Determine filters based on whitelist inclusion
         kebab_case_agent_name = to_kebab_case(agent_name)
-        filters = []
-        for filter_name, filter_data in whitelist.items():
-            if kebab_case_agent_name in filter_data.get("agents", []):
-                filters.append(filter_name)
+        filters = [
+            filter_name
+            for filter_name, agents in whitelist_lookup.items()
+            if kebab_case_agent_name in agents
+        ]
 
         actions = get_actions_info(agent_spec_data["action-packages"])
         base_url = "https://cdn.sema4.ai/gallery/agents/"
@@ -106,9 +112,14 @@ def generate_consolidated_manifest(
         published_manifest: The manifest currently stored in S3.
         update_manifest: The manifest generated as a result of building updated packages.
     """
-    # Load whitelist
+    # Load whitelist and pre-process agents lists
     with open('whitelist.json', 'r') as f:
         whitelist = json.load(f)
+        # Pre-process whitelist agents to kebab-case once
+        whitelist_lookup = {
+            filter_name: set(agent.lower() for agent in filter_data.get("agents", []))
+            for filter_name, filter_data in whitelist.items()
+        }
 
     new_manifest: AgentsManifest = published_manifest.copy()
 
@@ -123,10 +134,11 @@ def generate_consolidated_manifest(
         # Always update filters based on current whitelist status
         
         kebab_case_agent_name = to_kebab_case(updated_agent_name)
-        filters = []
-        for filter_name, filter_data in whitelist.items():
-            if kebab_case_agent_name in filter_data.get("agents", []):
-                filters.append(filter_name)
+        filters = [
+            filter_name
+            for filter_name, agents in whitelist_lookup.items()
+            if kebab_case_agent_name in agents
+        ]
         agent_info["filters"] = filters
 
         # we can only have one compiled version at manifest generation
@@ -142,10 +154,11 @@ def generate_consolidated_manifest(
     # Update filters for all agents based on current whitelist
     for agent_name, agent_info in new_manifest["agents"].items():
         kebab_case_agent_name = to_kebab_case(agent_name)
-        filters = []
-        for filter_name, filter_data in whitelist.items():
-            if kebab_case_agent_name in filter_data.get("agents", []):
-                filters.append(filter_name)
+        filters = [
+            filter_name
+            for filter_name, agents in whitelist_lookup.items()
+            if kebab_case_agent_name in agents
+        ]
         agent_info["filters"] = filters
 
     return new_manifest
@@ -181,13 +194,6 @@ def is_agent_published(published_manifest: dict, agent_name: str, version: str) 
         return False
 
     return True
-
-
-def to_kebab_case(text):
-    text = re.sub(r"([a-z])([A-Z])", r"\1-\2", text)
-    kebab_case = re.sub(r"[\s_]+", "-", text).lower()
-
-    return kebab_case
 
 
 def validate_agent(agent_folder: str, agent_cli_path: str) -> bool:
