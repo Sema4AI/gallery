@@ -1,0 +1,39 @@
+{
+    "actions": [
+        "actions-bootstrapper",
+        "agent-connector",
+        "agents-bootstrapper",
+        "browsing",
+        "email",
+        "excel",
+        "google-calendar",
+        "google-docs",
+        "google-drive",
+        "google-mail",
+        "google-search",
+        "google-sheets",
+        "hubspot",
+        "linear",
+        "microsoft-calendar",
+        "microsoft-excel",
+        "microsoft-mail",
+        "microsoft-onedrive",
+        "microsoft-sharepoint",
+        "microsoft-teams",
+        "pdf",
+        "salesforce",
+        "servicenow",
+        "slack",
+        "vitality-lab-results",
+        "vitality-medications",
+        "vitality-workouts",
+        "wayback-machine",
+        "youtube",
+        "zendesk"
+    ],
+    "agents": [
+    ],
+    "runbooks": [
+    ]
+}
+

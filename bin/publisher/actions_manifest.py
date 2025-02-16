@@ -23,6 +23,12 @@ def generate_actions_manifest(
     manifest: ActionsManifest = {"packages": {}, "organization": "Sema4.ai"}
     all_package_hashes = []
 
+    # Load whitelists
+    with open('whitelist-standard.json', 'r') as f:
+        standard_whitelist = json.load(f).get("actions", [])
+    with open('whitelist-snowflake.json', 'r') as f:
+        sf_whitelist = json.load(f).get("actions", [])
+
     for action_package_name in os.listdir(gallery_actions_folder):
         action_package_path = os.path.join(gallery_actions_folder, action_package_name)
 
@@ -44,6 +50,13 @@ def generate_actions_manifest(
                     python_env_hash = read_file_contents(env_hash_path)
                     zip_hash = read_file_contents(package_hash_path)
 
+                    # Determine filters based on whitelist inclusion
+                    filters = []
+                    if action_package_name in standard_whitelist:
+                        filters.append('standard')
+                    if action_package_name in sf_whitelist:
+                        filters.append('snowflake')
+
                     version_info: ActionVersionInfo = {
                         "version": package_data.get("version", version_dir),
                         "description": package_data.get(
@@ -54,6 +67,7 @@ def generate_actions_manifest(
                         "metadata": f"{base_url}{action_package_name}/{version_dir}/metadata.json",
                         "readme": f"{base_url}{action_package_name}/{version_dir}/README.md",
                         "changelog": f"{base_url}{action_package_name}/{version_dir}/CHANGELOG.md",
+                        "filters": filters,
                         "actions": actions,
                         "python_env_hash": python_env_hash,
                         "zip_hash": zip_hash,
@@ -77,7 +91,6 @@ def generate_actions_manifest(
         # We only want to calculate the total hash if there are any packages in the manifest.
         if len(manifest["packages"].keys()) > 0:
             manifest["total_hash"] = generate_total_hash(manifest)
-
 
     return manifest
 
@@ -114,6 +127,14 @@ def generate_consolidated_manifest(
                     updated_version is not None
                     and updated_version not in published_versions
                 ):
+                    # Ensure the filters field is preserved when adding new versions
+                    if "filters" not in updated_version_info:
+                        # Copy filters from an existing version if available
+                        if new_versions_info and "filters" in new_versions_info[0]:
+                            updated_version_info["filters"] = new_versions_info[0]["filters"]
+                        else:
+                            updated_version_info["filters"] = []
+                            
                     new_versions_info.append(updated_version_info)
 
             new_package_info["versions"] = sorted(
