@@ -36,10 +36,9 @@
             "agent-writer-agent",
             "action-writer-agent",
             "wayback-machine-agent"
-        ],
-        "runbooks": []
+        ]
     },
-    "snowflake": {
+    "sf": {
         "actions": [
             "browsing",
             "email",
@@ -56,7 +55,6 @@
         ],
         "agents": [
             "wayback-machine-agent"
-        ],
-        "runbooks": []
+        ]
     }
 } 
