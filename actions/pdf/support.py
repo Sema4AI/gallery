@@ -2,6 +2,8 @@ import pytesseract
 from pdf2image import convert_from_path
 from pypdf import PdfReader
 from models import PDFContent
+from sema4ai.actions import chat
+import os
 
 
 def _read_text_from_pdf(filename: str, pdf: PDFContent) -> str:
@@ -19,6 +21,7 @@ def _ocr_image(image):
 
 
 def _get_pdf_content(filename: str):
+    filename = _access_file(filename)
     reader = PdfReader(filename)
     pdf = PDFContent(pages=len(reader.pages), content={}, length=0)
 
@@ -30,3 +33,14 @@ def _get_pdf_content(filename: str):
     if pdf.length == 0:
         _read_text_from_pdf(filename, pdf)
     return pdf
+
+
+def _access_file(filename: str):
+    # filename can be absolute or just basename (from LLM), always get just basename
+    basename = os.path.basename(filename)
+    try:
+        # Get file from Sema4.ai File API, returns temporary filename
+        f = chat.get_file(basename)
+    except Exception:
+        f = filename
+    return f

@@ -15,4 +15,4 @@ class Match(BaseModel):
 
 
 class Matches(BaseModel):
-    items: list[Dict] = Field(description="The matches found", default=[])
+    items: list[Match] = Field(description="The matches found", default=[])
