@@ -6,12 +6,13 @@ retrieving and setting data from/into their cells.
 
 import contextlib
 from copy import copy
-import re
+import os
 from pathlib import Path
+import re
 
 from robocorp import excel, log
 from robocorp.excel.tables import Table as ExcelTable
-from sema4ai.actions import ActionError, Response, action
+from sema4ai.actions import ActionError, Response, action, chat
 from openpyxl import load_workbook
 from datetime import datetime
 import openpyxl.utils
@@ -28,30 +29,47 @@ from robocorp.excel.worksheet import Worksheet
 from sema4ai.crossplatform import trigger_excel_save_on_app
 
 
-def _search_excel_file(file_path: str, is_expected: bool = True) -> Path:
-    # Guesses the local Excel file path if the provided one isn't specific.
-    path = Path(file_path)
+def _access_file(filename: str):
+    # filename can be absolute or just basename (from LLM), always get just basename
+    filepath = Path(filename)
+    orig_basename = filepath.name
+    try:
+        # Get file from Sema4.ai File API, returns temporary filename
+        temp_file: Path = chat.get_file(orig_basename)
+        # Extract the directory path from temp_file
+        temp_file_dir = temp_file.parent
+        # Use the basename from filepath.name and append the suffix
+        new_temp_file_name = f"{temp_file.stem}{filepath.suffix}"
+        # Combine them to form the new path
+        new_temp_file_path = temp_file_dir / new_temp_file_name
+        # Rename temp_file
+        temp_file = temp_file.rename(new_temp_file_path)
+    except Exception as err:
+        print(f"Error getting file from chat - using filename as is: {err}")
+        temp_file = filename
+    return orig_basename, temp_file
 
-    # Search for an existing Excel when the extension isn't provided, as usually the
-    #  LLM may not receive a full path with directories, name and extension specified.
-    #  (e.g.: "Create a new Excel file called 'data' please.")
-    if not path.suffix:
-        file_name = path.stem
-        search_dir = path.parent
-        try:
-            path = next(search_dir.glob(f"{file_name}.xls*"))
-        except StopIteration:
-            if is_expected:
-                # Since the file is expected to exist, we let the caller know that it
-                #  wasn't found.
-                raise FileNotFoundError(
-                    f"no Excel file matching {file_name!r} found in: {search_dir}"
-                )
-            else:
-                # Otherwise we just pick a default favoured extension.
-                path = Path(f"{file_path}.xlsx")
 
-    return path.expanduser().resolve()
+@action(is_consequential=False)
+def excel_download_file(filename: str, target_directory: str) -> str:
+    """Download chat file to a local directory.
+
+    Args:
+        filename: The name of the file to get
+        target_directory: The directory to save the file to
+
+    Returns:
+        The absolute path of the file if successful, otherwise an error is raised.
+    """
+    orig_basename, _ = _access_file(filename)
+    try:
+        f_content = chat.get_file_content(orig_basename)
+        target_file = Path(target_directory) / orig_basename
+        with open(target_file, "wb") as f:
+            f.write(f_content)
+        return str(target_file.resolve())
+    except Exception as err:
+        raise ActionError(f"Failed to download file {filename}: {err}")
 
 
 @contextlib.contextmanager
@@ -75,9 +93,9 @@ def _open_workbook(
     # Opens a workbook, provides the control to a sheet optionally, then saves the
     #  changes that may have occurred in the caller.
     print(f"Opening workbook with file path: {file_path}")
+    orig_basename, temp_path = _access_file(file_path)
     with _capture_error(FileNotFoundError):
-        path = _search_excel_file(file_path)
-        workbook = excel.open_workbook(path)
+        workbook = excel.open_workbook(temp_path)
 
     if sheet_name:
         print(f"Opening worksheet with name: {sheet_name}")
@@ -91,8 +109,10 @@ def _open_workbook(
         yield workbook, None
 
     if save:
-        print(f"Saving workbook changes in path: {path}")
-        workbook.save(path, overwrite=True)
+        print(f"Saving workbook changes in path: {temp_path}")
+        workbook.save(temp_path, overwrite=True)
+        with open(temp_path, "rb") as f:
+            chat.attach_file_content(name=orig_basename, data=f.read())
 
 
 def _column_to_number(column) -> int:
@@ -128,14 +148,18 @@ def create_workbook(file_path: str, sheet_name: str = "") -> Response[str]:
     Returns:
         The absolute path of the newly created local Excel file.
     """
-    path = _search_excel_file(file_path, is_expected=False)
-    extension = path.suffix.strip(".").lower()
+    orig_basename, temp_path = _access_file(file_path)
+    extension = orig_basename.strip(".").lower()
     workbook = excel.create_workbook(
         "xls" if extension == "xls" else "xlsx", sheet_name=sheet_name or None
     )
-    path.parent.mkdir(parents=True, exist_ok=True)
-    workbook.save(path)
-    return Response(result=f"Created new Excel file in location: {path}")
+    temp_path.parent.mkdir(parents=True, exist_ok=True)
+    workbook.save(temp_path)
+    with open(temp_path, "rb") as f:
+        chat.attach_file_content(name=orig_basename, data=f.read())
+    return Response(
+        result=f"Created new Excel file in chat {orig_basename} in location: {temp_path}"
+    )
 
 
 @action(is_consequential=True)
@@ -152,10 +176,10 @@ def delete_workbook(file_path: str) -> Response[str]:
     """
     print(f"Removing Excel file in path: {file_path}")
     with _capture_error(FileNotFoundError):
-        path = _search_excel_file(file_path)
-        path.unlink()
+        orig_basename, temp_path = _access_file(file_path)
+        temp_path.unlink()
 
-    return Response(result=f"Removed Excel file at location: {path}")
+    return Response(result=f"Removed Excel file at location: {temp_path}")
 
 
 @action(is_consequential=True)
@@ -414,12 +438,12 @@ def get_workbook_schema(file_path: str) -> Response[Schema]:
         A list of sheets where for every sheet its name and first non-empty row are given.
     """
     sheets = []
-    path = _search_excel_file(file_path)
+    _, temp_path = _access_file(file_path)
 
     # Use openpyxl directly for better performance
 
     try:
-        workbook = load_workbook(filename=path, read_only=True)
+        workbook = load_workbook(filename=temp_path, read_only=True)
         created = UserAndTime(
             user=(
                 workbook.properties.creator.encode("utf-8")
@@ -491,9 +515,11 @@ def find_cross_reference(
     header_positions = {h: {"rows": [], "cols": []} for h in h1_list + h2_list}
 
     # Load both normal and data_only workbooks
-    wb = load_workbook(file_path, data_only=False)
-    trigger_excel_save_on_app(file_path)
-    wb_data = load_workbook(file_path, data_only=True)
+
+    _, temp_path = _access_file(file_path)
+    wb = load_workbook(temp_path, data_only=False)
+    trigger_excel_save_on_app(temp_path)
+    wb_data = load_workbook(temp_path, data_only=True)
 
     ws = wb[sheet_name]
     ws_data = wb_data[sheet_name]

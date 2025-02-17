@@ -6,6 +6,13 @@
                 "file_path": "/Users/username/Documents/MyWorkbook.xlsx",
                 "sheet_name": "Countries"
             }
+        },
+        {
+            "inputName": "csv file",
+            "inputValue": {
+                "file_path": "devdata\\monthly-expenses-2021.csv",
+                "sheet_name": ""
+            }
         }
     ],
     "metadata": {

@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [4.0.0] - 2025-02-17
+
+### Changed
+
+- Files are handled via Sema4.ai File API to access LLM chat files. This change prevents use
+  of this action package version in the Sema4.ai Studio v1.1.8.
+- Dependency versions updated
+
+### Added
+
+- Action `excel_download_file` to download chat file to local filesystem.
+
 ## [3.1.2] - 2025-01-14
 
 ### Fixed

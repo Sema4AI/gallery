@@ -1,10 +1,19 @@
 {
     "inputs": [
         {
-            "inputName": "input-1",
+            "inputName": "excel file",
             "inputValue": {
-                "file_path": "/Users/username/Documents/MyWorkbook.xlsx",
+                "file_path": "devdata\\simple.xlsx",
                 "sheet_name": "Countries",
+                "row": "1",
+                "column": "2"
+            }
+        },
+        {
+            "inputName": "csv file",
+            "inputValue": {
+                "file_path": "devdata\\monthly-expenses-2021.csv",
+                "sheet_name": "",
                 "row": "1",
                 "column": "2"
             }
@@ -14,8 +23,8 @@
         "actionName": "get_cell",
         "actionRelativePath": "actions.py",
         "schemaDescription": [
-            "file_path: string: The file name or a local path pointing to the workbook file.",
-            "sheet_name: string: The name of the sheet you want to store the rows into.",
+            "file_path: string: The file name or a local path pointing to the file.",
+            "sheet_name: string: The name of the sheet you want to store the rows into (ignored for CSV).",
             "row: string: The row number starting with 1.",
             "column: string: The column letter or index."
         ],
