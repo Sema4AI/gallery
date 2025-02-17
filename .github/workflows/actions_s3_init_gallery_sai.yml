@@ -1,0 +1,39 @@
+name: Actions - Update manifest_sai.json
+
+on:
+  workflow_dispatch:
+    # Enables manual triggering via GitHub Actions
+
+jobs:
+  publish_manifest:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write # required by AWS aws-actions/configure-aws-credentials
+      contents: read
+    env:
+      RCC_VERSION: v18.1.1
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build Gallery
+        run: |
+          cd bin
+          curl -L -o rcc "https://cdn.sema4.ai/rcc/releases/${{ env.RCC_VERSION }}/linux64/rcc"
+          chmod +x rcc
+          ./rcc run -r publisher/robot.yaml -t "Build all packages"
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: eu-west-1
+          role-to-assume: arn:aws:iam::710450854638:role/github-action-gallery
+
+      - name: Publish manifest_sai.json
+        run: |
+          S3_BASE_URL="s3://downloads.robocorp.com/gallery/actions"
+          cd bin/publisher/gallery
+          
+          # Copy only the manifest_sai.json
+          aws s3 cp manifest_sai.json $S3_BASE_URL/manifest_sai.json --cache-control max-age=120 --content-type "text/plain"
