@@ -15,6 +15,7 @@ from robocorp.excel.tables import Table as ExcelTable
 from sema4ai.actions import ActionError, Response, action, chat
 from openpyxl import load_workbook
 from datetime import datetime
+import tempfile
 import openpyxl.utils
 from models import (
     Row,
@@ -148,17 +149,25 @@ def create_workbook(file_path: str, sheet_name: str = "") -> Response[str]:
     Returns:
         The absolute path of the newly created local Excel file.
     """
-    orig_basename, temp_path = _access_file(file_path)
-    extension = orig_basename.strip(".").lower()
+    basename = Path(file_path).name
+    extension = Path(file_path).suffix.lower()
+
+    # Create temp file with proper extension
+    with tempfile.NamedTemporaryFile(suffix=extension, delete=False) as temp_file:
+        temp_path = Path(temp_file.name)
+
     workbook = excel.create_workbook(
-        "xls" if extension == "xls" else "xlsx", sheet_name=sheet_name or None
+        "xls" if extension == ".xls" else "xlsx", sheet_name=sheet_name or None
     )
+
     temp_path.parent.mkdir(parents=True, exist_ok=True)
     workbook.save(temp_path)
     with open(temp_path, "rb") as f:
-        chat.attach_file_content(name=orig_basename, data=f.read())
+        chat.attach_file_content(name=basename, data=f.read())
+
+    print(f"Created new Excel file in chat {basename} in location: {temp_path}")
     return Response(
-        result=f"Created new Excel file in chat {orig_basename} in location: {temp_path}"
+        result=f"Created new Excel file in chat {basename} in location: {temp_path}"
     )
 
 
