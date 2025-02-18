@@ -138,3 +138,15 @@ def get_version_strings_from_package_info(package_info: PackageInfo) -> list[str
 
 def is_manifest_empty(manifest: ActionsManifest) -> bool:
     return "packages" not in manifest
+
+
+def to_kebab_case(s: str) -> str:
+    """Convert a string to kebab-case.
+    
+    Args:
+        s: The input string to convert
+        
+    Returns:
+        The kebab-case version of the input string
+    """
+    return s.lower().replace(" ", "-")

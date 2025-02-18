@@ -7,6 +7,7 @@ from utils import (
     get_version_strings_from_package_info,
     read_file_contents,
     read_yaml_file,
+    to_kebab_case,
 )
 
 
@@ -23,6 +24,15 @@ def generate_actions_manifest(
     manifest: ActionsManifest = {"packages": {}, "organization": "Sema4.ai"}
     all_package_hashes = []
 
+    # Load whitelist and pre-process actions lists
+    with open('whitelist.json', 'r') as f:
+        whitelist = json.load(f)
+        # Pre-process whitelist actions to kebab-case once
+        whitelist_lookup = {
+            filter_name: set(action.lower() for action in filter_data.get("actions", []))
+            for filter_name, filter_data in whitelist.items()
+        }
+
     for action_package_name in os.listdir(gallery_actions_folder):
         action_package_path = os.path.join(gallery_actions_folder, action_package_name)
 
@@ -37,8 +47,6 @@ def generate_actions_manifest(
                     env_hash_path = os.path.join(version_path, "env.hash")
                     package_hash_path = os.path.join(version_path, "package.hash")
 
-                    # If reading of any file fails, we want to let it throw,
-                    # so it can be dealt with higher up if needed.
                     package_data = read_yaml_file(package_yaml_path)
                     actions = get_actions_info(metadata_path)
                     python_env_hash = read_file_contents(env_hash_path)
@@ -66,18 +74,25 @@ def generate_actions_manifest(
 
             if versions_info:
                 package_name = package_data.get("name", action_package_name)
+                package_kebab = to_kebab_case(package_name)
+
+                # Check against pre-processed whitelist
+                filters = [
+                    filter_name
+                    for filter_name, actions in whitelist_lookup.items()
+                    if package_kebab in actions
+                ]
 
                 action_package: PackageInfo = {
                     "name": package_name,
+                    "filters": filters,
                     "versions": versions_info,
                 }
 
                 manifest["packages"][package_name] = action_package
 
-        # We only want to calculate the total hash if there are any packages in the manifest.
         if len(manifest["packages"].keys()) > 0:
             manifest["total_hash"] = generate_total_hash(manifest)
-
 
     return manifest
 
@@ -92,14 +107,24 @@ def generate_consolidated_manifest(
         published_manifest: The manifest currently stored in S3.
         update_manifest: The manifest generated as a result of building updated packages.
     """
+    # Load whitelist and pre-process actions lists
+    with open('whitelist.json', 'r') as f:
+        whitelist = json.load(f)
+        # Pre-process whitelist actions to kebab-case once
+        whitelist_lookup = {
+            filter_name: set(action.lower() for action in filter_data.get("actions", []))
+            for filter_name, filter_data in whitelist.items()
+        }
+
     new_manifest: ActionsManifest = published_manifest.copy()
 
-    for updated_package_name, updated_package_info in update_manifest[
-        "packages"
-    ].items():
+    # Then handle updates and new packages
+    for updated_package_name, updated_package_info in update_manifest["packages"].items():
         if updated_package_name not in new_manifest["packages"]:
+            # For new packages
             new_manifest["packages"][updated_package_name] = updated_package_info
         else:
+            # For existing packages
             new_package_info = new_manifest["packages"][updated_package_name].copy()
             new_versions_info = new_package_info.get("versions", []).copy()
 
@@ -121,6 +146,16 @@ def generate_consolidated_manifest(
             )
 
             new_manifest["packages"][updated_package_name] = new_package_info
+
+    # Update filters for all packages based on current whitelist
+    for package_name, package_info in new_manifest["packages"].items():
+        package_kebab = to_kebab_case(package_name)
+        filters = [
+            filter_name
+            for filter_name, actions in whitelist_lookup.items()
+            if package_kebab in actions
+        ]
+        package_info["filters"] = filters
 
     new_manifest["total_hash"] = generate_total_hash(new_manifest)
 
