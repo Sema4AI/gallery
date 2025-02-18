@@ -3,6 +3,7 @@ import os
 import re
 import shutil
 import subprocess
+from copy import deepcopy
 from pathlib import Path
 
 from models import AgentActionPackage, AgentsManifest, AgentVersionInfo
@@ -130,9 +131,16 @@ def get_actions_info(action_packages: list[dict]) -> list[AgentActionPackage]:
     return actions
 
 
-def save_manifest(manifest: AgentsManifest, file_path: str) -> None:
+def save_manifest(
+    manifest: AgentsManifest, file_path: str, whitelist: list[str]
+) -> None:
+    whitelist_manifest = deepcopy(manifest)
+    for agent_name in list(whitelist_manifest["agents"].keys()):
+        if agent_name.lower().replace(" ", "-") not in whitelist:
+            del whitelist_manifest["agents"][agent_name]
+
     with open(file_path, "w") as file:
-        json.dump(manifest, file, indent=2)
+        json.dump(whitelist_manifest, file, indent=2)
 
 
 def is_agent_published(published_manifest: dict, agent_name: str, version: str) -> bool:

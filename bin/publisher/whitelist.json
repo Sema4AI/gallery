@@ -1,0 +1,61 @@
+{
+    "standard": {
+        "actions": [
+            "actions-bootstrapper",
+            "agent-connector",
+            "agents-bootstrapper",
+            "browsing",
+            "email-sending",
+            "excel",
+            "google-calendar",
+            "google-docs",
+            "google-drive",
+            "google-mail",
+            "google-search",
+            "google-sheets",
+            "hubspot",
+            "linear",
+            "microsoft-calendar",
+            "microsoft-365-excel",
+            "microsoft-mail",
+            "microsoft-onedrive",
+            "microsoft-sharepoint",
+            "microsoft-teams",
+            "pdf",
+            "salesforce",
+            "servicenow",
+            "slack",
+            "vitality-lab-results",
+            "vitality-medications",
+            "vitality-workouts",
+            "wayback-machine",
+            "youtube",
+            "zendesk",
+            "free-web-search"
+        ],
+        "agents": [
+            "agent-writer-agent",
+            "action-writer-agent",
+            "wayback-machine-agent"
+        ]
+    },
+    "spcs": {
+        "actions": [
+            "browsing",
+            "email",
+            "excel",
+            "hubspot",
+            "linear",
+            "pdf",
+            "salesforce",
+            "servicenow",
+            "slack",
+            "wayback-machine",
+            "youtube",
+            "zendesk"
+        ],
+        "agents": [
+            "wayback-machine-agent"
+        ]
+    }
+}

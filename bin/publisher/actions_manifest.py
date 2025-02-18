@@ -1,8 +1,16 @@
 import hashlib
 import json
 import os
+from copy import deepcopy
 
-from models import ActionInfo, ActionsManifest, ActionVersionInfo, PackageInfo, ActionMethodInfo, ActionParameter
+from models import (
+    ActionInfo,
+    ActionMethodInfo,
+    ActionParameter,
+    ActionsManifest,
+    ActionVersionInfo,
+    PackageInfo,
+)
 from utils import (
     get_version_strings_from_package_info,
     read_file_contents,
@@ -77,7 +85,6 @@ def generate_actions_manifest(
         # We only want to calculate the total hash if there are any packages in the manifest.
         if len(manifest["packages"].keys()) > 0:
             manifest["total_hash"] = generate_total_hash(manifest)
-
 
     return manifest
 
@@ -160,27 +167,35 @@ def get_detailed_actions_info(metadata_path: str) -> list[ActionMethodInfo]:
             metadata = json.load(file)
             openapi_section = metadata.get("openapi.json", {})
             paths = openapi_section.get("paths", {})
-            
+
             for path, operations in paths.items():
                 for method_name, details in operations.items():
                     if "operationId" in details:
                         parameters = []
-                        
+
                         # Extract parameters from requestBody if it exists
                         if "requestBody" in details:
                             request_body = details["requestBody"]
                             if "content" in request_body:
-                                json_content = request_body["content"].get("application/json", {})
+                                json_content = request_body["content"].get(
+                                    "application/json", {}
+                                )
                                 if "schema" in json_content:
-                                    properties = json_content["schema"].get("properties", {})
-                                    required_fields = json_content["schema"].get("required", [])
-                                    
+                                    properties = json_content["schema"].get(
+                                        "properties", {}
+                                    )
+                                    required_fields = json_content["schema"].get(
+                                        "required", []
+                                    )
+
                                     for param_name, param_details in properties.items():
                                         param_info: ActionParameter = {
                                             "name": param_name,
-                                            "description": param_details.get("description", ""),
+                                            "description": param_details.get(
+                                                "description", ""
+                                            ),
                                             "required": param_name in required_fields,
-                                            "type": param_details.get("type", "string")
+                                            "type": param_details.get("type", "string"),
                                         }
                                         parameters.append(param_info)
 
@@ -190,7 +205,7 @@ def get_detailed_actions_info(metadata_path: str) -> list[ActionMethodInfo]:
                             "parameters": parameters,
                         }
                         actions_info.append(action_info)
-                        
+
     return actions_info
 
 
@@ -215,14 +230,19 @@ def generate_total_hash(manifest: ActionsManifest) -> str:
     return total_hash.hexdigest()
 
 
-def save_manifest(manifest: ActionsManifest, file_path: str) -> None:
+def save_manifest(
+    manifest: ActionsManifest, file_path: str, whitelist: list[str]
+) -> None:
+    whitelist_manifest = deepcopy(manifest)
+    for action_name in list(whitelist_manifest["packages"].keys()):
+        if action_name.lower().replace(" ", "-") not in whitelist:
+            del whitelist_manifest["packages"][action_name]
+
     with open(file_path, "w") as file:
-        json.dump(manifest, file, indent=2)
+        json.dump(whitelist_manifest, file, indent=2)
 
 
-def generate_actions_manifest_for_sai(
-    gallery_actions_folder: str, base_url: str
-) -> ActionsManifest:
+def generate_actions_manifest_for_sai(gallery_actions_folder: str) -> ActionsManifest:
     """
     Generates a simplified manifest file for SAI, excluding certain fields.
 

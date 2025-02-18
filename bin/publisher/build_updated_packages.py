@@ -1,6 +1,5 @@
+import json
 import os
-
-from robocorp.tasks import task
 
 from actions_manifest import (
     generate_actions_manifest,
@@ -11,6 +10,7 @@ from actions_manifest import (
 from extractor import extract_all
 from models import ActionsManifest
 from package_builder import build_action_packages
+from robocorp.tasks import task
 from tools import get_action_server, get_rcc
 from utils import (
     clear_folders,
@@ -41,7 +41,7 @@ def build_updated_packages():
 
     try:
         published_manifest = read_json_file(published_manifest_path)
-    except Exception as e:
+    except Exception:
         log_error("Reading published manifest failed, exiting...")
         return
 
@@ -83,7 +83,9 @@ def build_updated_packages():
     # one later on in the pipeline.
     update_manifest = generate_actions_manifest(gallery_actions_folder, base_url)
 
-    update_manifest_for_sai = generate_actions_manifest_for_sai(gallery_actions_folder, base_url)
+    update_manifest_for_sai = generate_actions_manifest_for_sai(
+        gallery_actions_folder, base_url
+    )
 
     # We consolidate existing manifest with the updates, getting a manifest including updated packages.
     new_manifest: ActionsManifest = generate_consolidated_manifest(
@@ -92,9 +94,27 @@ def build_updated_packages():
 
     new_manifest["organization"] = "Sema4.ai"
 
-    # Write manifests to file.
-    save_manifest(new_manifest, os.path.join(gallery_actions_folder, "manifest.json"))
-    save_manifest(update_manifest_for_sai, os.path.join(gallery_actions_folder, "manifest_for_sai.json"))
+    with open("whitelist.json", "r") as f:
+        whitelist = json.load(f)
+
+    save_manifest(
+        new_manifest,
+        os.path.join(gallery_actions_folder, "manifest.json"),
+        whitelist["standard"]["actions"],
+    )
+
+    save_manifest(
+        update_manifest_for_sai,
+        os.path.join(gallery_actions_folder, "manifest_for_sai.json"),
+        whitelist["standard"]["actions"],
+    )
+
+    save_manifest(
+        new_manifest,
+        os.path.join(gallery_actions_folder, "manifest_spcs.json"),
+        whitelist["spcs"]["actions"],
+    )
+
 
 if __name__ == "__main__":
     build_updated_packages()

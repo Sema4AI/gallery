@@ -1,3 +1,4 @@
+import json
 import os
 
 from agents_manifest import (
@@ -19,6 +20,7 @@ from utils import (
 script_dir = os.path.dirname(os.path.abspath(__file__))
 dest_agents_folder = os.path.join(script_dir, "agents")
 manifest_file = os.path.join(dest_agents_folder, "manifest.json")
+spcs_manifest_file = os.path.join(dest_agents_folder, "manifest_spcs.json")
 
 
 @task
@@ -61,7 +63,11 @@ def build_updated_agents():
         published_manifest, update_manifest
     )
 
-    save_manifest(new_manifest, manifest_file)
+    with open("whitelist.json", "r") as f:
+        whitelist = json.load(f)
+
+    save_manifest(new_manifest, manifest_file, whitelist["standard"]["agents"])
+    save_manifest(new_manifest, spcs_manifest_file, whitelist["spcs"]["agents"])
 
 
 if __name__ == "__main__":
