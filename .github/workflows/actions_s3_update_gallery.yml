@@ -99,7 +99,7 @@ jobs:
           cd bin
           curl -L -o rcc "https://cdn.sema4.ai/rcc/releases/${{ env.RCC_VERSION }}/${{ matrix.rcc_folder }}/rcc"
           chmod +x rcc
-          
+
           # Please note that the script will only build environments for packages already existing in the gallery folder.
           ./rcc run -r publisher/robot.yaml -t "Build environments"
 
@@ -109,7 +109,7 @@ jobs:
           Set-Location -Path bin
           Invoke-WebRequest -Uri "https://cdn.sema4.ai/rcc/releases/${{ env.RCC_VERSION }}/${{ matrix.rcc_folder }}/rcc.exe" -OutFile rcc.exe
           icacls .\rcc.exe /grant Everyone:F
-          
+
           # Please note that the script will only build environments for packages already existing in the gallery folder.
           Invoke-Expression -Command ".\rcc.exe run -r publisher/robot.yaml -t `"Build environments`""
 
@@ -124,7 +124,7 @@ jobs:
         id: check_artifacts
         run: |
           # Note that it's enough to only do it once (on single OS), running it on all 3 would result
-          # in redundant operations. 
+          # in redundant operations.
           if find bin/publisher/environments -mindepth 1 -maxdepth 1 | read; then
             echo "has_environments=true" >> $GITHUB_OUTPUT
           fi
@@ -213,3 +213,6 @@ jobs:
 
           # Copy the updated manifest_sai.json
           aws s3 cp manifest_sai.json $S3_BASE_URL/manifest_sai.json --cache-control max-age=120 --content-type "text/plain"
+
+          # Copy the updated manifest_spcs.json
+          aws s3 cp manifest_spcs.json $S3_BASE_URL/manifest_spcs.json --cache-control max-age=120 --content-type "text/plain"

@@ -107,3 +107,6 @@ jobs:
 
           # Copy the updated manifest
           aws s3 cp manifest.json $S3_BASE_URL/manifest.json --cache-control max-age=120 --content-type "text/plain"
+
+          # Copy the updated manifest_spcs.json
+          aws s3 cp manifest_spcs.json $S3_BASE_URL/manifest_spcs.json --cache-control max-age=120 --content-type "text/plain"
