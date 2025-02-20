@@ -62,13 +62,6 @@ def get_snowflake_connection(
             conn.close()
 
 
-class DateTimeEncoder(json.JSONEncoder):
-    def default(self, obj):
-        if isinstance(obj, datetime):
-            return obj.isoformat()
-        return super().default(obj)
-
-
 def execute_query(
     query: str,
     warehouse: str = "",
@@ -111,20 +104,6 @@ def execute_query(
             rows = cursor.fetchall()
             result = [dict(zip(columns, row)) for row in rows]
             return result
-
-
-@contextmanager
-def get_snowpark_session():
-    from snowflake.snowpark import Session
-
-    session = None
-    try:
-        connection_params = get_snowflake_connection_details()
-        session = Session.builder.configs(connection_params).create()
-        yield session
-    finally:
-        if session:
-            session.close()
 
 
 def is_running_in_spcs() -> bool:
