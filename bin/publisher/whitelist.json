@@ -59,7 +59,8 @@
             "snowflake-cortex"
         ],
         "agents": [
-            "wayback-machine-agent"
+            "cortex-analyst-example",
+            "cortex-search-example"
         ]
     }
 }
