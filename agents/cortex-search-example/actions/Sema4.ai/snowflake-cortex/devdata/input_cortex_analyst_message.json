@@ -1,0 +1,23 @@
+{
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "semantic_model_file": "@PRODUCTION_RESULTS.PUBLIC.STAGE1/oil_gas.yml",
+                "message": "Get total production of oil in all data"
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "cortex_analyst_message",
+        "actionRelativePath": "cortex-actions.py",
+        "schemaDescription": [
+            "semantic_model_file: string: The semantic model file to use.",
+            "message: string: The message to send to the Cortex Analyst."
+        ],
+        "managedParamsSchemaDescription": {},
+        "inputFileVersion": "v3",
+        "kind": "action",
+        "actionSignature": "action/args: 'semantic_model_file: str, message: str'"
+    }
+}

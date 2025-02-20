@@ -1,0 +1,35 @@
+{
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "query": "Get notes from the december meeting",
+                "warehouse": "COMPUTE_WH",
+                "database": "PRODUCTION_RESULTS",
+                "schema": "PUBLIC",
+                "service": "OIL_GAS_SVC",
+                "columns": ["CONTENTS"],
+                "filter": null,
+                "limit": 5
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "cortex_search",
+        "actionRelativePath": "cortex-actions.py",
+        "schemaDescription": [
+            "query: string: The query to execute",
+            "warehouse: string: The warehouse to use",
+            "database: string: The database to use",
+            "schema: string: The schema to use",
+            "service: string: The service to use",
+            "columns: string: The columns to return, optional, defaults to None",
+            "filter: string: The filter to apply, optional, defaults to None",
+            "limit: integer: The limit to apply, optional, defaults to 5"
+        ],
+        "managedParamsSchemaDescription": {},
+        "inputFileVersion": "v3",
+        "kind": "action",
+        "actionSignature": "action/args: 'query: str, warehouse: str, database: str, schema: str, service: str, columns: list | None=None, filter: dict | None=None, limit: int=5'"
+    }
+}
