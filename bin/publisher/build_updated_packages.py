@@ -83,9 +83,7 @@ def build_updated_packages():
     # one later on in the pipeline.
     update_manifest = generate_actions_manifest(gallery_actions_folder, base_url)
 
-    update_manifest_for_sai = generate_actions_manifest_for_sai(
-        gallery_actions_folder, base_url
-    )
+    update_manifest_for_sai = generate_actions_manifest_for_sai(gallery_actions_folder)
 
     # We consolidate existing manifest with the updates, getting a manifest including updated packages.
     new_manifest: ActionsManifest = generate_consolidated_manifest(
