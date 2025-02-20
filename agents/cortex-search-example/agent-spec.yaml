@@ -1,0 +1,22 @@
+agent-package:
+  spec-version: v2
+  agents:
+  - name: Cortex Search Example
+    description: Example agent that works directly with Snowflake Cortex Search.
+    model:
+      provider: OpenAI
+      name: gpt-4o
+    version: 0.0.1
+    architecture: agent
+    reasoning: disabled
+    runbook: runbook.md
+    action-packages:
+    - name: Snowflake Cortex
+      organization: Sema4.ai
+      type: folder
+      version: 1.0.0
+      whitelist: cortex_search,cortex_get_search_specification
+      path: Sema4.ai/snowflake-cortex
+    knowledge: []
+    metadata:
+      mode: conversational

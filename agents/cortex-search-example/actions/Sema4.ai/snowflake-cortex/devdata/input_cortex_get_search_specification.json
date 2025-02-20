@@ -1,0 +1,27 @@
+{
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "warehouse": "COMPUTE_WH",
+                "database": "PRODUCTION_RESULTS",
+                "schema": "PUBLIC",
+                "service": "OIL_GAS_SVC"
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "cortex_get_search_specification",
+        "actionRelativePath": "cortex-actions.py",
+        "schemaDescription": [
+            "warehouse: string: The warehouse to use.",
+            "database: string: The database to use.",
+            "schema: string: The schema to use.",
+            "service: string: The service to use."
+        ],
+        "managedParamsSchemaDescription": {},
+        "inputFileVersion": "v3",
+        "kind": "action",
+        "actionSignature": "action/args: 'warehouse: str, database: str, schema: str, service: str'"
+    }
+}
