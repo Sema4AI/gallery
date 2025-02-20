@@ -7,8 +7,11 @@ from snowflake.core import Root
 from utils import execute_query, get_snowflake_connection, is_running_in_spcs
 import os
 
+
 @action
-def cortex_get_search_specification(warehouse: str, database: str, schema: str, service: str) -> list:
+def cortex_get_search_specification(
+    warehouse: str, database: str, schema: str, service: str
+) -> list:
     """
     Returns the name of the search column and a list of the names of the attribute columns
     for the provided cortex search serice
@@ -33,12 +36,27 @@ def cortex_get_search_specification(warehouse: str, database: str, schema: str, 
         INFORMATION_SCHEMA.CORTEX_SEARCH_SERVICES
         WHERE SERVICE_NAME = :1
     """
-    result = execute_query(query=query, warehouse=warehouse, database=database, schema=schema, numeric_args=[service])
+    result = execute_query(
+        query=query,
+        warehouse=warehouse,
+        database=database,
+        schema=schema,
+        numeric_args=[service],
+    )
     return result
 
+
 @action
-def cortex_search(query: str, warehouse: str, database: str, schema: str, service: str,
-                  columns: list | None = None, filter: dict | None = None, limit: int = 5) -> str:
+def cortex_search(
+    query: str,
+    warehouse: str,
+    database: str,
+    schema: str,
+    service: str,
+    columns: list | None = None,
+    filter: dict | None = None,
+    limit: int = 5,
+) -> str:
     """
     Queries the cortex search service in the session state and returns a list of results
 
@@ -56,7 +74,9 @@ def cortex_search(query: str, warehouse: str, database: str, schema: str, servic
         The results of the query as a JSON string
     """
     try:
-        with get_snowflake_connection(warehouse=warehouse, database=database, schema=schema) as conn:
+        with get_snowflake_connection(
+            warehouse=warehouse, database=database, schema=schema
+        ) as conn:
             cortex_search_service = (
                 Root(conn)
                 .databases[database]
@@ -76,6 +96,7 @@ def cortex_search(query: str, warehouse: str, database: str, schema: str, servic
     except Exception as e:
         return json.dumps({"error": str(e)})
 
+
 @action
 def cortex_analyst_message(semantic_model_file: str, message: str) -> str:
     """
@@ -91,35 +112,43 @@ def cortex_analyst_message(semantic_model_file: str, message: str) -> str:
     with get_snowflake_connection() as conn:
         request_body = {
             "timeout": 50000,
-            "messages": [{"role": "user", "content": [{"type": "text", "text": message}]}],
-            "semantic_model_file": semantic_model_file
+            "messages": [
+                {"role": "user", "content": [{"type": "text", "text": message}]}
+            ],
+            "semantic_model_file": semantic_model_file,
         }
 
         token_type = "KEYPAIR_JWT"
         base_url = None
         url = "/analyst/message"
         token = None
-        try:   
-            if (is_running_in_spcs()):
-                snowflake_account   = os.getenv("SNOWFLAKE_ACCOUNT")
+        try:
+            if is_running_in_spcs():
+                snowflake_account = os.getenv("SNOWFLAKE_ACCOUNT")
                 snowflake_host = os.getenv("SNOWFLAKE_HOST")
                 if snowflake_host.startswith("snowflake."):
-                    snowflake_host = snowflake_host.replace("snowflake", snowflake_account.lower().replace("_", "-"), 1)
+                    snowflake_host = snowflake_host.replace(
+                        "snowflake", snowflake_account.lower().replace("_", "-"), 1
+                    )
                 base_url = f"https://{snowflake_host}/api/v2/cortex"
                 with open("/snowflake/session/token", "r") as f:
                     token = f.read().strip()
                 token_type = "OAUTH"
             else:
-                base_url = f"https://{conn.account}.snowflakecomputing.com/api/v2/cortex"
+                base_url = (
+                    f"https://{conn.account}.snowflakecomputing.com/api/v2/cortex"
+                )
                 token_type = "KEYPAIR_JWT"
                 token = conn.auth_class._jwt_token
 
             headers = {
                 "Authorization": f"Bearer {token}",
                 "X-Snowflake-Authorization-Token-Type": token_type,
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
             }
-            response = requests.post(f'{base_url}{url}', headers=headers, json=request_body, verify=False)
+            response = requests.post(
+                f"{base_url}{url}", headers=headers, json=request_body, verify=False
+            )
             return response.text
         except Exception as e:
             return json.dumps({"error": str(e)})

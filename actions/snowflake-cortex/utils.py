@@ -7,6 +7,8 @@ import json
 from datetime import datetime
 import pandas as pd
 from pathlib import Path
+
+
 def _get_snowflake_connection(
     role: str = None,
     warehouse: str = None,
@@ -34,7 +36,7 @@ def _get_snowflake_connection(
 
     if token:
         return snowflake.connector.connect(
-            host = os.getenv("SNOWFLAKE_HOST"),
+            host=os.getenv("SNOWFLAKE_HOST"),
             account=os.getenv("SNOWFLAKE_ACCOUNT"),
             token=token,
             authenticator="oauth",
@@ -44,6 +46,7 @@ def _get_snowflake_connection(
         )
     else:
         return snowflake.connector.connect(**config)
+
 
 @contextmanager
 def get_snowflake_connection(
@@ -58,12 +61,14 @@ def get_snowflake_connection(
         if conn:
             conn.close()
 
+
 class DateTimeEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, datetime):
             return obj.isoformat()
         return super().default(obj)
-    
+
+
 def execute_query(
     query: str,
     warehouse: str = "",
@@ -107,6 +112,7 @@ def execute_query(
             result = [dict(zip(columns, row)) for row in rows]
             return result
 
+
 @contextmanager
 def get_snowpark_session():
     from snowflake.snowpark import Session
@@ -119,6 +125,7 @@ def get_snowpark_session():
     finally:
         if session:
             session.close()
+
 
 def is_running_in_spcs() -> bool:
     """

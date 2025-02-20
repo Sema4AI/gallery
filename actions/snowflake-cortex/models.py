@@ -3,11 +3,13 @@ from datetime import datetime
 from pydantic import BaseModel, Field
 from typing_extensions import Annotated
 
+
 class Warehouse(BaseModel):
     name: Annotated[str, Field(description="The name of the warehouse")]
     size: Annotated[str, Field(description="The size of the warehouse")]
     state: Annotated[str, Field(description="The state of the warehouse")]
     owner: Annotated[str, Field(description="The owner of the warehouse")]
+
 
 class Schema(BaseModel):
     model_config = {"populate_by_name": True}
@@ -27,6 +29,7 @@ class Schema(BaseModel):
         Field(description="The date the schema was last altered", alias="LAST_ALTERED"),
     ] = None
 
+
 class Table(BaseModel):
     model_config = {"populate_by_name": True}
 
@@ -36,6 +39,7 @@ class Table(BaseModel):
     table_type: Annotated[
         str, Field(description="The type of the table", alias="TABLE_TYPE")
     ]
+
 
 class Column(BaseModel):
     model_config = {"populate_by_name": True}
@@ -49,6 +53,7 @@ class Column(BaseModel):
     is_nullable: Annotated[
         str, Field(description="Whether the column is nullable", alias="IS_NULLABLE")
     ]
+
 
 class PutStageFile(BaseModel):
     source: Annotated[str, Field(description="The source file")]
