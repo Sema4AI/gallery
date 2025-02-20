@@ -1,7 +1,11 @@
 import os
 
+from actions_manifest import (
+    generate_actions_manifest,
+    generate_actions_manifest_for_sai,
+    save_manifest,
+)
 from extractor import extract_all
-from actions_manifest import generate_actions_manifest, save_manifest, generate_actions_manifest_for_sai
 from package_builder import build_action_packages
 from robocorp.tasks import task
 from tools import get_action_server, get_rcc
@@ -29,11 +33,13 @@ def build_all_packages():
     extract_all(zips_folder, gallery_actions_folder, rcc_path)
 
     manifest = generate_actions_manifest(gallery_actions_folder, base_url)
-    sai_manifest = generate_actions_manifest_for_sai(gallery_actions_folder, base_url)
+    sai_manifest = generate_actions_manifest_for_sai(gallery_actions_folder)
 
     # Write manifest to file
     save_manifest(manifest, os.path.join(gallery_actions_folder, "manifest.json"))
-    save_manifest(sai_manifest, os.path.join(gallery_actions_folder, "manifest_sai.json"))
+    save_manifest(
+        sai_manifest, os.path.join(gallery_actions_folder, "manifest_sai.json")
+    )
 
     print(f"\n\n-> Gallery generated in: {gallery_actions_folder}")
 
