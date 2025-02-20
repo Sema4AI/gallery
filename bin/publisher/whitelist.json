@@ -31,7 +31,8 @@
             "wayback-machine",
             "youtube",
             "zendesk",
-            "free-web-search"
+            "free-web-search",
+            "snowflake-cortex"
         ],
         "agents": [
             "agent-writer-agent",
@@ -54,7 +55,8 @@
             "slack",
             "wayback-machine",
             "youtube",
-            "zendesk"
+            "zendesk",
+            "snowflake-cortex"
         ],
         "agents": [
             "wayback-machine-agent"
