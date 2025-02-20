@@ -1,4 +1,4 @@
-name: Actions - Update manifest_sai.json
+name: Actions - SAI - Initialize S3 Gallery
 
 on:
   workflow_dispatch:

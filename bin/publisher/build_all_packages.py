@@ -35,10 +35,14 @@ def build_all_packages():
     manifest = generate_actions_manifest(gallery_actions_folder, base_url)
     sai_manifest = generate_actions_manifest_for_sai(gallery_actions_folder)
 
+    with open("whitelist.json", "r") as f:
+        import json
+        whitelist = json.load(f)
+
     # Write manifest to file
-    save_manifest(manifest, os.path.join(gallery_actions_folder, "manifest.json"))
+    save_manifest(manifest, os.path.join(gallery_actions_folder, "manifest.json"), whitelist["standard"]["actions"])
     save_manifest(
-        sai_manifest, os.path.join(gallery_actions_folder, "manifest_sai.json")
+        sai_manifest, os.path.join(gallery_actions_folder, "manifest_sai.json"), whitelist["standard"]["actions"]
     )
 
     print(f"\n\n-> Gallery generated in: {gallery_actions_folder}")
