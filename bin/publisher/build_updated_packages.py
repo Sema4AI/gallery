@@ -112,7 +112,7 @@ def build_updated_packages():
     )
 
     save_manifest(
-        new_manifest_sai,  # Using consolidated SAI manifest instead
+        new_manifest_sai,
         os.path.join(gallery_actions_folder, "manifest_sai.json"),
         whitelist["standard"]["actions"],
     )
