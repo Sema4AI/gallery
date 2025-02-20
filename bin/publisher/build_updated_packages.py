@@ -32,23 +32,27 @@ base_url = "https://cdn.sema4.ai/gallery/actions/"
 def build_updated_packages():
     working_dir = get_working_dir()
     published_manifest_path = os.path.join(working_dir, "published_manifest.json")
+    published_manifest_sai_path = os.path.join(working_dir, "published_manifest_sai.json")
 
     download_file(
         "https://cdn.sema4.ai/gallery/actions/manifest.json", published_manifest_path
     )
+    download_file(
+        "https://cdn.sema4.ai/gallery/actions/manifest_sai.json", published_manifest_sai_path
+    )
 
     published_manifest: ActionsManifest
+    published_manifest_sai: ActionsManifest
 
     try:
         published_manifest = read_json_file(published_manifest_path)
+        published_manifest_sai = read_json_file(published_manifest_sai_path)
     except Exception:
-        log_error("Reading published manifest failed, exiting...")
+        log_error("Reading published manifest(s) failed, exiting...")
         return
 
-    # When updating the gallery, we assume that some packages has already been published - otherwise, we want to
-    # skip the operation. This ensures that if manifest download fails for any reason, we don't end up replacing
-    # our entire gallery with only packages currently in the repository.
-    if is_manifest_empty(published_manifest):
+    # Check both manifests
+    if is_manifest_empty(published_manifest) or is_manifest_empty(published_manifest_sai):
         log_error("No published manifest available, exiting...")
         return
 
@@ -92,9 +96,9 @@ def build_updated_packages():
 
     new_manifest["organization"] = "Sema4.ai"
 
-    # Create consolidated SAI manifest
+    # Create consolidated SAI manifest using the published SAI manifest
     new_manifest_sai: ActionsManifest = generate_consolidated_manifest(
-        published_manifest, update_manifest_for_sai
+        published_manifest_sai, update_manifest_for_sai
     )
     new_manifest_sai["organization"] = "Sema4.ai"
 
