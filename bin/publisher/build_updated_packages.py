@@ -103,7 +103,7 @@ def build_updated_packages():
 
     save_manifest(
         update_manifest_for_sai,
-        os.path.join(gallery_actions_folder, "manifest_for_sai.json"),
+        os.path.join(gallery_actions_folder, "manifest_sai.json"),
         whitelist["standard"]["actions"],
     )
 
