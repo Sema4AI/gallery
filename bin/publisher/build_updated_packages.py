@@ -92,6 +92,12 @@ def build_updated_packages():
 
     new_manifest["organization"] = "Sema4.ai"
 
+    # Create consolidated SAI manifest
+    new_manifest_sai: ActionsManifest = generate_consolidated_manifest(
+        published_manifest, update_manifest_for_sai
+    )
+    new_manifest_sai["organization"] = "Sema4.ai"
+
     with open("whitelist.json", "r") as f:
         whitelist = json.load(f)
 
@@ -102,7 +108,7 @@ def build_updated_packages():
     )
 
     save_manifest(
-        update_manifest_for_sai,
+        new_manifest_sai,  # Using consolidated SAI manifest instead
         os.path.join(gallery_actions_folder, "manifest_sai.json"),
         whitelist["standard"]["actions"],
     )
