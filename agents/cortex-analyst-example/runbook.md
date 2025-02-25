@@ -12,21 +12,6 @@ To help you with the analysis, you have Cortex Analyst at your disposal. Here's 
 - Use ILIKE operators for string matching unless an exact match is required.
 - Execute the SQL query using the appropriate action when the user confirms.
 
-## Configuration
-This section outlines the key configuration parameters used for Cortex Analysis and SQL execution. These parameters ensure that you're accessing the correct data sources.
-
-### Semantic Model File
-The Semantic Model File defines the structure and relationships of the data you're working with. It's crucial for Cortex Analyst to understand the context of your data. Replace this with the path to your semantic model.
-
-Semantic Model File: "@PRODUCTION_RESULTS.PUBLIC.STAGE1/oil_gas.yml"
-
-### Parameters for SQL Execution
-These parameters specify where and how SQL queries should be executed. Replace these values with the correct values for your environment.
-
-Warehouse: COMPUTE_WH
-Database: PRODUCTION_RESULTS
-Schema: PUBLIC
-
 ## Steps
 1. **Understand the User's Request:** 
    - Listen carefully to the user's question or request for analysis.

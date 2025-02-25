@@ -1,26 +1,25 @@
-# Import python packages
 import json
 import requests
-from sema4ai.actions import action
-from snowflake.core import Root
-
-from utils import execute_query, get_snowflake_connection, is_running_in_spcs
 import os
+
+from sema4ai.actions import action, Secret
+from snowflake.core import Root
+from utils import execute_query, get_snowflake_connection, is_running_in_spcs
 
 
 @action
 def cortex_get_search_specification(
-    warehouse: str, database: str, schema: str, service: str
+    warehouse: Secret, database: Secret, schema: Secret, service: Secret
 ) -> list:
     """
     Returns the name of the search column and a list of the names of the attribute columns
     for the provided cortex search serice
 
     Args:
-        warehouse: The warehouse to use.
-        database: The database to use.
-        schema: The schema to use.
-        service: The service to use.
+        warehouse: Your Snowflake virtual warehouse to use for queries.
+        database: Your Snowflake database to use for queries.
+        schema: Your Snowflake schema to use for queries.
+        service: The name of the Cortex Search service to use.
 
     Returns:
         The column specification as a JSON string.
@@ -38,10 +37,10 @@ def cortex_get_search_specification(
     """
     result = execute_query(
         query=query,
-        warehouse=warehouse,
-        database=database,
-        schema=schema,
-        numeric_args=[service],
+        warehouse=warehouse.value,
+        database=database.value,
+        schema=schema.value,
+        numeric_args=[service.value],
     )
     return result
 
@@ -49,11 +48,11 @@ def cortex_get_search_specification(
 @action
 def cortex_search(
     query: str,
-    warehouse: str,
-    database: str,
-    schema: str,
-    service: str,
-    columns: list | None = None,
+    warehouse: Secret,
+    database: Secret,
+    schema: Secret,
+    service: Secret,
+    columns: list,
     filter: dict | None = None,
     limit: int = 5,
 ) -> str:
@@ -62,11 +61,11 @@ def cortex_search(
 
     Args:
         query: The query to execute
-        warehouse: The warehouse to use
-        database: The database to use
-        schema: The schema to use
-        service: The service to use
-        columns: The columns to return, optional, defaults to None
+        warehouse: Your Snowflake virtual warehouse to use for queries
+        database: Your Snowflake database to use for queries
+        schema: Your Snowflake schema to use for queries
+        service: The name of the Cortex Search service to use
+        columns: The columns to return
         filter: The filter to apply, optional, defaults to None
         limit: The limit to apply, optional, defaults to 5
 
@@ -75,13 +74,13 @@ def cortex_search(
     """
     try:
         with get_snowflake_connection(
-            warehouse=warehouse, database=database, schema=schema
+            warehouse=warehouse.value, database=database.value, schema=schema.value
         ) as conn:
             cortex_search_service = (
                 Root(conn)
-                .databases[database]
-                .schemas[schema]
-                .cortex_search_services[service]
+                .databases[database.value]
+                .schemas[schema.value]
+                .cortex_search_services[service.value]
             )
 
             # Only pass non-None values to search
@@ -98,12 +97,12 @@ def cortex_search(
 
 
 @action
-def cortex_analyst_message(semantic_model_file: str, message: str) -> str:
+def cortex_analyst_message(semantic_model_file: Secret, message: str) -> str:
     """
     Sends a message to the Cortex Analyst.
 
     Args:
-        semantic_model_file: The semantic model file to use.
+        semantic_model_file: The path to a Snowflake Stage containing the semantic model file for Cortex Analyst.
         message: The message to send to the Cortex Analyst.
 
     Returns:
@@ -115,7 +114,7 @@ def cortex_analyst_message(semantic_model_file: str, message: str) -> str:
             "messages": [
                 {"role": "user", "content": [{"type": "text", "text": message}]}
             ],
-            "semantic_model_file": semantic_model_file,
+            "semantic_model_file": semantic_model_file.value,
         }
 
         token_type = "KEYPAIR_JWT"
