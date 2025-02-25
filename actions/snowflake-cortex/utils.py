@@ -1,13 +1,9 @@
-from contextlib import closing, contextmanager
-
-import snowflake.connector
-from sema4ai.data import get_snowflake_connection_details
 import os
-import json
-from datetime import datetime
 import pandas as pd
+import snowflake.connector
 from pathlib import Path
-
+from contextlib import closing, contextmanager
+from sema4ai.data import get_snowflake_connection_details
 
 def _get_snowflake_connection(
     role: str = None,
