@@ -85,7 +85,13 @@ class UpdateRange(BaseModel):
         ),
     ]
     start_cell: Annotated[str, Field(pattern=_ADDRESS_PATTERN)]
-    operation: Literal["replace", "insert_shift_right", "insert_shift_down"]
+    operation: Annotated[
+        str,
+        Field(
+            description="The operation to be performed on the range. "
+            "Possible values: 'replace', 'insert_shift_right', 'insert_shift_down'."
+        ),
+    ]
 
     @field_validator("values", mode="after")
     @classmethod
@@ -129,7 +135,7 @@ class _RangeResponse(BaseModel, extra="ignore"):
 
 
 @action(is_consequential=True)
-def update_range_action(
+def update_range(
     workbook_id: str,
     worksheet_id_or_name: str,
     data: UpdateRange,

@@ -1,11 +1,11 @@
 # Required: A short name for the action package
-name: Microsoft 365 Excel
+name: ZMicrosoft 365 Excel
 
 # Required: A description of what's in the action package.
 description: Actions for manipulating Microsoft 365 Excel files.
 
 # Package version number, recommend using semver.org
-version: 1.0.2
+version: 2.0.0
 
 # The version of the `package.yaml` format.
 spec-version: v2
