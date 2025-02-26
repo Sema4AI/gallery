@@ -7,7 +7,7 @@ from microsoft_excel.models.worksheet import Range, Worksheet, WorksheetInfo
 
 
 @action(is_consequential=False)
-def get_worksheet_action(
+def get_worksheet(
     workbook_id: str,
     worksheet_id_or_name: str,
     token: OAuth2Secret[

@@ -6,7 +6,7 @@ from microsoft_excel._client import Client, create_worksheet, get_client  # noqa
 
 
 @action(is_consequential=True)
-def add_sheet_action(
+def add_sheet(
     token: OAuth2Secret[
         Literal["microsoft"],
         list[Literal["Files.ReadWrite"]],

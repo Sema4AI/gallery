@@ -7,7 +7,7 @@ from microsoft_excel.models.workbook import Workbook
 
 
 @action(is_consequential=True)
-def create_workbook_action(
+def create_workbook(
     workbook_name: str,
     token: OAuth2Secret[
         Literal["microsoft"],
