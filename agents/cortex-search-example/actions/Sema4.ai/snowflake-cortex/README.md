@@ -19,18 +19,20 @@ Executes searches against your Cortex Search service with:
 - Result limiting
 - Flexible filtering options
 
-### Cortex Search: Runbook Additions
+### Cortex Search: Configuration
 
-Before using these actions, you need to specify the search service name and the correct database and schema to execute queries against.
+When using the actions, you need to configure several secrets for authentication and service configuration. These include:
+- Search Service Name
+- Warehouse
+- Database
+- Schema
 
-The Search Service specifies which search index to use for executing search operations. It's crucial for Cortex Search to know where to look for relevant data. *In your Runbook, replace the following with the right values for your environment.*
+These values are stored as secrets in your Sema4.ai Studio or Control Room, and requested from you when creating or deploying the agent. Snowflake has a great [tutorial](https://docs.snowflake.com/en/user-guide/snowflake-cortex/cortex-search/tutorials/cortex-search-tutorial-1-search) for setting up a Cortex Search service using Airbnb data as an example. If you have completed this tutorial, you can use the values from the tutorial as the secrets for the actions.
 
-```text
-Service Name: AIRBNB_SVC
-Warehouse: COMPUTE_WH
-Database: CORTEX_SEARCH_TUTORIAL_DB
-Schema: PUBLIC
-```
+- Service Name: "AIRBNB_SVC"
+- Warehouse: "COMPUTE_WH" (this depends on your Snowflake account and may be different)
+- Database: "CORTEX_SEARCH_TUTORIAL_DB"
+- Schema: "PUBLIC"
 
 ### Cortex Analyst Integration
 
@@ -46,20 +48,19 @@ Provides direct query execution capabilities against Snowflake:
 - Parameter support
 - Warehouse/Database/Schema configuration
 
-#### Cortex Analyst Runbook Additions
+#### Cortex Analyst Configuration
 
-Before using these actions, you need to specify the correct location of your semantic model file and the correct database and schema to execute queries against.
+When using these actions, you need to configure several secrets:
+- Semantic Model File location
+- Warehouse
+- Database
+- Schema
 
-The Semantic Model File defines the structure and relationships of your data, enabling Cortex Analyst to understand your data context.
+These values are stored in your Sema4.ai Studio or Control Room and requested from you when creating or deploying the agent.
 
-```text
-Semantic Model File: "@PRODUCTION_RESULTS.PUBLIC.STAGE1/oil_gas.yml"
-```
+Example values:
 
-To ensure your queries are executed against the correct database and schema, add the following to your runbook:
-
-```text
-Warehouse: COMPUTE_WH
-Database: PRODUCTION_RESULTS
-Schema: PUBLIC
-```
+- Semantic Model File: "@PRODUCTION_RESULTS.PUBLIC.STAGE1/oil_gas.yml"
+- Warehouse: COMPUTE_WH
+- Database: PRODUCTION_RESULTS
+- Schema: PUBLIC

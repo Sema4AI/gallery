@@ -1,13 +1,12 @@
-from sema4ai.actions import Response, action
-
+from sema4ai.actions import Response, action, Secret
 from utils import execute_query
 
 @action
 def snowflake_execute_query(
     query: str,
-    warehouse: str = "",
-    database: str = None,
-    schema: str = None,
+    warehouse: Secret,
+    database: Secret,
+    schema: Secret,
     numeric_args: list = None,
 ) -> Response[list]:
     """
@@ -15,9 +14,9 @@ def snowflake_execute_query(
 
     Args:
         query: The query to execute.
-        database: The database to use.
-        schema: The schema to use.
-        warehouse: The warehouse to use.
+        database: Your Snowflake database to use for queries.
+        schema: Your Snowflake schema to use for queries.
+        warehouse: Your Snowflake virtual warehouse to use for queries.
         numeric_args: A list of numeric arguments to pass to the query.
 
     Returns:
@@ -26,7 +25,7 @@ def snowflake_execute_query(
 
     return Response(result=execute_query(
                 query=query,
-                warehouse=warehouse,
-                database=database,
-                schema=schema,
+                warehouse=warehouse.value,
+                database=database.value,
+                schema=schema.value,
                 numeric_args=numeric_args))

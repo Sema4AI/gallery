@@ -6,7 +6,7 @@ agent-package:
     model:
       provider: OpenAI
       name: gpt-4o
-    version: 0.0.1
+    version: 0.0.2
     architecture: agent
     reasoning: disabled
     runbook: runbook.md
@@ -14,7 +14,7 @@ agent-package:
     - name: Snowflake Cortex
       organization: Sema4.ai
       type: folder
-      version: 1.0.0
+      version: 1.0.1
       whitelist: cortex_search,cortex_get_search_specification
       path: Sema4.ai/snowflake-cortex
     knowledge: []

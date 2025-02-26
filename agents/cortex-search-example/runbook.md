@@ -8,17 +8,6 @@ To help you with the analysis, you have Cortex Search at your disposal. Here's h
 - Use Cortex Search to search for data relevant to the user's request.
 - Do not use any other tools or services to perform the knowledge search.
 
-## Configuration
-These parameters are used to configure and execute search operations within your Snowflake environment. They specify where to look for data and which search service to use.
-
-### Cortex Search
-The Search Service specifies which search index to use for executing search operations. It's crucial for Cortex Search to know where to look for relevant data. *Replace the following with the right values for your environment.*
-
-Warehouse: COMPUTE_WH
-Database: CORTEX_SEARCH_TUTORIAL_DB
-Schema: PUBLIC
-Service Name: AIRBNB_SVC
-
 ## Steps
 1. **Understand the User's Request:** 
 - Listen carefully to the user's question or request for analysis.
