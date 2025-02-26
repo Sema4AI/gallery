@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.1.0] - 2025-02-27
+
+### Changed
+
+- Add `cortex_llm_complete`, `cortex_agent_chat` cortex actions
+- Add `snowflake_get_warehouses`, `snowflake_get_databases`, `snowflake_get_schemas`, `snowflake_get_tables`, `snowflake_get_columns` actions
+
+#### Fixed
+
+- NaT values in pandas dataframes are now converted to `None` for the execute query result
+
 ## [1.0.1] - 2025-02-25
 
 ### Changed

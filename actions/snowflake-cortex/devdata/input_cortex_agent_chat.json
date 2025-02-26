@@ -1,0 +1,32 @@
+{
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "query": "What is the revenue for the year 2024?",
+                "service": "cortex_search_tutorial_db.public.airbnb_svc",
+                "semantic_model_file": "@CORTEX_ANALYST_DEMO.REVENUE_TIMESERIES.RAW_DATA/revenue_timeseries.yaml"
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "cortex_agent_chat",
+        "actionRelativePath": "cortex_actions.py",
+        "schemaDescription": [
+            "query: string: The query to use"
+        ],
+        "managedParamsSchemaDescription": {
+            "service": {
+                "type": "Secret",
+                "description": "The search service to use"
+            },
+            "semantic_model_file": {
+                "type": "Secret",
+                "description": "The semantic model file to use"
+            }
+        },
+        "inputFileVersion": "v3",
+        "kind": "action",
+        "actionSignature": "action/args: 'query: str, service: Secret, semantic_model_file: Secret'"
+    }
+}
