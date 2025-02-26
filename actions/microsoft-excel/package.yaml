@@ -1,5 +1,5 @@
 # Required: A short name for the action package
-name: ZMicrosoft 365 Excel
+name: Microsoft 365 Excel
 
 # Required: A description of what's in the action package.
 description: Actions for manipulating Microsoft 365 Excel files.
