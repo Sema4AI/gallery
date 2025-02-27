@@ -77,6 +77,12 @@ def convert_column_number_to_label(value: int) -> str:
     return column_address
 
 
+def _convert_value_to_string(value: any) -> str:
+    if value is None:
+        return ""
+    return str(value)
+
+
 class UpdateRange(BaseModel):
     values: Annotated[
         Values,
@@ -102,7 +108,8 @@ class UpdateRange(BaseModel):
                 "values must have the shape of a matrix, where each row has the same number of elements"
             )
 
-        return values
+        # Convert all values to strings
+        return [[_convert_value_to_string(cell) for cell in row] for row in values]
 
     @property
     def address(self) -> str:

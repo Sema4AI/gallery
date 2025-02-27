@@ -75,7 +75,7 @@ def get_client(token: OAuth2Secret) -> Client:
         client.close()
 
 
-def create_workbook(client: Client, workbook_name: str) -> Workbook:
+def _create_workbook(client: Client, workbook_name: str) -> Workbook:
     output = BytesIO()
     workbook_name = f"{workbook_name}.xlsx"
     with xlsxwriter.Workbook(output, {"in_memory": True}) as local_workbook:
@@ -92,7 +92,7 @@ def create_workbook(client: Client, workbook_name: str) -> Workbook:
     return workbook
 
 
-def create_worksheet(
+def _create_worksheet(
     client: Client, *, workbook_id: str, worksheet_name: str | None = None
 ) -> WorksheetInfo:
     if worksheet_name and worksheet_name.strip():
@@ -107,7 +107,7 @@ def create_worksheet(
     )
 
 
-def load_worksheets_for_workbook(client: Client, workbook: Workbook) -> Workbook:
+def _load_worksheets_for_workbook(client: Client, workbook: Workbook) -> Workbook:
     if workbook.worksheets is None:
         worksheet_info = client.get(
             APIResponse[WorksheetInfo],
