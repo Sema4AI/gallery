@@ -2,7 +2,7 @@ from typing import Literal
 
 from sema4ai.actions import OAuth2Secret, Response, action
 
-from microsoft_excel._client import Client, create_workbook, get_client  # noqa: F401
+from microsoft_excel._client import Client, _create_workbook, get_client  # noqa: F401
 from microsoft_excel.models.workbook import Workbook
 
 
@@ -24,4 +24,4 @@ def create_workbook(
     """
 
     with get_client(token) as client:  # type: Client
-        return Response(result=create_workbook(client, workbook_name))
+        return Response(result=_create_workbook(client, workbook_name))
