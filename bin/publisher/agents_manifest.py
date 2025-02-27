@@ -117,14 +117,30 @@ def generate_consolidated_manifest(
 
 
 def get_actions_info(action_packages: list[dict]) -> list[AgentActionPackage]:
+    import requests
+
     actions = []
     for action in action_packages:
+        version = action["version"]
+
+        folder_name = action["path"].split("/")[-1]
+        metadata_url = f"https://cdn.sema4.ai/gallery/actions/{folder_name}/{version}/metadata.json"
+        response = requests.get(metadata_url)
+
+        if response.status_code != 200:
+            raise Exception(
+                f"Invalid action package, could not find it at: {metadata_url}"
+            )
+
+        action_metadata = response.json()
+
         actions.append(
             {
                 "name": action["name"],
-                "version": action["version"],
+                "version": version,
                 "whitelist": action.get("whitelist", []),
                 "organization": "Sema4.ai",
+                "metadata": action_metadata.get("metadata", {}),
             }
         )
 
