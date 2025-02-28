@@ -4,9 +4,9 @@ agent-package:
   - name: Cortex Analyst Example
     description: Example agent that works directly with Snowflake Cortex Analyst.
     model:
-      provider: OpenAI
-      name: gpt-4o
-    version: 0.0.3
+      provider: Snowflake Cortex AI
+      name: claude-3-5-sonnet
+    version: 0.0.4
     architecture: agent
     reasoning: disabled
     runbook: runbook.md
@@ -14,11 +14,9 @@ agent-package:
     - name: Snowflake Cortex
       organization: Sema4.ai
       type: folder
-      version: 1.0.1
+      version: 1.1.1
       whitelist: cortex_analyst_message,snowflake_execute_query
       path: Sema4.ai/snowflake-cortex
     knowledge: []
     metadata:
       mode: conversational
-
-
