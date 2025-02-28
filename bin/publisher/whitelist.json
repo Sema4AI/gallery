@@ -60,8 +60,7 @@
         ],
         "agents": [
             "cortex-analyst-example",
-            "cortex-search-example",
-            "wayback-machine-agent"
+            "cortex-search-example"
         ]
     }
 }
