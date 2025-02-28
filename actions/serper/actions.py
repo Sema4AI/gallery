@@ -1,12 +1,13 @@
-from sema4ai.actions import action, Secret, ActionError
+from sema4ai.actions import action, Secret, ActionError, Response
 import http.client
 import json
 import os
+from pathlib import Path
 from pydantic import BaseModel, Field
 from typing import List, Optional
 from dotenv import load_dotenv
 
-load_dotenv(os.path.join(os.path.dirname(__file__), "devdata", ".env"))
+load_dotenv(Path(__file__).absolute().parent / "devdata" / ".env")
 
 
 # Define Pydantic models for the response
@@ -61,7 +62,7 @@ class SearchResult(BaseModel):
 
 
 @action
-def search_google(q: str, num: int, api_key: Secret) -> SearchResult:
+def search_google(q: str, num: int, api_key: Secret) -> Response[SearchResult]:
     """
     Perform a search using the Serper API and return a structured summary.
 
@@ -74,13 +75,14 @@ def search_google(q: str, num: int, api_key: Secret) -> SearchResult:
         SearchResult: A structured summary of the search results.
     """
     # Check if API key is provided
-    if not api_key or not api_key.value or not os.getenv("SERPER_API_KEY"):
+    api_key = api_key.value or os.getenv("SERPER_API_KEY")
+    if not api_key:
         raise ActionError("API key is required but not provided")
 
     try:
         conn = http.client.HTTPSConnection("google.serper.dev")
         payload = json.dumps({"q": q, "num": num})
-        headers = {"X-API-KEY": api_key.value, "Content-Type": "application/json"}
+        headers = {"X-API-KEY": api_key, "Content-Type": "application/json"}
         conn.request("POST", "/search", payload, headers)
         res = conn.getresponse()
 
@@ -97,7 +99,7 @@ def search_google(q: str, num: int, api_key: Secret) -> SearchResult:
         # Parse the response using the Pydantic model
         search_result = SearchResult(**response)
 
-        return search_result
+        return Response(result=search_result)
 
     except json.JSONDecodeError:
         raise ActionError("Failed to parse API response as JSON")
