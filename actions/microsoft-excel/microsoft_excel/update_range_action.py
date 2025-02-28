@@ -77,6 +77,12 @@ def convert_column_number_to_label(value: int) -> str:
     return column_address
 
 
+def _convert_value_to_string(value: any) -> str:
+    if value is None:
+        return ""
+    return str(value)
+
+
 class UpdateRange(BaseModel):
     values: Annotated[
         Values,
@@ -85,7 +91,13 @@ class UpdateRange(BaseModel):
         ),
     ]
     start_cell: Annotated[str, Field(pattern=_ADDRESS_PATTERN)]
-    operation: Literal["replace", "insert_shift_right", "insert_shift_down"]
+    operation: Annotated[
+        str,
+        Field(
+            description="The operation to be performed on the range. "
+            "Possible values: 'replace', 'insert_shift_right', 'insert_shift_down'."
+        ),
+    ]
 
     @field_validator("values", mode="after")
     @classmethod
@@ -96,7 +108,8 @@ class UpdateRange(BaseModel):
                 "values must have the shape of a matrix, where each row has the same number of elements"
             )
 
-        return values
+        # Convert all values to strings
+        return [[_convert_value_to_string(cell) for cell in row] for row in values]
 
     @property
     def address(self) -> str:
@@ -129,7 +142,7 @@ class _RangeResponse(BaseModel, extra="ignore"):
 
 
 @action(is_consequential=True)
-def update_range_action(
+def update_range(
     workbook_id: str,
     worksheet_id_or_name: str,
     data: UpdateRange,

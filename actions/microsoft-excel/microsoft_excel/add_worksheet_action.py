@@ -2,11 +2,11 @@ from typing import Literal
 
 from sema4ai.actions import OAuth2Secret, Response, action
 
-from microsoft_excel._client import Client, create_worksheet, get_client  # noqa: F401
+from microsoft_excel._client import Client, _create_worksheet, get_client  # noqa: F401
 
 
 @action(is_consequential=True)
-def add_sheet_action(
+def add_sheet(
     token: OAuth2Secret[
         Literal["microsoft"],
         list[Literal["Files.ReadWrite"]],
@@ -27,7 +27,7 @@ def add_sheet_action(
 
     with get_client(token) as client:  # type: Client
         return Response(
-            result=create_worksheet(
+            result=_create_worksheet(
                 client, workbook_id=workbook_id, worksheet_name=worksheet_name
             )
         )

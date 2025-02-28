@@ -6,7 +6,7 @@ from sema4ai.actions import ActionError, OAuth2Secret, Response, action
 from microsoft_excel._client import (  # noqa: F401
     Client,
     get_client,
-    load_worksheets_for_workbook,
+    _load_worksheets_for_workbook,
 )
 from microsoft_excel._constants import EXCEL_MIME_TYPE, FILE_EXTENSION
 from microsoft_excel.models import APIResponse
@@ -31,7 +31,7 @@ class _Item(BaseModel, extra="ignore"):
 
     def as_workbook(self, client: Client) -> Workbook:
         workbook = Workbook(id=self.id, name=self.name, web_url=self.web_url)
-        return load_worksheets_for_workbook(client, workbook)
+        return _load_worksheets_for_workbook(client, workbook)
 
 
 _SearchResponse = APIResponse[OnErrorOmit[_Item]]
