@@ -32,7 +32,8 @@
             "youtube",
             "zendesk",
             "free-web-search",
-            "snowflake-cortex"
+            "snowflake-cortex",
+            "serper"
         ],
         "agents": [
             "wayback-machine-agent"
@@ -54,7 +55,8 @@
             "wayback-machine",
             "youtube",
             "zendesk",
-            "snowflake-cortex"
+            "snowflake-cortex",
+            "serper"
         ],
         "agents": [
             "cortex-analyst-example",

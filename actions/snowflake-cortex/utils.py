@@ -1,9 +1,10 @@
-import os
+from contextlib import closing, contextmanager
+from pathlib import Path
+
 import pandas as pd
 import snowflake.connector
-from pathlib import Path
-from contextlib import closing, contextmanager
 from sema4ai.data import get_snowflake_connection_details
+
 
 def _get_snowflake_connection(
     role: str = None,
@@ -23,25 +24,7 @@ def _get_snowflake_connection(
         role=role, warehouse=warehouse, database=database, schema=schema
     )
 
-    token = None
-    try:
-        with open("/snowflake/session/token", "r") as f:
-            token = f.read().strip()
-    except Exception:
-        pass
-
-    if token:
-        return snowflake.connector.connect(
-            host=os.getenv("SNOWFLAKE_HOST"),
-            account=os.getenv("SNOWFLAKE_ACCOUNT"),
-            token=token,
-            authenticator="oauth",
-            warehouse=warehouse,
-            database=database,
-            schema=schema,
-        )
-    else:
-        return snowflake.connector.connect(**config)
+    return snowflake.connector.connect(**config)
 
 
 @contextmanager
@@ -60,11 +43,11 @@ def get_snowflake_connection(
 
 def execute_query(
     query: str,
-    warehouse: str = "",
-    database: str = None,
-    schema: str = None,
-    numeric_args: list = None,
-) -> list:
+    warehouse: str | None = None,
+    database: str | None = None,
+    schema: str | None = None,
+    numeric_args: list | None = None,
+) -> list[dict]:
     """
     Executes a specific query.
 
@@ -94,9 +77,12 @@ def execute_query(
 
         if cursor._query_result_format == "arrow":
             results = cursor.fetch_pandas_all()
-            return results.where(pd.notna, None).to_dict(orient="records")
+            return (
+                results.astype(object).where(pd.notnull, None).to_dict(orient="records")
+            )
+
         else:
-            columns = [desc[0] for desc in cursor.description]  # Extract column names
+            columns = [desc[0] for desc in cursor.description]
             rows = cursor.fetchall()
             result = [dict(zip(columns, row)) for row in rows]
             return result
@@ -104,9 +90,8 @@ def execute_query(
 
 def is_running_in_spcs() -> bool:
     """
-    Returns True if the action is running in Snowpark Container Services, False otherwise.
-    Args:
-        None
+    Checks if the action is running in Snowpark Container Services.
+
     Returns:
         True if the action is running in Snowpark Container Services, False otherwise.
     """
