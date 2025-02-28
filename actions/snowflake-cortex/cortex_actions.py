@@ -10,7 +10,6 @@ from snowflake.core.cortex.lite_agent_service._generated.models import (
     Tool,
     ToolToolSpec,
 )
-
 from utils import execute_query, get_snowflake_connection, is_running_in_spcs
 
 
@@ -135,7 +134,7 @@ def cortex_agent_chat(
     Args:
         query: The query to use
         service: The search service to use
-        semantic_model_file: The semantic model file to use
+        semantic_model_file: The path to a Snowflake Stage containing the semantic model file
 
     Returns:
         The chat result.
@@ -174,8 +173,8 @@ def cortex_analyst_message(semantic_model_file: Secret, message: str) -> Respons
     Sends a message to the Cortex Analyst.
 
     Args:
-        semantic_model_file: The semantic model file to use.
-        message: The message to send to the Cortex Analyst.
+        semantic_model_file: The path to a Snowflake Stage containing the semantic model file.
+        message: The message to send.
 
     Returns:
         The response from the Cortex Analyst.

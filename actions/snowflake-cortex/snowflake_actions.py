@@ -132,6 +132,7 @@ def snowflake_get_tables(
     return Response(result=[Table.model_validate(table) for table in response])
 
 
+@action
 def snowflake_get_columns(
     warehouse: str, database: str, schema: str, table: str
 ) -> Response[list[Column]]:
