@@ -36,8 +36,6 @@
             "serper"
         ],
         "agents": [
-            "agent-writer-agent",
-            "action-writer-agent",
             "wayback-machine-agent"
         ]
     },
