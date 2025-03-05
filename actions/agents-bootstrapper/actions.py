@@ -8,7 +8,7 @@ from urllib.parse import urljoin
 import black
 import requests
 from refresh_agent_spec_helper import update_agent_spec
-from sema4ai.actions import action
+from sema4ai.actions import Response, action
 
 AGENTS_DIR_PATH = Path.home() / "agents_bootstrapper"
 ACTIONS_GITHUB_URL = "https://api.github.com/repos/Sema4AI/gallery/contents/actions"
@@ -17,7 +17,7 @@ MY_ACTIONS = "MyActions"
 
 
 @action
-def bootstrap_agent_package(agent_name: str) -> str:
+def bootstrap_agent_package(agent_name: str) -> Response[str]:
     """
     This action sets up an agent package in the home directory of the user under the "agents_bootstrapper" folder.
 
@@ -32,7 +32,9 @@ def bootstrap_agent_package(agent_name: str) -> str:
     command = f"agent-cli project new --path '{agent_name}'"
     subprocess.run(command, shell=True, check=True, cwd=str(AGENTS_DIR_PATH))
 
-    return f"Agent successfully bootstrapped! Code available at {str(AGENTS_DIR_PATH / agent_name)}"
+    return Response(
+        result=f"Agent successfully bootstrapped! Code available at {str(AGENTS_DIR_PATH / agent_name)}"
+    )
 
 
 @action
@@ -63,7 +65,7 @@ def open_agent_code(agent_name: str) -> str:
 
 
 @action
-def refresh_agent_package_spec(agent_name: str) -> None:
+def refresh_agent_package_spec(agent_name: str) -> Response[None]:
     """
     Refreshes the agent-spec.yaml file in the agent package with the latest changes.
 
@@ -201,7 +203,7 @@ def get_sema4_ai_studio_url_for_agent_zip_path(path: str) -> str:
 
 
 @action
-def publish_to_sema4_ai_studio(agent_name: str) -> None:
+def publish_to_sema4_ai_studio(agent_name: str) -> Response[None]:
     """
     Publishes the agent package to Sema4 AI Studio.
 
@@ -227,7 +229,9 @@ def publish_to_sema4_ai_studio(agent_name: str) -> None:
 
 
 @action
-def bootstrap_action_package(agent_name: str, action_package_name: str) -> str:
+def bootstrap_action_package(
+    agent_name: str, action_package_name: str
+) -> Response[str]:
     """
     This action sets up an action package in the home directory of the user under the "actions_bootstrapper" folder.
 
@@ -249,13 +253,15 @@ def bootstrap_action_package(agent_name: str, action_package_name: str) -> str:
 
     refresh_agent_package_spec(agent_name)
 
-    return f"Action successfully bootstrapped! Code available at {str(new_action_package_path)}"
+    return Response(
+        result=f"Action successfully bootstrapped! Code available at {str(new_action_package_path)}"
+    )
 
 
 @action
 def update_action_package_dependencies(
     agent_name: str, action_package_name: str, action_package_dependencies_code: str
-) -> str:
+) -> Response[str]:
     """
     Update the action package dependencies (package.yaml) for
     a specified action package.
@@ -285,13 +291,15 @@ def update_action_package_dependencies(
     finally:
         package_yaml.close()
 
-    return f"Successfully updated the package dependencies at: {package_yaml_path}"
+    return Response(
+        result=f"Successfully updated the package dependencies at: {package_yaml_path}"
+    )
 
 
 @action
 def update_action_code(
     agent_name: str, action_package_name: str, action_code: str
-) -> str:
+) -> Response[str]:
     """
     Replaces actions.py content with the provided input.
 
@@ -324,4 +332,4 @@ def update_action_code(
 
     refresh_agent_package_spec(agent_name)
 
-    return f"Successfully updated the actions at {actions_py_path}"
+    return Response(result=f"Successfully updated the actions at {actions_py_path}")

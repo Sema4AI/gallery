@@ -5,28 +5,28 @@ retrieving and setting data from/into their cells.
 """
 
 import contextlib
-from copy import copy
 import os
-from pathlib import Path
 import re
-
-from robocorp import excel, log
-from robocorp.excel.tables import Table as ExcelTable
-from sema4ai.actions import ActionError, Response, action, chat
-from openpyxl import load_workbook
-from datetime import datetime
 import tempfile
+from copy import copy
+from datetime import datetime
+from pathlib import Path
+
 import openpyxl.utils
 from models import (
+    CrossReferenceResult,
+    Header,
     Row,
     Schema,
     Sheet,
     Table,
-    Header,
-    CrossReferenceResult,
     UserAndTime,
 )
+from openpyxl import load_workbook
+from robocorp import excel, log
+from robocorp.excel.tables import Table as ExcelTable
 from robocorp.excel.worksheet import Worksheet
+from sema4ai.actions import ActionError, Response, action, chat
 from sema4ai.crossplatform import trigger_excel_save_on_app
 
 
@@ -495,7 +495,7 @@ def get_workbook_schema(file_path: str) -> Response[Schema]:
 @action
 def find_cross_reference(
     file_path: str, sheet_name: str, header1: Header, header2: Header
-) -> CrossReferenceResult:
+) -> Response[CrossReferenceResult]:
     """Find the cell references where header1 and header2 intersect in the same row.
 
     Args:
@@ -612,7 +612,7 @@ def find_cross_reference(
             cell_ref = f"{column_letter}{row}"
             results.intersections.append(cell_ref)
 
-    return results
+    return Response(result=results)
 
 
 def _resolve_formula_value(wb_data, cell_value, current_sheet=None, data_book=None):

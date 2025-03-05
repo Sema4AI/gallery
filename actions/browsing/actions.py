@@ -6,27 +6,24 @@ Currently supporting:
 - download file
 """
 
-from sema4ai.actions import action, Response
-from robocorp import browser
-from playwright.sync_api import TimeoutError
-from dotenv import load_dotenv
-
-
 import os
 from pathlib import Path
-import requests
 from urllib.parse import urlparse
 
-
-from models import DownloadedFile, Form, Links, WebPage, UserAgent
+import requests
+from dotenv import load_dotenv
+from models import DownloadedFile, Form, Links, UserAgent, WebPage
+from playwright.sync_api import TimeoutError
+from robocorp import browser
+from sema4ai.actions import Response, action
 from support import (
+    _clean_text,
     _configure_browser,
     _ensure_https,
+    _get_filename_from_cd,
     _get_form_elements,
     _get_page_links,
     _locator_action,
-    _get_filename_from_cd,
-    _clean_text,
 )
 
 load_dotenv(Path(__file__).absolute().parent / "devdata" / ".env")
@@ -124,7 +121,7 @@ def download_file(
 
             if df.content_length > max_filesize_in_megabytes * 1000000:
                 df.status = f"File is too large to download - limit is {max_filesize_in_megabytes} MB"
-                return df
+                return Response(result=df)
 
             # Check if content is text-based or binary
             if "text" in df.content_type:
@@ -142,13 +139,13 @@ def download_file(
         df.filepath = ""
         df.status = f"Download failed: {str(e)}"
     print(df.status)
-    return df
+    return Response(result=df)
 
 
 @action(is_consequential=True)
 def fill_elements(
     web_page: WebPage,
-) -> str:
+) -> Response[str]:
     """
     Fill form elements according to input values given in the Form object.
 
@@ -205,4 +202,4 @@ def fill_elements(
             page.wait_for_load_state("networkidle", timeout=MAX_WAIT_FOR_NETWORK_IDLE)
         except TimeoutError as _:
             pass
-    return page.locator("//body").inner_text()
+    return Response(result=page.locator("//body").inner_text())

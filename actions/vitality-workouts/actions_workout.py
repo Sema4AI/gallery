@@ -1,12 +1,13 @@
-from sema4ai.actions import action
+from sema4ai.actions import Response, action
 from workout_metrics_service import WorkoutMetricsService
-
 
 workout_metrics_service = WorkoutMetricsService()
 
 
 @action(is_consequential=False)
-def get_run_workout_performance(metric: str, aggregation_type: str, start_date: str, end_date: str) -> float:
+def get_run_workout_performance(
+    metric: str, aggregation_type: str, start_date: str, end_date: str
+) -> Response[float]:
     """
     Calculate various running performance metrics within a specified time period across different running workouts.
 
@@ -32,11 +33,17 @@ def get_run_workout_performance(metric: str, aggregation_type: str, start_date: 
         get_run_workout_performance('calorie', 'sum', '2023-01-01', '2024-01-01').
 
     """
-    return workout_metrics_service.get_performance('run', metric, aggregation_type, start_date, end_date)
+    return Response(
+        result=workout_metrics_service.get_performance(
+            "run", metric, aggregation_type, start_date, end_date
+        )
+    )
 
 
 @action(is_consequential=False)
-def get_cycle_workout_performance(metric: str, aggregation_type: str, start_date: str, end_date: str) -> float:
+def get_cycle_workout_performance(
+    metric: str, aggregation_type: str, start_date: str, end_date: str
+) -> Response[float]:
     """
     Calculate various cycling performance metrics within a specified time period across different cycling workouts.
 
@@ -63,11 +70,17 @@ def get_cycle_workout_performance(metric: str, aggregation_type: str, start_date
 
 
     """
-    return workout_metrics_service.get_performance('cycle', metric, aggregation_type, start_date, end_date)
+    return Response(
+        result=workout_metrics_service.get_performance(
+            "cycle", metric, aggregation_type, start_date, end_date
+        )
+    )
 
 
 @action(is_consequential=False)
-def get_walk_workout_performance(metric: str, aggregation_type: str, start_date: str, end_date: str) -> float:
+def get_walk_workout_performance(
+    metric: str, aggregation_type: str, start_date: str, end_date: str
+) -> Response[float]:
     """
     Calculate various walking performance metrics within a specified time period across different walking workouts.
 
@@ -93,11 +106,17 @@ def get_walk_workout_performance(metric: str, aggregation_type: str, start_date:
         get_walk_workout_performance('calorie', 'sum', '2023-01-01', '2024-01-01').
 
     """
-    return workout_metrics_service.get_performance('walk', metric, aggregation_type, start_date, end_date)
+    return Response(
+        result=workout_metrics_service.get_performance(
+            "walk", metric, aggregation_type, start_date, end_date
+        )
+    )
 
 
 @action(is_consequential=False)
-def get_hike_workout_performance(metric: str, aggregation_type: str, start_date: str, end_date: str) -> float:
+def get_hike_workout_performance(
+    metric: str, aggregation_type: str, start_date: str, end_date: str
+) -> Response[float]:
     """
     Calculate various hiking performance metrics within a specified time period across different hiking workouts.
 
@@ -122,11 +141,17 @@ def get_hike_workout_performance(metric: str, aggregation_type: str, start_date:
         - To find out the total calorie burned during hiking in 2023, use
         get_hike_workout_performance('calorie', 'sum', '2023-01-01', '2024-01-01').
     """
-    return workout_metrics_service.get_performance('hike', metric, aggregation_type, start_date, end_date)
+    return Response(
+        result=workout_metrics_service.get_performance(
+            "hike", metric, aggregation_type, start_date, end_date
+        )
+    )
 
 
 @action(is_consequential=False)
-def get_tennis_workout_performance(metric: str, aggregation_type: str, start_date: str, end_date: str) -> float:
+def get_tennis_workout_performance(
+    metric: str, aggregation_type: str, start_date: str, end_date: str
+) -> Response[float]:
     """
     Calculate various tennis performance metrics within a specified time period across different tennis workouts.
 
@@ -151,11 +176,17 @@ def get_tennis_workout_performance(metric: str, aggregation_type: str, start_dat
         - To find out the total calorie burned during tennis in 2023, use
         get_tennis_workout_performance('calorie', 'sum', '2023-01-01', '2024-01-01').
     """
-    return workout_metrics_service.get_performance('tennis', metric, aggregation_type, start_date, end_date)
+    return Response(
+        result=workout_metrics_service.get_performance(
+            "tennis", metric, aggregation_type, start_date, end_date
+        )
+    )
 
 
 @action(is_consequential=False)
-def get_core_workout_performance(metric: str, aggregation_type: str, start_date: str, end_date: str) -> float:
+def get_core_workout_performance(
+    metric: str, aggregation_type: str, start_date: str, end_date: str
+) -> Response[float]:
     """
     Calculate various core performance metrics within a specified time period across different core workouts.
 
@@ -181,7 +212,11 @@ def get_core_workout_performance(metric: str, aggregation_type: str, start_date:
         get_core_workout_performance('calorie', 'sum', '2023-01-01', '2024-01-01').
 
     """
-    return workout_metrics_service.get_performance('core', metric, aggregation_type, start_date, end_date)
+    return Response(
+        result=workout_metrics_service.get_performance(
+            "core", metric, aggregation_type, start_date, end_date
+        )
+    )
 
 
 # @action(is_consequential=False)

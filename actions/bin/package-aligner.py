@@ -5,12 +5,10 @@
 It inlines their package.yaml files content, the git-ignored files and more.
 """
 
-
 import itertools
 import re
 import sys
 from pathlib import Path
-
 
 # package.yaml
 RE_DIRECTIVE = re.compile(r"^\s*\w+:")
@@ -20,7 +18,7 @@ EXPECTED_DEPS = {
     "python-dotenv": ("1.0.1", 2),
     "uv": ("0.4.17", 3),
     # PyPI deps:
-    "sema4ai-actions": ("1.3.0", 1),
+    "sema4ai-actions": ("1.3.5", 1),
     "pydantic": ("2.10.4", 2),
 }
 LOWEST_PRIO = sys.maxsize

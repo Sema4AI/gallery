@@ -1,14 +1,14 @@
-from dotenv import load_dotenv
 from pathlib import Path
 from typing import Literal
 
-from sema4ai.actions import action, OAuth2Secret, Response, ActionError
+from dotenv import load_dotenv
+from sema4ai.actions import ActionError, OAuth2Secret, Response, action
 
 from google_mail._models import Emails
 from google_mail._support import (
     _get_google_service,
-    _get_message_details,
     _get_message_by_id,
+    _get_message_details,
     _list_messages_with_query,
 )
 from google_mail._variables import MAX_RESPONSE_SIZE
@@ -61,4 +61,4 @@ def get_email_content(
                 break
             emails.items.append(email)
         print(f"Total email response size: {total_response_size}")
-    return emails
+    return Response(result=emails)
