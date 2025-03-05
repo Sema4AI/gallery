@@ -36,7 +36,9 @@
             "serper"
         ],
         "agents": [
-            "wayback-machine-agent"
+            "wayback-machine-agent",
+            "sales-contact-finder",
+            "similiar-company-finder"
         ]
     },
     "spcs": {
@@ -60,7 +62,9 @@
         ],
         "agents": [
             "cortex-analyst-example",
-            "cortex-search-example"
+            "cortex-search-example",
+            "sales-contact-finder",
+            "similiar-company-finder"
         ]
     }
 }
