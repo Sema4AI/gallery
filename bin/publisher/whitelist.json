@@ -38,7 +38,7 @@
         "agents": [
             "wayback-machine-agent",
             "sales-contact-finder",
-            "similiar-company-finder"
+            "similar-company-finder"
         ]
     },
     "spcs": {
@@ -64,7 +64,7 @@
             "cortex-analyst-example",
             "cortex-search-example",
             "sales-contact-finder",
-            "similiar-company-finder"
+            "similir-company-finder"
         ]
     }
 }
