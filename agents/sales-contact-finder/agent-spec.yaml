@@ -1,0 +1,31 @@
+agent-package:
+  spec-version: v2
+  agents:
+  - name: Sales Contact Finder
+    description: Comprehensive sales intelligence specialist that researches target
+      companies, analyzes their organizational structure, identifies key decision-makers,
+      and develops customized sales approach strategies to enable effective B2B sales
+      outreach
+    model:
+      provider: Snowflake Cortex AI
+      name: claude-3-5-sonnet
+    version: 0.0.1
+    architecture: agent
+    reasoning: disabled
+    runbook: runbook.md
+    action-packages:
+    - name: Browsing
+      organization: Sema4.ai
+      version: 1.1.1
+      path: Sema4.ai/browsing
+      type: folder
+      whitelist: ''
+    - name: Serper
+      organization: Sema4.ai
+      version: 0.0.1
+      path: Sema4.ai/serper
+      type: folder
+      whitelist: ''
+    knowledge: []
+    metadata:
+      mode: conversational
