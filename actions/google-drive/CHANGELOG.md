@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ### Changed
 
 - Dependency versions updated
+- Use `Response[T]` as return type to actions
 
 ## [1.0.5] - 2025-01-09
 

@@ -1,3 +1,11 @@
+name: Agents Bootstrapper
+
+version: 1.0.1
+
+description: Actions for setting up and managing other agent packages.
+
+spec-version: v2
+
 dependencies:
   conda-forge:
   - python=3.10.16
@@ -8,13 +16,6 @@ dependencies:
   - black=24.10.0
   - ruamel.yaml=0.18.10
   - PyYAML=6.0.2
-
-name: Agents Bootstrapper
-
-# Package version number, recommend using semver.org
-version: 1.0.1
-
-description: Actions for setting up and managing other agent packages.
 
 packaging:
   exclude:
