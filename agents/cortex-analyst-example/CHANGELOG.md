@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.0.5] - 2025-03-06
+
+- Updated the action package to use the latest version
+
 ## [0.0.4] - 2025-02-28
 
 - Updated the action package to use the latest version
