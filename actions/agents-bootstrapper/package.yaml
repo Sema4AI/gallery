@@ -1,16 +1,17 @@
 name: Agents Bootstrapper
 
-# Package version number, recommend using semver.org
-version: 1.0.0
+version: 1.0.1
 
 description: Actions for setting up and managing other agent packages.
 
+spec-version: v2
+
 dependencies:
   conda-forge:
-  - python=3.10.14
+  - python=3.10.16
   - uv=0.4.17
   pypi:
-  - sema4ai-actions=1.3.0
+  - sema4ai-actions=1.3.5
   - requests=2.32.3
   - black=24.10.0
   - ruamel.yaml=0.18.10
@@ -24,6 +25,6 @@ packaging:
     - ./output/**
     - ./venv/**
     - ./.venv/**
-    - ./.DS_store/**
+    - ./.DS_Store/**
     - ./**/*.pyc
     - ./**/*.zip

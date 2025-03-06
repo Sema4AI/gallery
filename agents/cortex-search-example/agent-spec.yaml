@@ -6,7 +6,7 @@ agent-package:
     model:
       provider: Snowflake Cortex AI
       name: claude-3-5-sonnet
-    version: 0.0.3
+    version: 0.0.4
     architecture: agent
     reasoning: disabled
     runbook: runbook.md
@@ -14,7 +14,7 @@ agent-package:
     - name: Snowflake Cortex
       organization: Sema4.ai
       type: folder
-      version: 1.1.1
+      version: 1.1.2
       whitelist: cortex_search,cortex_get_search_specification
       path: Sema4.ai/snowflake-cortex
     knowledge: []

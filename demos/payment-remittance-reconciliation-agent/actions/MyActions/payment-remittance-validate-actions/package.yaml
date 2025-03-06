@@ -15,13 +15,13 @@ dependencies:
   pypi:
   - sema4ai-actions=1.1.2
   - sema4ai-di-client=1.0.11
-  - pandas=2.2.2   
+  - pandas=2.2.2
   - duckdb=0.10.2
-  - pytest 
+  - pytest
   - requests
   - pydantic=2.8.2
   - natsort
-     
+
 
 
 
@@ -35,6 +35,6 @@ packaging:
   - ./output/**
   - ./venv/**
   - ./.venv/**
-  - ./.DS_store/**
+  - ./.DS_Store/**
   - ./**/*.pyc
   - ./**/*.zip

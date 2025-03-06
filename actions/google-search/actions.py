@@ -4,19 +4,16 @@ Currently supporting:
 - google search
 """
 
-from sema4ai.actions import action, Secret, ActionError
-
-from dotenv import load_dotenv
-
 import os
 from pathlib import Path
+
 import requests
-
+from dotenv import load_dotenv
 from models import (
-    SearchResultList,
     SearchResult,
+    SearchResultList,
 )
-
+from sema4ai.actions import ActionError, Response, Secret, action
 
 load_dotenv(Path(__file__).absolute().parent / "devdata" / ".env")
 
@@ -30,7 +27,7 @@ def google_search(
     count: int = 10,
     api_key: Secret = Secret.model_validate(os.getenv(API_KEY_FIELD, "")),
     context: Secret = Secret.model_validate(os.getenv(CONTEXT_FIELD, "")),
-) -> SearchResultList:
+) -> Response[SearchResultList]:
     """Performs Google Search to find information about a topic.
 
     Secrets are required. Do not call if they are given.
@@ -69,8 +66,10 @@ def google_search(
     if count > 0:
         message += f" and returning {count} of those."
     print(message)
-    return (
+
+    search_result = (
         SearchResultList(results=items[:count])
         if count > 0
         else SearchResultList(results=items)
     )
+    return Response(result=search_result)

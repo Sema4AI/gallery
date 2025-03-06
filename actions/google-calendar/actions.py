@@ -24,7 +24,7 @@ def create_event(
     ],
     event: CreateEvent,
     calendar_id="primary",
-) -> Event:
+) -> Response[Event]:
     """Creates a new event in the specified calendar.
 
     Args:
@@ -48,7 +48,7 @@ def create_event(
 
     event = service.events().insert(calendarId=calendar_id, body=event_dict).execute()
 
-    return Event(**event)
+    return Response(result=Event(**event))
 
 
 @action(is_consequential=False)

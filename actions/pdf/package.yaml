@@ -5,7 +5,7 @@ name: PDF
 description: Reading and finding text- and image-based PDFs.
 
 # Package version number, recommend using semver.org
-version: 1.0.0
+version: 1.0.1
 
 # The version of the `package.yaml` format.
 spec-version: v2
@@ -35,6 +35,6 @@ packaging:
     - ./output/**
     - ./venv/**
     - ./.venv/**
-    - ./.DS_store/**
+    - ./.DS_Store/**
     - ./**/*.pyc
     - ./**/*.zip

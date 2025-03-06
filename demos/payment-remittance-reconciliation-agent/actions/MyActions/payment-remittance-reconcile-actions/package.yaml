@@ -14,15 +14,15 @@ dependencies:
   pypi:
   - sema4ai-actions=1.0.1
   - sema4ai-di-client=1.0.11
-  - pandas=2.2.2   
+  - pandas=2.2.2
   - duckdb=0.10.2
-  - pytest=8.3.3 
+  - pytest=8.3.3
   - requests=2.32.3
   - pydantic=2.8.2
   - natsort=8.4.0
 
-     
-     
+
+
 packaging:
   # By default, all files and folders in this directory are packaged when uploaded.
   # Add exclusion rules below (expects glob format: https://docs.python.org/3/library/glob.html)
@@ -34,7 +34,7 @@ packaging:
   - ./venv/**
   - ./.venv/**
   - ./.env/**
-  - ./.DS_store/**
+  - ./.DS_Store/**
   - ./**/*.pyc
   - ./**/*.zip
   - ./**/*.log

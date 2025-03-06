@@ -7,9 +7,8 @@ from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import Resource, build
 from googleapiclient.errors import HttpError
 from googleapiclient.http import MediaIoBaseDownload
-from sema4ai.actions import OAuth2Secret, action
-
 from models import CommentList, File, FileList, Response
+from sema4ai.actions import OAuth2Secret, action
 
 load_dotenv(Path(__file__).absolute().parent / "devdata" / ".env")
 
@@ -174,7 +173,7 @@ def get_file_contents(
     ],
     name: str,
     worksheet: str = "",
-) -> Response:
+) -> Response[str]:
     """Get the file contents.
 
     Args:
@@ -217,7 +216,7 @@ def share_document(
     name: str,
     role: str,
     email_address: str,
-) -> Response:
+) -> Response[str]:
     """Share a document with a specific email address.
 
     Args:

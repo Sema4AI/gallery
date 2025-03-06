@@ -5,7 +5,7 @@ name: ServiceNow
 description: Actions interacting with a ServiceNow instance.
 
 # Package version number, recommend using semver.org
-version: 1.0.1
+version: 1.0.2
 
 # The version of the `package.yaml` format.
 spec-version: v2
@@ -15,7 +15,7 @@ dependencies:
   - python=3.10.16
   - uv=0.4.17
   pypi:
-  - sema4ai-actions=1.3.0
+  - sema4ai-actions=1.3.5
   - pydantic=2.10.4
   - sema4ai-http-helper=1.0.2
   - httpx=0.27.2
@@ -30,6 +30,6 @@ packaging:
   - ./output/**
   - ./venv/**
   - ./.venv/**
-  - ./.DS_store/**
+  - ./.DS_Store/**
   - ./**/*.pyc
   - ./**/*.zip

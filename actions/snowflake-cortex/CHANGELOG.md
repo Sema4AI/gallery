@@ -10,7 +10,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ### Fixed
 - Private key password for unencrypted file fixed
 
-
 ## [1.1.0] - 2025-02-27
 
 ### Changed
