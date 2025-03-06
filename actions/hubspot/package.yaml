@@ -29,7 +29,7 @@ packaging:
     - ./.vscode/**
     - ./devdata/**
     - ./output/**
-    - ./.DS_store/**
+    - ./.DS_Store/**
     - ./venv/**
     - ./.venv/**
     - ./**/*.pyc
