@@ -14,7 +14,7 @@ agent-package:
     - name: Snowflake Cortex
       organization: Sema4.ai
       type: folder
-      version: 1.1.1
+      version: 1.1.2
       whitelist: cortex_search,cortex_get_search_specification
       path: Sema4.ai/snowflake-cortex
     knowledge: []
