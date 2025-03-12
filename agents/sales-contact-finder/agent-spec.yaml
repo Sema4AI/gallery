@@ -1,5 +1,16 @@
 agent-package:
   spec-version: v2
+  exclude:
+    - ./.git/**
+    - ./.vscode/**
+    - ./devdata/**
+    - ./output/**
+    - ./venv/**
+    - ./.venv/**
+    - ./**/.env
+    - ./**/.DS_store
+    - ./**/*.pyc
+    - ./*.zip
   agents:
   - name: Sales Contact Finder
     description: Comprehensive sales intelligence specialist that researches target
@@ -9,7 +20,7 @@ agent-package:
     model:
       provider: Snowflake Cortex AI
       name: claude-3-5-sonnet
-    version: 0.0.1
+    version: 0.0.2
     architecture: agent
     reasoning: disabled
     runbook: runbook.md
