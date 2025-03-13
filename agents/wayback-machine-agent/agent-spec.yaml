@@ -8,7 +8,7 @@ agent-package:
     - ./venv/**
     - ./.venv/**
     - ./**/.env
-    - ./**/.DS_store
+    - ./**/.DS_Store
     - ./**/*.pyc
     - ./*.zip
   agents:

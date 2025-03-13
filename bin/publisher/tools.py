@@ -9,7 +9,7 @@ from utils import get_working_dir
 
 as_version = "2.6.0"
 rcc_version = "v18.1.1"
-agent_cli_version = "v0.0.25"
+agent_cli_version = "v1.0.1"
 
 
 def get_agent_cli_path() -> str:
