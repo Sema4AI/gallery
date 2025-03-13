@@ -1,12 +1,23 @@
 agent-package:
   spec-version: v2
+  exclude:
+    - ./.git/**
+    - ./.vscode/**
+    - ./devdata/**
+    - ./output/**
+    - ./venv/**
+    - ./.venv/**
+    - ./**/.env
+    - ./**/.DS_store
+    - ./**/*.pyc
+    - ./*.zip
   agents:
   - name: Wayback Machine Agent
     description: Helps you analyze websites and summarizes changes over a time period.
     model:
       provider: OpenAI
       name: gpt-4o
-    version: 0.0.1
+    version: 0.0.2
     architecture: agent
     reasoning: disabled
     runbook: runbook.md
