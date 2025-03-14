@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.0.4] - 2025-03-14
+
+### Changed
+
+- Fixed the docstring, typo potentially confusing LLM
+- Return changed to object the docstring to match
+
 ## [1.0.3] - 2025-03-06
 
 ### Changed

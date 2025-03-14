@@ -30,7 +30,7 @@ def google_search(
 ) -> Response[SearchResultList]:
     """Performs Google Search to find information about a topic.
 
-    Secrets are required. Do not call if they are given.
+    Secrets are required. Do not call if they are not given.
 
     To list all possible results use count=0.
 
@@ -41,7 +41,7 @@ def google_search(
         context: the Custom Search Engine ID
 
     Returns:
-        Titles and links of the results.
+        Response object containing SearchResultList with titles, links, and descriptions of the results.
     """
     url = "https://www.googleapis.com/customsearch/v1"
     params = {
