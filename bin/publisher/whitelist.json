@@ -34,9 +34,7 @@
             "perplexity"
         ],
         "agents": [
-            "wayback-machine-agent",
-            "sales-contact-finder",
-            "similar-company-finder"
+            "wayback-machine-agent"
         ]
     },
     "spcs": {
