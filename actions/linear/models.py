@@ -1,6 +1,6 @@
 from datetime import datetime
 from enum import Enum
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 from typing import Annotated, List, Optional
 
 
@@ -143,12 +143,77 @@ class TeamList(BaseModel):
     nodes: List[Team]
 
 
+class ProjectFilterOptions(BaseModel):
+    name: Optional[str] = None
+    team_name: Optional[str] = None
+    initiative: Optional[str] = None
+    limit: Optional[int] = Field(default=50)
+    ordering: Optional[OrderType] = Field(default=OrderType.UPDATED_AT)
+
+    @model_validator(mode='before')
+    @classmethod
+    def validate_empty_strings(cls, data: dict) -> dict:
+        """Convert empty strings to None for optional fields"""
+        if isinstance(data, dict):
+            for field in ['name', 'team_name', 'initiative']:
+                if field in data and data[field] == '':
+                    data[field] = None
+            # Handle limit field
+            if 'limit' in data and (data['limit'] == '' or data['limit'] is None):
+                data['limit'] = 50
+            # Handle ordering field
+            if 'ordering' in data and (data['ordering'] == '' or data['ordering'] is None):
+                data['ordering'] = OrderType.UPDATED_AT
+        return data
+
+
 class Project(BaseModel):
     id: str
     name: str
     description: Optional[str] = None
     startDate: Optional[datetime] = None
     targetDate: Optional[datetime] = None
+    team: Optional[NameAndId] = None
+    initiative: Optional[NameAndId] = None
+    url: Optional[str] = None
+    created_at: Optional[str] = None
+    updated_at: Optional[str] = None
+
+    @classmethod
+    def create(cls, data: dict) -> "Project":
+        """Create a Project instance from Linear API data
+
+        Args:
+            data: Dictionary containing project data from Linear API
+        Returns:
+            New Project instance with populated fields
+        """
+        return cls(
+            id=data.get("id"),
+            name=data.get("name"),
+            description=data.get("description"),
+            startDate=data.get("startDate"),
+            targetDate=data.get("targetDate"),
+            team=(
+                NameAndId(
+                    name=data.get("teams", {}).get("nodes", [{}])[0].get("name"),
+                    id=data.get("teams", {}).get("nodes", [{}])[0].get("id"),
+                )
+                if data.get("teams", {}).get("nodes")
+                else None
+            ),
+            initiative=(
+                NameAndId(
+                    name=data.get("initiatives", {}).get("nodes", [{}])[0].get("name"),
+                    id=data.get("initiatives", {}).get("nodes", [{}])[0].get("id"),
+                )
+                if data.get("initiatives", {}).get("nodes")
+                else None
+            ),
+            url=data.get("url"),
+            created_at=data.get("createdAt"),
+            updated_at=data.get("updatedAt"),
+        )
 
 
 class ProjectList(BaseModel):

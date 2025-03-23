@@ -1,11 +1,12 @@
 import json
 
-from models import FilterOptions, Issue, IssueList
+from models import FilterOptions, Issue, IssueList, ProjectFilterOptions, Project, ProjectList
 from queries import (
     query_add_comment,
     query_create_issue,
     query_get_issues,
     query_search_issues,
+    query_search_projects,
 )
 from sema4ai.actions import Response, Secret, action
 from support import (
@@ -116,3 +117,55 @@ def add_comment(issue_id: str, body: str, api_key: Secret) -> Response[str]:
     return Response(
         result=f"Comment added - link {comment_response['commentCreate']['comment']['url']}"
     )
+
+
+@action
+def search_projects(
+    filter_options: ProjectFilterOptions,
+    api_key: Secret,
+) -> Response[ProjectList]:
+    """
+    Search projects from Linear.
+
+    The values for "ordering" can be "createdAt" or "updatedAt".
+    Returns by default 50 projects matching the filter options.
+
+    Args:
+        api_key: The API key to use to authenticate with the Linear API.
+        filter_options: The filter options to use to search for projects.
+
+    Returns:
+        List of projects matching the filter criteria.
+    """
+    filter_dict = {}
+    if filter_options.name:
+        filter_dict["name"] = {"contains": filter_options.name}
+    if filter_options.initiative:
+        filter_dict["initiatives"] = {"some": {"name": {"contains": filter_options.initiative}}}
+
+    query_variables = {
+        "first": filter_options.limit if filter_options.limit else 50,
+        "orderBy": filter_options.ordering.value if filter_options.ordering else "updatedAt",
+    }
+    if filter_dict:
+        query_variables["filter"] = filter_dict
+
+    search_response = _make_graphql_request(query_search_projects, query_variables, api_key)
+    projects = search_response["projects"]["nodes"]
+    
+    # Filter by team name after fetching if team_name is specified
+    if filter_options.team_name:
+        projects = [
+            p for p in projects 
+            if any(
+                team["name"].lower() == filter_options.team_name.lower() 
+                for team in p.get("teams", {}).get("nodes", [])
+            )
+        ]
+    
+    project_list = ProjectList(nodes=[])
+    for project_data in projects:
+        project = Project.create(project_data)
+        project_list.nodes.append(project)
+
+    return Response(result=project_list)
