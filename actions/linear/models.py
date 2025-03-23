@@ -173,8 +173,8 @@ class Project(BaseModel):
     description: Optional[str] = None
     startDate: Optional[datetime] = None
     targetDate: Optional[datetime] = None
-    team: Optional[NameAndId] = None
-    initiative: Optional[NameAndId] = None
+    teams: Optional[List[NameAndId]] = None
+    initiatives: Optional[List[NameAndId]] = None
     url: Optional[str] = None
     created_at: Optional[str] = None
     updated_at: Optional[str] = None
@@ -194,19 +194,19 @@ class Project(BaseModel):
             description=data.get("description"),
             startDate=data.get("startDate"),
             targetDate=data.get("targetDate"),
-            team=(
-                NameAndId(
-                    name=data.get("teams", {}).get("nodes", [{}])[0].get("name"),
-                    id=data.get("teams", {}).get("nodes", [{}])[0].get("id"),
-                )
+            teams=(
+                [
+                    NameAndId(name=team.get("name", ""), id=team.get("id", ""))
+                    for team in data.get("teams", {}).get("nodes", [])
+                ]
                 if data.get("teams", {}).get("nodes")
                 else None
             ),
-            initiative=(
-                NameAndId(
-                    name=data.get("initiatives", {}).get("nodes", [{}])[0].get("name"),
-                    id=data.get("initiatives", {}).get("nodes", [{}])[0].get("id"),
-                )
+            initiatives=(
+                [
+                    NameAndId(name=init.get("name", ""), id=init.get("id", ""))
+                    for init in data.get("initiatives", {}).get("nodes", [])
+                ]
                 if data.get("initiatives", {}).get("nodes")
                 else None
             ),
