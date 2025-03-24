@@ -5,7 +5,7 @@ name: Snowflake Data
 description: Various tools for interacting with Snowflake databases and other tools.
 
 # Package version number, recommend using semver.org
-version: 2.0.0
+version: 2.1.0
 
 spec-version: v2
 
@@ -25,6 +25,14 @@ dependencies:
   - snowflake-snowpark-python=1.29.1
   - pyjwt=2.10.1
   - streamlit=1.43.2
+
+external-endpoints:
+  - name: "Snowflake API"
+    description: "Access Snowflake API."
+    additional-info-link: "https://docs.snowflake.com/en/guides"
+    rules:
+      - host: "*.snowflakecomputing.com"
+        port: 443
 
 packaging:
   # By default, all files and folders in this directory are packaged when uploaded.
