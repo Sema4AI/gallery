@@ -201,3 +201,32 @@ query WorkflowStates($teamId: String!) {
     }
 }
 """
+
+query_search_projects = """
+query SearchProjects($filter: ProjectFilter, $orderBy: PaginationOrderBy, $first: Int = 50) {
+    projects(filter: $filter, orderBy: $orderBy, first: $first) {
+        nodes {
+            id
+            name
+            description
+            startDate
+            targetDate
+            teams {
+                nodes {
+                    id
+                    name
+                }
+            }
+            initiatives {
+                nodes {
+                    id
+                    name
+                }
+            }
+            url
+            createdAt
+            updatedAt
+        }
+    }
+}
+"""
