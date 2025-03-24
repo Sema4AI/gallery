@@ -3,21 +3,21 @@
         {
             "inputName": "input-1",
             "inputValue": {
-                "message": "Show me the top 5 oil producing wells by production volume over time.",
-                "semantic_model_file": "@PRODUCTION_RESULTS.PUBLIC.STAGE1/oil_gas.yml"
+                "message": "Which regions are experiencing the fastest growth in sales in 2024?",
+                "semantic_model_file": "@CORTEX_ANALYST_DEMO.REVENUE_TIMESERIES.RAW_DATA/revenue_timeseries.yaml"
             }
         }
     ],
     "metadata": {
-        "actionName": "cortex_analyst_message",
+        "actionName": "ask_cortex_analyst",
         "actionRelativePath": "cortex_actions.py",
         "schemaDescription": [
-            "message: string: The message to send to the Cortex Analyst."
+            "message: string: The message to send."
         ],
         "managedParamsSchemaDescription": {
             "semantic_model_file": {
                 "type": "Secret",
-                "description": "The semantic model file to use."
+                "description": "The path to a Snowflake Stage containing the semantic model file."
             }
         },
         "inputFileVersion": "v3",

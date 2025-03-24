@@ -29,7 +29,8 @@
             "youtube",
             "zendesk",
             "free-web-search",
-            "snowflake-cortex",
+            "snowflake-cortex-analyst",
+            "snowflake-cortex-search",
             "serper",
             "perplexity"
         ],
@@ -53,7 +54,8 @@
             "wayback-machine",
             "youtube",
             "zendesk",
-            "snowflake-cortex",
+            "snowflake-cortex-analyst",
+            "snowflake-cortex-search",
             "serper",
             "perplexity"
         ],
