@@ -3,10 +3,10 @@
         {
             "inputName": "input-1",
             "inputValue": {
-                "warehouse": "PLATFORM_TEAM_DEFAULT",
-                "database": "RESOURCES_DEVELOPMENT",
-                "schema": "INFORMATION_SCHEMA",
-                "table": "DATABASES"
+                "warehouse": "COMPUTE_WH",
+                "database": "CORTEX_ANALYST_DEMO",
+                "schema": "REVENUE_TIMESERIES",
+                "table": "DAILY_REVENUE"
             }
         }
     ],
