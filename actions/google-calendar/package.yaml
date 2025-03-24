@@ -1,5 +1,5 @@
 # Required: A short name for the action package
-name: Google Calendar
+name: Google Calendar123
 
 # Required: A description of what's in the action package.
 description: List calendars and search, create and update events in your Google Calendar.
@@ -25,7 +25,7 @@ dependencies:
 external-endpoints:
   - name: "Google API"
     description: "Access Google API to retrieve informations."
-    additional-info-link: "https://developers.google.com/search/api"
+    additional-info-link: "https://developers.google.com/explorer-help"
     rules:
       - host: "www.googleapis.com"
         port: 443

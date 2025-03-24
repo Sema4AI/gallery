@@ -23,7 +23,7 @@ dependencies:
 external-endpoints:
   - name: "Google API"
     description: "Access Google API to retrieve informations."
-    additional-info-link: "https://developers.google.com/search/api"
+    additional-info-link: "https://developers.google.com/explorer-help"
     rules:
       - host: "www.googleapis.com"
         port: 443
