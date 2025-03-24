@@ -33,3 +33,11 @@ packaging:
     - ./.DS_Store/**
     - ./**/*.pyc
     - ./**/*.zip
+
+external-endpoints:
+  - name: "Linear API"
+    description: "Accesses to the Linear API"
+    additional-info-link: "https://developers.linear.app/docs/graphql/working-with-the-graphql-api"
+    rules:
+      - host: "api.linear.app"
+        port: 443
