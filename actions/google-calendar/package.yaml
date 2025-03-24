@@ -1,5 +1,5 @@
 # Required: A short name for the action package
-name: Google Calendar123
+name: Google Calendar
 
 # Required: A description of what's in the action package.
 description: List calendars and search, create and update events in your Google Calendar.
