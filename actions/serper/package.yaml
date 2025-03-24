@@ -22,7 +22,7 @@ dependencies:
 external-endpoints:
   - name: "Google Serper API"
     description: "Accesses the Google Serper API to retrieve information."
-    additional-info-link: "https://docs.perplexity.ai/api-reference/chat-completions"
+    additional-info-link: "https://serper.dev/"
     rules:
       - host: "google.serper.dev"
         port: 443

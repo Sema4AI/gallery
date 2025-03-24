@@ -21,7 +21,7 @@ dependencies:
 external-endpoints:
   - name: "Perplexity API"
     description: "Accesses the Perplexity API to retrieve information."
-    additional-info-link: "https://www.perplexity.ai/api"
+    additional-info-link: "https://docs.perplexity.ai/api-reference/chat-completions"
     rules:
       - host: "api.perplexity.ai"
         port: 443
