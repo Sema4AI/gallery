@@ -1,0 +1,32 @@
+{
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "process_id": "29856e96-5153-4a9e-8c75-6dd4404cec43",
+                "api_key": "",
+                "workspace_id": ""
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "start_process_run",
+        "actionRelativePath": "actions.py",
+        "schemaDescription": [
+            "process_id: string: The ID of the process to run."
+        ],
+        "managedParamsSchemaDescription": {
+            "api_key": {
+                "type": "Secret",
+                "description": "The API key for authentication."
+            },
+            "workspace_id": {
+                "type": "Secret",
+                "description": "The workspace ID to query."
+            }
+        },
+        "inputFileVersion": "v3",
+        "kind": "action",
+        "actionSignature": "action/args: 'api_key: Secret, workspace_id: Secret, process_id: str'"
+    }
+}
