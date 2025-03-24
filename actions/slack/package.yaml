@@ -5,7 +5,7 @@ name: Slack
 description: Actions for reading and writing from/to Slack channels.
 
 # Package version number, recommend using semver.org
-version: 1.0.4
+version: 1.1.0
 
 # The version of the `package.yaml` format.
 spec-version: v2
@@ -16,10 +16,18 @@ dependencies:
     - python-dotenv=1.0.1
     - uv=0.4.17
   pypi:
-    - sema4ai-actions=1.3.5
+    - sema4ai-actions=1.3.6
     - pydantic=2.10.4
     - slack_sdk=3.34.0
     - rapidfuzz=3.11.0
+
+external-endpoints:
+  - name: "Slack API"
+    description: "Access Slack API."
+    additional-info-link: "https://api.slack.com/"
+    rules:
+      - host: "slack.com"
+        port: 443
 
 packaging:
   # By default, all files and folders in this directory are packaged when uploaded.

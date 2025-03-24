@@ -5,7 +5,7 @@ name: Zendesk
 description: Operate Zendesk tickets, assignments and comments with Agents.
 
 # Package version number, recommend using semver.org
-version: 1.1.2
+version: 1.2.0
 
 # The version of the `package.yaml` format.
 spec-version: v2
@@ -16,9 +16,17 @@ dependencies:
     - python-dotenv=1.0.1
     - uv=0.4.17
   pypi:
-    - sema4ai-actions=1.3.5
+    - sema4ai-actions=1.3.6
     - pydantic=2.10.4
     - requests=2.32.3
+
+external-endpoints:
+  - name: "Zendesk API"
+    description: "Access Zendesk API."
+    additional-info-link: "https://developer.zendesk.com/"
+    rules:
+      - host: "*.zendesk.com"
+        port: 443
 
 packaging:
   # By default, all files and folders in this directory are packaged when uploaded.
