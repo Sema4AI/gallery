@@ -11,13 +11,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 - External endpoint definition added to package.yaml [Read more](https://sema4.ai/docs/team-edition/marketplace/snowflake-admin#managing-external-access)
 
-## [0.0.1] - 2025-02-28
+## [0.0.1] - 2025-03-05
 
 First version published, changelog tracking starts.
 
 ### Added
 
-- Search Google action
+- Search action
 
 ### Changed
 
