@@ -1,0 +1,39 @@
+{
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "warehouse": "COMPUTE_WH",
+                "database": "CORTEX_SEARCH_TUTORIAL_DB",
+                "schema": "PUBLIC",
+                "service": "AIRBNB_SVC"
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "cortex_get_search_specification",
+        "actionRelativePath": "cortex_actions.py",
+        "schemaDescription": [],
+        "managedParamsSchemaDescription": {
+            "warehouse": {
+                "type": "Secret",
+                "description": "The warehouse to use."
+            },
+            "database": {
+                "type": "Secret",
+                "description": "The database to use."
+            },
+            "schema": {
+                "type": "Secret",
+                "description": "The schema to use."
+            },
+            "service": {
+                "type": "Secret",
+                "description": "The service to use."
+            }
+        },
+        "inputFileVersion": "v3",
+        "kind": "action",
+        "actionSignature": "action/args: 'warehouse: Secret, database: Secret, schema: Secret, service: Secret'"
+    }
+}
