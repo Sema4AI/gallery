@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [2.0.0] - 2025-03-24
+
+**This version is not backwards compatible with previous versions.**
+
+### Removed
+
+- Split Cortex Search and Analyst actions into separate packages.
+
 ## [1.1.2] - 2025-03-13
 
 ### Changed
