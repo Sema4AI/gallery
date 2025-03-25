@@ -7,4 +7,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [1.0.0] - 2025-03-24
 
-- This package is spiltted from the Snowflake Cortex package and only contains actions to request Cortex Serach specification and make searches.
+- This package is splitted from the Snowflake Cortex package and only contains actions to request Cortex Serach specification and make searches.

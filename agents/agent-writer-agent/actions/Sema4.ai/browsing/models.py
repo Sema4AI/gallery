@@ -83,6 +83,19 @@ class WebPage(BaseModel):
     form: Form
     links: Links
 
+    def calculate_total_size(self) -> int:
+        """Calculate the total size of all properties in bytes.
+
+        Returns:
+            The total size of the url, text_content, form, and links in bytes.
+        """
+        url_size = len(self.url.encode("utf-8"))
+        text_content_size = len(self.text_content.encode("utf-8"))
+        form_size = len(self.form.json().encode("utf-8"))
+        links_size = len(self.links.json().encode("utf-8"))
+
+        return url_size + text_content_size + form_size + links_size
+
 
 class DownloadedFile(BaseModel):
     content: str = Field(description="The content of the downloaded file")
@@ -98,7 +111,9 @@ class UserAgent(BaseModel):
 
     @model_validator(mode="before")
     def set_user_agent(cls, values):
-        if values["name"] == "":
+        if not values:
+            values = {"name": _get_random_user_agent()}
+        if not values["name"]:
             values["name"] = _get_random_user_agent()
         return values
 
