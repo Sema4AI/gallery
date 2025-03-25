@@ -34,5 +34,5 @@ if __name__ == "__main__":
     action_package_path = sys.argv[1]
     port = int(sys.argv[2])
     secrets = sys.argv[3] if len(sys.argv) > 3 else ""
-    print(f"Running start_server.py with path: {action_package_path}, port: {port}, secrets: {secrets}")
+    print(f"Running start_server.py with path: {action_package_path}, port: {port}, secrets provided: {'yes' if secrets else 'no'}")
     start_action_server(action_package_path, port, secrets)
