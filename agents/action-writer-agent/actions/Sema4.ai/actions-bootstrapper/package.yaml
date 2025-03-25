@@ -1,18 +1,21 @@
 dependencies:
   conda-forge:
-  - python=3.10.14
+  - python=3.10.16
   - uv=0.4.17
   pypi:
-  - sema4ai-actions=1.0.1
+  - sema4ai-actions=1.3.5
   - requests=2.32.3
-  - black=24.4.2
+  - black=24.10.0
 
 name: Actions Bootstrapper
 
 description: Actions for setting up and managing other action packages.
 
 # Package version number, recommend using semver.org
-version: 1.0.2
+version: 1.0.4
+
+# The version of the `package.yaml` format.
+spec-version: v2
 
 packaging:
   exclude:

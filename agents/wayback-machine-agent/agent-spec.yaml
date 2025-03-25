@@ -17,7 +17,7 @@ agent-package:
     model:
       provider: OpenAI
       name: gpt-4o
-    version: 0.0.2
+    version: 1.0.0
     architecture: agent
     reasoning: disabled
     runbook: runbook.md
@@ -25,13 +25,13 @@ agent-package:
       - name: Wayback Machine
         organization: Sema4.ai
         type: folder
-        version: 1.0.1
+        version: 1.1.0
         whitelist: get_wayback_changes,get_wayback_snapshots
         path: Sema4.ai/wayback-machine
       - name: Browsing
         organization: Sema4.ai
         type: folder
-        version: 1.0.2
+        version: 1.2.0
         whitelist: get_website_content,download_file,fill_elements
         path: Sema4.ai/browsing
     knowledge: []

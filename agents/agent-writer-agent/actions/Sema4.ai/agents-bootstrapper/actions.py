@@ -8,7 +8,7 @@ from urllib.parse import urljoin
 import black
 import requests
 from refresh_agent_spec_helper import update_agent_spec
-from sema4ai.actions import action
+from sema4ai.actions import ActionError, Response, action
 
 AGENTS_DIR_PATH = Path.home() / "agents_bootstrapper"
 ACTIONS_GITHUB_URL = "https://api.github.com/repos/Sema4AI/gallery/contents/actions"
@@ -17,7 +17,7 @@ MY_ACTIONS = "MyActions"
 
 
 @action
-def bootstrap_agent_package(agent_name: str) -> str:
+def bootstrap_agent_package(agent_name: str) -> Response[str]:
     """
     This action sets up an agent package in the home directory of the user under the "agents_bootstrapper" folder.
 
@@ -32,11 +32,13 @@ def bootstrap_agent_package(agent_name: str) -> str:
     command = f"agent-cli project new --path '{agent_name}'"
     subprocess.run(command, shell=True, check=True, cwd=str(AGENTS_DIR_PATH))
 
-    return f"Agent successfully bootstrapped! Code available at {str(AGENTS_DIR_PATH / agent_name)}"
+    return Response(
+        result=f"Agent successfully bootstrapped! Code available at {str(AGENTS_DIR_PATH / agent_name)}"
+    )
 
 
 @action
-def open_agent_code(agent_name: str) -> str:
+def open_agent_code(agent_name: str) -> Response[str]:
     """
     This action opens the code of the agent package with VSCode.
 
@@ -50,20 +52,24 @@ def open_agent_code(agent_name: str) -> str:
     full_agent_path = AGENTS_DIR_PATH / agent_name
 
     if not os.path.exists(full_agent_path):
-        return f"Error: agent package '{agent_name}' does not exist at path {full_agent_path}."
+        raise ActionError(
+            "Error: agent package '{agent_name}' does not exist at path {full_agent_path}."
+        )
 
     command = ["code", str(full_agent_path)]
 
     try:
         subprocess.run(command, check=True)
     except Exception as e:
-        return f"Unexpected error: {str(e)}. " "Please check your setup and try again."
+        raise ActionError(
+            f"Unexpected error: {str(e)}. " "Please check your setup and try again."
+        )
 
-    return f"{agent_name} code opened with VSCode."
+    return Response(result=f"{agent_name} code opened with VSCode.")
 
 
 @action
-def refresh_agent_package_spec(agent_name: str) -> None:
+def refresh_agent_package_spec(agent_name: str) -> Response[None]:
     """
     Refreshes the agent-spec.yaml file in the agent package with the latest changes.
 
@@ -74,7 +80,7 @@ def refresh_agent_package_spec(agent_name: str) -> None:
 
 
 @action
-def list_available_prebuilt_actions() -> list[str]:
+def list_available_prebuilt_actions() -> Response[list[str]]:
     """
     List all folders (actions) inside the 'actions' directory of the repository.
 
@@ -85,13 +91,13 @@ def list_available_prebuilt_actions() -> list[str]:
     if response.status_code == 200:
         data = response.json()
         folders = [item["name"] for item in data if item["type"] == "dir"]
-        return folders
+        return Response(result=folders)
     else:
-        return []
+        return Response(result=[])
 
 
 @action
-def read_prebuild_action_capabilities(action_name: str) -> str:
+def read_prebuild_action_capabilities(action_name: str) -> Response[str]:
     """
     Read the capabilities of a prebuild action package that is available in Github.
 
@@ -109,11 +115,15 @@ def read_prebuild_action_capabilities(action_name: str) -> str:
             import base64
 
             readme_content = base64.b64decode(data["content"]).decode("utf-8")
-            return readme_content
+            return Response(result=readme_content)
         else:
-            return "README.md file is empty or not available in the expected format."
+            raise ActionError(
+                "README.md file is empty or not available in the expected format."
+            )
     else:
-        return f"Unable to fetch README.md. Status Code: {response.status_code}, error: {response.text}"
+        raise ActionError(
+            f"Unable to fetch README.md. Status Code: {response.status_code}, error: {response.text}"
+        )
 
 
 def download_file(url, save_path):
@@ -129,7 +139,9 @@ def download_file(url, save_path):
         with open(save_path, "wb") as file:
             file.write(response.content)
     else:
-        print(f"Failed to download file: {url}. Status Code: {response.status_code}")
+        raise ActionError(
+            f"Failed to download file: {url}. Status Code: {response.status_code}"
+        )
 
 
 def download_folder(url: str, local_path: Path) -> str:
@@ -152,13 +164,15 @@ def download_folder(url: str, local_path: Path) -> str:
             elif item["type"] == "dir":
                 download_folder(item["url"], local_path / item["name"])
     else:
-        return f"Failed to download action: {url}. Status Code: {response.status_code}, message: {response.text}"
+        raise ActionError(
+            f"Failed to download action: {url}. Status Code: {response.status_code}, message: {response.text}"
+        )
 
     return "Action downloaded successfully."
 
 
 @action
-def download_prebuilt_action(action_name: str, agent_name: str) -> str:
+def download_prebuilt_action(action_name: str, agent_name: str) -> Response[str]:
     """
     Downloads a prebuilt action package from Github to the specified agent package.
     This method requires an agent to be bootstrapped first.
@@ -172,14 +186,14 @@ def download_prebuilt_action(action_name: str, agent_name: str) -> str:
     """
     agent_path = AGENTS_DIR_PATH / agent_name
     if not agent_path.exists():
-        return (
+        raise ActionError(
             f"Error: agent package '{agent_name}' does not exist at path {agent_path}."
         )
 
     url = f"{ACTIONS_GITHUB_URL}/{action_name}"
     sema4_actions_path = agent_path / "actions" / SEMA4AI_ACTIONS / action_name
 
-    return download_folder(url, sema4_actions_path)
+    return Response(result=download_folder(url, sema4_actions_path))
 
 
 def get_sema4_ai_studio_url_for_agent_zip_path(path: str) -> str:
@@ -201,7 +215,7 @@ def get_sema4_ai_studio_url_for_agent_zip_path(path: str) -> str:
 
 
 @action
-def publish_to_sema4_ai_studio(agent_name: str) -> None:
+def publish_to_sema4_ai_studio(agent_name: str) -> Response[None]:
     """
     Publishes the agent package to Sema4 AI Studio.
 
@@ -227,7 +241,9 @@ def publish_to_sema4_ai_studio(agent_name: str) -> None:
 
 
 @action
-def bootstrap_action_package(agent_name: str, action_package_name: str) -> str:
+def bootstrap_action_package(
+    agent_name: str, action_package_name: str
+) -> Response[str]:
     """
     This action sets up an action package in the home directory of the user under the "actions_bootstrapper" folder.
 
@@ -249,13 +265,15 @@ def bootstrap_action_package(agent_name: str, action_package_name: str) -> str:
 
     refresh_agent_package_spec(agent_name)
 
-    return f"Action successfully bootstrapped! Code available at {str(new_action_package_path)}"
+    return Response(
+        result=f"Action successfully bootstrapped! Code available at {str(new_action_package_path)}"
+    )
 
 
 @action
 def update_action_package_dependencies(
     agent_name: str, action_package_name: str, action_package_dependencies_code: str
-) -> str:
+) -> Response[str]:
     """
     Update the action package dependencies (package.yaml) for
     a specified action package.
@@ -285,13 +303,15 @@ def update_action_package_dependencies(
     finally:
         package_yaml.close()
 
-    return f"Successfully updated the package dependencies at: {package_yaml_path}"
+    return Response(
+        result=f"Successfully updated the package dependencies at: {package_yaml_path}"
+    )
 
 
 @action
 def update_action_code(
     agent_name: str, action_package_name: str, action_code: str
-) -> str:
+) -> Response[str]:
     """
     Replaces actions.py content with the provided input.
 
@@ -324,4 +344,4 @@ def update_action_code(
 
     refresh_agent_package_spec(agent_name)
 
-    return f"Successfully updated the actions at {actions_py_path}"
+    return Response(result=f"Successfully updated the actions at {actions_py_path}")

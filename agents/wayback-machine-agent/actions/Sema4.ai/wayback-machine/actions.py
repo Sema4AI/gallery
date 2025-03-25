@@ -4,16 +4,14 @@ Please checkout the base guidance on AI Actions in our main repository readme:
 https://github.com/sema4ai/actions#readme
 """
 
-from datetime import datetime
-
-import pytz
-from sema4ai.actions import action
-from waybackpy import WaybackMachineCDXServerAPI
 from datetime import datetime, timedelta
+
+from sema4ai.actions import Response, action
+from waybackpy import WaybackMachineCDXServerAPI
 
 
 @action
-def get_wayback_changes(url: str, days: int) -> str:
+def get_wayback_changes(url: str, days: int) -> Response[str]:
     """Uses the Wayback Machine to get a comma-seperated list of archive URLs for a given website within the number of days from today.
 
     Args:
@@ -45,11 +43,13 @@ def get_wayback_changes(url: str, days: int) -> str:
     )
     print(start_archive.archive_url)
     print(end_archive.archive_url)
-    return ",".join([start_archive.archive_url, end_archive.archive_url])
+    return Response(
+        result=",".join([start_archive.archive_url, end_archive.archive_url])
+    )
 
 
 @action
-def get_wayback_snapshots(url: str, days: int) -> str:
+def get_wayback_snapshots(url: str, days: int) -> Response[str]:
     """Gets a list of snapshots from the Wayback Machine for a given website and number of days from today.
 
     Args:
@@ -77,4 +77,4 @@ def get_wayback_snapshots(url: str, days: int) -> str:
 
     for snapshot in snapshots:
         print(snapshot.archive_url)
-    return ",".join(list(snapshots))
+    return Response(result=",".join(list(snapshots)))
