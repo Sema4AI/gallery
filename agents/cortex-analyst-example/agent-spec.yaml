@@ -1,16 +1,5 @@
 agent-package:
   spec-version: v2
-  exclude:
-    - ./.git/**
-    - ./.vscode/**
-    - ./devdata/**
-    - ./output/**
-    - ./venv/**
-    - ./.venv/**
-    - ./**/.env
-    - ./**/.DS_Store
-    - ./**/*.pyc
-    - ./*.zip
   agents:
   - name: Cortex Analyst Example
     description: Example agent that works directly with Snowflake Cortex Analyst.
@@ -22,12 +11,23 @@ agent-package:
     reasoning: disabled
     runbook: runbook.md
     action-packages:
-    - name: Snowflake Cortex
+    - name: Snowflake Cortex Analyst
       organization: Sema4.ai
       type: folder
-      version: 1.1.2
-      whitelist: cortex_analyst_message,snowflake_execute_query
-      path: Sema4.ai/snowflake-cortex
+      version: 1.0.0
+      whitelist: ""
+      path: Sema4.ai/snowflake-cortex-analyst/1.0.0
     knowledge: []
     metadata:
       mode: conversational
+  exclude:
+  - ./.git/**
+  - ./.vscode/**
+  - ./devdata/**
+  - ./output/**
+  - ./venv/**
+  - ./.venv/**
+  - ./**/.env
+  - ./**/.DS_Store
+  - ./**/*.pyc
+  - ./*.zi
