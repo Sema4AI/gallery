@@ -44,6 +44,9 @@ def build_all_packages():
     save_manifest(
         sai_manifest, os.path.join(gallery_actions_folder, "manifest_sai.json"), whitelist["standard"]["actions"]
     )
+    save_manifest(
+        sai_manifest, os.path.join(gallery_actions_folder, "manifest_sai_spcs.json"), whitelist["spcs"]["actions"]
+    )
 
     print(f"\n\n-> Gallery generated in: {gallery_actions_folder}")
 
