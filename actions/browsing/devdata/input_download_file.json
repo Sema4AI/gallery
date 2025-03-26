@@ -3,7 +3,7 @@
         {
             "inputName": "Download CSV file - will be over max filesize",
             "inputValue": {
-                "file_url": "https://mikahanninen.dev/data.csv",
+                "file_url": "https://<link-to-csv-file>",
                 "max_filesize_in_megabytes": 0,
                 "target_folder": ""
             }
@@ -11,7 +11,7 @@
         {
             "inputName": "Download CSV file",
             "inputValue": {
-                "file_url": "https://mikahanninen.dev/data.csv",
+                "file_url": "https://<link-to-csv-file>",
                 "target_folder": "./devdata"
             }
         }
