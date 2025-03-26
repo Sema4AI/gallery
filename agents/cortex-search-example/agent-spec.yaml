@@ -16,7 +16,7 @@ agent-package:
       type: folder
       version: 1.0.0
       whitelist: ""
-      path: Sema4.ai/snowflake-cortex-search/1.0.0
+      path: Sema4.ai/snowflake-cortex-search
     knowledge: []
     metadata:
       mode: conversational
