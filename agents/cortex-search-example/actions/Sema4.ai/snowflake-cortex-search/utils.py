@@ -1,4 +1,4 @@
-from contextlib import closing, contextmanager
+from contextlib import closing,contextmanager
 from pathlib import Path
 
 import pandas as pd
@@ -39,7 +39,6 @@ def get_snowflake_connection(
     finally:
         if conn:
             conn.close()
-
 
 def execute_query(
     query: str,
@@ -86,7 +85,6 @@ def execute_query(
             rows = cursor.fetchall()
             result = [dict(zip(columns, row)) for row in rows]
             return result
-
 
 def is_running_in_spcs() -> bool:
     """

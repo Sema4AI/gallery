@@ -1,33 +1,33 @@
 agent-package:
   spec-version: v2
-  exclude:
-    - ./.git/**
-    - ./.vscode/**
-    - ./devdata/**
-    - ./output/**
-    - ./venv/**
-    - ./.venv/**
-    - ./**/.env
-    - ./**/.DS_Store
-    - ./**/*.pyc
-    - ./*.zip
   agents:
   - name: Cortex Search Example
     description: Example agent that works directly with Snowflake Cortex Search.
     model:
       provider: Snowflake Cortex AI
       name: claude-3-5-sonnet
-    version: 0.0.5
+    version: 0.1.0
     architecture: agent
     reasoning: disabled
     runbook: runbook.md
     action-packages:
-    - name: Snowflake Cortex
+    - name: Snowflake Cortex Search
       organization: Sema4.ai
       type: folder
-      version: 1.1.2
-      whitelist: cortex_search,cortex_get_search_specification
-      path: Sema4.ai/snowflake-cortex
+      version: 1.0.0
+      whitelist: ""
+      path: Sema4.ai/snowflake-cortex-search
     knowledge: []
     metadata:
       mode: conversational
+  exclude:
+  - ./.git/**
+  - ./.vscode/**
+  - ./devdata/**
+  - ./output/**
+  - ./venv/**
+  - ./.venv/**
+  - ./**/.env
+  - ./**/.DS_Store
+  - ./**/*.pyc
+  - ./*.zip
