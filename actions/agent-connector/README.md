@@ -18,18 +18,27 @@ Currently supported features:
 ## Prompts
 
 ```
-use wayback machine to find how robocorp.com has changed over past 2yrs
+What agents do i have running?
 ```
 
-> **Changes to Robocorp.com Over the Past 2 Years**
-> Snapshot from September 1, 2022
->
-> ... Content shortened ...
->
-> Snapshot from August 13, 2024
->
-> ... Content shortened ...
->
+> Here are the agents you currently have running:
+> 1. Data Agent Example
+> 2. The Ultimate Data Sources Test 
+
+
+```
+Let's talk to "Data Agent Example"
+```
+> You have the following threads available with the "Data Agent Example":
+> 1. Welcome
+> 2. Chat 2
+
+```
+Let's say "Hello" to "Welcome"
+```
+
+> The "Data Agent Example" responded with: "Hello! How can I assist you today?"
+> If you have any specific questions or tasks for this agent, feel free to let me know!
 
 ## How It Works
 
