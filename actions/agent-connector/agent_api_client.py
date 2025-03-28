@@ -50,17 +50,15 @@ class AgentAPIClient:
             json_data: Optional JSON payload for POST requests
 
         Returns:
-            Response object or error message string
+            Response object
+
+        Raises:
+            requests.exceptions.RequestException: If the request fails or returns an error status
         """
         if self.api_url is None:
-            return "Agent Server not running"
+            raise requests.exceptions.ConnectionError("Agent Server not running")
 
         url = urljoin(self.api_url + "/", quote(path))
-
-        try:
-            response = requests.request(method, url, json=json_data)
-            if response.status_code == 200:
-                return response
-            return f"Error: {response.status_code} {response.text}"
-        except requests.RequestException as e:
-            return f"Request failed: {str(e)}"
+        response = requests.request(method, url, json=json_data)
+        response.raise_for_status()
+        return response

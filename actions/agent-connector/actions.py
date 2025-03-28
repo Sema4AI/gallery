@@ -1,5 +1,6 @@
 import json
-from sema4ai.actions import action
+import requests
+from sema4ai.actions import action, Response, ActionError
 from agent_api_client import AgentAPIClient
 
 # Create a single client instance
@@ -7,66 +8,77 @@ client = AgentAPIClient()
 
 
 @action
-def get_all_agents() -> str:
+def get_all_agents() -> Response[str]:
     """Fetches a list of all available agents with their IDs and names.
 
     Returns:
-        A json of the list of dictionaries with agent IDs and names, or an error message if the request fails.
-    """
-    response = client.request("agents/")
-    if isinstance(response, str):  # Error message
-        return response
+        Response containing either a JSON string of agents or an error message
 
-    agents = response.json()
-    result = [{"agent_id": agent["id"], "name": agent["name"]} for agent in agents]
-    return json.dumps(result)
+    Raises:
+        ActionError: If the request fails or response processing fails
+    """
+    try:
+        response = client.request("agents/")
+        agents = response.json()
+        result = [{"agent_id": agent["id"], "name": agent["name"]} for agent in agents]
+        return Response(result=json.dumps(result))
+    except (requests.exceptions.RequestException, json.JSONDecodeError, KeyError) as e:
+        raise ActionError(str(e))
 
 
 @action
-def get_agent_by_name(name: str) -> str:
+def get_agent_by_name(name: str) -> Response[str]:
     """Fetches an agent by name.
 
     Args:
         name: The name of the agent
 
     Returns:
-        A string with the agent ID and name or error message.
-    """
-    response = client.request("agents/")  # Get all agents instead of trying direct path
-    if isinstance(response, str):  # Error message
-        return response
+        Response containing either the agent ID or an error message
 
-    agents = response.json()
-    for agent in agents:
-        if agent["name"] == name:
-            return agent["id"]
-    return f"Error fetching agent: No agent with name '{name}'"
+    Raises:
+        ActionError: If the request fails, response processing fails, or agent not found
+    """
+    try:
+        response = client.request("agents/")
+        agents = response.json()
+        for agent in agents:
+            if agent["name"] == name:
+                return Response(result=agent["id"])
+        raise ActionError(f"No agent found with name '{name}'")
+    except (requests.exceptions.RequestException, json.JSONDecodeError, KeyError) as e:
+        raise ActionError(str(e))
 
 
 @action
-def get_threads(agent_id: str) -> str:
+def get_threads(agent_id: str) -> Response[str]:
     """Fetches all threads for an agent.
 
     Args:
         agent_id: The ID of the agent
 
     Returns:
-        A json string with the List of threads or error message.
-    """
-    response = client.request("threads/")  # Get all threads and filter
-    if isinstance(response, str):  # Error message
-        return response
+        Response containing either a JSON string of threads or an error message
 
-    threads = response.json()
-    result = []
-    for thread in threads:
-        if thread["agent_id"] == agent_id:
-            result.append({"thread_id": thread["thread_id"], "name": thread["name"]})
-    return json.dumps(result)
+    Raises:
+        ActionError: If the request fails or response processing fails
+    """
+    try:
+        response = client.request("threads/")
+        threads = response.json()
+        result = []
+        for thread in threads:
+            if thread["agent_id"] == agent_id:
+                result.append(
+                    {"thread_id": thread["thread_id"], "name": thread["name"]}
+                )
+        return Response(result=json.dumps(result))
+    except (requests.exceptions.RequestException, json.JSONDecodeError, KeyError) as e:
+        raise ActionError(str(e))
 
 
 @action
-def get_thread(agent_name: str, thread_name: str) -> str:
+def get_thread(agent_name: str, thread_name: str) -> Response[str]:
     """Fetches a thread for an agent.
 
     Args:
@@ -74,87 +86,103 @@ def get_thread(agent_name: str, thread_name: str) -> str:
         thread_name: The name of the thread
 
     Returns:
-        The thread ID or error message.
+        Response containing either the thread ID or an error message
+
+    Raises:
+        ActionError: If the request fails, response processing fails, or thread not found
     """
-    # First get the agent_id
-    agent_id = get_agent_by_name(agent_name)
-    if agent_id.startswith("Error"):  # Error message
-        return agent_id
+    try:
+        agent_result = get_agent_by_name(agent_name)
+        if agent_result.error:
+            raise ActionError(agent_result.error)
 
-    # Then get all threads and filter
-    response = client.request("threads/")
-    if isinstance(response, str):  # Error message
-        return response
-
-    threads = response.json()
-    for thread in threads:
-        if thread["agent_id"] == agent_id and thread["name"] == thread_name:
-            return thread["thread_id"]
-    return f"Error: No thread found for agent '{agent_name}' with name '{thread_name}'"
+        response = client.request("threads/")
+        threads = response.json()
+        for thread in threads:
+            if (
+                thread["agent_id"] == agent_result.result
+                and thread["name"] == thread_name
+            ):
+                return Response(result=thread["thread_id"])
+        raise ActionError(
+            f"No thread found for agent '{agent_name}' with name '{thread_name}'"
+        )
+    except (requests.exceptions.RequestException, json.JSONDecodeError, KeyError) as e:
+        raise ActionError(str(e))
 
 
 @action
-def create_thread(agent_id: str, thread_name: str) -> str:
+def create_thread(agent_id: str, thread_name: str) -> Response[str]:
     """Creates a new thread for communication with an agent.
 
-    Note: Agent names are pre-defined and must match existing agent names.
-
     Args:
-        agent_id: The id of the agent to create thread in. Use tools get_all_agents or get_agent_by_name to get the id of an agent based on it's name.
-        thread_name: The name of the thread  to be created (user-defined).
+        agent_id: The id of the agent to create thread in
+        thread_name: The name of the thread to be created
 
     Returns:
-        The thread ID, or error message if the call fails.
-    """
-    response = client.request(
-        "threads",  # Ensure trailing slash in the path
-        method="POST",
-        json_data={"name": thread_name, "agent_id": agent_id},
-    )
-    if isinstance(response, str):  # Error message
-        return response
+        Response containing either the thread ID or an error message
 
-    return response.json()["thread_id"]
+    Raises:
+        ActionError: If the request fails or response processing fails
+    """
+    try:
+        response = client.request(
+            "threads",
+            method="POST",
+            json_data={"name": thread_name, "agent_id": agent_id},
+        )
+        result = response.json()
+        return Response(result=result["thread_id"])
+    except (requests.exceptions.RequestException, json.JSONDecodeError, KeyError) as e:
+        raise ActionError(str(e))
 
 
 @action
-def send_message(thread_id: str, message: str) -> str:
+def send_message(thread_id: str, message: str) -> Response[str]:
     """Sends a message within a thread and retrieves the agent's response.
 
-    Note: The thread ID must be obtained from a successful call to `create_thread`.
-
     Args:
-        thread_id: The thread ID obtained from `create_thread`.
-        message: The message content.
+        thread_id: The thread ID obtained from create_thread
+        message: The message content
 
     Returns:
-        The agent's response, or error message if the call fails.
+        Response containing either the agent's response or an error message
+
+    Raises:
+        ActionError: If the request fails, response processing fails, or no response received
     """
-    response = client.request(
-        "runs/stream",
-        method="POST",
-        json_data={
-            "thread_id": thread_id,
-            "input": [
-                {
-                    "content": message,
-                    "type": "human",
-                    "example": False,
-                },
-            ],
-        },
-    )
+    try:
+        response = client.request(
+            "runs/stream",
+            method="POST",
+            json_data={
+                "thread_id": thread_id,
+                "input": [
+                    {
+                        "content": message,
+                        "type": "human",
+                        "example": False,
+                    },
+                ],
+            },
+        )
 
-    if isinstance(response, str):  # Error message
-        return response
+        collected_data = []
+        for line in response.iter_lines():
+            if line:
+                decoded_line = line.decode("utf-8")
+                if decoded_line.startswith("data: "):
+                    collected_data.append(decoded_line[6:])
 
-    collected_data = []
+        if not collected_data:
+            raise ActionError("No response data received")
 
-    for line in response.iter_lines():
-        if line:
-            decoded_line = line.decode("utf-8")
-            if decoded_line.startswith("data: "):
-                collected_data.append(decoded_line[6:])
-
-    last_response = json.loads(collected_data[-1])
-    return last_response[-1]["content"]
+        last_response = json.loads(collected_data[-1])
+        return Response(result=last_response[-1]["content"])
+    except (
+        requests.exceptions.RequestException,
+        json.JSONDecodeError,
+        KeyError,
+        IndexError,
+    ) as e:
+        raise ActionError(str(e))

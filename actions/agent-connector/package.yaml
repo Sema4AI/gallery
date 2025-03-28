@@ -1,11 +1,11 @@
 # Required: A short name for the action package
-name: Agent Connector -Kari
+name: Agent Connector
 
 # Required: A description of what's in the action package.
 description: Actions to connect agents with each other
 
 # Package version number, recommend using semver.org
-version: 2.1.0
+version: 3.0.0
 
 # The version of the `package.yaml` format.
 spec-version: v2
