@@ -32,7 +32,8 @@
             "snowflake-cortex-analyst",
             "snowflake-cortex-search",
             "serper",
-            "perplexity"
+            "perplexity",
+            "robocorp"
         ],
         "agents": [
             "wayback-machine-agent"
@@ -57,7 +58,8 @@
             "snowflake-cortex-analyst",
             "snowflake-cortex-search",
             "serper",
-            "perplexity"
+            "perplexity",
+            "robocorp"
         ],
         "agents": [
             "cortex-analyst-example",
