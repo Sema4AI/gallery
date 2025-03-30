@@ -1,0 +1,27 @@
+{
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "message": "Which regions are experiencing the fastest growth in sales in 2024?",
+                "semantic_model_file": "@CORTEX_ANALYST_DEMO.REVENUE_TIMESERIES.RAW_DATA/revenue_timeseries.yaml"
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "ask_cortex_analyst",
+        "actionRelativePath": "cortex_actions.py",
+        "schemaDescription": [
+            "message: string: The message to send."
+        ],
+        "managedParamsSchemaDescription": {
+            "semantic_model_file": {
+                "type": "Secret",
+                "description": "The path to a Snowflake Stage containing the semantic model file."
+            }
+        },
+        "inputFileVersion": "v3",
+        "kind": "action",
+        "actionSignature": "action/args: 'semantic_model_file: Secret, message: str'"
+    }
+}

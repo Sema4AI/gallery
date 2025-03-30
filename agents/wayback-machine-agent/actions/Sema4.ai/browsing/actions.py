@@ -6,35 +6,34 @@ Currently supporting:
 - download file
 """
 
-from sema4ai.actions import action, Response
-from robocorp import browser
-
-from dotenv import load_dotenv
-
-
 import os
 from pathlib import Path
-import requests
 from urllib.parse import urlparse
 
-
-from models import DownloadedFile, Form, Links, WebPage, UserAgent
+import requests
+from dotenv import load_dotenv
+from models import DownloadedFile, Form, Links, UserAgent, WebPage
+from playwright.sync_api import TimeoutError
+from robocorp import browser
+from sema4ai.actions import Response, action
 from support import (
+    _clean_text,
     _configure_browser,
     _ensure_https,
+    _get_filename_from_cd,
     _get_form_elements,
     _get_page_links,
     _locator_action,
-    _get_filename_from_cd,
 )
 
 load_dotenv(Path(__file__).absolute().parent / "devdata" / ".env")
 
 HEADLESS_BROWSER = not os.getenv("HEADLESS_BROWSER")
+MAX_WAIT_FOR_NETWORK_IDLE = 5000
 
 
 @action
-def get_website_content(url: str, user_agent: UserAgent) -> Response[WebPage]:
+def get_website_content(url: str, user_agent: UserAgent = {}) -> Response[WebPage]:
     """
     Gets the text content, form elements, links and other elements of a website.
     If content-type is not "text/html" then just URL content is returned.
@@ -51,22 +50,29 @@ def get_website_content(url: str, user_agent: UserAgent) -> Response[WebPage]:
     page = browser.page()
     response = page.goto(url)
     page.wait_for_load_state("domcontentloaded")
-    page.wait_for_load_state("networkidle")
+    try:
+        # Wait for network to be idle for 5 seconds, but continue even if not idle
+        page.wait_for_load_state("networkidle", timeout=MAX_WAIT_FOR_NETWORK_IDLE)
+    except TimeoutError as _:
+        pass
     content_type = response.headers.get("content-type", "").lower()
     print(f"content type: {content_type}")
     if "text/html" in content_type:
         text_contents = page.locator("//body").inner_text()
+        text_contents = _clean_text(text_contents)
         form = _get_form_elements(page, url)
         links = _get_page_links(page, url)
         wb = WebPage(url=url, text_content=text_contents, form=form, links=links)
     else:
+        content = response.body()
         wb = WebPage(
             url=url,
-            text_content=response.body(),
+            text_content=_clean_text(content),
             links=Links(links=[]),
             form=Form(url=url, elements=[]),
         )
     print(f"len text_contents: {len(wb.text_content)}")
+    print(f"total size: {wb.calculate_total_size()}")
     return wb
 
 
@@ -115,7 +121,7 @@ def download_file(
 
             if df.content_length > max_filesize_in_megabytes * 1000000:
                 df.status = f"File is too large to download - limit is {max_filesize_in_megabytes} MB"
-                return df
+                return Response(result=df)
 
             # Check if content is text-based or binary
             if "text" in df.content_type:
@@ -133,7 +139,7 @@ def download_file(
         df.filepath = ""
         df.status = f"Download failed: {str(e)}"
     print(df.status)
-    return df
+    return Response(result=df)
 
 
 @action(is_consequential=True)
@@ -152,7 +158,6 @@ def fill_elements(
     browser.configure(browser_engine="chromium", headless=HEADLESS_BROWSER)
     page = browser.goto(web_page.url)
     page.wait_for_load_state("domcontentloaded")
-    page.wait_for_load_state("networkidle")
     locator = None
     submit_locator = None
     for element in web_page.form.elements:
@@ -183,10 +188,18 @@ def fill_elements(
         print("Enter the locator")
         locator.press("Enter")
         page.wait_for_load_state("domcontentloaded")
-        page.wait_for_load_state("networkidle")
+        try:
+            # Wait for network to be idle for 5 seconds, but continue even if not idle
+            page.wait_for_load_state("networkidle", timeout=MAX_WAIT_FOR_NETWORK_IDLE)
+        except TimeoutError as _:
+            pass
     elif submit_locator:
         print("Click the submit locator")
         submit_locator.click()
         page.wait_for_load_state("domcontentloaded")
-        page.wait_for_load_state("networkidle")
-    return page.locator("//body").inner_text()
+        try:
+            # Wait for network to be idle for 5 seconds, but continue even if not idle
+            page.wait_for_load_state("networkidle", timeout=MAX_WAIT_FOR_NETWORK_IDLE)
+        except TimeoutError as _:
+            pass
+    return Response(result=page.locator("//body").inner_text())

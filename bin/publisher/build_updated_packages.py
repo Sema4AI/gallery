@@ -123,6 +123,12 @@ def build_updated_packages():
         whitelist["spcs"]["actions"],
     )
 
+    save_manifest(
+        new_manifest_sai,
+        os.path.join(gallery_actions_folder, "manifest_sai_spcs.json"),
+        whitelist["spcs"]["actions"],
+    )
+
 
 if __name__ == "__main__":
     build_updated_packages()
