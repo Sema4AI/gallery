@@ -1,5 +1,5 @@
 import json
-import requests
+
 from sema4ai.actions import action, Response, ActionError
 from agent_api_client import AgentAPIClient
 
