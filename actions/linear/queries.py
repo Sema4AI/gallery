@@ -211,6 +211,7 @@ query SearchProjects($filter: ProjectFilter, $orderBy: PaginationOrderBy, $first
             description
             startDate
             targetDate
+            content
             teams {
                 nodes {
                     id
@@ -226,6 +227,60 @@ query SearchProjects($filter: ProjectFilter, $orderBy: PaginationOrderBy, $first
             url
             createdAt
             updatedAt
+        }
+    }
+}
+"""
+
+query_create_project = """
+mutation CreateProject($input: ProjectCreateInput!) {
+    projectCreate(input: $input) {
+        success
+        project {
+            id
+            name
+            description
+            startDate
+            targetDate
+            teams {
+                nodes {
+                    id
+                    name
+                }
+            }
+            initiatives {
+                nodes {
+                    id
+                    name
+                }
+            }
+            url
+            createdAt
+            updatedAt
+        }
+    }
+}
+"""
+
+query_get_initiatives = """
+query Initiatives {
+    initiatives {
+        nodes {
+            id
+            name
+            description
+            url
+        }
+    }
+}
+"""
+
+query_get_teams_simple = """
+query TeamsSimple {
+    teams {
+        nodes {
+            id
+            name
         }
     }
 }

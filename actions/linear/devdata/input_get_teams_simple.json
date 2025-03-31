@@ -8,7 +8,7 @@
         }
     ],
     "metadata": {
-        "actionName": "get_teams",
+        "actionName": "get_teams_simple",
         "actionRelativePath": "actions.py",
         "schemaDescription": [],
         "managedParamsSchemaDescription": {
@@ -21,4 +21,4 @@
         "kind": "action",
         "actionSignature": "action/args: 'api_key: Secret'"
     }
-}
+} 

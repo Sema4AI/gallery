@@ -167,9 +167,30 @@ class ProjectFilterOptions(BaseModel):
         return data
 
 
+class ProjectCreate(BaseModel):
+    name: str
+    description: Optional[str] = None
+    content: Optional[str] = None
+    startDate: Optional[datetime] = None
+    targetDate: Optional[datetime] = None
+    team: NameAndId
+    initiatives: Optional[List[NameAndId]] = None
+
+    @model_validator(mode='before')
+    @classmethod
+    def validate_empty_strings(cls, data: dict) -> dict:
+        """Convert empty strings to None for optional fields"""
+        if isinstance(data, dict):
+            for field in ['description', 'content', 'startDate', 'targetDate']:
+                if field in data and data[field] == '':
+                    data[field] = None
+        return data
+
+
 class Project(BaseModel):
     id: str
     name: str
+    content: Optional[str] = None
     description: Optional[str] = None
     startDate: Optional[datetime] = None
     targetDate: Optional[datetime] = None
@@ -192,6 +213,7 @@ class Project(BaseModel):
             id=data.get("id"),
             name=data.get("name"),
             description=data.get("description"),
+            content=data.get("content"),
             startDate=data.get("startDate"),
             targetDate=data.get("targetDate"),
             teams=(
@@ -218,6 +240,33 @@ class Project(BaseModel):
 
 class ProjectList(BaseModel):
     nodes: List[Project]
+
+
+class Initiative(BaseModel):
+    id: str
+    name: str
+    description: Optional[str] = None
+    url: Optional[str] = None
+
+    @classmethod
+    def create(cls, data: dict) -> "Initiative":
+        """Create an Initiative instance from Linear API data
+
+        Args:
+            data: Dictionary containing initiative data from Linear API
+        Returns:
+            New Initiative instance with populated fields
+        """
+        return cls(
+            id=data.get("id"),
+            name=data.get("name"),
+            description=data.get("description"),
+            url=data.get("url"),
+        )
+
+
+class InitiativeList(BaseModel):
+    nodes: List[Initiative]
 
 
 class LabelList(BaseModel):

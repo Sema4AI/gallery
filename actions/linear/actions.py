@@ -1,12 +1,15 @@
 import json
 
-from models import FilterOptions, Issue, IssueList, ProjectFilterOptions, Project, ProjectList
+from models import FilterOptions, Issue, IssueList, ProjectFilterOptions, Project, ProjectList, ProjectCreate, Initiative, InitiativeList, Team, TeamList, WorkflowStates
 from queries import (
     query_add_comment,
     query_create_issue,
     query_get_issues,
     query_search_issues,
     query_search_projects,
+    query_create_project,
+    query_get_initiatives,
+    query_get_teams_simple,
 )
 from sema4ai.actions import Response, Secret, action
 from support import (
@@ -169,3 +172,86 @@ def search_projects(
         project_list.nodes.append(project)
 
     return Response(result=project_list)
+
+
+@action
+def create_project(
+    api_key: Secret,
+    project_details: ProjectCreate,
+) -> Response[str]:
+    """Create a new Linear project
+
+    Args:
+        project_details: The details of the project to create
+        api_key: The API key to use to authenticate with the Linear API
+    Returns:
+        The created project details
+    """
+    teams_result = _get_teams(api_key)
+    team_id = _get_team_id(Issue(team=project_details.team), teams_result)
+    
+    if not team_id:
+        raise Exception(f"Could not find team: {project_details.team.name}")
+
+    input_vars = {
+        "name": project_details.name,
+        "teamIds": [team_id],
+    }
+
+    # Add optional fields if provided
+    if project_details.description:
+        input_vars["description"] = project_details.description
+    if project_details.content:
+        input_vars["content"] = project_details.content
+    if project_details.startDate:
+        input_vars["startDate"] = project_details.startDate.isoformat()
+    if project_details.targetDate:
+        input_vars["targetDate"] = project_details.targetDate.isoformat()
+
+    variables = {"input": input_vars}
+
+    project_response = _make_graphql_request(query_create_project, variables, api_key)
+    return Response(result=json.dumps(project_response))
+
+
+@action
+def get_initiatives(
+    api_key: Secret,
+) -> Response[InitiativeList]:
+    """Get all initiatives from Linear
+
+    Args:
+        api_key: The API key to use to authenticate with the Linear API
+    Returns:
+        List of initiatives with their IDs and names
+    """
+    initiatives_response = _make_graphql_request(query_get_initiatives, {}, api_key)
+    initiatives = [
+        Initiative.create(initiative)
+        for initiative in initiatives_response["initiatives"]["nodes"]
+    ]
+    return Response(result=InitiativeList(nodes=initiatives))
+
+
+@action
+def get_teams(
+    api_key: Secret,
+) -> Response[TeamList]:
+    """Get all teams from Linear with basic information (id and name)
+
+    Args:
+        api_key: The API key to use to authenticate with the Linear API
+    Returns:
+        List of teams with their IDs and names
+    """
+    teams_response = _make_graphql_request(query_get_teams_simple, {}, api_key)
+    teams = [
+        Team(
+            id=team["id"],
+            name=team["name"],
+            key="",  # Required by model but not needed for simple view
+            states=WorkflowStates(nodes=[])  # Required by model but not needed for simple view
+        )
+        for team in teams_response["teams"]["nodes"]
+    ]
+    return Response(result=TeamList(nodes=teams))

@@ -1,0 +1,47 @@
+{
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "project_details": {
+                    "name": "API Test Project",
+                    "description": "Test Description",
+                    "content": "# Project Content\n\nThis is the main content of the project.",
+                    "startDate": "",
+                    "targetDate": "",
+                    "team": {
+                        "name": "Control Room"
+                    },
+                    "initiatives": [
+                        {
+                            "name": "Snowflake Adoption"
+                        }
+                    ]
+                },
+                "api_key": ""
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "create_project",
+        "actionRelativePath": "actions.py",
+        "schemaDescription": [
+            "project_details.name: string",
+            "project_details.description: string",
+            "project_details.content: string",
+            "project_details.startDate: string",
+            "project_details.targetDate: string",
+            "project_details.team: NameAndId",
+            "project_details.initiatives: List[NameAndId]"
+        ],
+        "managedParamsSchemaDescription": {
+            "api_key": {
+                "type": "Secret",
+                "description": "The API key to use to authenticate with the Linear API"
+            }
+        },
+        "inputFileVersion": "v3",
+        "kind": "action",
+        "actionSignature": "action/args: 'api_key: Secret, project_details: ProjectCreate'"
+    }
+}
