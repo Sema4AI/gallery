@@ -53,9 +53,7 @@ def get_threads(agent_id: str) -> Response[str]:
     result = []
     for thread in threads:
         if thread["agent_id"] == agent_id:
-            result.append(
-                {"thread_id": thread["thread_id"], "name": thread["name"]}
-            )
+            result.append({"thread_id": thread["thread_id"], "name": thread["name"]})
     return Response(result=json.dumps(result))
 
 
@@ -77,10 +75,7 @@ def get_thread(agent_name: str, thread_name: str) -> Response[str]:
     response = client.request("threads/")
     threads = response.json()
     for thread in threads:
-        if (
-            thread["agent_id"] == agent_result.result
-            and thread["name"] == thread_name
-        ):
+        if thread["agent_id"] == agent_result.result and thread["name"] == thread_name:
             return Response(result=thread["thread_id"])
     raise ActionError(
         f"No thread found for agent '{agent_name}' with name '{thread_name}'"
