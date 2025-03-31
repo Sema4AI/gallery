@@ -13,17 +13,11 @@ def get_all_agents() -> Response[str]:
 
     Returns:
         Response containing either a JSON string of agents or an error message
-
-    Raises:
-        ActionError: If the request fails or response processing fails
     """
-    try:
-        response = client.request("agents/")
-        agents = response.json()
-        result = [{"agent_id": agent["id"], "name": agent["name"]} for agent in agents]
-        return Response(result=json.dumps(result))
-    except (requests.exceptions.RequestException, json.JSONDecodeError, KeyError) as e:
-        raise ActionError(str(e))
+    response = client.request("agents/")
+    agents = response.json()
+    result = [{"agent_id": agent["id"], "name": agent["name"]} for agent in agents]
+    return Response(result=json.dumps(result))
 
 
 @action
@@ -35,19 +29,13 @@ def get_agent_by_name(name: str) -> Response[str]:
 
     Returns:
         Response containing either the agent ID or an error message
-
-    Raises:
-        ActionError: If the request fails, response processing fails, or agent not found
     """
-    try:
-        response = client.request("agents/")
-        agents = response.json()
-        for agent in agents:
-            if agent["name"] == name:
-                return Response(result=agent["id"])
-        raise ActionError(f"No agent found with name '{name}'")
-    except (requests.exceptions.RequestException, json.JSONDecodeError, KeyError) as e:
-        raise ActionError(str(e))
+    response = client.request("agents/")
+    agents = response.json()
+    for agent in agents:
+        if agent["name"] == name:
+            return Response(result=agent["id"])
+    raise ActionError(f"No agent found with name '{name}'")
 
 
 @action
@@ -59,22 +47,16 @@ def get_threads(agent_id: str) -> Response[str]:
 
     Returns:
         Response containing either a JSON string of threads or an error message
-
-    Raises:
-        ActionError: If the request fails or response processing fails
     """
-    try:
-        response = client.request("threads/")
-        threads = response.json()
-        result = []
-        for thread in threads:
-            if thread["agent_id"] == agent_id:
-                result.append(
-                    {"thread_id": thread["thread_id"], "name": thread["name"]}
-                )
-        return Response(result=json.dumps(result))
-    except (requests.exceptions.RequestException, json.JSONDecodeError, KeyError) as e:
-        raise ActionError(str(e))
+    response = client.request("threads/")
+    threads = response.json()
+    result = []
+    for thread in threads:
+        if thread["agent_id"] == agent_id:
+            result.append(
+                {"thread_id": thread["thread_id"], "name": thread["name"]}
+            )
+    return Response(result=json.dumps(result))
 
 
 @action
@@ -87,28 +69,22 @@ def get_thread(agent_name: str, thread_name: str) -> Response[str]:
 
     Returns:
         Response containing either the thread ID or an error message
-
-    Raises:
-        ActionError: If the request fails, response processing fails, or thread not found
     """
-    try:
-        agent_result = get_agent_by_name(agent_name)
-        if agent_result.error:
-            raise ActionError(agent_result.error)
+    agent_result = get_agent_by_name(agent_name)
+    if agent_result.error:
+        raise ActionError(agent_result.error)
 
-        response = client.request("threads/")
-        threads = response.json()
-        for thread in threads:
-            if (
-                thread["agent_id"] == agent_result.result
-                and thread["name"] == thread_name
-            ):
-                return Response(result=thread["thread_id"])
-        raise ActionError(
-            f"No thread found for agent '{agent_name}' with name '{thread_name}'"
-        )
-    except (requests.exceptions.RequestException, json.JSONDecodeError, KeyError) as e:
-        raise ActionError(str(e))
+    response = client.request("threads/")
+    threads = response.json()
+    for thread in threads:
+        if (
+            thread["agent_id"] == agent_result.result
+            and thread["name"] == thread_name
+        ):
+            return Response(result=thread["thread_id"])
+    raise ActionError(
+        f"No thread found for agent '{agent_name}' with name '{thread_name}'"
+    )
 
 
 @action
@@ -121,20 +97,14 @@ def create_thread(agent_id: str, thread_name: str) -> Response[str]:
 
     Returns:
         Response containing either the thread ID or an error message
-
-    Raises:
-        ActionError: If the request fails or response processing fails
     """
-    try:
-        response = client.request(
-            "threads",
-            method="POST",
-            json_data={"name": thread_name, "agent_id": agent_id},
-        )
-        result = response.json()
-        return Response(result=result["thread_id"])
-    except (requests.exceptions.RequestException, json.JSONDecodeError, KeyError) as e:
-        raise ActionError(str(e))
+    response = client.request(
+        "threads",
+        method="POST",
+        json_data={"name": thread_name, "agent_id": agent_id},
+    )
+    result = response.json()
+    return Response(result=result["thread_id"])
 
 
 @action
@@ -147,42 +117,31 @@ def send_message(thread_id: str, message: str) -> Response[str]:
 
     Returns:
         Response containing either the agent's response or an error message
-
-    Raises:
-        ActionError: If the request fails, response processing fails, or no response received
     """
-    try:
-        response = client.request(
-            "runs/stream",
-            method="POST",
-            json_data={
-                "thread_id": thread_id,
-                "input": [
-                    {
-                        "content": message,
-                        "type": "human",
-                        "example": False,
-                    },
-                ],
-            },
-        )
+    response = client.request(
+        "runs/stream",
+        method="POST",
+        json_data={
+            "thread_id": thread_id,
+            "input": [
+                {
+                    "content": message,
+                    "type": "human",
+                    "example": False,
+                },
+            ],
+        },
+    )
 
-        collected_data = []
-        for line in response.iter_lines():
-            if line:
-                decoded_line = line.decode("utf-8")
-                if decoded_line.startswith("data: "):
-                    collected_data.append(decoded_line[6:])
+    collected_data = []
+    for line in response.iter_lines():
+        if line:
+            decoded_line = line.decode("utf-8")
+            if decoded_line.startswith("data: "):
+                collected_data.append(decoded_line[6:])
 
-        if not collected_data:
-            raise ActionError("No response data received")
+    if not collected_data:
+        raise ActionError("No response data received")
 
-        last_response = json.loads(collected_data[-1])
-        return Response(result=last_response[-1]["content"])
-    except (
-        requests.exceptions.RequestException,
-        json.JSONDecodeError,
-        KeyError,
-        IndexError,
-    ) as e:
-        raise ActionError(str(e))
+    last_response = json.loads(collected_data[-1])
+    return Response(result=last_response[-1]["content"])
