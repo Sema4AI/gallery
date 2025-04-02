@@ -1,12 +1,21 @@
 {
     "inputs": [
         {
-            "inputName": "input-1",
+            "inputName": "input-uppercase",
             "inputValue": {
                 "warehouse": "COMPUTE_WH",
                 "database": "CORTEX_SEARCH_TUTORIAL_DB",
                 "schema": "PUBLIC",
                 "service": "AIRBNB_SVC"
+            }
+        },
+        {
+            "inputName": "input-lowercase",
+            "inputValue": {
+                "warehouse": "compute_wh",
+                "database": "cortex_search_tutorial_db",
+                "schema": "public",
+                "service": "airbnb_svc"
             }
         }
     ],
