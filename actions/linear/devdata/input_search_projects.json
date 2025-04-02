@@ -1,0 +1,89 @@
+{
+    "inputs": [
+        {
+            "inputName": "Search by name",
+            "inputValue": {
+                "filter_options": {
+                    "name": "Improved Data Visualization",
+                    "team_name": "",
+                    "initiative": "",
+                    "limit": "",
+                    "ordering": ""
+                },
+                "api_key": ""
+            }
+        },
+        {
+            "inputName": "Search by team",
+            "inputValue": {
+                "filter_options": {
+                    "name": "",
+                    "team_name": "Work Room",
+                    "initiative": "",
+                    "limit": "",
+                    "ordering": ""
+                },
+                "api_key": ""
+            }
+        },
+        {
+            "inputName": "Search by initiative",
+            "inputValue": {
+                "filter_options": {
+                    "name": "",
+                    "team_name": "",
+                    "initiative": "Sai",
+                    "limit": "",
+                    "ordering": ""
+                },
+                "api_key": ""
+            }
+        },
+        {
+            "inputName": "Search with multiple filters",
+            "inputValue": {
+                "filter_options": {
+                    "name": "",
+                    "team_name": "Studio",
+                    "initiative": "Sai",
+                    "limit": "10",
+                    "ordering": "createdAt"
+                },
+                "api_key": ""
+            }
+        },
+        {
+            "inputName": "Get recent projects",
+            "inputValue": {
+                "filter_options": {
+                    "name": "",
+                    "team_name": "",
+                    "initiative": "",
+                    "limit": "5",
+                    "ordering": "updatedAt"
+                },
+                "api_key": ""
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "search_projects",
+        "actionRelativePath": "actions.py",
+        "schemaDescription": [
+            "filter_options.name: string",
+            "filter_options.team_name: string",
+            "filter_options.initiative: string",
+            "filter_options.limit: string",
+            "filter_options.ordering: string"
+        ],
+        "managedParamsSchemaDescription": {
+            "api_key": {
+                "type": "Secret",
+                "description": "The API key to use to authenticate with the Linear API."
+            }
+        },
+        "inputFileVersion": "v3",
+        "kind": "action",
+        "actionSignature": "action/args: 'filter_options: ProjectFilterOptions, api_key: Secret'"
+    }
+}
