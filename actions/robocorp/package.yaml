@@ -5,7 +5,7 @@ name: Robocorp
 description: Manage Robocorp automations from agents
 
 # Package version number, recommend using semver.org
-version: 0.0.1
+version: 1.0.0
 
 spec-version: v2
 
