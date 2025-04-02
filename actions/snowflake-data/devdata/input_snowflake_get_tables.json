@@ -1,0 +1,25 @@
+{
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "warehouse": "COMPUTE_WH",
+                "database": "CORTEX_ANALYST_DEMO",
+                "schema": "REVENUE_TIMESERIES"
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "snowflake_get_tables",
+        "actionRelativePath": "snowflake_actions.py",
+        "schemaDescription": [
+            "warehouse: string: The warehouse to use.",
+            "database: string: The database to get the tables from.",
+            "schema: string: The schema to get the tables from."
+        ],
+        "managedParamsSchemaDescription": {},
+        "inputFileVersion": "v3",
+        "kind": "action",
+        "actionSignature": "action/args: 'warehouse: str, database: str, schema: str'"
+    }
+}

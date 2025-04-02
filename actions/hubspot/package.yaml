@@ -5,7 +5,7 @@ name: HubSpot
 description: Search and manage all aspects of CRM objects, including companies, contacts, deals, and more.
 
 # Package version number, recommend using semver.org
-version: 1.1.5
+version: 1.2.0
 
 # The version of the `package.yaml` format.
 spec-version: v2
@@ -20,6 +20,14 @@ dependencies:
     - pydantic=2.10.4
     - hubspot-api-client=11.1.0
     - requests=2.32.3
+
+external-endpoints:
+  - name: "HubSpot API"
+    description: "Access HubSpot CRM API."
+    additional-info-link: "https://developers.hubspot.com/docs/api/overview"
+    rules:
+      - host: "api.hubapi.com"
+        port: 443
 
 packaging:
   # By default, all files and folders in this directory are packaged when uploaded.

@@ -8,7 +8,10 @@ __pycache__/
 *.exe
 *.zip
 manifest.json
+manifest_sai.json
+manifest_sai_spcs.json
 published_manifest.json
+published_manifest_sai.json
 published_agents_manifest.json
 **/.DS_STORE
 !runbooks/manifest.json

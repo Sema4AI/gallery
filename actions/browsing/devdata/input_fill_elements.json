@@ -4,16 +4,15 @@
             "inputName": "Fill elements with values",
             "inputValue": {
                 "web_page": {
-                    "url": "https://mikahanninen.dev/form-test",
+                    "url": "https://robotsparebinindustries.com/#/",
                     "text_content": "  ",
                     "form": {
-                        "url": "https://mikahanninen.dev/form-test",
+                        "url": "https://robotsparebinindustries.com/#/",
                         "elements": [
                             {
                                 "type": "input",
-                                "placeholder": "Username",
                                 "aria_label": "",
-                                "id": "",
+                                "id": "username",
                                 "name": "username",
                                 "class_": "",
                                 "value_type": "text",
@@ -22,24 +21,12 @@
                             },
                             {
                                 "type": "input",
-                                "placeholder": "Email",
-                                "aria_label": "",
-                                "id": "",
-                                "name": "email",
-                                "class_": "",
-                                "value_type": "email",
-                                "value_to_fill": "hessu@hopo.com",
-                                "options": []
-                            },
-                            {
-                                "type": "input",
                                 "placeholder": "",
                                 "aria_label": "",
-                                "id": "",
-                                "name": "",
+                                "id": "password",
                                 "class_": "",
-                                "value_type": "submit",
-                                "value_to_fill": "",
+                                "value_type": "text",
+                                "value_to_fill": "something",
                                 "options": []
                             }
                         ]

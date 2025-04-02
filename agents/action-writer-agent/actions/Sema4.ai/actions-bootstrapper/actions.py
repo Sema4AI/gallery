@@ -8,11 +8,11 @@ from pathlib import Path
 
 import black
 import requests
-from sema4ai.actions import action
+from sema4ai.actions import Response, action
 
 
 @action
-def bootstrap_action_package(action_package_name: str) -> str:
+def bootstrap_action_package(action_package_name: str) -> Response[str]:
     """
     This action sets up an action package in the home directory of the user under the "actions_bootstrapper" folder.
 
@@ -33,7 +33,9 @@ def bootstrap_action_package(action_package_name: str) -> str:
 
     full_action_path = get_action_package_path(action_package_name)
 
-    return f"Action successfully bootstrapped! Code available at {full_action_path}"
+    return Response(
+        result=f"Action successfully bootstrapped! Code available at {full_action_path}"
+    )
 
 
 def find_available_port(start_port: int) -> int:
@@ -60,7 +62,7 @@ def get_action_package_path(action_package_name: str) -> str:
 @action
 def update_action_package_dependencies(
     action_package_name: str, action_package_dependencies_code: str
-) -> str:
+) -> Response[str]:
     """
     Update the action package dependencies (package.yaml) for
     a specified action package.
@@ -87,7 +89,9 @@ def update_action_package_dependencies(
     finally:
         package_yaml.close()
 
-    return f"Successfully updated the package dependencies at: {package_yaml_path}"
+    return Response(
+        result=f"Successfully updated the package dependencies at: {package_yaml_path}"
+    )
 
 
 @action
@@ -95,7 +99,7 @@ def update_action_package_action_dev_data(
     action_package_name: str,
     action_package_action_name: str,
     action_package_dev_data: str,
-) -> str:
+) -> Response[str]:
     """
     Update the action package dev data for a specified action package.
 
@@ -124,7 +128,9 @@ def update_action_package_action_dev_data(
         finally:
             file.close()
 
-    return f"dev data for {action_package_action_name} in the action package {action_package_name} successfully created!"
+    return Response(
+        result=f"dev data for {action_package_action_name} in the action package {action_package_name} successfully created!"
+    )
 
 
 @action
@@ -162,7 +168,7 @@ def start_action_server(action_package_name: str, secrets: str) -> str:
         str(available_port),
         secrets,
     ]
-    print(f"Start command: {start_command[:-1]}")
+    print(f"Start command: {start_command}")
 
     process = subprocess.Popen(
         start_command,
@@ -247,7 +253,7 @@ def stop_action_server(action_server_url: str) -> str:
 
 
 @action
-def update_action_code(action_package_name: str, action_code: str) -> str:
+def update_action_code(action_package_name: str, action_code: str) -> Response[str]:
     """
     Replaces actions.py content with the provided input.
 
@@ -275,7 +281,7 @@ def update_action_code(action_package_name: str, action_code: str) -> str:
     finally:
         actions_py.close()
 
-    return f"Successfully updated the actions at {actions_py_path}"
+    return Response(result=f"Successfully updated the actions at {actions_py_path}")
 
 
 @action
@@ -317,7 +323,7 @@ def open_action_code(action_package_name: str) -> str:
 
 
 @action
-def get_action_run_logs(action_server_url: str, run_id: str) -> str:
+def get_action_run_logs(action_server_url: str, run_id: str) -> Response[str]:
     """
     Returns action run logs in plain text by requesting them from the
     provided action server URL.
@@ -342,11 +348,11 @@ def get_action_run_logs(action_server_url: str, run_id: str) -> str:
     payload = response.json()
     output = payload[artifact]
 
-    return output
+    return Response(result=output)
 
 
 @action
-def get_action_run_logs_latest(action_server_url: str) -> str:
+def get_action_run_logs_latest(action_server_url: str) -> Response[str]:
     """
     Returns action run logs in plain text by requesting them from the
     provided action server URL. Requests the latest run's logs.
@@ -365,4 +371,4 @@ def get_action_run_logs_latest(action_server_url: str) -> str:
 
     last_run = runs_payload[-1]
 
-    return get_action_run_logs(action_server_url, last_run["id"])
+    return Response(result=get_action_run_logs(action_server_url, last_run["id"]))
