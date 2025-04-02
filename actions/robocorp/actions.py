@@ -1,10 +1,7 @@
-from dotenv import load_dotenv
-from pathlib import Path
+
 from sema4ai.actions import Response, Secret, action
 
 from support import make_get_request, make_post_request, get_credentials
-
-load_dotenv(Path(__file__).absolute().parent / "devdata" / ".env")
 
 BASE_URL = "https://cloud.robocorp.com/api/v1/workspaces"
 
