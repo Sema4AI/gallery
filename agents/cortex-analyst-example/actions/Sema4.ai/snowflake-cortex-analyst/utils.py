@@ -67,11 +67,11 @@ def execute_query(
         conn.cursor()
     ) as cursor:
         if warehouse:
-            cursor.execute(f'USE WAREHOUSE "{warehouse}"')
+            cursor.execute(f'USE WAREHOUSE "{warehouse.upper()}"')
         if database:
-            cursor.execute(f'USE DATABASE "{database}"')
+            cursor.execute(f'USE DATABASE "{database.upper()}"')
         if schema:
-            cursor.execute(f'USE SCHEMA "{schema}"')
+            cursor.execute(f'USE SCHEMA "{schema.upper()}"')
 
         cursor.execute(query, numeric_args)
 
