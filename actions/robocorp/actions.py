@@ -1,9 +1,10 @@
 from dotenv import load_dotenv
-from sema4ai.actions import ActionError, Response, Secret, action
+from pathlib import Path
+from sema4ai.actions import Response, Secret, action
 
 from support import make_get_request, make_post_request, get_credentials
 
-load_dotenv()
+load_dotenv(Path(__file__).absolute().parent / "devdata" / ".env")
 
 BASE_URL = "https://cloud.robocorp.com/api/v1/workspaces"
 
@@ -20,14 +21,14 @@ def list_processes(api_key: Secret, workspace_id: Secret) -> Response[dict]:
     Returns:
         Result of the operation
     """
-    try:
-        api_key_value, ws_id = get_credentials(api_key, workspace_id)
-        headers = {"Content-Type": "application/json", "Authorization": f"RC-WSKEY {api_key_value}"}
+    api_key_value, ws_id = get_credentials(api_key, workspace_id)
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": f"RC-WSKEY {api_key_value}",
+    }
 
-        url = f"{BASE_URL}/{ws_id}/processes"
-        return make_get_request(url, headers)
-    except Exception as e:
-        raise ActionError(f"Failed to list processes: {str(e)}")
+    url = f"{BASE_URL}/{ws_id}/processes"
+    return make_get_request(url, headers)
 
 
 @action
@@ -45,14 +46,14 @@ def start_process_run(
     Returns:
         Response[dict]: Result of the operation including the ID that you can check the status with get_process_run
     """
-    try:
-        api_key_value, ws_id = get_credentials(api_key, workspace_id)
-        headers = {"Content-Type": "application/json", "Authorization": f"RC-WSKEY {api_key_value}"}
+    api_key_value, ws_id = get_credentials(api_key, workspace_id)
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": f"RC-WSKEY {api_key_value}",
+    }
 
-        url = f"{BASE_URL}/{ws_id}/processes/{process_id}/process-runs"
-        return make_post_request(url, headers)
-    except Exception as e:
-        raise ActionError(f"Failed to start process run: {str(e)}")
+    url = f"{BASE_URL}/{ws_id}/processes/{process_id}/process-runs"
+    return make_post_request(url, headers)
 
 
 @action
@@ -70,12 +71,12 @@ def get_process_run(
     Returns:
         Response[dict]: The details of the specified process run.
     """
-    try:
-        api_key_value, ws_id = get_credentials(api_key, workspace_id)
-        headers = {"Content-Type": "application/json", "Authorization": f"RC-WSKEY {api_key_value}"}
+    api_key_value, ws_id = get_credentials(api_key, workspace_id)
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": f"RC-WSKEY {api_key_value}",
+    }
 
-        url = f"{BASE_URL}/{ws_id}/process-runs/{process_run_id}"
+    url = f"{BASE_URL}/{ws_id}/process-runs/{process_run_id}"
 
-        return make_get_request(url, headers)
-    except Exception as e:
-        raise ActionError(f"Failed to get process run: {str(e)}")
+    return make_get_request(url, headers)

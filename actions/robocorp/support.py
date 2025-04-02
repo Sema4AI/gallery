@@ -2,7 +2,7 @@ import os
 from typing import Any, Dict, Tuple
 
 import requests
-from sema4ai.actions import ActionError, Response, Secret
+from sema4ai.actions import Response, Secret
 
 
 def get_credentials(api_key: Secret, workspace_id: Secret) -> Tuple[str, str]:
@@ -36,11 +36,8 @@ def make_get_request(url: str, headers: dict) -> Response[Dict[str, Any]]:
         ActionError: If the request fails.
     """
     response = requests.get(url, headers=headers)
-
-    if response.status_code in [200, 201]:
-        return Response(result=response.json())
-    else:
-        raise ActionError(f"Failed to retrieve data: {response.text}")
+    response.raise_for_status()
+    return Response(result=response.json())
 
 
 def make_post_request(url: str, headers: dict) -> Response[Dict[str, Any]]:
@@ -58,8 +55,5 @@ def make_post_request(url: str, headers: dict) -> Response[Dict[str, Any]]:
         ActionError: If the request fails.
     """
     response = requests.post(url, headers=headers)
-
-    if response.status_code in [200, 201]:
-        return Response(result=response.json())
-    else:
-        raise ActionError(f"Failed to make POST request: {response.text}")
+    response.raise_for_status()
+    return Response(result=response.json())
