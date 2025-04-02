@@ -1,7 +1,7 @@
 {
     "inputs": [
         {
-            "inputName": "input-1",
+            "inputName": "input-uppercase",
             "inputValue": {
                 "query": "Can you analyze the different types of cancellation policies by room type?",
                 "columns": [
@@ -13,6 +13,21 @@
                 "database": "CORTEX_SEARCH_TUTORIAL_DB",
                 "schema": "PUBLIC",
                 "service": "AIRBNB_SVC"
+            }
+        },
+        {
+            "inputName": "input-lowercase",
+            "inputValue": {
+                "query": "Can you analyze the different types of cancellation policies by room type?",
+                "columns": [
+                    "room_type",
+                    "cancellation_policy"
+                ],
+                "limit": 10,
+                "warehouse": "compute_wh",
+                "database": "cortex_search_tutorial_db",
+                "schema": "public",
+                "service": "airbnb_svc"
             }
         }
     ],

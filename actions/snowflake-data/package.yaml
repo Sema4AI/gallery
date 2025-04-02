@@ -5,7 +5,7 @@ name: Snowflake Data
 description: Various tools for interacting with Snowflake databases and other tools.
 
 # Package version number, recommend using semver.org
-version: 2.0.0
+version: 2.0.1
 
 spec-version: v2
 
@@ -21,10 +21,10 @@ dependencies:
   - tabulate=0.9.0
   - PyYAML=6.0.2
   - openpyxl=3.2.0b1
-  - snowflake=1.1.0
-  - snowflake-snowpark-python=1.29.1
+  - snowflake=1.2.0
+  - snowflake-snowpark-python=1.30.0
   - pyjwt=2.10.1
-  - streamlit=1.43.2
+  - streamlit=1.44.1
 
 packaging:
   # By default, all files and folders in this directory are packaged when uploaded.
