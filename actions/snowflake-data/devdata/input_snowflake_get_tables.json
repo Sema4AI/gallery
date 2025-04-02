@@ -3,9 +3,9 @@
         {
             "inputName": "input-1",
             "inputValue": {
-                "warehouse": "COMPUTE_WH",
-                "database": "CORTEX_ANALYST_DEMO",
-                "schema": "REVENUE_TIMESERIES"
+                "warehouse": "compute_wh",
+                "database": "cortex_analyst_demo",
+                "schema": "revenue_timeseries"
             }
         }
     ],
