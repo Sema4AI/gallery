@@ -5,7 +5,7 @@ name: Snowflake Cortex Search
 description: Cortex Search is a retrieval engine that provides agent the context it needs based on your latest data.
 
 # Package version number, recommend using semver.org
-version: 1.0.0
+version: 1.0.1
 
 spec-version: v2
 
@@ -18,7 +18,7 @@ dependencies:
   - sema4ai-data=1.0.2
   - snowflake-connector-python[pandas]=3.14.0
   - pandas=2.2.3
-  - snowflake=1.1.0
+  - snowflake=1.2.0
   - pyjwt=2.10.1
 
 packaging:
