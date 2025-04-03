@@ -3,8 +3,8 @@
         {
             "inputName": "input-1",
             "inputValue": {
-                "warehouse": "COMPUTE_WH",
-                "database": "CORTEX_ANALYST_DEMO"
+                "warehouse": "compute_wh",
+                "database": "cortex_analyst_demo"
             }
         }
     ],

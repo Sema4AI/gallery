@@ -94,7 +94,10 @@ def snowflake_get_schemas(warehouse: str, database: str) -> Response[list[Schema
         ORDER BY schema_name;
     """
     reponse = execute_query(
-        query=sql, warehouse=warehouse, database=database, numeric_args=[database]
+        query=sql,
+        warehouse=warehouse,
+        database=database,
+        numeric_args=[database.upper()],
     )
 
     return Response(result=[Schema.model_validate(schema) for schema in reponse])
@@ -126,7 +129,7 @@ def snowflake_get_tables(
         warehouse=warehouse,
         database=database,
         schema=schema,
-        numeric_args=[schema],
+        numeric_args=[schema.upper()],
     )
 
     return Response(result=[Table.model_validate(table) for table in response])
@@ -160,7 +163,7 @@ def snowflake_get_columns(
         warehouse=warehouse,
         database=database,
         schema=schema,
-        numeric_args=[table, schema],
+        numeric_args=[table.upper(), schema.upper()],
     )
 
     return Response(result=[Column.model_validate(column) for column in response])

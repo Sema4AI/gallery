@@ -33,10 +33,10 @@ def cortex_get_search_specification(
     """
     result = execute_query(
         query=query,
-        warehouse=warehouse.value,
-        database=database.value,
-        schema=schema.value,
-        numeric_args=[service.value],
+        warehouse=warehouse.value.upper(),
+        database=database.value.upper(),
+        schema=schema.value.upper(),
+        numeric_args=[service.value.upper()],
     )
     return Response(result=result)
 
@@ -69,12 +69,12 @@ def cortex_search(
         The results of the query.
     """
     with get_snowflake_connection(
-        warehouse=warehouse.value, database=database.value, schema=schema.value
+        warehouse=warehouse.value.upper(), database=database.value.upper(), schema=schema.value.upper()
     ) as conn:
         cortex_search_service = (
             Root(conn)
-            .databases[database.value]
-            .schemas[schema.value]
+            .databases[database.value.upper()]
+            .schemas[schema.value.upper()]
             .cortex_search_services[service.value]
         )
 

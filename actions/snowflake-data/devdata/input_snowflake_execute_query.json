@@ -4,9 +4,9 @@
             "inputName": "input-1",
             "inputValue": {
                 "query": "SELECT * FROM daily_revenue LIMIT 10",
-                "warehouse": "COMPUTE_WH",
-                "database": "CORTEX_ANALYST_DEMO",
-                "schema": "REVENUE_TIMESERIES",
+                "warehouse": "compute_wh",
+                "database": "cortex_analyst_demo",
+                "schema": "revenue_timeseries",
                 "numeric_args": null
             }
         }
