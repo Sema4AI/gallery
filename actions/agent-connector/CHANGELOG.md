@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
-## [3.0.1] - 2025-04-03
+## [3.0.1] - 2025-04-04
 
 ### Changed
 
@@ -20,7 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 > Should not affect Agents using this, but is a change worth noting.
 
 - Support `SEMA4AI_AGENT_SERVER_API_URL` for giving the Agent Server url
-  - Expected format: `https://localhost:<port>/api/v1` 
+  - Expected format: `https://localhost:<port>/api/v1`
   - If not given looks for Agent Server in localhost ports 8990 and 8000
 - General cleanup and updates.
 

@@ -1,45 +1,47 @@
 agent-package:
   spec-version: v2
   exclude:
-    - ./.git/**
-    - ./.vscode/**
-    - ./devdata/**
-    - ./output/**
-    - ./venv/**
-    - ./.venv/**
-    - ./**/.env
-    - ./**/.DS_Store
-    - ./**/*.pyc
-    - ./*.zip
+  - ./.git/**
+  - ./.vscode/**
+  - ./devdata/**
+  - ./output/**
+  - ./venv/**
+  - ./.venv/**
+  - ./**/.env
+  - ./**/.DS_Store
+  - ./**/*.pyc
+  - ./*.zip
   agents:
   - name: Action Writer Agent
     description: Helps you create new actions using public API documentation.
     model:
       provider: OpenAI
       name: gpt-4o
-    version: 1.0.0
+    version: 1.0.1
     architecture: agent
     reasoning: disabled
     runbook: runbook.md
     action-packages:
-      - name: Actions Bootstrapper
-        organization: Sema4.ai
-        type: folder
-        version: 1.0.4
-        whitelist: bootstrap_action_package,update_action_package_dependencies,update_action_package_action_dev_data,start_action_server,stop_action_server,update_action_code,open_action_code,get_action_run_logs,get_action_run_logs_latest
-        path: Sema4.ai/actions-bootstrapper
-      - name: Agent Connector
-        organization: Sema4.ai
-        type: folder
-        version: 2.0.2
-        whitelist: get_all_agents,get_agent_by_name,get_thread,get_threads,create_thread,send_message
-        path: Sema4.ai/agent-connector
-      - name: Browsing
-        organization: Sema4.ai
-        type: folder
-        version: 1.2.0
-        whitelist: get_website_content,download_file,fill_elements
-        path: Sema4.ai/browsing
+    - name: Browsing
+      organization: Sema4.ai
+      version: 1.2.1
+      path: Sema4.ai/browsing
+      type: folder
+      whitelist: get_website_content,download_file,fill_elements
+    - name: Actions Bootstrapper
+      organization: Sema4.ai
+      version: 1.0.5
+      path: Sema4.ai/actions-bootstrapper
+      type: folder
+      whitelist:
+        bootstrap_action_package,update_action_package_dependencies,update_action_package_action_dev_data,start_action_server,stop_action_server,update_action_code,open_action_code,get_action_run_logs,get_action_run_logs_latest
+    - name: Agent Connector
+      organization: Sema4.ai
+      version: 2.0.3
+      path: Sema4.ai/agent-connector
+      type: folder
+      whitelist:
+        get_all_agents,get_agent_by_name,get_thread,get_threads,create_thread,send_message
     knowledge: []
     metadata:
       mode: conversational
