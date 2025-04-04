@@ -10,4 +10,5 @@
 output/
 temp/
 venv/
-*.log
+*.logmetadata.json
+./**/.env
