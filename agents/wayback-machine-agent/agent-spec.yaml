@@ -1,39 +1,39 @@
 agent-package:
   spec-version: v2
   exclude:
-    - ./.git/**
-    - ./.vscode/**
-    - ./devdata/**
-    - ./output/**
-    - ./venv/**
-    - ./.venv/**
-    - ./**/.env
-    - ./**/.DS_Store
-    - ./**/*.pyc
-    - ./*.zip
+  - ./.git/**
+  - ./.vscode/**
+  - ./devdata/**
+  - ./output/**
+  - ./venv/**
+  - ./.venv/**
+  - ./**/.env
+  - ./**/.DS_Store
+  - ./**/*.pyc
+  - ./*.zip
   agents:
   - name: Wayback Machine Agent
     description: Helps you analyze websites and summarizes changes over a time period.
     model:
       provider: OpenAI
       name: gpt-4o
-    version: 1.0.0
+    version: 1.0.1
     architecture: agent
     reasoning: disabled
     runbook: runbook.md
     action-packages:
-      - name: Wayback Machine
-        organization: Sema4.ai
-        type: folder
-        version: 1.1.0
-        whitelist: get_wayback_changes,get_wayback_snapshots
-        path: Sema4.ai/wayback-machine
-      - name: Browsing
-        organization: Sema4.ai
-        type: folder
-        version: 1.2.0
-        whitelist: get_website_content,download_file,fill_elements
-        path: Sema4.ai/browsing
+    - name: Browsing
+      organization: Sema4.ai
+      version: 1.2.1
+      path: Sema4.ai/browsing
+      type: folder
+      whitelist: get_website_content,download_file,fill_elements
+    - name: Wayback Machine
+      organization: Sema4.ai
+      version: 1.1.1
+      path: Sema4.ai/wayback-machine
+      type: folder
+      whitelist: get_wayback_changes,get_wayback_snapshots
     knowledge: []
     metadata:
       mode: conversational

@@ -1,8 +1,8 @@
 *.pyc
 *.zip
+./**/.env
 .DS_Store
 .env
-.gitattributes
 .project
 .pydevproject
 .use
@@ -12,4 +12,4 @@ metadata.json
 output/
 temp/
 venv/
-./**/.env
+*.pkl

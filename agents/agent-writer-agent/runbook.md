@@ -91,6 +91,7 @@ packaging:
     - ./.DS_Store/**
     - ./**/*.pyc
     - ./**/*.zip
+    - ./**/.env
 ```
 
 # Using @action annotation

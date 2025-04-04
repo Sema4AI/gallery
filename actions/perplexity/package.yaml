@@ -7,16 +7,16 @@ description: Search the web with Perplexity
 spec-version: v2
 
 # Package version number, recommend using semver.org
-version: 1.0.0
+version: 1.0.1
 
 dependencies:
   conda-forge:
-  - python=3.10.14
-  - uv=0.4.17
+    - python=3.11.11
+    - uv=0.6.11
   pypi:
-  - sema4ai-actions=1.3.6
-  - requests=2.32.3
-  - openai=1.65.3
+    - sema4ai-actions=1.3.8
+    - requests=2.32.3
+    - openai=1.65.3
 
 external-endpoints:
   - name: "Perplexity API"
@@ -30,12 +30,13 @@ packaging:
   # By default, all files and folders in this directory are packaged when uploaded.
   # Add exclusion rules below (expects glob format: https://docs.python.org/3/library/glob.html)
   exclude:
-  - ./.git/**
-  - ./.vscode/**
-  - ./devdata/**
-  - ./output/**
-  - ./venv/**
-  - ./.venv/**
-  - ./.DS_store/**
-  - ./**/*.pyc
-  - ./**/*.zip
+    - ./.git/**
+    - ./.vscode/**
+    - ./devdata/**
+    - ./output/**
+    - ./venv/**
+    - ./.venv/**
+    - ./.DS_store/**
+    - ./**/*.pyc
+    - ./**/*.zip
+    - ./**/.env

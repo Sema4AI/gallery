@@ -1,3 +1,4 @@
+./**/.env
 *.pkl
 *.pyc
 *.zip
@@ -16,12 +17,8 @@
 .virtual_documents/
 .vscode
 .~lock*
-creds.json
-gmail_oauthflow.py
-input_send_email.json
 metadata.json
 output/
 temp/
 testrun/*
 venv/
-./**/.env

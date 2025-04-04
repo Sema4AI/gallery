@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.1.2] - 2025-04-04
+
+- Update to the latest version of the action packages
+
 ## [0.1.1] - 2025-04-02
 
 - Update to use the Cortex Analyst action package version 1.0.1 that fixes the lowercase configuration issue

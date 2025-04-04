@@ -5,21 +5,21 @@ name: PDF
 description: Reading and finding text- and image-based PDFs.
 
 # Package version number, recommend using semver.org
-version: 1.0.1
+version: 1.0.2
 
 # The version of the `package.yaml` format.
 spec-version: v2
 
 dependencies:
   conda-forge:
-    - python=3.10.16
-    - uv=0.4.17
+    - python=3.11.11
+    - uv=0.6.11
     - tesseract=5.5.0
     - pdf2image=1.17.0
     - poppler=25.02.0
   pypi:
-    - sema4ai-actions=1.3.5
-    - pydantic=2.10.4
+    - sema4ai-actions=1.3.8
+    - pydantic=2.11.2
     - pypdf=5.3.0
     - pytesseract=0.3.13
     - pillow=11.1.0
@@ -38,3 +38,4 @@ packaging:
     - ./.DS_Store/**
     - ./**/*.pyc
     - ./**/*.zip
+    - ./**/.env

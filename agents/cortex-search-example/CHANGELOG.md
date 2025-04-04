@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.1.2] - 2025-04-04
+
+- Update to the latest version of the action packages
+
 ## [0.1.1] - 2025-04-02
 
 - Updated the action package to use the latest version that fixes the casing of the warehouse, database, schema, and service parameters.
