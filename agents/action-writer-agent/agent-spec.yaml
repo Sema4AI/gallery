@@ -24,7 +24,7 @@ agent-package:
     action-packages:
     - name: Browsing
       organization: Sema4.ai
-      version: 1.2.1
+      version: 1.2.2
       path: Sema4.ai/browsing
       type: folder
       whitelist: get_website_content,download_file,fill_elements
@@ -37,7 +37,7 @@ agent-package:
         bootstrap_action_package,update_action_package_dependencies,update_action_package_action_dev_data,start_action_server,stop_action_server,update_action_code,open_action_code,get_action_run_logs,get_action_run_logs_latest
     - name: Agent Connector
       organization: Sema4.ai
-      version: 2.0.3
+      version: 3.0.1
       path: Sema4.ai/agent-connector
       type: folder
       whitelist:
