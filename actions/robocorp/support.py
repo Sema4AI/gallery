@@ -1,13 +1,13 @@
 import os
-from typing import Any, Dict, Tuple
-from dotenv import load_dotenv
 from pathlib import Path
+from typing import Any, Dict, Tuple
 
-import requests
-from sema4ai.actions import Response, Secret, ActionError
-
+import sema4ai_http
+from dotenv import load_dotenv
+from sema4ai.actions import ActionError, Response, Secret
 
 load_dotenv(Path(__file__).absolute().parent / "devdata" / ".env")
+
 
 def get_credentials(api_key: Secret, workspace_id: Secret) -> Tuple[str, str]:
     """
@@ -27,10 +27,14 @@ def get_credentials(api_key: Secret, workspace_id: Secret) -> Tuple[str, str]:
     ws_id = workspace_id.value or os.getenv("WORKSPACE_ID", "")
 
     if not api_key_value:
-        raise ActionError("API key is required. Please provide it either through the Secret object or set the API_KEY environment variable.")
-    
+        raise ActionError(
+            "API key is required. Please provide it either through the Secret object or set the API_KEY environment variable."
+        )
+
     if not ws_id:
-        raise ActionError("Workspace ID is required. Please provide it either through the Secret object or set the WORKSPACE_ID environment variable.")
+        raise ActionError(
+            "Workspace ID is required. Please provide it either through the Secret object or set the WORKSPACE_ID environment variable."
+        )
 
     return api_key_value, ws_id
 
@@ -49,7 +53,7 @@ def make_get_request(url: str, headers: dict) -> Response[Dict[str, Any]]:
     Raises:
         ActionError: If the request fails.
     """
-    response = requests.get(url, headers=headers)
+    response = sema4ai_http.get(url, headers=headers)
     response.raise_for_status()
     return Response(result=response.json())
 
@@ -68,6 +72,6 @@ def make_post_request(url: str, headers: dict) -> Response[Dict[str, Any]]:
     Raises:
         ActionError: If the request fails.
     """
-    response = requests.post(url, headers=headers)
+    response = sema4ai_http.post(url, headers=headers)
     response.raise_for_status()
     return Response(result=response.json())

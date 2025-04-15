@@ -1,4 +1,4 @@
-import requests
+import sema4ai_http
 from sema4ai.actions import ActionError
 
 BASE_GRAPH_URL = "https://graph.microsoft.com/v1.0"
@@ -31,12 +31,14 @@ def send_request(
     :raises: RequestException for any request failures.
     """
     try:
-        response = requests.request(
-            method, f"{BASE_GRAPH_URL}{url}", headers=headers, json=data, params=params
+        response = getattr(sema4ai_http, method.lower())(
+            f"{BASE_GRAPH_URL}{url}", headers=headers, json=data, fields=params
         )
         response.raise_for_status()  # Raises a HTTPError for bad responses
+
         if response.status_code not in [200, 201]:
             raise ActionError(f"Error on '{req_name}': {response.text}")
         return response.json()
+
     except Exception as e:
         raise ActionError(f"Error on '{req_name}': {str(e)}")

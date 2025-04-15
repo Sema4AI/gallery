@@ -1,13 +1,11 @@
 from typing import Literal
 
-import requests
-from sema4ai.actions import ActionError, OAuth2Secret, Response, action
-
+import sema4ai_http
 from microsoft_teams.models import (
-    TeamSearchRequest,
-    UserSearch,
     GetChannelMessagesRequest,
     GetMessageRepliesRequest,
+    TeamSearchRequest,
+    UserSearch,
 )
 from microsoft_teams.support import (
     BASE_GRAPH_URL,
@@ -15,6 +13,7 @@ from microsoft_teams.support import (
     parse_channel_messages,
     parse_message_replies,
 )
+from sema4ai.actions import ActionError, OAuth2Secret, Response, action
 
 
 @action
@@ -34,7 +33,7 @@ def get_joined_teams(
         Result of the operation
     """
     headers = build_headers(token)
-    response = requests.get(
+    response = sema4ai_http.get(
         f"{BASE_GRAPH_URL}/me/joinedTeams",
         headers=headers,
     )
@@ -65,7 +64,7 @@ def search_team_by_name(
     headers = build_headers(token)
     team_name = search_request.team_name
 
-    response = requests.get(
+    response = sema4ai_http.get(
         f"{BASE_GRAPH_URL}/groups?$filter=displayName eq '{team_name}' and resourceProvisioningOptions/Any(x:x eq 'Team')",
         headers=headers,
     )
@@ -99,7 +98,7 @@ def get_team_members(
         raise ActionError("The team_id must be provided")
 
     headers = build_headers(token)
-    response = requests.get(
+    response = sema4ai_http.get(
         f"{BASE_GRAPH_URL}/teams/{team_id}/members",
         headers=headers,
     )
@@ -131,7 +130,7 @@ def get_team_channels(
         raise ActionError("The team_id must be provided")
 
     headers = build_headers(token)
-    response = requests.get(
+    response = sema4ai_http.get(
         f"{BASE_GRAPH_URL}/teams/{team_id}/channels",
         headers=headers,
     )
@@ -169,7 +168,7 @@ def search_user(
         search_query.append(f"startswith(surname,'{user_search.last_name}')")
 
     filter_query = " and ".join(search_query)
-    response = requests.get(
+    response = sema4ai_http.get(
         f"{BASE_GRAPH_URL}/users?$filter={filter_query}",
         headers=headers,
     )
@@ -207,7 +206,7 @@ def get_channel_messages(
 
     url = f"https://graph.microsoft.com/beta/teams/{team_id}/channels/{channel_id}/messages?$top={limit}"
 
-    response = requests.get(url, headers=headers)
+    response = sema4ai_http.get(url, headers=headers)
 
     if response.status_code in [200, 201]:
         parsed_data = parse_channel_messages(response.json())
@@ -242,7 +241,7 @@ def get_message_replies(
 
     url = f"https://graph.microsoft.com/beta/teams/{team_id}/channels/{channel_id}/messages/{message_id}/replies"
 
-    response = requests.get(url, headers=headers)
+    response = sema4ai_http.get(url, headers=headers)
 
     if response.status_code in [200, 201]:
         parsed_data = parse_message_replies(response.json())

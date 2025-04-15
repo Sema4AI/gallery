@@ -10,13 +10,12 @@ import os
 from pathlib import Path
 from urllib.parse import urlparse
 
-import requests
+import sema4ai_http
 from dotenv import load_dotenv
+from models import DownloadedFile, Form, Links, UserAgent, WebPage
 from playwright.sync_api import TimeoutError
 from robocorp import browser
 from sema4ai.actions import Response, action
-
-from models import DownloadedFile, Form, Links, UserAgent, WebPage
 from support import (
     _clean_text,
     _configure_browser,
@@ -102,7 +101,7 @@ def download_file(
         content_length=0,
     )
     try:
-        with requests.get(file_url, stream=True) as response:
+        with sema4ai_http.get(file_url, preload_content=False) as response:
             df.request_status = response.status_code
             response.raise_for_status()  # Check for HTTP errors
 
@@ -131,14 +130,17 @@ def download_file(
             if target_folder == "":
                 target_folder = os.getcwd()
             file_path = os.path.join(target_folder, filename)
+
             with open(file_path, "wb") as file:
-                for chunk in response.iter_content(chunk_size=8192):
+                for chunk in response.stream(8192):
                     file.write(chunk)
+
             df.status = f"File downloaded successfully at: {os.path.abspath(file_path)}"
             df.filepath = os.path.abspath(file_path)  # Return the full path of the file
     except Exception as e:
         df.filepath = ""
         df.status = f"Download failed: {str(e)}"
+
     print(df.status)
     return Response(result=df)
 

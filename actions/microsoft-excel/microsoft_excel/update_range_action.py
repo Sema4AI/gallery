@@ -8,7 +8,7 @@ from pydantic import BaseModel, Field, field_validator, validate_call
 from sema4ai.actions import ActionError, OAuth2Secret, Response, action
 from typing_extensions import assert_never
 
-from microsoft_excel._client import Client, get_client  # noqa: F401
+from microsoft_excel._client import Client  # noqa: F401
 
 Values = list[list[str | Decimal]]
 
@@ -168,20 +168,20 @@ def update_range(
 
     url = f"/me/drive/items/{workbook_id}/workbook/worksheets/{worksheet_id_or_name}/range(address='{data.address}')"
 
-    with get_client(token) as client:  # type: Client
-        match data.operation:
-            case "insert_shift_right" | "insert_shift_down" as op:
-                match op:
-                    case "insert_shift_right":
-                        shift = "Right"
-                    case "insert_shift_down":
-                        shift = "Down"
-                    case _:
-                        assert_never(op)
+    client = Client(token)
+    match data.operation:
+        case "insert_shift_right" | "insert_shift_down" as op:
+            match op:
+                case "insert_shift_right":
+                    shift = "Right"
+                case "insert_shift_down":
+                    shift = "Down"
+                case _:
+                    assert_never(op)
 
-                # When inserting a new range we first shift everything and then we add the values
-                client.post(_RangeResponse, f"{url}/insert", json={"shift": shift})
+            # When inserting a new range we first shift everything and then we add the values
+            client.post(_RangeResponse, f"{url}/insert", json={"shift": shift})
 
-        client.patch(_RangeResponse, url, json={"values": data.values})
+    client.patch(_RangeResponse, url, json={"values": data.values})
 
     return Response(result=f"Range updated successfully at address: {data.address}")

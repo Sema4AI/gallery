@@ -1,20 +1,19 @@
 from typing import Literal
 
-import requests
-from sema4ai.actions import ActionError, OAuth2Secret, Response, action
-
+import sema4ai_http
 from microsoft_teams.models import (
     AddUsersToTeamRequest,
     ChannelMessageRequest,
     ChatCreationRequest,
+    ReplyMessageRequest,
     SendMessageRequest,
     TeamDetails,
-    ReplyMessageRequest,
 )
 from microsoft_teams.support import (
     BASE_GRAPH_URL,
     build_headers,
 )
+from sema4ai.actions import ActionError, OAuth2Secret, Response, action
 
 
 @action
@@ -37,7 +36,7 @@ def post_channel_message(
     """
     headers = build_headers(token)
     payload = {"body": {"content": message_request.message}}
-    response = requests.post(
+    response = sema4ai_http.post(
         f"{BASE_GRAPH_URL}/teams/{message_request.team_id}/channels/{message_request.channel_id}/messages",
         headers=headers,
         json=payload,
@@ -75,10 +74,10 @@ def create_team(
         "visibility": team_details.visibility,
     }
 
-    response = requests.post(f"{BASE_GRAPH_URL}/teams", headers=headers, json=data)
+    response = sema4ai_http.post(f"{BASE_GRAPH_URL}/teams", headers=headers, json=data)
 
     if response.status_code in [200, 201, 202]:
-        search_response = requests.get(
+        search_response = sema4ai_http.get(
             f"{BASE_GRAPH_URL}/groups?$filter=displayName eq '{team_details.display_name}' and resourceProvisioningOptions/Any(x:x eq 'Team')",
             headers=headers,
         )
@@ -122,7 +121,7 @@ def create_chat(
     """
     headers = build_headers(token)
 
-    me_response = requests.get(f"{BASE_GRAPH_URL}/me", headers=headers)
+    me_response = sema4ai_http.get(f"{BASE_GRAPH_URL}/me", headers=headers)
     if me_response.status_code in [200, 201]:
         my_details = me_response.json()
         user_id_1 = my_details["id"]
@@ -152,7 +151,7 @@ def create_chat(
 
     data = {"chatType": chat_type, "members": members}
 
-    response = requests.post(f"{BASE_GRAPH_URL}/chats", headers=headers, json=data)
+    response = sema4ai_http.post(f"{BASE_GRAPH_URL}/chats", headers=headers, json=data)
 
     if response.status_code in [200, 201]:
         return Response(result=response.json())
@@ -182,7 +181,7 @@ def send_message_to_chat(
 
     data = {"body": {"content": message_request.message}}
 
-    response = requests.post(
+    response = sema4ai_http.post(
         f"{BASE_GRAPH_URL}/chats/{message_request.chat_id}/messages",
         headers=headers,
         json=data,
@@ -219,7 +218,7 @@ def add_users_to_team(
     results = []
 
     for user_id in user_ids:
-        response = requests.post(
+        response = sema4ai_http.post(
             f"{BASE_GRAPH_URL}/groups/{team_id}/members/$ref",
             headers=headers,
             json={"@odata.id": f"https://graph.microsoft.com/v1.0/users/{user_id}"},
@@ -255,7 +254,7 @@ def reply_to_message(
     """
     headers = build_headers(token)
     payload = {"body": {"content": reply_request.reply}}
-    response = requests.post(
+    response = sema4ai_http.post(
         f"{BASE_GRAPH_URL}/teams/{reply_request.team_id}/channels/{reply_request.channel_id}/messages/{reply_request.message_id}/replies",
         headers=headers,
         json=payload,

@@ -1,19 +1,20 @@
-from sema4ai.actions import Secret
-from dotenv import load_dotenv
 import json
 import os
 from pathlib import Path
-import requests
-from models import FilterOptions, Issue, TeamList, ProjectList, Project, Team
+from typing import List
+
+import sema4ai_http
+from dotenv import load_dotenv
+from models import FilterOptions, Issue, Project, ProjectList, Team, TeamList
 from queries import (
+    query_create_label,
     query_get_labels,
+    query_get_projects,
     query_get_states,
     query_get_teams,
-    query_get_projects,
     query_get_users,
-    query_create_label,
 )
-from typing import List
+from sema4ai.actions import Secret
 
 GRAPHQL_API_URL = "https://api.linear.app/graphql"
 
@@ -175,7 +176,7 @@ def _make_graphql_request(
         current_variables = {**variables}
         if paginated:
             current_variables["after"] = after
-        response = requests.post(
+        response = sema4ai_http.post(
             GRAPHQL_API_URL,
             json={"query": query, "variables": current_variables},
             headers={
