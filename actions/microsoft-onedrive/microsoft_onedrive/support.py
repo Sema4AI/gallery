@@ -41,7 +41,7 @@ def send_request(
         if "application/json" in response.headers.get("Content-Type", ""):
             return response.json()
         else:
-            return response.content
+            return response.data
     except Exception as e:
         raise ActionError(f"Error on '{req_name}': {str(e)}")
 

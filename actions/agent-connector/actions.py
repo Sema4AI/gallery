@@ -132,11 +132,9 @@ def send_message(thread_id: str, message: str) -> Response[str]:
     )
 
     collected_data = []
-    for line in response.iter_lines():
-        if line:
-            decoded_line = line.decode("utf-8")
-            if decoded_line.startswith("data: "):
-                collected_data.append(decoded_line[6:])
+    for line in response.data.decode("utf-8").splitlines():
+        if line.startswith("data: "):
+            collected_data.append(line[6:])
 
     if not collected_data:
         raise ActionError("No response data received")

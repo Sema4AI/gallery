@@ -136,6 +136,7 @@ def download_file(
             if "text" in df.content_type:
                 df_content += chunk.decode("utf-8")
 
+        response.release_conn()
         df.content = df_content
         df.status = f"File downloaded successfully at: {os.path.abspath(file_path)}"
         df.filepath = os.path.abspath(file_path)  # Return the full path of the file
