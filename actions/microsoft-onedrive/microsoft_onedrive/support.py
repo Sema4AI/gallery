@@ -32,7 +32,7 @@ def send_request(
     try:
         query_url = url if url.startswith("http") else f"{BASE_GRAPH_URL}{url}"
         response = getattr(sema4ai_http, method.lower())(
-            method, query_url, headers=headers, json=json, fields=params, body=data
+            query_url, headers=headers, json=json, fields=params, body=data
         )
         response.raise_for_status()  # Raises a HTTPError for bad responses
         if response.status_code not in [200, 201, 202, 204]:
