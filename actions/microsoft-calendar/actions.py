@@ -1,4 +1,4 @@
-from typing import Literal
+from typing import Literal, Optional
 
 import sema4ai_http
 from models import Calendar, CreateEvent, Event, QueryParams, UpdateEvent
@@ -29,7 +29,7 @@ def create_event(
         list[Literal["Calendars.ReadWrite"]],
     ],
     event: CreateEvent,
-    calendar_id: str = "",
+    calendar_id: Optional[str] = "",
 ) -> Response[Event]:
     """Creates a new event in the user's calendar.
 
@@ -112,7 +112,7 @@ def list_events(
     ],
     query_params: QueryParams,
     timezone: str,
-    calendar_id: str = "",
+    calendar_id: Optional[str] = "",
 ) -> Response[list[Event]]:
     """List all events in the user's calendar.
 
@@ -133,7 +133,6 @@ def list_events(
 
     Returns:
         A list of calendar events that match the query, if defined.
-
     """
     url = EVENTS_ENDPOINT
     if calendar_id:
@@ -166,7 +165,6 @@ def list_calendars(
 
     Returns:
         A list of calendars.
-
     """
     response = sema4ai_http.get(
         CALENDARS_ENDPOINT,
