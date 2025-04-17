@@ -13,11 +13,11 @@ from microsoft_excel.models.workbook import Workbook
 from microsoft_excel.models.worksheet import WorksheetInfo
 
 T = TypeVar("T", bound=BaseModel)
-
+MSGRAPH_BASE_URL = "https://graph.microsoft.com/v1.0/"
 
 class Client:
     def __init__(self, token: OAuth2Secret):
-        self.token = token
+        self.token = token.access_token
 
     def get(self, model: type[T], url: str, **kwargs) -> T:
         return self._make_request(model, sema4ai_http.get, url, **kwargs)
@@ -32,7 +32,7 @@ class Client:
         return self._make_request(model, sema4ai_http.patch, url, **kwargs)
 
     def _make_request(self, model: type[T], method: Callable, url: str, **kwargs) -> T:
-        url = url.lstrip("/")
+        url = f"{MSGRAPH_BASE_URL}{url.lstrip('/')}"
         headers = {
             "Authorization": f"Bearer {self.token}",
             "Content-Type": "application/json",
@@ -41,11 +41,11 @@ class Client:
         if extra_headers:
             headers.update(extra_headers)
 
-        raw_result = method(url, headers, **kwargs)
+        raw_result = method(url, headers=headers, **kwargs)
         raw_result.raise_for_status()
 
         pprint(raw_result.json())
-        return model.model_validate_json(raw_result.content)
+        return model.model_validate_json(raw_result.text)
 
 
 def _create_workbook(client: Client, workbook_name: str) -> Workbook:
@@ -59,7 +59,7 @@ def _create_workbook(client: Client, workbook_name: str) -> Workbook:
         Workbook,
         f"/me/drive/root:/{workbook_name}:/content",
         headers={"Content-Type": EXCEL_MIME_TYPE},
-        data=output.getvalue(),
+        body=output.getvalue(),
     )
 
     return workbook
