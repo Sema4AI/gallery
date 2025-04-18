@@ -1,0 +1,39 @@
+{
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "task_description": "",
+                "url": "",
+                "source_data": "",
+                "output_model": "",
+                "headless": false,
+                "timeout": 0,
+                "cookies_file": "",
+                "openai_api_key": "<specify-secret>"
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "perform_browser_task",
+        "actionRelativePath": "actions.py",
+        "schemaDescription": [
+            "task_description: string: the description of the task to perform",
+            "url: string: the URL of the website to browse",
+            "source_data: string: Optional source data to be used during the task execution. Given as JSON string.\nWhen a list is provided, the task will be executed separately for each item in the list.\nExamples:\n- List of strings: [\"item1\", \"item2\", \"item3\"]\n- Single dictionary: {\"username\": \"john\", \"password\": \"secret\"}\n- List of dictionaries: [{\"name\": \"John\", \"email\": \"john@example.com\"},\n                       {\"name\": \"Jane\", \"email\": \"jane@example.com\"}]",
+            "output_model: string: Optional string description to structure the output.\nExample: \"list of name(str) and title(str) combinations\"",
+            "headless: boolean: whether to run the browser in headless mode (default: True)",
+            "timeout: integer: maximum time in seconds to wait for task completion (default: 300)",
+            "cookies_file: string: Optional path to a file containing cookies to be used during the task execution."
+        ],
+        "managedParamsSchemaDescription": {
+            "openai_api_key": {
+                "type": "Secret",
+                "description": "the OpenAI API key"
+            }
+        },
+        "inputFileVersion": "v3",
+        "kind": "action",
+        "actionSignature": "action/args: 'task_description: str, url: str, openai_api_key: Secret, source_data: Optional[str], output_model: Optional[str]=None, headless: bool=True, timeout: int=300, cookies_file: Optional[str]=None'"
+    }
+}
