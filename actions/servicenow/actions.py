@@ -1,20 +1,10 @@
-"""
-A bare-bone AI Action template
-
-Please check out the base guidance on AI Actions in our main repository readme:
-https://github.com/sema4ai/actions/blob/master/README.md
-
-"""
-
-from contextlib import contextmanager
 from datetime import datetime
 from typing import Annotated
 
-from httpx import Client, HTTPStatusError
-from httpx import Response as HttpxResponse
+import sema4ai_http
+import urllib3
 from pydantic import BaseModel, Field, PlainSerializer, ValidationInfo, model_validator
-from sema4ai.actions import ActionError, Response, Secret, action
-from sema4ai_http import build_ssl_context
+from sema4ai.actions import Response, Secret, action
 from typing_extensions import Self
 
 _Dict = Annotated[dict, PlainSerializer(lambda x: {k: v for k, v in x.items() if v})]
@@ -37,10 +27,18 @@ class ServiceNowResponse(BaseModel):
     next_page: str | None
 
     @classmethod
-    def from_http_response(cls, response: HttpxResponse) -> Self:
-        return cls.model_validate_json(
-            response.read(), context={"links": response.links}
-        )
+    def from_http_response(cls, response: urllib3.HTTPResponse) -> Self:
+        content = response.data.decode("utf-8")
+        links = response.headers.get("Link")
+        context = {"links": {}}
+        if links and 'rel="next"' in links:
+            for part in links.split(","):
+                if 'rel="next"' in part:
+                    url_part = part.split(";")[0].strip().strip("<>")
+                    context["links"]["next"] = {"url": url_part}
+                    break
+
+        return cls.model_validate_json(content, context=context)
 
     @model_validator(mode="before")
     def set_links(cls, values: dict, info: ValidationInfo):
@@ -52,25 +50,6 @@ class ServiceNowResponse(BaseModel):
         values["next_page"] = next_page
 
         return values
-
-
-@contextmanager
-def get_client(instance_url: Secret, username: Secret, password: Secret) -> Client:
-    with Client(
-        base_url=instance_url.value.rstrip("/"),
-        auth=(username.value, password.value),
-        verify=build_ssl_context(),
-        params={
-            "sysparm_exclude_reference_link": "true",
-            "sysparm_display_value": "true",
-        },
-    ) as client:
-        try:
-            yield client
-        except HTTPStatusError as exc:
-            raise ActionError(
-                f"[HTTP Error] status: {exc.response.status_code}, error: {exc.response.text}"
-            ) from None
 
 
 @action(is_consequential=False)
@@ -92,15 +71,16 @@ def get_my_open_incidents(
         A structure representing the incidents.
     """
 
-    with get_client(instance_url, username, password) as client:
-        incidents = _get_incidents(
-            client,
-            {
-                "active": "true",
-                "assigned_to": username.value,
-            },
-            pagination=pagination,
-        )
+    incidents = _get_incidents(
+        instance_url,
+        username,
+        password,
+        {
+            "active": "true",
+            "assigned_to": username.value,
+        },
+        pagination=pagination,
+    )
 
     return Response(result=incidents)
 
@@ -125,14 +105,15 @@ def get_recent_incidents(
     """
     today = datetime.today().strftime("%Y-%m-%d")
 
-    with get_client(instance_url, username, password) as client:
-        incidents = _get_incidents(
-            client,
-            {
-                "sysparm_query": f"sys_created_on>={today}",
-            },
-            pagination=pagination,
-        )
+    incidents = _get_incidents(
+        instance_url,
+        username,
+        password,
+        {
+            "sysparm_query": f"sys_created_on>={today}",
+        },
+        pagination=pagination,
+    )
 
     return Response(result=incidents)
 
@@ -159,14 +140,15 @@ def search_incidents(
         A structure representing the incidents.
     """
 
-    with get_client(instance_url, username, password) as client:
-        incidents = _get_incidents(
-            client,
-            {
-                "sysparm_query": sysparm_query,
-            },
-            pagination=pagination,
-        )
+    incidents = _get_incidents(
+        instance_url,
+        username,
+        password,
+        {
+            "sysparm_query": sysparm_query,
+        },
+        pagination=pagination,
+    )
 
     return Response(result=incidents)
 
@@ -189,30 +171,54 @@ def get_users(
     Returns:
         A structure representing the users.
     """
-    with get_client(instance_url, username, password) as client:
-        if pagination.next_page:
-            raw_response = client.get(pagination.next_page)
-        else:
-            raw_response = client.get(
-                "/api/now/table/sys_user",
-                params=pagination.as_params(),
-            )
+    headers = urllib3.make_headers(basic_auth=f"{username.value}:{password.value}")
+    fields = {
+        "sysparm_exclude_reference_link": "true",
+        "sysparm_display_value": "true",
+    }
 
-        return Response(
-            result=ServiceNowResponse.from_http_response(
-                raw_response.raise_for_status()
-            )
+    if pagination.next_page:
+        raw_response = sema4ai_http.get(
+            pagination.next_page, headers=headers, fields=fields
         )
+    else:
+        raw_response = sema4ai_http.get(
+            f"{instance_url.value.rstrip('/')}/api/now/table/sys_user",
+            headers=headers,
+            fields={**pagination.as_params(), **fields},
+        )
+
+    raw_response.raise_for_status()
+
+    return Response(result=ServiceNowResponse.from_http_response(raw_response))
 
 
 def _get_incidents(
-    client: Client, params: dict[str, str], *, pagination: Pagination
+    instance_url: str,
+    username: str,
+    password: str,
+    params: dict[str, str],
+    *,
+    pagination: Pagination,
 ) -> ServiceNowResponse:
+    headers = urllib3.make_headers(basic_auth=f"{username.value}:{password.value}")
+    common_params = {
+        **pagination.as_params(),
+        **params,
+        "sysparm_exclude_reference_link": "true",
+        "sysparm_display_value": "true",
+    }
     if pagination.next_page:
-        raw_response = client.get(pagination.next_page)
+        raw_response = sema4ai_http.get(
+            pagination.next_page, headers=headers, fields=common_params
+        )
     else:
-        raw_response = client.get(
-            "/api/now/table/incident", params={**pagination.as_params(), **params}
-        ).raise_for_status()
+        raw_response = sema4ai_http.get(
+            f"{instance_url.value.rstrip('/')}/api/now/table/incident",
+            headers=headers,
+            fields={**pagination.as_params(), **params, **common_params},
+        )
+
+    raw_response.raise_for_status()
 
     return ServiceNowResponse.from_http_response(raw_response)

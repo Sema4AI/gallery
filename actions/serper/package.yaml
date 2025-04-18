@@ -5,7 +5,7 @@ name: Serper
 description: Interact with the Serper API to perform Google searches.
 
 # Required: The version of the action package.
-version: 1.0.1
+version: 1.1.0
 
 # The version of the `package.yaml` format.
 spec-version: v2

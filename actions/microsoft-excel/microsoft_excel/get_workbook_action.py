@@ -5,7 +5,6 @@ from sema4ai.actions import ActionError, OAuth2Secret, Response, action
 
 from microsoft_excel._client import (  # noqa: F401
     Client,
-    get_client,
     _load_worksheets_for_workbook,
 )
 from microsoft_excel._constants import EXCEL_MIME_TYPE, FILE_EXTENSION
@@ -58,30 +57,30 @@ def get_workbook_by_name(
     if workbook_name.endswith(f"f.{FILE_EXTENSION}"):
         workbook_name = workbook_name.removesuffix(f".{FILE_EXTENSION}")
 
-    with get_client(token) as client:  # type: Client
-        response = client.get(
-            _SearchResponse,
-            f"/me/drive/root/search(q='{workbook_name}')",
-        )
+    client = Client(token)
+    response = client.get(
+        _SearchResponse,
+        f"/me/drive/root/search(q='{workbook_name}')",
+    )
 
-        matches = []
-        while True:
-            for item in response.value:  # type: _Item
-                if item.match_name(workbook_name):
-                    return Response[Workbook](result=item.as_workbook(client))
+    matches = []
+    while True:
+        for item in response.value:  # type: _Item
+            if item.match_name(workbook_name):
+                return Response[Workbook](result=item.as_workbook(client))
 
-                if item.name.lower() not in workbook_name.lower():
-                    continue
+            if item.name.lower() not in workbook_name.lower():
+                continue
 
-                matches.append(item.name)
+            matches.append(item.name)
 
-            if response.next_link:
-                response = client.get(_SearchResponse, response.next_link)
-            else:
-                break
+        if response.next_link:
+            response = client.get(_SearchResponse, response.next_link)
+        else:
+            break
 
-        if matches:
-            matches = ", ".join(matches)
-            raise ActionError(f"Multiple files found: {matches}")
+    if matches:
+        matches = ", ".join(matches)
+        raise ActionError(f"Multiple files found: {matches}")
 
     raise ActionError("File not found")

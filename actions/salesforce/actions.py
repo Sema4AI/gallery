@@ -1,20 +1,19 @@
 import os
 from pathlib import Path
 
-import requests
+import sema4ai_http
 from dotenv import load_dotenv
-from sema4ai.actions import Response, Secret, action
-
 from models import SalesforceResponse
+from sema4ai.actions import Response, Secret, action
 
 load_dotenv(Path(__file__).absolute().parent / "devdata" / ".env")
 
 
 def _auth_client_credentials(client_id, client_secret, domain_url) -> str:
-    response = requests.post(
+    response = sema4ai_http.post(
         f"{domain_url}/services/oauth2/token",
-        headers={"Content-Type": "application/x-www-form-urlencoded"},
-        data={
+        headers={"Content-Type": "application/json"},
+        json={
             "client_id": client_id,
             "client_secret": client_secret,
             "grant_type": "client_credentials",
@@ -56,7 +55,7 @@ def query_data(
         "Content-Type": "application/json",
     }
 
-    response = requests.get(url, headers=headers, params={"q": query})
+    response = sema4ai_http.get(url, headers=headers, fields={"q": query})
     response.raise_for_status()
 
     return Response(result=SalesforceResponse(**response.json()))

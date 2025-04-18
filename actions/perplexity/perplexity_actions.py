@@ -1,4 +1,4 @@
-import requests
+import sema4ai_http
 from pydantic import BaseModel
 from sema4ai.actions import Response, Secret, action
 
@@ -40,7 +40,7 @@ def search(api_key: Secret, query: str) -> Response[SearchResult]:
         "Content-Type": "application/json",
     }
 
-    response = requests.post(
+    response = sema4ai_http.post(
         "https://api.perplexity.ai/chat/completions", headers=headers, json=payload
     )
 

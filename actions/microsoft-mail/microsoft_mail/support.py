@@ -1,10 +1,9 @@
 import base64
-import requests
-
-
-from sema4ai.actions import ActionError
 from pathlib import Path
+
+import sema4ai_http
 from microsoft_mail.models import Email
+from sema4ai.actions import ActionError
 
 BASE_GRAPH_URL = "https://graph.microsoft.com/v1.0"
 
@@ -37,15 +36,17 @@ def send_request(
     """
     try:
         query_url = url if BASE_GRAPH_URL in url else f"{BASE_GRAPH_URL}{url}"
-        response = requests.request(
-            method, query_url, headers=headers, json=data, params=params
+        response = getattr(sema4ai_http, method.lower())(
+            query_url, headers=headers, json=data, fields=params
         )
         response.raise_for_status()  # Raises a HTTPError for bad responses
         if response.status_code not in [200, 201, 202, 204]:
             raise ActionError(f"Error on '{req_name}': {response.text}")
+
         # Check if the response has JSON content
         if "application/json" in response.headers.get("Content-Type", ""):
             return response.json()
+
         return None
     except Exception as e:
         raise ActionError(f"Error on '{req_name}': {str(e)}")
