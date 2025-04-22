@@ -1,12 +1,11 @@
-from dotenv import load_dotenv
-from msal import ConfidentialClientApplication
 import json
-from pathlib import Path
 import os
-from urllib.parse import urlparse, parse_qs
-from http.server import HTTPServer, BaseHTTPRequestHandler
 import webbrowser
+from http.server import BaseHTTPRequestHandler, HTTPServer
+from pathlib import Path
+from urllib.parse import parse_qs, urlparse
 
+from dotenv import load_dotenv
 
 devdata_directory = Path(__file__).absolute().parent
 load_dotenv(devdata_directory / ".env")
@@ -37,6 +36,8 @@ def get_auth_code(auth_url):
 
 
 def get_microsoft_token() -> str:
+    from msal import ConfidentialClientApplication
+
     client_id = os.getenv("MICROSOFT_CLIENT_ID")
     tenant_id = os.getenv("MICROSOFT_TENANT_ID")
     client_secret = os.getenv("MICROSOFT_CLIENT_SECRET")

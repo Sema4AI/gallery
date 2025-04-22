@@ -1,7 +1,7 @@
 import json
 
-from sema4ai.actions import action, Response, ActionError
 from agent_api_client import AgentAPIClient
+from sema4ai.actions import ActionError, Response, action
 
 # Create a single client instance
 client = AgentAPIClient()
@@ -54,6 +54,7 @@ def get_threads(agent_id: str) -> Response[str]:
     for thread in threads:
         if thread["agent_id"] == agent_id:
             result.append({"thread_id": thread["thread_id"], "name": thread["name"]})
+
     return Response(result=json.dumps(result))
 
 
@@ -77,6 +78,7 @@ def get_thread(agent_name: str, thread_name: str) -> Response[str]:
     for thread in threads:
         if thread["agent_id"] == agent_result.result and thread["name"] == thread_name:
             return Response(result=thread["thread_id"])
+
     raise ActionError(
         f"No thread found for agent '{agent_name}' with name '{thread_name}'"
     )
@@ -99,6 +101,7 @@ def create_thread(agent_id: str, thread_name: str) -> Response[str]:
         json_data={"name": thread_name, "agent_id": agent_id},
     )
     result = response.json()
+
     return Response(result=result["thread_id"])
 
 
@@ -129,11 +132,9 @@ def send_message(thread_id: str, message: str) -> Response[str]:
     )
 
     collected_data = []
-    for line in response.iter_lines():
-        if line:
-            decoded_line = line.decode("utf-8")
-            if decoded_line.startswith("data: "):
-                collected_data.append(decoded_line[6:])
+    for line in response.data.decode("utf-8").splitlines():
+        if line.startswith("data: "):
+            collected_data.append(line[6:])
 
     if not collected_data:
         raise ActionError("No response data received")
