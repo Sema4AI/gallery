@@ -2,6 +2,8 @@
 
 A AI-powered web browsing package that supports automated web browsing with AI agents, web scraping, form filling, integrated with OpenAI LLM.
 
+User needs to provide a valid OpenAI key to use this package (initially only supported LLM).
+
 ## Prompts
 
 ```
