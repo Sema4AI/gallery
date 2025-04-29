@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.0.3] - 2025-04-29
+
+### Changed
+
+- Updated the search query docstrings so that agent will be better able to use the filter parameter.
+- Updated the default limit to 10 to match the Snowflake Cortex Search API default.
+- Dependency versions updated
+
 ## [1.0.2] - 2025-04-04
 
 ### Changed
