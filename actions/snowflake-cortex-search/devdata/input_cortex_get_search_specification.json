@@ -4,18 +4,18 @@
             "inputName": "input-uppercase",
             "inputValue": {
                 "warehouse": "COMPUTE_WH",
-                "database": "CORTEX_SEARCH_TUTORIAL_DB",
+                "database": "CALL_CENTER_DATA",
                 "schema": "PUBLIC",
-                "service": "AIRBNB_SVC"
+                "service": "CALL_LOGS"
             }
         },
         {
             "inputName": "input-lowercase",
             "inputValue": {
                 "warehouse": "compute_wh",
-                "database": "cortex_search_tutorial_db",
+                "database": "call_center_data",
                 "schema": "public",
-                "service": "airbnb_svc"
+                "service": "call_logs"
             }
         }
     ],

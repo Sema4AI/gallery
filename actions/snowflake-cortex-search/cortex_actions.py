@@ -50,20 +50,31 @@ def cortex_search(
     service: Secret,
     columns: list | None = None,
     filter: dict | None = None,
-    limit: int = 5,
+    limit: int = 10,
 ) -> Response[list]:
     """
     Queries the cortex search service in the session state and returns a list of results.
 
     Args:
-        query: The query to execute
+        query: The full-text search query to find relevant content. This is for semantic search only 
+               and should NOT contain filter conditions. Example: "customer feedback about returns"
         warehouse: Your Snowflake virtual warehouse to use for queries
         database: Your Snowflake database to use for queries
         schema: Your Snowflake schema to use for queries
         service: The name of the Cortex Search service to use
-        columns: The columns to return
-        filter: The filter to apply, optional, defaults to None
-        limit: The limit to apply, optional, defaults to 5
+        columns: The columns to return. These columns must be based on the columns returned by cortex_get_search_specification.
+        filter: Dictionary specifying filter conditions using Snowflake Cortex Search syntax. Only use columns that are part of the attribute_columns returned by cortex_get_search_specification.
+            Must use specific operators:
+            - "@eq": Equality filter. Example: {"@eq": {"COLUMN_NAME": "value"}}
+            - "@contains": Array contains filter. Example: {"@contains": {"ARRAY_COLUMN": "value"}}
+            - "@gte": Greater than or equal. Example: {"@gte": {"NUMERIC_COLUMN": 10}}
+            - "@lte": Less than or equal. Example: {"@lte": {"NUMERIC_COLUMN": 100}}
+            
+            Logical operators can combine conditions:
+            - "@and": Example: {"@and": [{"@eq": {"COL1": "val1"}}, {"@eq": {"COL2": "val2"}}]}
+            - "@or": Example: {"@or": [{"@eq": {"COL1": "val1"}}, {"@eq": {"COL1": "val2"}}]}
+            - "@not": Example: {"@not": {"@eq": {"COL1": "val1"}}}
+        limit: The limit to apply, optional, defaults to 10
 
     Returns:
         The results of the query.
