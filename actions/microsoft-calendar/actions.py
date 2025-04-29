@@ -1,9 +1,8 @@
-from typing import Literal
+from typing import Literal, Optional
 
-import requests
-from sema4ai.actions import OAuth2Secret, Response, action
-
+import sema4ai_http
 from models import Calendar, CreateEvent, Event, QueryParams, UpdateEvent
+from sema4ai.actions import OAuth2Secret, Response, action
 
 BASE_URL = "https://graph.microsoft.com/v1.0/me"
 EVENTS_ENDPOINT = f"{BASE_URL}/calendar/events"
@@ -30,7 +29,7 @@ def create_event(
         list[Literal["Calendars.ReadWrite"]],
     ],
     event: CreateEvent,
-    calendar_id: str = "",
+    calendar_id: Optional[str] = "",
 ) -> Response[Event]:
     """Creates a new event in the user's calendar.
 
@@ -47,7 +46,7 @@ def create_event(
     if calendar_id:
         url = f"{CALENDARS_ENDPOINT}/{calendar_id}/events"
 
-    response = requests.post(
+    response = sema4ai_http.post(
         url,
         headers=_build_headers(credentials),
         json=event.model_dump(mode="json", exclude_none=True, exclude={"timeZone"}),
@@ -84,7 +83,7 @@ def update_event(
 
     # We add the new attendees to the existing ones, so we don't override them
     if "attendees" in updates_json:
-        response = requests.get(f"{BASE_URL}/events/{event_id}", headers=headers)
+        response = sema4ai_http.get(f"{BASE_URL}/events/{event_id}", headers=headers)
         response.raise_for_status()
 
         current_event = Event.model_validate(response.json())
@@ -94,7 +93,7 @@ def update_event(
 
         updates_json["attendees"] = updates_json["attendees"] + attendees
 
-    response = requests.patch(
+    response = sema4ai_http.patch(
         f"{BASE_URL}/events/{event_id}",
         headers=headers,
         json=updates_json,
@@ -113,7 +112,7 @@ def list_events(
     ],
     query_params: QueryParams,
     timezone: str,
-    calendar_id: str = "",
+    calendar_id: Optional[str] = "",
 ) -> Response[list[Event]]:
     """List all events in the user's calendar.
 
@@ -134,16 +133,15 @@ def list_events(
 
     Returns:
         A list of calendar events that match the query, if defined.
-
     """
     url = EVENTS_ENDPOINT
     if calendar_id:
         url = f"{CALENDARS_ENDPOINT}/{calendar_id}/events"
 
-    response = requests.get(
+    response = sema4ai_http.get(
         url,
         headers=_build_headers(credentials, timezone=timezone),
-        params=query_params.model_dump(by_alias=True, exclude_none=True),
+        fields=query_params.model_dump(by_alias=True, exclude_none=True),
     )
 
     response.raise_for_status()
@@ -167,9 +165,8 @@ def list_calendars(
 
     Returns:
         A list of calendars.
-
     """
-    response = requests.get(
+    response = sema4ai_http.get(
         CALENDARS_ENDPOINT,
         headers=_build_headers(credentials),
     )
@@ -200,7 +197,7 @@ def get_mailbox_timezone(
     Returns:
         User's mailbox timezone.
     """
-    response = requests.get(
+    response = sema4ai_http.get(
         MAILBOX_ENDPOINT,
         headers=_build_headers(credentials),
     )

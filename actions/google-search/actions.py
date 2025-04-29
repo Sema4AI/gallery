@@ -7,7 +7,7 @@ Currently supporting:
 import os
 from pathlib import Path
 
-import requests
+import sema4ai_http
 from dotenv import load_dotenv
 from models import (
     SearchResult,
@@ -47,9 +47,10 @@ def google_search(
         "cx": context.value or os.getenv(CONTEXT_FIELD, ""),
         "q": topic,
     }
-    response = requests.get(url, params=params)
+    response = sema4ai_http.get(url, fields=params)
     if response.status_code not in [200, 201]:
         raise ActionError(f"Failed to search. Error: {response.text}")
+
     result = response.json()
     items = []
     if "items" in result.keys():

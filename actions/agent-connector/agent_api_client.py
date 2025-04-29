@@ -1,6 +1,8 @@
 import os
-import requests
-from urllib.parse import urlparse, quote, urljoin
+from urllib.parse import quote, urljoin, urlparse
+
+import sema4ai_http
+from urllib3.exceptions import ConnectionError, HTTPError
 
 
 class AgentAPIClient:
@@ -22,9 +24,9 @@ class AgentAPIClient:
                 parsed = urlparse(url)
                 if parsed.scheme not in ("http", "https"):
                     return False
-                requests.get(f"{url}", timeout=1)
+                sema4ai_http.get(f"{url}", timeout=1)
                 return True
-            except (requests.RequestException, ValueError):
+            except (HTTPError, ValueError):
                 return False
 
         # First check environment variable
@@ -53,12 +55,20 @@ class AgentAPIClient:
             Response object
 
         Raises:
-            requests.exceptions.RequestException: If the request fails or returns an error status
+           urllib3.exceptions.ConnectionError: If the request fails or returns an error status
         """
         if self.api_url is None:
-            raise requests.exceptions.ConnectionError("Agent Server not running")
+            raise ConnectionError("Agent Server not running")
 
         url = urljoin(self.api_url + "/", quote(path))
-        response = requests.request(method, url, json=json_data)
+
+        if method == "GET":
+            response = sema4ai_http.get(url, json=json_data)
+        elif method == "POST":
+            response = sema4ai_http.post(url, json=json_data)
+        else:
+            raise ValueError(f"Unsupported HTTP method: {method}")
+
         response.raise_for_status()
+
         return response
