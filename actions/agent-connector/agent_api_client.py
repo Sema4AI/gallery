@@ -1,4 +1,6 @@
 import os
+import json
+from pathlib import Path
 from urllib.parse import quote, urljoin, urlparse
 
 import sema4ai_http
@@ -24,15 +26,31 @@ class AgentAPIClient:
                 parsed = urlparse(url)
                 if parsed.scheme not in ("http", "https"):
                     return False
-                sema4ai_http.get(f"{url}", timeout=1)
+                response = sema4ai_http.get(f"{url}", timeout=1)
                 return True
-            except (HTTPError, ValueError):
+            except (HTTPError, ValueError) as e:
+                return False
+            except Exception as e:
                 return False
 
         # First check environment variable
         if url := os.getenv("SEMA4AI_AGENT_SERVER_API_URL"):
             if test_url(url):
                 return url
+
+        # Try reading from agent-server.pid file
+        pid_file_path = os.path.expanduser("~/.sema4ai/sema4ai-studio/agent-server.pid")
+        try:
+            if os.path.exists(pid_file_path):
+                with open(pid_file_path, "r") as f:
+                    content = f.read()
+                    server_info = json.loads(content)
+                    if base_url := server_info.get("base_url"):
+                        api_url = f"{base_url}/api/v1"
+                        if test_url(api_url):
+                            return api_url
+        except (json.JSONDecodeError, IOError) as e:
+            pass
 
         # Try default ports
         for port in [8990, 8000]:

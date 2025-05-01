@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [3.1.1] - 2025-05-01
+
+### Changed
+
+- When ran locally with SDK or Studio, check the API port from the PID file
+- Dependency versions updated
+- Updated icon
+
 ## [3.1.0] - 2025-04-15
 
 ### Changed
@@ -40,7 +48,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 - Update dependencies
 
-## [2.0.0]
+## [2.0.0] - 2024-10-09
 
 - Support new version of Agent API
 
