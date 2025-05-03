@@ -4,11 +4,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
-## [3.1.1] - 2025-05-01
+## [4.0.0] - 2025-05-03
+
+**Breaking changes as this aciont package is modified to use the public Agent API.**
 
 ### Changed
 
 - When ran locally with SDK or Studio, check the API port from the PID file
+- When ran in Agent Compute, get the end point from environment variable
+- Add secret for API key to be used in cloud
+- Updated to use the public Agent API - and updated terminology and action names to match the public API
 - Dependency versions updated
 - Updated icon
 

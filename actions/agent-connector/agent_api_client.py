@@ -8,8 +8,27 @@ from urllib3.exceptions import ConnectionError, HTTPError
 
 
 class AgentAPIClient:
-    def __init__(self):
+    def __init__(self, api_key=None):
+        """Initialize the AgentAPIClient.
+        
+        Args:
+            api_key: Optional API key to use for authentication in cloud environments
+        """
         self.api_url = self._get_api_url()
+        self.api_key = api_key
+        print(f"API URL: {self.api_url}")
+        
+        # Determine if we're running in cloud based on https protocol using proper URL parsing
+        if self.api_url:
+            parsed_url = urlparse(self.api_url)
+            self.is_cloud = parsed_url.scheme == "https"
+            if self.is_cloud:
+                print("Running in cloud environment (HTTPS) - will use Bearer authentication")
+            else:
+                print(f"Running in local environment ({parsed_url.scheme}) - no authentication required")
+        else:
+            self.is_cloud = False
+            print("No API URL detected - cannot determine environment")
 
     def _get_api_url(self) -> str:
         """Determine the correct API URL by checking environment variable and testing API availability.
@@ -20,7 +39,6 @@ class AgentAPIClient:
         Raises:
             ConnectionError: If no API server is responding
         """
-
         def test_url(url: str) -> bool:
             try:
                 parsed = urlparse(url)
@@ -34,9 +52,11 @@ class AgentAPIClient:
                 return False
 
         # First check environment variable
-        if url := os.getenv("SEMA4AI_AGENT_SERVER_API_URL"):
-            if test_url(url):
-                return url
+        if url := os.getenv("SEMA4AI_TENANT_URL"):
+            # Append /api/v1 to the base URL for cloud environments
+            api_url = f"{url}/api/v1"
+            if test_url(api_url):
+                return api_url
 
         # Try reading from agent-server.pid file
         pid_file_path = os.path.expanduser("~/.sema4ai/sema4ai-studio/agent-server.pid")
@@ -46,28 +66,23 @@ class AgentAPIClient:
                     content = f.read()
                     server_info = json.loads(content)
                     if base_url := server_info.get("base_url"):
-                        api_url = f"{base_url}/api/v1"
+                        api_url = f"{base_url}/api/public/v1"
                         if test_url(api_url):
                             return api_url
         except (json.JSONDecodeError, IOError) as e:
             pass
 
-        # Try default ports
-        for port in [8990, 8000]:
-            url = f"http://localhost:{port}/api/v1"
-            if test_url(url):
-                return url
-
         # Could not connect to API server on ports 8990 or 8000, or the given environment variable
         return None
 
-    def request(self, path: str, method="GET", json_data=None):
+    def request(self, path: str, method="GET", json_data=None, headers=None):
         """Make an API request with common error handling.
 
         Args:
             path: API endpoint path
             method: HTTP method (GET or POST)
             json_data: Optional JSON payload for POST requests
+            headers: Optional additional headers
 
         Returns:
             Response object
@@ -79,11 +94,19 @@ class AgentAPIClient:
             raise ConnectionError("Agent Server not running")
 
         url = urljoin(self.api_url + "/", quote(path))
+        
+        # Initialize headers
+        request_headers = headers.copy() if headers else {}
+        
+        # Add Bearer token for cloud environments if API key is provided
+        if self.is_cloud and self.api_key:
+            request_headers["Authorization"] = f"Bearer {self.api_key}"
+            print("Adding Bearer token authentication")
 
         if method == "GET":
-            response = sema4ai_http.get(url, json=json_data)
+            response = sema4ai_http.get(url, json=json_data, headers=request_headers)
         elif method == "POST":
-            response = sema4ai_http.post(url, json=json_data)
+            response = sema4ai_http.post(url, json=json_data, headers=request_headers)
         else:
             raise ValueError(f"Unsupported HTTP method: {method}")
 
