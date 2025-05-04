@@ -1,5 +1,6 @@
 import os
 import json
+import platform
 from pathlib import Path
 from urllib.parse import quote, urljoin, urlparse
 
@@ -58,8 +59,10 @@ class AgentAPIClient:
             if test_url(api_url):
                 return api_url
 
-        # Try reading from agent-server.pid file
-        pid_file_path = os.path.expanduser("~/.sema4ai/sema4ai-studio/agent-server.pid")
+        # Try reading from agent-server.pid file - use OS-specific paths
+        pid_file_path = self._get_pid_file_path()
+        print(f"Looking for PID file at: {pid_file_path}")
+        
         try:
             if os.path.exists(pid_file_path):
                 with open(pid_file_path, "r") as f:
@@ -72,8 +75,24 @@ class AgentAPIClient:
         except (json.JSONDecodeError, IOError) as e:
             pass
 
-        # Could not connect to API server on ports 8990 or 8000, or the given environment variable
+        # Could not connect to API server or find the PID file
         return None
+        
+    def _get_pid_file_path(self) -> str:
+        """Get the path to the agent-server.pid file based on the operating system.
+        
+        Returns:
+            str: Path to the PID file
+        """
+        home_dir = os.path.expanduser("~")
+        
+        # Determine OS-specific path
+        if platform.system() == "Windows":
+            # Windows path: C:\Users\<username>\AppData\Local\sema4ai\sema4ai-studio\agent-server.pid
+            return os.path.join(home_dir, "AppData", "Local", "sema4ai", "sema4ai-studio", "agent-server.pid")
+        else:
+            # macOS/Linux path: ~/.sema4ai/sema4ai-studio/agent-server.pid
+            return os.path.join(home_dir, ".sema4ai", "sema4ai-studio", "agent-server.pid")
 
     def request(self, path: str, method="GET", json_data=None, headers=None):
         """Make an API request with common error handling.
