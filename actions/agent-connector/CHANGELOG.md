@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [4.0.1] - 2025-05-05
+
+### Changed
+
+- Updated to work with Agent Compute 1.2.2 which has a environment variable for the API URL. NOTE: Use previous version of the action if you are using Agent Compute 1.2.1 or earlier.
+
 ## [4.0.0] - 2025-05-03
 
 **Breaking changes as this aciont package is modified to use the public Agent API.**
