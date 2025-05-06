@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [2.3.0] - 2025-05-06
+
+### Added
+
+- CRUD actions for Sharepoint list items
+
 ## [2.2.0] - 2025-04-15
 
 ### Changed
