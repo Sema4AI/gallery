@@ -203,8 +203,8 @@ query WorkflowStates($teamId: String!) {
 """
 
 query_search_projects = """
-query SearchProjects($filter: ProjectFilter, $orderBy: PaginationOrderBy, $first: Int = 50) {
-    projects(filter: $filter, orderBy: $orderBy, first: $first) {
+query SearchProjects($filter: ProjectFilter, $orderBy: PaginationOrderBy, $first: Int = 50, $after: String) {
+    projects(filter: $filter, orderBy: $orderBy, first: $first, after: $after) {
         nodes {
             id
             name
@@ -212,6 +212,7 @@ query SearchProjects($filter: ProjectFilter, $orderBy: PaginationOrderBy, $first
             startDate
             targetDate
             content
+            priority
             teams {
                 nodes {
                     id
@@ -227,6 +228,10 @@ query SearchProjects($filter: ProjectFilter, $orderBy: PaginationOrderBy, $first
             url
             createdAt
             updatedAt
+        }
+        pageInfo {
+            hasNextPage
+            endCursor
         }
     }
 }

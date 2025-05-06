@@ -7,6 +7,7 @@ from typing import Annotated, List, Optional
 class OrderType(str, Enum):
     CREATED_AT = "createdAt"
     UPDATED_AT = "updatedAt"
+    PRIORITY = "priority"
 
 
 class FilterOptions(BaseModel):
@@ -192,6 +193,7 @@ class Project(BaseModel):
     name: str
     content: Optional[str] = None
     description: Optional[str] = None
+    priority: Optional[int] = None
     startDate: Optional[datetime] = None
     targetDate: Optional[datetime] = None
     teams: Optional[List[NameAndId]] = None
@@ -214,6 +216,7 @@ class Project(BaseModel):
             name=data.get("name"),
             description=data.get("description"),
             content=data.get("content"),
+            priority=data.get("priority"),
             startDate=data.get("startDate"),
             targetDate=data.get("targetDate"),
             teams=(

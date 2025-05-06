@@ -130,8 +130,8 @@ def search_projects(
     """
     Search projects from Linear.
 
-    The values for "ordering" can be "createdAt" or "updatedAt".
-    Returns by default 50 projects matching the filter options.
+    The values for "ordering" can be "createdAt", "updatedAt", or "priority".
+    When ordering by priority, results will be ordered as: 1 (Urgent), 2 (High), 3 (Normal), 4 (Low), 0 (No priority)
 
     Args:
         api_key: The API key to use to authenticate with the Linear API.
@@ -146,30 +146,53 @@ def search_projects(
     if filter_options.initiative:
         filter_dict["initiatives"] = {"some": {"name": {"contains": filter_options.initiative}}}
 
-    query_variables = {
-        "first": filter_options.limit if filter_options.limit else 50,
-        "orderBy": filter_options.ordering.value if filter_options.ordering else "updatedAt",
-    }
-    if filter_dict:
-        query_variables["filter"] = filter_dict
+    all_projects = []
+    has_next_page = True
+    after = None
 
-    search_response = _make_graphql_request(query_search_projects, query_variables, api_key)
-    projects = search_response["projects"]["nodes"]
+    while has_next_page:
+        query_variables = {
+            "first": 50,  # Fetch 50 items per page
+            "after": after,
+            "orderBy": filter_options.ordering.value if filter_options.ordering else "priority",
+        }
+        if filter_dict:
+            query_variables["filter"] = filter_dict
+
+        search_response = _make_graphql_request(query_search_projects, query_variables, api_key)
+        page_projects = search_response["projects"]["nodes"]
+        all_projects.extend(page_projects)
+
+        # Get pagination info
+        page_info = search_response["projects"]["pageInfo"]
+        has_next_page = page_info["hasNextPage"]
+        after = page_info["endCursor"]
     
     # Filter by team name after fetching if team_name is specified
     if filter_options.team_name:
-        projects = [
-            p for p in projects 
+        all_projects = [
+            p for p in all_projects 
             if any(
                 team["name"].lower() == filter_options.team_name.lower() 
                 for team in p.get("teams", {}).get("nodes", [])
             )
         ]
     
+    # Create Project objects first
     project_list = ProjectList(nodes=[])
-    for project_data in projects:
+    for project_data in all_projects:
         project = Project.create(project_data)
         project_list.nodes.append(project)
+
+    # Split projects into priority 0 and non-0
+    priority_zero = [p for p in project_list.nodes if p.priority is None or p.priority == 0]
+    priority_nonzero = [p for p in project_list.nodes if p.priority is not None and p.priority > 0]
+    
+    # Sort non-zero priority projects by priority (1,2,3,4)
+    priority_nonzero.sort(key=lambda x: (x.priority or 999))
+    
+    # Replace the nodes with our custom sorted list
+    project_list.nodes = priority_nonzero + priority_zero
 
     return Response(result=project_list)
 

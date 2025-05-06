@@ -4,7 +4,7 @@
             "inputName": "Search by name",
             "inputValue": {
                 "filter_options": {
-                    "name": "Improved Data Visualization",
+                    "name": "Runbook Editor Improvements",
                     "team_name": "",
                     "initiative": "",
                     "limit": "",
@@ -18,7 +18,7 @@
             "inputValue": {
                 "filter_options": {
                     "name": "",
-                    "team_name": "Work Room",
+                    "team_name": "Studio",
                     "initiative": "",
                     "limit": "",
                     "ordering": ""
