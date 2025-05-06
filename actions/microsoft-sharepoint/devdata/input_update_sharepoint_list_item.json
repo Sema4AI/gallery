@@ -3,15 +3,15 @@
         {
             "inputName": "input-1",
             "inputValue": {
-                "new_item": {
-                    "fields": [
-                        {
-                            "Title": "Something wrong"
-                        },
-                        {
-                            "Status": "In progress"
-                        }
-                    ]
+                "update_item": {
+                    "item_id": "26",
+                    "fields": {
+                        "fields": [
+                            {
+                                "Title": "Was there anything wrong?"
+                            }
+                        ]
+                    }
                 },
                 "site_id": "",
                 "site_name": "Communication site",
@@ -31,11 +31,12 @@
         }
     ],
     "metadata": {
-        "actionName": "add_sharepoint_list_item",
+        "actionName": "update_sharepoint_list_item",
         "actionRelativePath": "microsoft_sharepoint/sharepoint_list_action.py",
         "schemaDescription": [
-            "new_item.fields: array: Field values for the list item as a dictionary",
-            "new_item.fields.0: object: Field values for the list item as a dictionary",
+            "update_item.item_id: string: ID of the list item",
+            "update_item.fields.fields: array: Field values for the list item as a dictionary",
+            "update_item.fields.fields.0: object: Field values for the list item as a dictionary",
             "site_id: string: ID of the SharePoint site.",
             "site_name: string: Name of the SharePoint site.",
             "list_id: string: ID of the SharePoint list.",
@@ -53,6 +54,6 @@
         },
         "inputFileVersion": "v3",
         "kind": "action",
-        "actionSignature": "action/args: \"new_item: ListItem, token: OAuth2Secret[Literal['microsoft'], list[Literal['Sites.Manage.All']]], site_id: str='', site_name: str='', list_id: str='', list_name: str=''\""
+        "actionSignature": "action/args: \"update_item: SharepointListItem, token: OAuth2Secret[Literal['microsoft'], list[Literal['Sites.Manage.All']]], site_id: str='', site_name: str='', list_id: str='', list_name: str=''\""
     }
 }
