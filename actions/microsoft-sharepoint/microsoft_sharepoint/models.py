@@ -39,8 +39,8 @@ class SharepointList(BaseModel):
     columns: list[ListColumn] = Field(description="List of columns", default=[])
 
 class ListItem(BaseModel):
-    fields: list[dict] = Field(description="Field values for the list item as a dictionary", default=[])
+    fields: Any = Field(description="Field values for the list item as a dictionary", default=[])
 
 class SharepointListItem(BaseModel):
     item_id: str = Field(description="ID of the list item", default="")
-    fields: ListItem = Field(description="Field values for the list item", default=ListItem())
+    fields: ListItem = Field(description="Field values for the list item")

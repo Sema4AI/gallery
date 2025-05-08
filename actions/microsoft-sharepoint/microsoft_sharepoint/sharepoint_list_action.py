@@ -6,6 +6,7 @@ Currently supporting:
 """
 from sema4ai.actions import action, OAuth2Secret, Response, ActionError
 from typing import Literal
+import json
 from microsoft_sharepoint.sharepoint_site_action import (
     get_sharepoint_site,
     _get_my_site,
@@ -101,21 +102,25 @@ def _map_fields_to_list_columns(incoming_fields, list_fields):
     """Map incoming fields to SharePoint list columns, handling case sensitivity and best-effort matching.
 
     Args:
-        incoming_fields: List of dicts (as per new ListItem model) or a dict of incoming field names and values.
+        incoming_fields: List of dicts, a single dict, or a single dict inside a list.
         list_fields: Dict mapping lower-case field names to canonical names.
 
     Returns:
         Dict of mapped fields suitable for SharePoint API.
     """
-    # If incoming_fields is a list (as per new ListItem), merge all dicts into one
+    incoming_fields = json.loads(incoming_fields) if isinstance(incoming_fields, str) else incoming_fields
+    merged_fields = {}
     if isinstance(incoming_fields, list):
-        merged_fields = {}
         for d in incoming_fields:
             if isinstance(d, dict):
                 merged_fields.update(d)
-        incoming_fields = merged_fields
+    elif isinstance(incoming_fields, dict):
+        merged_fields = incoming_fields
+    else:
+        # If it's neither a list nor a dict, return empty
+        return {}
     mapped = {}
-    for key, value in incoming_fields.items():
+    for key, value in merged_fields.items():
         canonical = list_fields.get(key.lower())
         if canonical:
             mapped[canonical] = value
