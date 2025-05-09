@@ -1,20 +1,33 @@
-from pydantic import BaseModel, Field, ValidationInfo, field_validator, model_serializer
+from pydantic import (
+    BaseModel,
+    Field,
+    ValidationInfo,
+    field_validator,
+    model_serializer,
+)
 from typing_extensions import Annotated, Self
 
 
 class User(BaseModel):
     id: Annotated[int, Field(description="Unique identifier of the user")]
     name: Annotated[str, Field(description="Name of the user")]
-    created_at: Annotated[str, Field(description="Timestamp when the user was created")]
+    created_at: Annotated[
+        str, Field(description="Timestamp when the user was created")
+    ]
     updated_at: Annotated[
         str, Field(description="Timestamp when the user was last updated")
     ]
-    email: Annotated[str, Field(description="Email address of the user")]
+    email: Annotated[
+        str | None, Field(description="Email address of the user")
+    ]
     role: Annotated[
         str, Field(description="Role of the user (end-user, agent or admin)")
     ]
     verified: Annotated[
-        bool, Field(description="Indicates if any of the user's identities is verified")
+        bool,
+        Field(
+            description="Indicates if any of the user's identities is verified"
+        ),
     ]
     # Properties below are only available for an Agent or Admin
     role_type: Annotated[
@@ -41,8 +54,23 @@ class User(BaseModel):
     ticket_restriction: Annotated[
         str | None,
         Field(
-            default=None, description="Specifies which tickets the user has access to"
+            default=None,
+            description="Specifies which tickets the user has access to",
         ),
+    ] = None
+
+
+class Organization(BaseModel):
+    id: Annotated[
+        int, Field(description="The unique identifier of the organization")
+    ]
+    name: Annotated[str, Field(description="The name of the organization")]
+    tags: Annotated[
+        list | None, Field(description="List of tags for organization")
+    ] = None
+    domain_names: Annotated[
+        list[str] | None,
+        Field(description="List of domain names for the organization"),
     ] = None
 
 
@@ -54,34 +82,41 @@ class Group(BaseModel):
         Field(description="A brief description of the group"),
     ] = None
     default: Annotated[
-        bool | None, Field(description="Indicates if this is the default group")
+        bool | None,
+        Field(description="Indicates if this is the default group"),
     ] = None
 
 
 class Rating(BaseModel):
-    comment: Annotated[str | None, Field(description="Comment for rating")] = None
+    comment: Annotated[str | None, Field(description="Comment for rating")] = (
+        None
+    )
     score: Annotated[str | None, Field(description="Score for rating")] = None
 
 
 class Ticket(BaseModel):
-    id: Annotated[int, Field(description="The unique identifier of the ticket")]
-    subject: Annotated[str | None, Field(description="The subject of the ticket")] = (
-        None
-    )
+    id: Annotated[
+        int, Field(description="The unique identifier of the ticket")
+    ]
+    subject: Annotated[
+        str | None, Field(description="The subject of the ticket")
+    ] = None
     description: Annotated[
         str | None,
         Field(description="The detailed description of the ticket"),
     ] = None
-    status: Annotated[str, Field(description="The current status of the ticket")]
+    status: Annotated[
+        str, Field(description="The current status of the ticket")
+    ]
     created_at: Annotated[
         str, Field(description="The datetime when the ticket was created")
     ]
     updated_at: Annotated[
         str, Field(description="The datetime when the ticket was updated")
     ]
-    priority: Annotated[str | None, Field(description="The priority of the ticket")] = (
-        None
-    )
+    priority: Annotated[
+        str | None, Field(description="The priority of the ticket")
+    ] = None
     type: Annotated[
         str | None,
         Field(
@@ -93,6 +128,13 @@ class Ticket(BaseModel):
         Field(
             description="The user who requested the ticket",
             validation_alias="requester_id",
+        ),
+    ] = None
+    organization: Annotated[
+        Organization | int | None,
+        Field(
+            description="The organization of the ticket",
+            validation_alias="organization_id",
         ),
     ] = None
     assignee: Annotated[
@@ -111,17 +153,21 @@ class Ticket(BaseModel):
     ] = None
     due_at: Annotated[
         str | None,
-        Field(description="If this is a ticket of type 'task' it has a due date"),
+        Field(
+            description="If this is a ticket of type 'task' it has a due date"
+        ),
     ] = None
-    tags: Annotated[list | None, Field(description="List of tags for the ticket")] = (
-        None
-    )
+    tags: Annotated[
+        list | None, Field(description="List of tags for the ticket")
+    ] = None
     satisfaction_rating: Annotated[
         Rating | None, Field(description="Rating of the ticket")
     ] = None
 
     @field_validator("assignee", "requester", mode="before")
-    def set_users_data(cls, value: str, info: ValidationInfo) -> User | str | None:
+    def set_users_data(
+        cls, value: str, info: ValidationInfo
+    ) -> User | str | None:
         if not info.context:
             return value
 
@@ -131,7 +177,9 @@ class Ticket(BaseModel):
         return value
 
     @field_validator("group", mode="before")
-    def set_groups_data(cls, value: str, info: ValidationInfo) -> Group | str | None:
+    def set_groups_data(
+        cls, value: str, info: ValidationInfo
+    ) -> Group | str | None:
         if not info.context:
             return value
 
@@ -140,17 +188,36 @@ class Ticket(BaseModel):
 
         return value
 
+    @field_validator("organization", mode="before")
+    def set_organizations_data(
+        cls, value: str, info: ValidationInfo
+    ) -> Organization | str | None:
+        if not info.context:
+            return value
+
+        if organization := info.context.get("organizations", {}).get(value):
+            return Organization.model_validate(organization)
+
+        return value
+
 
 class Comment(BaseModel):
-    id: Annotated[int, Field(description="The unique identifier of the comment")]
-    author_id: Annotated[
-        User | str | None, Field(description="The ID of the author of the comment")
+    id: Annotated[
+        int, Field(description="The unique identifier of the comment")
     ]
-    body: Annotated[str, Field(description="The body of the comment in plain text")]
+    author_id: Annotated[
+        User | str | None,
+        Field(description="The ID of the author of the comment"),
+    ]
+    body: Annotated[
+        str, Field(description="The body of the comment in plain text")
+    ]
     html_body: Annotated[
         str, Field(description="The body of the comment in HTML format")
     ]
-    public: Annotated[bool, Field(description="Indicates if the comment is public")]
+    public: Annotated[
+        bool, Field(description="Indicates if the comment is public")
+    ]
     created_at: Annotated[
         str,
         Field(
@@ -159,9 +226,15 @@ class Comment(BaseModel):
     ]
 
     @field_validator("author_id", mode="before")
-    def set_users_data(cls, value: str, info: ValidationInfo) -> User | str | None:
+    def set_users_data(
+        cls, value: str, info: ValidationInfo
+    ) -> User | str | None:
         if not info.context:
             return value
+
+        # There is no user with id -1, so we return system_user
+        if value == -1:
+            return "system_user"
 
         if user := info.context.get("users", {}).get(value):
             return User.model_validate(user)
@@ -176,17 +249,21 @@ class UpdateTicket(BaseModel):
     group_id: Annotated[
         str | None, Field(description="The ID of the assigned group")
     ] = None
-    status: Annotated[str | None, Field(description="The new status of the ticket")] = (
-        None
-    )
+    status: Annotated[
+        str | None, Field(description="The new status of the ticket")
+    ] = None
 
     def to_ticket(self):
         return {"ticket": self.model_dump(mode="json", exclude_none=True)}
 
 
 class AddComment(BaseModel):
-    body: Annotated[str, Field(description="The body of the comment in plain text")]
-    public: Annotated[bool, Field(description="Indicates if the comment is public")]
+    body: Annotated[
+        str, Field(description="The body of the comment in plain text")
+    ]
+    public: Annotated[
+        bool, Field(description="Indicates if the comment is public")
+    ]
 
     def to_ticket_comment(self):
         return {"ticket": {"comment": self.model_dump(mode="json")}}
@@ -196,10 +273,21 @@ class BaseResponse(BaseModel):
     @classmethod
     def from_response(cls, data: dict) -> Self:
         users_dict = {user["id"]: user for user in data.get("users") or []}
-        groups_dict = {group["id"]: group for group in data.get("groups") or []}
+        groups_dict = {
+            group["id"]: group for group in data.get("groups") or []
+        }
+        organizations_dict = {
+            organization["id"]: organization
+            for organization in data.get("organizations") or []
+        }
 
         return cls.model_validate(
-            data, context={"users": users_dict, "groups": groups_dict}
+            data,
+            context={
+                "users": users_dict,
+                "groups": groups_dict,
+                "organizations": organizations_dict,
+            },
         )
 
 
@@ -208,7 +296,9 @@ class TicketsResponse(BaseResponse):
 
 
 class CommentsResponse(BaseResponse):
-    comments: Annotated[list[Comment], Field(description="List of ticket comments")]
+    comments: Annotated[
+        list[Comment], Field(description="List of ticket comments")
+    ]
 
 
 class UsersResponse(BaseModel):

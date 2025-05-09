@@ -23,7 +23,10 @@ class BaseApi:
     subdomain: str
 
     def _call_api(
-        self, http_method: Any, endpoint: str, params: Optional[dict[str, Any]] = None
+        self,
+        http_method: Any,
+        endpoint: str,
+        params: Optional[dict[str, Any]] = None,
     ) -> sema4ai_http.ResponseWrapper:
         headers = {
             "Authorization": f"Bearer {self.bearer_token}",
@@ -51,7 +54,7 @@ class TicketsApi(BaseApi):
     QUERY_OPTIONS = {
         "sort_by": "created_at",
         "sort_order": "asc",
-        "include": "tickets(users,groups)",
+        "include": "tickets(users,groups,organizations)",
     }
 
     @staticmethod
@@ -87,7 +90,9 @@ class TicketsApi(BaseApi):
 
         return Ticket.model_validate(response["ticket"])
 
-    def create(self, comment: str, priority: str, subject: str, tags: str) -> Ticket:
+    def create(
+        self, comment: str, priority: str, subject: str, tags: str
+    ) -> Ticket:
         response = self._call_api(
             sema4ai_http.post,
             "/api/v2/tickets.json",
@@ -148,6 +153,8 @@ class UsersApi(BaseApi):
 
 class GroupsApi(BaseApi):
     def list(self) -> list[Group]:
-        response = self._call_api(sema4ai_http.get, "/api/v2/groups.json").json()
+        response = self._call_api(
+            sema4ai_http.get, "/api/v2/groups.json"
+        ).json()
 
         return [Group.model_validate(group) for group in response["groups"]]
