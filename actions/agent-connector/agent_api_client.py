@@ -53,9 +53,7 @@ class AgentAPIClient:
                 return False
 
         # First check environment variable
-        if url := os.getenv("SEMA4AI_TENANT_URL"):
-            # Append /api/v1 to the base URL for cloud environments
-            api_url = f"{url}/api/v1"
+        if api_url := os.getenv("SEMA4AI_API_V1_URL"):
             if test_url(api_url):
                 return api_url
 
