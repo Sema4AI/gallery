@@ -1,7 +1,6 @@
 from enum import Enum
 from pydantic import BaseModel, Field
-from typing import Dict
-
+from typing import Dict, Any
 
 class Location(BaseModel):
     name: str = Field(description="Name of the location", default="")
@@ -38,3 +37,10 @@ class SharepointList(BaseModel):
     list_name: str = Field(description="Name of the list", default="")
     description: str = Field(description="Description of the list", default="")
     columns: list[ListColumn] = Field(description="List of columns", default=[])
+
+class ListItem(BaseModel):
+    fields: Any = Field(description="Field values for the list item as a dictionary", default=[])
+
+class SharepointListItem(BaseModel):
+    item_id: str = Field(description="ID of the list item", default="")
+    fields: ListItem = Field(description="Field values for the list item")
