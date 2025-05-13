@@ -2,10 +2,30 @@
 
 Action package for interaction with Microsoft Sharepoint resources.
 
-Currently capably of downloading a file, uploading a file, searching files, listing all sites
-that user knows, getting lists of a site and creating a list for a site.
+Currently capable of downloading a file, uploading a file, searching files, listing all sites
+that user knows, getting lists of a site, creating a list for a site, and adding, updating, deleting, or retrieving items in a list.
 
 ## Prompt Examples
+
+```
+List items in Issue tracker list (Communication site) in table format
+```
+
+> Here are the items from the "Issue tracker" list in the "Communication site" presented in a table format:
+>
+> | ID | Title                  | Status      | Created             | Modified            |
+> |----|------------------------|-------------|---------------------|---------------------|
+> | 23 | Test item              | New         | 2025-05-06 14:14:45 | 2025-05-06 14:14:45 |
+> | 24 | Something wrong        | In progress | 2025-05-06 15:18:50 | 2025-05-06 15:59:43 |
+> | 25 |                        | New         | 2025-05-06 16:00:25 | 2025-05-06 16:00:25 |
+> | 26 | Was there anything wrong? | In progress | 2025-05-06 16:08:22 | 2025-05-06 16:26:12 |
+
+```
+Delete list item 25
+```
+
+> The item with ID 25 has been successfully deleted from the "Issue tracker" list in the "Communication site." If there's anything else you need, feel free to ask!
+
 
 ```
 Get a file related to studio from Community site

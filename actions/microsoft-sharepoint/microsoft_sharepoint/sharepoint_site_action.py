@@ -68,9 +68,14 @@ def get_sharepoint_site(
         site_id = mysite["id"]
     else:
         response = search_for_site(search_string=site_name, token=token)
-        if len(response.result["value"]) > 1:
-            raise ActionError("Multiple sites with the same name found.")
-        site_id = response.result["value"][0]["id"]
+        # Filter results case-insensitively
+        matches = [site for site in response.result["value"] if site["displayName"].lower() == site_name.lower()]
+        if len(matches) > 1:
+            raise ActionError(f"Multiple sites with the same name '{site_name}' found.")
+        elif len(matches) == 0:
+            raise ActionError(f"No site found with the given name '{site_name}'.")
+        else:
+            site_id = matches[0]["id"]
     site_id = site_id if len(site_id.split(",")) == 1 else site_id.split(",")[1]
     headers = build_headers(token)
     response_json = send_request(
