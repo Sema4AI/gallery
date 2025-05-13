@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.4.0] - 2025-05-08
+
+### Added
+
+- Add sideloading organization data to `TicketsApi`
+- Add `Organization` datamodel
+- Add check for `Comment` datamodel for user validation
+- Add search ticket by only number instruction to `search_tickets`
+
+### Changed
+
+- Change email validation for `User` datamodel to allow `None` email for deleted users
+
 ## [1.3.0] - 2025-04-15
 
 ### Changed
