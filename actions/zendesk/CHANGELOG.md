@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - Add sideloading organization data to `TicketsApi`
 - Add `Organization` datamodel
 - Add check for `Comment`datamodel for user validation
+- Add search ticket by only number instruction to `search_tickets`
 
 ### Changed
 
