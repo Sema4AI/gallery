@@ -1,10 +1,24 @@
 {
     "inputs": [
         {
-            "inputName": "input-1",
+            "inputName": "input-clean",
             "inputValue": {
                 "message": "Which regions are experiencing the fastest growth in sales in 2024?",
                 "semantic_model_file": "@CORTEX_ANALYST_DEMO.REVENUE_TIMESERIES.RAW_DATA/revenue_timeseries.yaml"
+            }
+        },
+        {
+            "inputName": "input-from-snowsight",
+            "inputValue": {
+                "message": "Which regions are experiencing the fastest growth in sales in 2024?",
+                "semantic_model_file": "'@\"CORTEX_ANALYST_DEMO\".\"REVENUE_TIMESERIES\".\"RAW_DATA\"/revenue_timeseries.yaml'"
+            }
+        },
+        {
+            "inputName": "input-spaces",
+            "inputValue": {
+                "message": "Which regions are experiencing the fastest growth in sales in 2024?",
+                "semantic_model_file": "'@\"CORTEX_ANALYST_DEMO\".\"REVENUE_TIMESERIES\".\"RAW_DATA\"/revenue timeseries.yaml'"
             }
         }
     ],
