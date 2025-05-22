@@ -5,16 +5,18 @@ from time import sleep
 from typing import Any, Optional
 
 import sema4ai_http
+from sema4ai.actions import ActionError
+
 from models import (
     AddComment,
     CommentsResponse,
     Group,
+    Tag,
     Ticket,
     TicketsResponse,
     UpdateTicket,
     UsersResponse,
 )
-from sema4ai.actions import ActionError
 
 
 @dataclass
@@ -158,3 +160,10 @@ class GroupsApi(BaseApi):
         ).json()
 
         return [Group.model_validate(group) for group in response["groups"]]
+
+
+class TagsApi(BaseApi):
+    def list(self) -> list[Tag]:
+        response = self._call_api(sema4ai_http.get, "/api/v2/tags.json").json()
+
+        return [Tag.model_validate(tag) for tag in response["tags"]]
