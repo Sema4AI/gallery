@@ -241,7 +241,7 @@ def list_tags(
         Literal["zendesk"], list[Literal["read"]]
     ],
 ) -> Response[list[Tag]]:
-    """List top 100 used tags.
+    """Lists up to 100 most popular tags in the last 60 days, in decreasing popularity.
 
     Args:
         zendesk_credentials: Zendesk OAuth2 credentials
