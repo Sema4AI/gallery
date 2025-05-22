@@ -271,6 +271,9 @@ class AddComment(BaseModel):
 
 class Tag(BaseModel):
     name: Annotated[str, Field(description="The name of the tag")]
+    count: Annotated[
+        int, Field(description="The number of tickets with the tag")
+    ]
 
 
 class BaseResponse(BaseModel):
