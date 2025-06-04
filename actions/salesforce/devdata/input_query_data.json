@@ -3,10 +3,10 @@
         {
             "inputName": "input-1",
             "inputValue": {
-                "query": "SELECT Name, Amount, CloseDate FROM Opportunity WHERE StageName = 'Closed Won' AND CloseDate >= 2024-10-01 AND CloseDate <= 2024-10-31 ORDER BY Amount DESC",
-                "client_id": "<specify-secret>",
-                "client_secret": "<specify-secret>",
-                "domain_url": "<specify-secret>"
+                "query": "SELECT Name, CreatedDate FROM Contact ORDER BY CreatedDate DESC LIMIT 3",
+                "client_id": "",
+                "client_secret": "",
+                "domain_url": ""
             }
         }
     ],
@@ -30,6 +30,8 @@
                 "description": "Salesforce domain url."
             }
         },
-        "inputFileVersion": "v2"
+        "inputFileVersion": "v3",
+        "kind": "action",
+        "actionSignature": "action/args: 'query: str, client_id: Secret, client_secret: Secret, domain_url: Secret'"
     }
 }
