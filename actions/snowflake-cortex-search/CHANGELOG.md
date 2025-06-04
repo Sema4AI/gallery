@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ### Changed
 - Added pydantic type for cortex_search request arg.
 - Updated snowflake=1.5.1
-- Added exclusion rules to *.log files
+- Added exclusion rules
 
 ## [1.0.4] - 2025-05-22
 
