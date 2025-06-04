@@ -1,5 +1,7 @@
 *.pyc
 *.zip
+./**/*.log
+./**/.env
 .DS_Store
 .env
 .project
@@ -8,7 +10,8 @@
 .venv/
 .vscode
 metadata.json
+*metadata__.json
 output/
 temp/
 venv/
-./**/.env
+*.pkl
