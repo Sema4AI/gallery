@@ -35,3 +35,4 @@ packaging:
     - ./**/*.pyc
     - ./**/*.zip
     - ./**/.env
+    - ./**/*.log

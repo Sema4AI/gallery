@@ -90,23 +90,17 @@ def cortex_search(
     warehouse: Secret,
     database: Secret,
     schema: Secret,
-    service: Secret,
-    columns: list | None = None,
-    filter: dict | None = None,
-    limit: int = 5,
+    service: Secret
 ) -> Response[list]:
     """
     Queries the cortex search service in the session state and returns a list of results.
 
     Args:
-        query: The query to execute
+        query: The search request containing query, columns, filter, and limit parameters.
         warehouse: Your Snowflake virtual warehouse to use for queries
         database: Your Snowflake database to use for queries
         schema: Your Snowflake schema to use for queries
         service: The name of the Cortex Search service to use
-        columns: The columns to return
-        filter: The filter to apply, optional, defaults to None
-        limit: The limit to apply, optional, defaults to 5
 
     Returns:
         The results of the query.
