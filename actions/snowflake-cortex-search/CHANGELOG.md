@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.0.6] - 2025-06-05
+
+### Changed
+
+- Fixed handling of secrets in cortex search action.
+- Further improvements to docstring to instruct LLM on correct tool usage.
+
 ## [1.0.5] - 2025-06-04
 
 ### Changed
