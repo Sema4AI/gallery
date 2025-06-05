@@ -1,0 +1,29 @@
+{
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "api_key": "",
+                "workspace_id": ""
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "list_processes",
+        "actionRelativePath": "actions.py",
+        "schemaDescription": [],
+        "managedParamsSchemaDescription": {
+            "api_key": {
+                "type": "Secret",
+                "description": "The API key for authentication."
+            },
+            "workspace_id": {
+                "type": "Secret",
+                "description": "The workspace ID to query."
+            }
+        },
+        "inputFileVersion": "v3",
+        "kind": "action",
+        "actionSignature": "action/args: 'api_key: Secret, workspace_id: Secret'"
+    }
+}

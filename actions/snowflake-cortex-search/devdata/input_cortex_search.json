@@ -1,0 +1,86 @@
+{
+    "inputs": [
+        {
+            "inputName": "input-uppercase",
+            "inputValue": {
+                "query": "What were the opening lines of the call by the agent?",
+                "columns": [
+                    "CALL_ID",
+                    "TRANSCRIPT_TEXT"
+                ],
+                "limit": 10,
+                "warehouse": "COMPUTE_WH",
+                "database": "CALL_CENTER_DATA",
+                "schema": "PUBLIC",
+                "service": "CALL_LOGS"
+            }
+        },
+        {
+            "inputName": "input-with-filter",
+            "inputValue": {
+                "query": "What were the opening lines of the call by the agent?",
+                "columns": [
+                    "CALL_ID",
+                    "TRANSCRIPT_TEXT"
+                ],
+                "limit": 10,
+                "filter": {
+                    "@or": [
+                        { "@eq": { "CALL_ID": "CALL_776" } },
+                        { "@eq": { "CALL_ID": "CALL_51" } }
+                    ]
+                },
+                "warehouse": "COMPUTE_WH",
+                "database": "CALL_CENTER_DATA",
+                "schema": "PUBLIC",
+                "service": "CALL_LOGS"
+            }
+        },
+        {
+            "inputName": "input-lowercase",
+            "inputValue": {
+                "query": "What were the opening lines of the call by the agent?",
+                "columns": [
+                    "call_id",
+                    "transcript_text"
+                ],
+                "limit": 10,
+                "warehouse": "compute_wh",
+                "database": "call_center_data",
+                "schema": "public",
+                "service": "call_logs"
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "cortex_search",
+        "actionRelativePath": "cortex_actions.py",
+        "schemaDescription": [
+            "query: string: Your search query, to search over the text column in the service.",
+            "columns: string: The columns to return. These columns must be based on the columns returned by cortex_get_search_specification.",
+            "filter: string: Dictionary specifying filter conditions using Snowflake Cortex Search syntax. Only use columns that are part of the attribute_columns returned by cortex_get_search_specification.\nMust use specific operators:\n- \"@eq\": Equality filter. Example: {\"@eq\": {\"COLUMN_NAME\": \"value\"}}\n- \"@contains\": Array contains filter. Example: {\"@contains\": {\"ARRAY_COLUMN\": \"value\"}}\n- \"@gte\": Greater than or equal. Example: {\"@gte\": {\"NUMERIC_COLUMN\": 10}}\n- \"@lte\": Less than or equal. Example: {\"@lte\": {\"NUMERIC_COLUMN\": 100}}\n\nLogical operators can combine conditions:\n- \"@and\": Example: {\"@and\": [{\"@eq\": {\"COL1\": \"val1\"}}, {\"@eq\": {\"COL2\": \"val2\"}}]}\n- \"@or\": Example: {\"@or\": [{\"@eq\": {\"COL1\": \"val1\"}}, {\"@eq\": {\"COL1\": \"val2\"}}]}\n- \"@not\": Example: {\"@not\": {\"@eq\": {\"COL1\": \"val1\"}}}",
+            "limit: integer: The limit to apply, optional, defaults to 10"
+        ],
+        "managedParamsSchemaDescription": {
+            "warehouse": {
+                "type": "Secret",
+                "description": "Your Snowflake virtual warehouse to use for queries"
+            },
+            "database": {
+                "type": "Secret",
+                "description": "Your Snowflake database to use for queries"
+            },
+            "schema": {
+                "type": "Secret",
+                "description": "Your Snowflake schema to use for queries"
+            },
+            "service": {
+                "type": "Secret",
+                "description": "The name of the Cortex Search service to use"
+            }
+        },
+        "inputFileVersion": "v3",
+        "kind": "action",
+        "actionSignature": "action/args: 'query: str, warehouse: Secret, database: Secret, schema: Secret, service: Secret, columns: list | None=None, filter: dict | None=None, limit: int=10'"
+    }
+}

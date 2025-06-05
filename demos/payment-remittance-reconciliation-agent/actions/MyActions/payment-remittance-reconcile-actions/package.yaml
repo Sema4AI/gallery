@@ -2,39 +2,40 @@
 name: Payment Remittance Reconcile Actions
 
 # Required: A description of what's in the action package.
-description: Performs reconciliation of remittance documents by analyzing, storing, and updating payment data. Identifies discrepancies and updates work item status based on reconciliation results.
+description: Performs reconciliation of remittance documents by analyzing, storing,
+  and updating payment data. Identifies discrepancies and updates work item status
+  based on reconciliation results.
 
 # Package version number, recommend using semver.org
-version: 0.0.8
+version: 0.0.9
 
 dependencies:
   conda-forge:
-  - python=3.10.14
-  - uv=0.4.17
+    - python=3.11.11
+    - uv=0.6.11
   pypi:
-  - sema4ai-actions=1.0.1
-  - sema4ai-di-client=1.0.11
-  - pandas=2.2.2   
-  - duckdb=0.10.2
-  - pytest=8.3.3 
-  - requests=2.32.3
-  - pydantic=2.8.2
-  - natsort=8.4.0
+    - sema4ai-actions=1.3.6
+    - sema4ai-di-client=1.0.11
+    - pandas=2.2.2
+    - duckdb=0.10.2
+    - pytest=8.3.3
+    - requests=2.32.3
+    - pydantic=2.11.2
+    - natsort=8.4.0
 
-     
-     
 packaging:
   # By default, all files and folders in this directory are packaged when uploaded.
   # Add exclusion rules below (expects glob format: https://docs.python.org/3/library/glob.html)
   exclude:
-  - ./.git/**
-  - ./.vscode/**
-  - ./devdata/**
-  - ./output/**
-  - ./venv/**
-  - ./.venv/**
-  - ./.env/**
-  - ./.DS_store/**
-  - ./**/*.pyc
-  - ./**/*.zip
-  - ./**/*.log
+    - ./.git/**
+    - ./.vscode/**
+    - ./devdata/**
+    - ./output/**
+    - ./venv/**
+    - ./.venv/**
+    - ./.env/**
+    - ./.DS_Store/**
+    - ./**/*.pyc
+    - ./**/*.zip
+    - ./**/.env
+    - ./**/*.log

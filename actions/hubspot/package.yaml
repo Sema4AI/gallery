@@ -5,21 +5,29 @@ name: HubSpot
 description: Search and manage all aspects of CRM objects, including companies, contacts, deals, and more.
 
 # Package version number, recommend using semver.org
-version: 1.1.4
+version: 1.2.1
 
 # The version of the `package.yaml` format.
 spec-version: v2
 
 dependencies:
   conda-forge:
-    - python=3.10.16
-    - python-dotenv=1.0.1
-    - uv=0.4.17
+    - python=3.11.11
+    - python-dotenv=1.1.0
+    - uv=0.6.11
   pypi:
-    - sema4ai-actions=1.3.0
-    - pydantic=2.10.4
+    - sema4ai-actions=1.3.8
+    - pydantic=2.11.2
     - hubspot-api-client=11.1.0
     - requests=2.32.3
+
+external-endpoints:
+  - name: "HubSpot API"
+    description: "Access HubSpot CRM API."
+    additional-info-link: "https://developers.hubspot.com/docs/api/overview"
+    rules:
+      - host: "api.hubapi.com"
+        port: 443
 
 packaging:
   # By default, all files and folders in this directory are packaged when uploaded.
@@ -29,8 +37,9 @@ packaging:
     - ./.vscode/**
     - ./devdata/**
     - ./output/**
-    - ./.DS_store/**
+    - ./.DS_Store/**
     - ./venv/**
     - ./.venv/**
     - ./**/*.pyc
     - ./**/*.zip
+    - ./**/.env

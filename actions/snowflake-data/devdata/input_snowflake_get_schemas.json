@@ -1,0 +1,23 @@
+{
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "warehouse": "compute_wh",
+                "database": "cortex_analyst_demo"
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "snowflake_get_schemas",
+        "actionRelativePath": "snowflake_actions.py",
+        "schemaDescription": [
+            "warehouse: string: The warehouse to use.",
+            "database: string: The database to get the schemas from."
+        ],
+        "managedParamsSchemaDescription": {},
+        "inputFileVersion": "v3",
+        "kind": "action",
+        "actionSignature": "action/args: 'warehouse: str, database: str'"
+    }
+}

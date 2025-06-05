@@ -1,0 +1,21 @@
+{
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "warehouse": "compute_wh"
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "snowflake_get_databases",
+        "actionRelativePath": "snowflake_actions.py",
+        "schemaDescription": [
+            "warehouse: string: The warehouse to use."
+        ],
+        "managedParamsSchemaDescription": {},
+        "inputFileVersion": "v3",
+        "kind": "action",
+        "actionSignature": "action/args: 'warehouse: str'"
+    }
+}

@@ -5,17 +5,17 @@ name: Vitality Medications
 description: Explore the dummy Medications data
 
 # Package version number, recommend using semver.org
-version: 1.0.2
+version: 1.0.4
 
 # The version of the `package.yaml` format.
 spec-version: v2
 
 dependencies:
   conda-forge:
-    - python=3.10.16
-    - uv=0.4.17
+    - python=3.11.11
+    - uv=0.6.11
   pypi:
-    - sema4ai-actions=1.3.0
+    - sema4ai-actions=1.3.8
     - robocorp=2.1.2
 
 packaging:
@@ -28,6 +28,7 @@ packaging:
     - ./output/**
     - ./venv/**
     - ./.venv/**
-    - ./.DS_store/**
+    - ./.DS_Store/**
     - ./**/*.pyc
     - ./**/*.zip
+    - ./**/.env

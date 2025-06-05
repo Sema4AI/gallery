@@ -1,18 +1,19 @@
+import os
+import socket
+import subprocess
 import sys
 import time
+import urllib.parse
 from pathlib import Path
 
-from sema4ai.actions import action
-import os
-import urllib.parse
-import subprocess
-import socket
-import requests
 import black
+import sema4ai_http
+from sema4ai.actions import Response, action
+from urllib3.exceptions import ConnectionError
 
 
 @action
-def bootstrap_action_package(action_package_name: str) -> str:
+def bootstrap_action_package(action_package_name: str) -> Response[str]:
     """
     This action sets up an action package in the home directory of the user under the "actions_bootstrapper" folder.
 
@@ -33,7 +34,9 @@ def bootstrap_action_package(action_package_name: str) -> str:
 
     full_action_path = get_action_package_path(action_package_name)
 
-    return f"Action successfully bootstrapped! Code available at {full_action_path}"
+    return Response(
+        result=f"Action successfully bootstrapped! Code available at {full_action_path}"
+    )
 
 
 def find_available_port(start_port: int) -> int:
@@ -60,7 +63,7 @@ def get_action_package_path(action_package_name: str) -> str:
 @action
 def update_action_package_dependencies(
     action_package_name: str, action_package_dependencies_code: str
-) -> str:
+) -> Response[str]:
     """
     Update the action package dependencies (package.yaml) for
     a specified action package.
@@ -87,7 +90,9 @@ def update_action_package_dependencies(
     finally:
         package_yaml.close()
 
-    return f"Successfully updated the package dependencies at: {package_yaml_path}"
+    return Response(
+        result=f"Successfully updated the package dependencies at: {package_yaml_path}"
+    )
 
 
 @action
@@ -95,7 +100,7 @@ def update_action_package_action_dev_data(
     action_package_name: str,
     action_package_action_name: str,
     action_package_dev_data: str,
-) -> str:
+) -> Response[str]:
     """
     Update the action package dev data for a specified action package.
 
@@ -124,7 +129,9 @@ def update_action_package_action_dev_data(
         finally:
             file.close()
 
-    return f"dev data for {action_package_action_name} in the action package {action_package_name} successfully created!"
+    return Response(
+        result=f"dev data for {action_package_action_name} in the action package {action_package_name} successfully created!"
+    )
 
 
 @action
@@ -156,8 +163,11 @@ def start_action_server(action_package_name: str, secrets: str) -> str:
     # Command to start the server using the script
     script_path = Path(__file__).parent / "start_action_server.py"
     start_command = [
-        sys.executable, str(script_path),
-        str(full_action_path), str(available_port), secrets
+        sys.executable,
+        str(script_path),
+        str(full_action_path),
+        str(available_port),
+        secrets,
     ]
     print(f"Start command: {start_command}")
 
@@ -165,7 +175,7 @@ def start_action_server(action_package_name: str, secrets: str) -> str:
         start_command,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
-        creationflags=subprocess.CREATE_NEW_PROCESS_GROUP if os.name == 'nt' else 0
+        creationflags=subprocess.CREATE_NEW_PROCESS_GROUP if os.name == "nt" else 0,
     )
     print("Subprocess started.")
 
@@ -196,8 +206,12 @@ def start_action_server(action_package_name: str, secrets: str) -> str:
                         print(f"Action Server started at {url}")
                         return f"Action Server started at {url}"
                     if "Error executing action-server" in line:
-                        stdout_content = process.stdout.read().decode() if process.stdout else ""
-                        stderr_content = process.stderr.read().decode() if process.stderr else ""
+                        stdout_content = (
+                            process.stdout.read().decode() if process.stdout else ""
+                        )
+                        stderr_content = (
+                            process.stderr.read().decode() if process.stderr else ""
+                        )
                         print("Failed to start.")
                         print("Stdout:")
                         print(stdout_content)
@@ -226,8 +240,10 @@ def stop_action_server(action_server_url: str) -> str:
     }
 
     try:
-        response = requests.post(f"{action_server_url}/api/shutdown", headers=headers)
-    except requests.exceptions.ConnectionError:
+        response = sema4ai_http.post(
+            f"{action_server_url}/api/shutdown", headers=headers
+        )
+    except ConnectionError:
         return "Could not connect to the server"
 
     if response.status_code == 200:
@@ -240,7 +256,7 @@ def stop_action_server(action_server_url: str) -> str:
 
 
 @action
-def update_action_code(action_package_name: str, action_code: str) -> str:
+def update_action_code(action_package_name: str, action_code: str) -> Response[str]:
     """
     Replaces actions.py content with the provided input.
 
@@ -268,7 +284,7 @@ def update_action_code(action_package_name: str, action_code: str) -> str:
     finally:
         actions_py.close()
 
-    return f"Successfully updated the actions at {actions_py_path}"
+    return Response(result=f"Successfully updated the actions at {actions_py_path}")
 
 
 @action
@@ -304,16 +320,13 @@ def open_action_code(action_package_name: str) -> str:
             "Ensure VSCode is installed and the 'code' command is available in your PATH."
         )
     except Exception as e:
-        return (
-            f"Unexpected error: {str(e)}. "
-            "Please check your setup and try again."
-        )
+        return f"Unexpected error: {str(e)}. " "Please check your setup and try again."
 
     return f"{action_package_name} code opened with VSCode."
 
 
 @action
-def get_action_run_logs(action_server_url: str, run_id: str) -> str:
+def get_action_run_logs(action_server_url: str, run_id: str) -> Response[str]:
     """
     Returns action run logs in plain text by requesting them from the
     provided action server URL.
@@ -333,16 +346,16 @@ def get_action_run_logs(action_server_url: str, run_id: str) -> str:
         f"/api/runs/{run_id}/artifacts/text-content?artifact_names={artifact}",
     )
 
-    response = requests.get(target_url)
+    response = sema4ai_http.get(target_url)
 
     payload = response.json()
     output = payload[artifact]
 
-    return output
+    return Response(result=output)
 
 
 @action
-def get_action_run_logs_latest(action_server_url: str) -> str:
+def get_action_run_logs_latest(action_server_url: str) -> Response[str]:
     """
     Returns action run logs in plain text by requesting them from the
     provided action server URL. Requests the latest run's logs.
@@ -356,9 +369,9 @@ def get_action_run_logs_latest(action_server_url: str) -> str:
 
     runs_list_url = urllib.parse.urljoin(action_server_url, "/api/runs")
 
-    runs_response = requests.get(runs_list_url)
+    runs_response = sema4ai_http.get(runs_list_url)
     runs_payload = runs_response.json()
 
     last_run = runs_payload[-1]
 
-    return get_action_run_logs(action_server_url, last_run["id"])
+    return Response(result=get_action_run_logs(action_server_url, last_run["id"]))

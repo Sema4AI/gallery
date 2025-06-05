@@ -8,19 +8,20 @@ Currently supporting:
 
 import os
 from pathlib import Path
-import requests
-from sema4ai.actions import action, OAuth2Secret, Response, ActionError
 from typing import Literal
-from microsoft_sharepoint.models import File, Location, FileList
+
+import sema4ai_http
+from microsoft_sharepoint.models import File, FileList, Location
 from microsoft_sharepoint.sharepoint_site_action import (
-    search_for_site,
     get_sharepoint_site,
+    search_for_site,
 )
 from microsoft_sharepoint.support import (
     BASE_GRAPH_URL,
     build_headers,
     send_request,
 )
+from sema4ai.actions import ActionError, OAuth2Secret, Response, action
 
 
 @action(is_consequential=False)
@@ -93,7 +94,7 @@ def download_sharepoint_file(
             download_file_url = f"{download_url}/{item_file_id}/content"
         else:
             download_file_url = f"{download_url}/{site_id}/items/{item_file_id}/content"
-        download_r = requests.get(download_file_url, headers=headers)
+        download_r = sema4ai_http.get(download_file_url, headers=headers)
 
         if target_folder == "":
             target_folder = os.getcwd()
@@ -205,7 +206,9 @@ def upload_file_to_sharepoint(
     if filesize <= 4000000:  # 4MB
         with open(filename, "rb") as file:
             file_content = file.read()
-        upload_response = requests.put(upload_url, headers=headers, data=file_content)
+        upload_response = sema4ai_http.put(
+            upload_url, headers=headers, body=file_content
+        )
         if upload_response.status_code in [200, 201]:
             web_url_parts = upload_response.json()["webUrl"].split("/")[:-1]
             web_url = "/".join(web_url_parts)
@@ -216,7 +219,7 @@ def upload_file_to_sharepoint(
             raise ActionError(f"Failed to upload file: {upload_response.text}")
     else:
         # upload bigger file in session
-        upload_session_response = requests.post(upload_session_url, headers=headers)
+        upload_session_response = sema4ai_http.post(upload_session_url, headers=headers)
         upload_url = upload_session_response.json()["uploadUrl"]
         chunk_size = 327680  # 320KB
         with open(filename, "rb") as file:
@@ -228,10 +231,10 @@ def upload_file_to_sharepoint(
                 start = i * chunk_size
                 end = start + len(chunk_data) - 1
                 headers.update({"Content-Range": f"bytes {start}-{end}/{filesize}"})
-                chunk_response = requests.put(
-                    upload_url, headers=headers, data=chunk_data
+                chunk_response = sema4ai_http.put(
+                    upload_url, headers=headers, body=chunk_data
                 )
-                if not chunk_response.ok:
+                if not chunk_response.ok():
                     raise ActionError(f"Failed to upload file: {chunk_response.text}")
                 i += 1
         return Response(result="File uploaded successfully")

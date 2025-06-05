@@ -2,7 +2,7 @@ from typing import Literal
 
 from sema4ai.actions import OAuth2Secret, Response, action
 
-from microsoft_excel._client import Client, _create_worksheet, get_client  # noqa: F401
+from microsoft_excel._client import Client, _create_worksheet  # noqa: F401
 
 
 @action(is_consequential=True)
@@ -25,9 +25,10 @@ def add_sheet(
         Message containing the spreadsheet title and url.
     """
 
-    with get_client(token) as client:  # type: Client
-        return Response(
-            result=_create_worksheet(
-                client, workbook_id=workbook_id, worksheet_name=worksheet_name
-            )
+    client = Client(token)
+
+    return Response(
+        result=_create_worksheet(
+            client, workbook_id=workbook_id, worksheet_name=worksheet_name
         )
+    )

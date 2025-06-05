@@ -13,3 +13,4 @@ metadata.json
 output/
 temp/
 venv/
+./**/.env

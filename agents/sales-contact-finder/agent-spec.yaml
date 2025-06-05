@@ -1,5 +1,16 @@
 agent-package:
   spec-version: v2
+  exclude:
+  - ./.git/**
+  - ./.vscode/**
+  - ./devdata/**
+  - ./output/**
+  - ./venv/**
+  - ./.venv/**
+  - ./**/.env
+  - ./**/.DS_Store
+  - ./**/*.pyc
+  - ./*.zip
   agents:
   - name: Sales Contact Finder
     description: Comprehensive sales intelligence specialist that researches target
@@ -9,20 +20,20 @@ agent-package:
     model:
       provider: Snowflake Cortex AI
       name: claude-3-5-sonnet
-    version: 0.0.1
+    version: 1.0.1
     architecture: agent
     reasoning: disabled
     runbook: runbook.md
     action-packages:
     - name: Browsing
       organization: Sema4.ai
-      version: 1.1.1
+      version: 1.2.2
       path: Sema4.ai/browsing
       type: folder
       whitelist: ''
     - name: Serper
       organization: Sema4.ai
-      version: 0.0.1
+      version: 1.0.1
       path: Sema4.ai/serper
       type: folder
       whitelist: ''

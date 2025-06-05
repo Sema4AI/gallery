@@ -9,13 +9,12 @@ from datetime import datetime
 from pathlib import Path
 from typing import Generator
 
+from conversations import ConversationNotFoundError, get_conversation_id
 from dotenv import load_dotenv
+from models import Messages, ThreadMessage, ThreadMessageList
 from sema4ai.actions import ActionError, Response, Secret, action
 from slack_sdk import WebClient as SlackWebClient
 from slack_sdk.errors import SlackApiError
-
-from conversations import ConversationNotFoundError, get_conversation_id
-from models import Messages, ThreadMessage, ThreadMessageList
 
 load_dotenv(Path(__file__).absolute().parent / "devdata" / ".env")
 
@@ -152,7 +151,7 @@ def read_messages_from_channel(
                     {"messages": replies}, from_attributes=True, context=context
                 )
 
-    return messages_result
+    return Response(result=messages_result)
 
 
 @action(is_consequential=False)

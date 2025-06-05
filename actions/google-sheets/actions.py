@@ -26,15 +26,6 @@ load_dotenv(Path(__file__).absolute().parent / "devdata" / ".env")
 ALPHA_LENGTH = ord("Z") - ord("A") + 1
 
 
-class _CatchError:
-    def __enter__(self):
-        return self
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        if isinstance(exc_val, APIError):
-            raise ActionError(str(exc_val)) from None
-
-
 class _Credentials(Credentials):
     @classmethod
     def from_oauth2_secret(cls, secret: OAuth2Secret) -> Self:
@@ -79,13 +70,10 @@ def create_spreadsheet(
         Message containing the spreadsheet title and url.
     """
 
-    with _CatchError():
-        gc = gspread.authorize(_Credentials.from_oauth2_secret(oauth_access_token))
-        spreadsheet = gc.create(name)
+    gc = gspread.authorize(_Credentials.from_oauth2_secret(oauth_access_token))
+    spreadsheet = gc.create(name)
 
-        return Response[str](
-            result=f"Sheet created: {spreadsheet.title}: {spreadsheet.url}"
-        )
+    return Response(result=f"Sheet created: {spreadsheet.title}: {spreadsheet.url}")
 
 
 @action(is_consequential=True)
@@ -117,15 +105,14 @@ def create_worksheet(
         Message containing the newly created worksheet title and url.
     """
 
-    with _CatchError():
-        gc = gspread.authorize(_Credentials.from_oauth2_secret(oauth_access_token))
+    gc = gspread.authorize(_Credentials.from_oauth2_secret(oauth_access_token))
 
-        spreadsheet = gc.open(spreadsheet)
-        worksheet = spreadsheet.add_worksheet(title=title, rows=rows, cols=columns)
+    spreadsheet = gc.open(spreadsheet)
+    worksheet = spreadsheet.add_worksheet(title=title, rows=rows, cols=columns)
 
-        return Response(
-            result=f"Worksheet successfully created the worksheet: {worksheet.title}: {worksheet.url}"
-        )
+    return Response(
+        result=f"Worksheet successfully created the worksheet: {worksheet.title}: {worksheet.url}"
+    )
 
 
 @action(is_consequential=False)
@@ -160,13 +147,12 @@ def get_sheet_content(
         The sheet's content.
     """
 
-    with _CatchError():
-        gc = gspread.authorize(_Credentials.from_oauth2_secret(oauth_access_token))
+    gc = gspread.authorize(_Credentials.from_oauth2_secret(oauth_access_token))
 
-        spreadsheet = gc.open(spreadsheet)
-        worksheet = spreadsheet.worksheet(worksheet)
+    spreadsheet = gc.open(spreadsheet)
+    worksheet = spreadsheet.worksheet(worksheet)
 
-        return Response(result=_get_sheet_content(worksheet, from_row, limit))
+    return Response(result=_get_sheet_content(worksheet, from_row, limit))
 
 
 @action(is_consequential=False)
@@ -194,19 +180,18 @@ def get_spreadsheet_schema(
         Names of the sheets, and the first rows from each sheet to explain the context.
     """
 
-    with _CatchError():
-        gc = gspread.authorize(_Credentials.from_oauth2_secret(oauth_access_token))
-        sh = gc.open(spreadsheet)
+    gc = gspread.authorize(_Credentials.from_oauth2_secret(oauth_access_token))
+    sh = gc.open(spreadsheet)
 
-        output = "Here are the sheets and their first rows.\n\n"
-        content = []
+    output = "Here are the sheets and their first rows.\n\n"
+    content = []
 
-        for sheet in sh.worksheets():
-            content.append(_get_sheet_content(sheet, from_row=1, limit=5))
+    for sheet in sh.worksheets():
+        content.append(_get_sheet_content(sheet, from_row=1, limit=5))
 
-        result = output + "\n".join(content)
+    result = output + "\n".join(content)
 
-        return Response(result=result)
+    return Response(result=result)
 
 
 @action(is_consequential=True)
@@ -238,15 +223,14 @@ def add_sheet_rows(
         Message indicating the success of the operation.
     """
 
-    with _CatchError():
-        gc = gspread.authorize(_Credentials.from_oauth2_secret(oauth_access_token))
+    gc = gspread.authorize(_Credentials.from_oauth2_secret(oauth_access_token))
 
-        spreadsheet = gc.open(spreadsheet)
-        worksheet = spreadsheet.worksheet(worksheet)
+    spreadsheet = gc.open(spreadsheet)
+    worksheet = spreadsheet.worksheet(worksheet)
 
-        worksheet.append_rows(values=rows_to_add.to_raw_data())
+    worksheet.append_rows(values=rows_to_add.to_raw_data())
 
-        return Response(result="Row(s) were successfully added.")
+    return Response(result="Row(s) were successfully added.")
 
 
 @action(is_consequential=True)
@@ -285,15 +269,14 @@ def update_sheet_rows(
          Message indicating the success or failure of the operation.
     """
 
-    with _CatchError():
-        gc = gspread.authorize(_Credentials.from_oauth2_secret(oauth_access_token))
+    gc = gspread.authorize(_Credentials.from_oauth2_secret(oauth_access_token))
 
-        spreadsheet = gc.open(spreadsheet)
-        worksheet = spreadsheet.worksheet(worksheet)
+    spreadsheet = gc.open(spreadsheet)
+    worksheet = spreadsheet.worksheet(worksheet)
 
-        worksheet.update(data.to_raw_data(), range_name=cells)
+    worksheet.update(data.to_raw_data(), range_name=cells)
 
-        return Response(result="Rows were successfully updated.")
+    return Response(result="Rows were successfully updated.")
 
 
 def _get_sheet_content(worksheet: Worksheet, from_row, limit) -> str:

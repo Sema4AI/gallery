@@ -16,8 +16,10 @@
 .virtual_documents/
 .vscode
 .~lock*
+devdata/data.csv
 metadata.json
 output/
 temp/
 testrun/*
 venv/
+./**/.env

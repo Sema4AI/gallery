@@ -16,12 +16,15 @@ from models import (
 
 @action(is_consequential=False)
 def search_tickets(
-    zendesk_credentials: OAuth2Secret[Literal["zendesk"], list[Literal["read"]]],
+    zendesk_credentials: OAuth2Secret[
+        Literal["zendesk"], list[Literal["read"]]
+    ],
     query: str,
 ) -> Response[TicketsResponse]:
     """List tickets that meet the search criteria.
 
     You can narrow your search results according to resource dates, and object properties, such as ticket status or tag.
+    When searching for ticket never prefix it, use only number.
 
     Args:
         zendesk_credentials: Zendesk OAuth2 credentials
@@ -32,7 +35,8 @@ def search_tickets(
         A list of tickets matching the query.
     """
     client = TicketsApi(
-        zendesk_credentials.access_token, zendesk_credentials.metadata["server"]
+        zendesk_credentials.access_token,
+        zendesk_credentials.metadata["server"],
     )
 
     response = client.search(query)
@@ -41,7 +45,9 @@ def search_tickets(
 
 @action(is_consequential=True)
 def update_ticket(
-    zendesk_credentials: OAuth2Secret[Literal["zendesk"], list[Literal["read"]]],
+    zendesk_credentials: OAuth2Secret[
+        Literal["zendesk"], list[Literal["read"]]
+    ],
     ticket_id: str,
     updates: UpdateTicket,
 ) -> Response[Ticket]:
@@ -56,7 +62,8 @@ def update_ticket(
         The updated ticket.
     """
     client = TicketsApi(
-        zendesk_credentials.access_token, zendesk_credentials.metadata["server"]
+        zendesk_credentials.access_token,
+        zendesk_credentials.metadata["server"],
     )
 
     response = client.update(ticket_id, updates)
@@ -65,7 +72,9 @@ def update_ticket(
 
 @action(is_consequential=False)
 def get_ticket_comments(
-    zendesk_credentials: OAuth2Secret[Literal["zendesk"], list[Literal["read"]]],
+    zendesk_credentials: OAuth2Secret[
+        Literal["zendesk"], list[Literal["read"]]
+    ],
     ticket_id: str,
 ) -> Response[CommentsResponse]:
     """Get the comments for a ticket.
@@ -81,7 +90,8 @@ def get_ticket_comments(
         The ticket comments.
     """
     client = CommentsApi(
-        zendesk_credentials.access_token, zendesk_credentials.metadata["server"]
+        zendesk_credentials.access_token,
+        zendesk_credentials.metadata["server"],
     )
 
     response = client.get(ticket_id)
@@ -90,7 +100,9 @@ def get_ticket_comments(
 
 @action(is_consequential=False)
 def search_users(
-    zendesk_credentials: OAuth2Secret[Literal["zendesk"], list[Literal["read"]]],
+    zendesk_credentials: OAuth2Secret[
+        Literal["zendesk"], list[Literal["read"]]
+    ],
     query: str,
 ) -> Response[UsersResponse]:
     """List the users that meet the search criteria.
@@ -104,7 +116,8 @@ def search_users(
         The ticket comments.
     """
     client = UsersApi(
-        zendesk_credentials.access_token, zendesk_credentials.metadata["server"]
+        zendesk_credentials.access_token,
+        zendesk_credentials.metadata["server"],
     )
 
     response = client.search(query)
@@ -130,7 +143,8 @@ def add_comment(
         Success message if the comment was added or an error message.
     """
     client = CommentsApi(
-        zendesk_credentials.access_token, zendesk_credentials.metadata["server"]
+        zendesk_credentials.access_token,
+        zendesk_credentials.metadata["server"],
     )
 
     response = client.create(ticket_id, comment)
@@ -139,7 +153,9 @@ def add_comment(
 
 @action(is_consequential=False)
 def list_groups(
-    zendesk_credentials: OAuth2Secret[Literal["zendesk"], list[Literal["read"]]],
+    zendesk_credentials: OAuth2Secret[
+        Literal["zendesk"], list[Literal["read"]]
+    ],
 ) -> Response[list[Group]]:
     """List all the available groups.
 
@@ -153,7 +169,8 @@ def list_groups(
         List of groups.
     """
     client = GroupsApi(
-        zendesk_credentials.access_token, zendesk_credentials.metadata["server"]
+        zendesk_credentials.access_token,
+        zendesk_credentials.metadata["server"],
     )
 
     response = client.list()
@@ -184,7 +201,8 @@ def create_ticket(
         Success message if the ticket was created or an error message.
     """
     client = TicketsApi(
-        zendesk_credentials.access_token, zendesk_credentials.metadata["server"]
+        zendesk_credentials.access_token,
+        zendesk_credentials.metadata["server"],
     )
 
     response = client.create(comment, priority, subject, tags)
@@ -209,7 +227,8 @@ def delete_ticket(
         Success message if the ticket was deleted or an error message.
     """
     client = TicketsApi(
-        zendesk_credentials.access_token, zendesk_credentials.metadata["server"]
+        zendesk_credentials.access_token,
+        zendesk_credentials.metadata["server"],
     )
     client.delete(ticket_id)
     return Response(result=f"Ticket {ticket_id} deleted successfully")

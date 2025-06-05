@@ -1,0 +1,27 @@
+{
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "api_key": "<API_KEY>",
+                "query": "What is the capital of France?"
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "search",
+        "actionRelativePath": "actions.py",
+        "schemaDescription": [
+            "query: string: The query to search for."
+        ],
+        "managedParamsSchemaDescription": {
+            "api_key": {
+                "type": "Secret",
+                "description": "The Perplexity API key."
+            }
+        },
+        "inputFileVersion": "v3",
+        "kind": "action",
+        "actionSignature": "action/args: 'api_key: Secret, query: str'"
+    }
+}

@@ -5,6 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.1.2] - 2025-04-04
+
+- Update to the latest version of the action packages
+
+## [0.1.1] - 2025-04-02
+
+- Update to use the Cortex Analyst action package version 1.0.1 that fixes the lowercase configuration issue
+
+## [0.1.0] - 2025-03-26
+
+- Update to use the Cortex Analyst action package instead of generic Snowflake package
+
+## [0.0.6] - 2025-03-12
+
+- Add exclude file rules to `agent-spec.yaml`
+
+## [0.0.5] - 2025-03-06
+
+- Updated the action package to use the latest version
+
 ## [0.0.4] - 2025-02-28
 
 - Updated the action package to use the latest version

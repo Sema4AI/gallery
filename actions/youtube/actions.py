@@ -1,27 +1,30 @@
 # YouTube Actions for Sema4.ai Action Server
 
-from sema4ai.actions import action
-from youtube_transcript_api import YouTubeTranscriptApi
-from youtube_search import YoutubeSearch
 import re
+
+from sema4ai.actions import Response, action
+from youtube_search import YoutubeSearch
+from youtube_transcript_api import YouTubeTranscriptApi
+
 
 def _extract_youtube_id(url):
     # Regular expression patterns to match various YouTube URL formats
     patterns = [
-        r'(?:https?://)?(?:www\.)?youtube\.com/watch\?v=([^&amp;]+)',  # Matches https://www.youtube.com/watch?v=VIDEO_ID
-        r'(?:https?://)?(?:www\.)?youtu\.be/([^?]+)',  # Matches https://youtu.be/VIDEO_ID
-        r'(?:https?://)?(?:www\.)?youtube\.com/embed/([^?]+)',  # Matches https://www.youtube.com/embed/VIDEO_ID
-        r'(?:https?://)?(?:www\.)?youtube\.com/v/([^?]+)'  # Matches https://www.youtube.com/v/VIDEO_ID
+        r"(?:https?://)?(?:www\.)?youtube\.com/watch\?v=([^&amp;]+)",  # Matches https://www.youtube.com/watch?v=VIDEO_ID
+        r"(?:https?://)?(?:www\.)?youtu\.be/([^?]+)",  # Matches https://youtu.be/VIDEO_ID
+        r"(?:https?://)?(?:www\.)?youtube\.com/embed/([^?]+)",  # Matches https://www.youtube.com/embed/VIDEO_ID
+        r"(?:https?://)?(?:www\.)?youtube\.com/v/([^?]+)",  # Matches https://www.youtube.com/v/VIDEO_ID
     ]
-    
+
     for pattern in patterns:
         match = re.search(pattern, url)
         if match:
             return match.group(1)
     return None
 
+
 @action(is_consequential=False)
-def search(search_term: str, max_results: int = 3) -> str:
+def search(search_term: str, max_results: int = 3) -> Response[str]:
     """Searches for the YouTube videos with a search keyword.
 
     Args:
@@ -31,14 +34,12 @@ def search(search_term: str, max_results: int = 3) -> str:
     Returns:
         Youtube video links that match the search criteria. The return value is a json string.
     """
-    try:
-        results = YoutubeSearch(search_term, max_results=max_results).to_json()
-        return results
-    except Exception as e:
-        return f"An error occurred: {str(e)}"
+    results = YoutubeSearch(search_term, max_results=max_results).to_json()
+    return Response(result=results)
+
 
 @action(is_consequential=False)
-def get_transcript(video_url: str) -> str:
+def get_transcript(video_url: str) -> Response[str]:
     """Extracts the transcription of a Youtube video. Only works if subtitles or captions are available for the video.
 
     Args:
@@ -54,11 +55,9 @@ def get_transcript(video_url: str) -> str:
     if video_id is None:
         return "Could not extract YouTube video ID from the given URL."
 
-    try:
-        # Fetching the transcript
-        transcript_list = YouTubeTranscriptApi.get_transcript(video_id)
-        # Concatenate all text parts to create a full transcript
-        transcript = ' '.join([entry['text'] for entry in transcript_list])
-        return transcript
-    except Exception as e:
-        return f"An error occurred: {str(e)}"
+    # Fetching the transcript
+    transcript_list = YouTubeTranscriptApi.get_transcript(video_id)
+    # Concatenate all text parts to create a full transcript
+    transcript = " ".join([entry["text"] for entry in transcript_list])
+
+    return Response(result=transcript)

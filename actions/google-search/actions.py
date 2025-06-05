@@ -4,19 +4,16 @@ Currently supporting:
 - google search
 """
 
-from sema4ai.actions import action, Secret, ActionError
-
-from dotenv import load_dotenv
-
 import os
 from pathlib import Path
-import requests
 
+import sema4ai_http
+from dotenv import load_dotenv
 from models import (
-    SearchResultList,
     SearchResult,
+    SearchResultList,
 )
-
+from sema4ai.actions import ActionError, Response, Secret, action
 
 load_dotenv(Path(__file__).absolute().parent / "devdata" / ".env")
 
@@ -30,10 +27,8 @@ def google_search(
     count: int = 10,
     api_key: Secret = Secret.model_validate(os.getenv(API_KEY_FIELD, "")),
     context: Secret = Secret.model_validate(os.getenv(CONTEXT_FIELD, "")),
-) -> SearchResultList:
+) -> Response[SearchResultList]:
     """Performs Google Search to find information about a topic.
-
-    Secrets are required. Do not call if they are given.
 
     To list all possible results use count=0.
 
@@ -44,7 +39,7 @@ def google_search(
         context: the Custom Search Engine ID
 
     Returns:
-        Titles and links of the results.
+        Object containing SearchResultList with titles, links, and descriptions of the results.
     """
     url = "https://www.googleapis.com/customsearch/v1"
     params = {
@@ -52,9 +47,10 @@ def google_search(
         "cx": context.value or os.getenv(CONTEXT_FIELD, ""),
         "q": topic,
     }
-    response = requests.get(url, params=params)
+    response = sema4ai_http.get(url, fields=params)
     if response.status_code not in [200, 201]:
         raise ActionError(f"Failed to search. Error: {response.text}")
+
     result = response.json()
     items = []
     if "items" in result.keys():
@@ -69,8 +65,10 @@ def google_search(
     if count > 0:
         message += f" and returning {count} of those."
     print(message)
-    return (
+
+    search_result = (
         SearchResultList(results=items[:count])
         if count > 0
         else SearchResultList(results=items)
     )
+    return Response(result=search_result)

@@ -6,17 +6,28 @@ agent-package:
     model:
       provider: Snowflake Cortex AI
       name: claude-3-5-sonnet
-    version: 0.0.3
+    version: 0.1.4
     architecture: agent
     reasoning: disabled
     runbook: runbook.md
     action-packages:
-    - name: Snowflake Cortex
+    - name: Snowflake Cortex Search
       organization: Sema4.ai
+      version: 1.0.5
+      path: Sema4.ai/snowflake-cortex-search
       type: folder
-      version: 1.1.1
-      whitelist: cortex_search,cortex_get_search_specification
-      path: Sema4.ai/snowflake-cortex
+      whitelist: ''
     knowledge: []
     metadata:
       mode: conversational
+  exclude:
+  - ./.git/**
+  - ./.vscode/**
+  - ./devdata/**
+  - ./output/**
+  - ./venv/**
+  - ./.venv/**
+  - ./**/.env
+  - ./**/.DS_Store
+  - ./**/*.pyc
+  - ./*.zip

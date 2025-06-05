@@ -1,23 +1,24 @@
-from sema4ai.actions import action, Response, Secret
 import json
-from models import Issue, IssueList, FilterOptions
+
+from models import FilterOptions, Issue, IssueList
+from queries import (
+    query_add_comment,
+    query_create_issue,
+    query_get_issues,
+    query_search_issues,
+)
+from sema4ai.actions import Response, Secret, action
 from support import (
     _get_assignee_id,
-    _set_default_variables,
-    _set_query_variables,
-    _make_graphql_request,
     _get_label_ids,
+    _get_project_id,
+    _get_projects,
     _get_state_id,
     _get_team_id,
     _get_teams,
-    _get_project_id,
-    _get_projects,
-)
-from queries import (
-    query_search_issues,
-    query_get_issues,
-    query_create_issue,
-    query_add_comment,
+    _make_graphql_request,
+    _set_default_variables,
+    _set_query_variables,
 )
 
 
@@ -98,7 +99,7 @@ def create_issue(
 
 
 @action
-def add_comment(issue_id: str, body: str, api_key: Secret) -> str:
+def add_comment(issue_id: str, body: str, api_key: Secret) -> Response[str]:
     """Add a comment to a Linear issue
 
     Args:
@@ -111,4 +112,7 @@ def add_comment(issue_id: str, body: str, api_key: Secret) -> str:
 
     variables = {"input": {"issueId": issue_id, "body": body}}
     comment_response = _make_graphql_request(query_add_comment, variables, api_key)
-    return f"Comment added - link {comment_response['commentCreate']['comment']['url']}"
+
+    return Response(
+        result=f"Comment added - link {comment_response['commentCreate']['comment']['url']}"
+    )

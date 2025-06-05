@@ -1,9 +1,9 @@
+import json
 from datetime import datetime
 from typing import List
 
-import json
-from sema4ai.actions import action
 from fhir_lab_results_service import FHIRLabResultsService
+from sema4ai.actions import Response, action
 
 fhir_lab_results_service = FHIRLabResultsService("fhir_lab_results.json")
 
@@ -14,7 +14,7 @@ def datetime_converter(o):
 
 
 @action(is_consequential=False)
-def list_lab_tests_by_category() -> str:
+def list_lab_tests_by_category() -> Response[str]:
     """
     Fetches a categorized list of lab tests  with its test names and LOINC codes. Provides a structured overview of a patient's lab test history useful for mapping
     natural language queries to structured data to use with other APIs.
@@ -28,11 +28,13 @@ def list_lab_tests_by_category() -> str:
     """
     lab_test_category_dict = fhir_lab_results_service.list_lab_tests_by_category()
     # Return compact json string
-    return json.dumps(lab_test_category_dict, default=datetime_converter)
+    return Response(
+        result=json.dumps(lab_test_category_dict, default=datetime_converter)
+    )
 
 
 @action(is_consequential=False)
-def get_yearly_lab_results_snapshot(loinc_codes: str) -> str:
+def get_yearly_lab_results_snapshot(loinc_codes: str) -> Response[str]:
     """
     Fetches the latest lab results within the last year, providing a snapshot of the most recent health status. Designed for quick health checks and monitoring current conditions. This action is not adjustable for periods beyond the last year, making it ideal for recent health trend analysis.
 
@@ -47,12 +49,16 @@ def get_yearly_lab_results_snapshot(loinc_codes: str) -> str:
             }
     """
     loinc_codes_list = get_loinc_codes_list(loinc_codes)
-    lab_results = fhir_lab_results_service.get_yearly_lab_results_snapshot(loinc_codes_list)
-    return json.dumps(lab_results, default=datetime_converter)
+    lab_results = fhir_lab_results_service.get_yearly_lab_results_snapshot(
+        loinc_codes_list
+    )
+    return Response(result=json.dumps(lab_results, default=datetime_converter))
 
 
 @action(is_consequential=False)
-def get_historical_lab_results(loinc_codes: str, start_date: str = "", end_date: str = "") -> str:
+def get_historical_lab_results(
+    loinc_codes: str, start_date: str = "", end_date: str = ""
+) -> Response[str]:
     """
     Fetches all lab results based on provided LOINC codes within a specified date range. Ideal for in-depth health analysis for a set of tests, enabling users to trace health trends, compare lab results across multiple years.
 
@@ -62,8 +68,10 @@ def get_historical_lab_results(loinc_codes: str, start_date: str = "", end_date:
         - end_date (str): Optional end date to filter lab results, in 'YYYY-MM-DD' format.  Use an empty string if no end date is provided.
     """
     loinc_codes_list = get_loinc_codes_list(loinc_codes)
-    lab_results = fhir_lab_results_service.get_historical_lab_results(loinc_codes_list, start_date, end_date)
-    return json.dumps(lab_results, default=datetime_converter)
+    lab_results = fhir_lab_results_service.get_historical_lab_results(
+        loinc_codes_list, start_date, end_date
+    )
+    return Response(result=json.dumps(lab_results, default=datetime_converter))
 
 
 def get_loinc_codes_list(loinc_codes) -> List[str]:

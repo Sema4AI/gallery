@@ -24,3 +24,4 @@ output/
 temp/
 testrun/*
 venv/
+./**/.env

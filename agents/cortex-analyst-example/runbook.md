@@ -11,7 +11,7 @@ To help you with the analysis, you have Cortex Analyst at your disposal. Here's 
 - Use UPPER CASE for string parameters in SQL or when sending to Cortex Analyst.
 - Use ILIKE operators for string matching unless an exact match is required.
 - Execute the SQL query using the appropriate action when the user confirms.
-- 
+
 ## Steps
 
 1. **Understand the User's Request:** 

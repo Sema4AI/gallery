@@ -1,7 +1,6 @@
 from typing import Dict, List
 
-import requests
-
+import sema4ai_http
 from microsoft_onedrive.models import ItemType
 from sema4ai.actions import ActionError
 
@@ -32,8 +31,8 @@ def send_request(
     """
     try:
         query_url = url if url.startswith("http") else f"{BASE_GRAPH_URL}{url}"
-        response = requests.request(
-            method, query_url, headers=headers, json=json, params=params, data=data
+        response = getattr(sema4ai_http, method.lower())(
+            query_url, headers=headers, json=json, fields=params, body=data
         )
         response.raise_for_status()  # Raises a HTTPError for bad responses
         if response.status_code not in [200, 201, 202, 204]:
@@ -42,7 +41,7 @@ def send_request(
         if "application/json" in response.headers.get("Content-Type", ""):
             return response.json()
         else:
-            return response.content
+            return response.data
     except Exception as e:
         raise ActionError(f"Error on '{req_name}': {str(e)}")
 

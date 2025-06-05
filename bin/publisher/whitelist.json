@@ -4,6 +4,7 @@
             "actions-bootstrapper",
             "agent-connector",
             "agents-bootstrapper",
+            "ai-browsing",
             "browsing",
             "email-sending",
             "excel",
@@ -25,15 +26,15 @@
             "salesforce",
             "servicenow",
             "slack",
-            "vitality-lab-results",
-            "vitality-medications",
-            "vitality-workouts",
             "wayback-machine",
             "youtube",
             "zendesk",
             "free-web-search",
-            "snowflake-cortex",
-            "serper"
+            "snowflake-cortex-analyst",
+            "snowflake-cortex-search",
+            "serper",
+            "perplexity",
+            "robocorp"
         ],
         "agents": [
             "wayback-machine-agent"
@@ -41,6 +42,7 @@
     },
     "spcs": {
         "actions": [
+            "ai-browsing",
             "browsing",
             "email",
             "excel",
@@ -55,8 +57,11 @@
             "wayback-machine",
             "youtube",
             "zendesk",
-            "snowflake-cortex",
-            "serper"
+            "snowflake-cortex-analyst",
+            "snowflake-cortex-search",
+            "serper",
+            "perplexity",
+            "robocorp"
         ],
         "agents": [
             "cortex-analyst-example",

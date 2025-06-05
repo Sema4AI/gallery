@@ -1,5 +1,16 @@
 agent-package:
   spec-version: v2
+  exclude:
+  - ./.git/**
+  - ./.vscode/**
+  - ./devdata/**
+  - ./output/**
+  - ./venv/**
+  - ./.venv/**
+  - ./**/.env
+  - ./**/.DS_Store
+  - ./**/*.pyc
+  - ./*.zip
   agents:
   - name: Agent Writer Agent
     description: Helps you create new agents with actions using public API documentation
@@ -7,20 +18,20 @@ agent-package:
     model:
       provider: OpenAI
       name: gpt-4o
-    version: 0.0.1
+    version: 1.0.1
     architecture: agent
     reasoning: disabled
     runbook: runbook.md
     action-packages:
     - name: Browsing
       organization: Sema4.ai
-      version: 1.0.2
+      version: 1.2.2
       path: Sema4.ai/browsing
       type: folder
       whitelist: get_website_content,download_file,fill_elements
     - name: Agents Bootstrapper
       organization: Sema4.ai
-      version: 1.0.0
+      version: 1.1.1
       path: Sema4.ai/agents-bootstrapper
       type: folder
       whitelist: 'bootstrap_agent_package,open_agent_code,refresh_agent_package_spec,list_available_prebuilt_actions,read_prebuild_action_capabilities,download_prebuilt_action,publish_to_sema4_ai_studio,bootstrap_action_package,update_action_package_dependencies,update_action_code'
