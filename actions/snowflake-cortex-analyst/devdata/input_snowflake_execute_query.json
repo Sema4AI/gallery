@@ -7,7 +7,7 @@
                 "warehouse": "COMPUTE_WH",
                 "database": "CORTEX_ANALYST_DEMO",
                 "schema": "REVENUE_TIMESERIES",
-                "numeric_args": null
+                "numeric_args": []
             }
         }
     ],

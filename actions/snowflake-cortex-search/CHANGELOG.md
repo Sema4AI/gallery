@@ -5,6 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.0.6] - 2025-06-05
+
+### Changed
+
+- Fixed handling of secrets in cortex search action.
+- Further improvements to docstring to instruct LLM on correct tool usage.
+
+## [1.0.5] - 2025-06-04
+
+### Changed
+- Added pydantic type for cortex_search request arg.
+- Updated snowflake=1.5.1
+- Added exclusion rules
+
+## [1.0.4] - 2025-05-22
+
+### Changed
+
+- Update `sema4ai-data` to `1.0.5`
+
 ## [1.0.3] - 2025-04-29
 
 ### Changed
@@ -12,6 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - Updated the search query docstrings so that agent will be better able to use the filter parameter.
 - Updated the default limit to 10 to match the Snowflake Cortex Search API default.
 - Dependency versions updated
+
 
 ## [1.0.2] - 2025-04-04
 
