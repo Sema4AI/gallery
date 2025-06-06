@@ -68,8 +68,7 @@ def cortex_get_search_specification(
             service_name,
             columns,
             search_column,
-            attribute_columns,
-
+            attribute_columns
         FROM
         INFORMATION_SCHEMA.CORTEX_SEARCH_SERVICES
         WHERE SERVICE_NAME = :1
@@ -94,6 +93,10 @@ def cortex_search(
 ) -> Response[list]:
     """
     Queries the cortex search service in the session state and returns a list of results.
+    Mind the nesting of { "query": { "query": "...", "columns": [...], "filter": {...}, "limit": 10 } }
+    when providing the arguments to this action. You will often need to check the results of
+    cortex_get_search_specification to get the correct columns information for use in the columns argument.
+    (The columns, filter, and limit are optional and can be omitted.)
 
     Args:
         query: The search request containing query, columns, filter, and limit parameters.
@@ -125,13 +128,13 @@ def cortex_search(
         with get_snowflake_connection(
             warehouse=warehouse.value.upper(), database=database.value.upper(), schema=schema.value.upper()
         ) as conn:
-            print(f"Established Snowflake connection to {database}.{schema}")
+            print(f"Established Snowflake connection to {database.value.upper()}.{schema.value.upper()}")
             
             cortex_search_service = (
                 Root(conn)
-                .databases[database]
-                .schemas[schema]
-                .cortex_search_services[service]
+                .databases[database.value.upper()]
+                .schemas[schema.value.upper()]
+                .cortex_search_services[service.value.upper()]
             )
 
             context_documents = cortex_search_service.search(
@@ -154,11 +157,11 @@ def cortex_search(
             print(f"ERROR: {error_msg}")
             return Response(result=[], error=error_msg)
         elif "warehouse" in str(conn_error).lower():
-            error_msg = f"Warehouse access error: {str(conn_error)}. Check if warehouse '{warehouse}' is available and accessible."
+            error_msg = f"Warehouse access error: {str(conn_error)}. Check if warehouse '{warehouse.value.upper()}' is available and accessible."
             print(f"ERROR: {error_msg}")
             return Response(result=[], error=error_msg)
         elif "database" in str(conn_error).lower() or "schema" in str(conn_error).lower():
-            error_msg = f"Database/Schema access error: {str(conn_error)}. Check if database '{database}' and schema '{schema}' exist and are accessible."
+            error_msg = f"Database/Schema access error: {str(conn_error)}. Check if database '{database.value.upper()}' and schema '{schema.value.upper()}' exist and are accessible."
             print(f"ERROR: {error_msg}")
             return Response(result=[], error=error_msg)
         else:
