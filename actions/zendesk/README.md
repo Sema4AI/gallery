@@ -13,6 +13,7 @@ Possible actions with this package are:
 - list all available groups
 - create ticket
 - delete ticket
+- list top 100 tags
 
 ## Prompts
 
