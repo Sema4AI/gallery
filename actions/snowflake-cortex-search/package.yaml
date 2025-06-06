@@ -5,7 +5,7 @@ name: Snowflake Cortex Search
 description: Cortex Search is a retrieval engine that provides agent the context it needs based on your latest data.
 
 # Package version number, recommend using semver.org
-version: 1.0.5
+version: 1.0.6
 
 spec-version: v2
 
