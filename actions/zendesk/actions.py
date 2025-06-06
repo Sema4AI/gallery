@@ -2,11 +2,12 @@ from typing import Literal
 
 from sema4ai.actions import OAuth2Secret, Response, action
 
-from client import CommentsApi, GroupsApi, TicketsApi, UsersApi
+from client import CommentsApi, GroupsApi, TagsApi, TicketsApi, UsersApi
 from models import (
     AddComment,
     CommentsResponse,
     Group,
+    Tag,
     Ticket,
     TicketsResponse,
     UpdateTicket,
@@ -232,3 +233,26 @@ def delete_ticket(
     )
     client.delete(ticket_id)
     return Response(result=f"Ticket {ticket_id} deleted successfully")
+
+
+@action(is_consequential=False)
+def list_tags(
+    zendesk_credentials: OAuth2Secret[
+        Literal["zendesk"], list[Literal["read"]]
+    ],
+) -> Response[list[Tag]]:
+    """Lists up to 100 most popular tags in the last 60 days, in decreasing popularity.
+
+    Args:
+        zendesk_credentials: Zendesk OAuth2 credentials
+
+    Returns:
+        List of tags.
+    """
+    client = TagsApi(
+        zendesk_credentials.access_token,
+        zendesk_credentials.metadata["server"],
+    )
+
+    response = client.list()
+    return Response(result=response)

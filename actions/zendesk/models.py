@@ -269,6 +269,13 @@ class AddComment(BaseModel):
         return {"ticket": {"comment": self.model_dump(mode="json")}}
 
 
+class Tag(BaseModel):
+    name: Annotated[str, Field(description="The name of the tag")]
+    count: Annotated[
+        int, Field(description="The number of tickets with the tag")
+    ]
+
+
 class BaseResponse(BaseModel):
     @classmethod
     def from_response(cls, data: dict) -> Self:
