@@ -11,8 +11,7 @@
                         "type": "OAuth2Secret",
                         "provider": "google",
                         "scopes": [
-                            "https://www.googleapis.com/auth/gmail.readonly",
-                            "https://www.googleapis.com/auth/gmail.modify"
+                            "https://www.googleapis.com/auth/gmail.readonly"
                         ],
                         "access_token": "<access-token-will-be-requested-by-vscode>"
                     }
@@ -34,13 +33,12 @@
                 "description": "the OAuth2 token for the user",
                 "provider": "google",
                 "scopes": [
-                    "https://www.googleapis.com/auth/gmail.readonly",
-                    "https://www.googleapis.com/auth/gmail.modify"
+                    "https://www.googleapis.com/auth/gmail.readonly"
                 ]
             }
         },
         "inputFileVersion": "v3",
         "kind": "action",
-        "actionSignature": "action/args: \"query: str, token: OAuth2Secret[Literal['google'], list[Literal['https://www.googleapis.com/auth/gmail.readonly', 'https://www.googleapis.com/auth/gmail.modify']]], max_results: int=DEFAULT_EMAIL_QUERY_COUNT, fetch_attachments: bool=False\""
+        "actionSignature": "action/args: \"query: str, token: OAuth2Secret[Literal['google'], list[Literal['https://www.googleapis.com/auth/gmail.readonly']]], max_results: int=DEFAULT_EMAIL_QUERY_COUNT, fetch_attachments: bool=False\""
     }
 }

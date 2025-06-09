@@ -12,8 +12,7 @@
                         "type": "OAuth2Secret",
                         "provider": "google",
                         "scopes": [
-                            "https://www.googleapis.com/auth/gmail.readonly",
-                            "https://www.googleapis.com/auth/gmail.modify"
+                            "https://www.googleapis.com/auth/gmail.readonly"
                         ],
                         "access_token": "<access-token-will-be-requested-by-vscode>"
                     }
@@ -32,8 +31,7 @@
                         "type": "OAuth2Secret",
                         "provider": "google",
                         "scopes": [
-                            "https://www.googleapis.com/auth/gmail.readonly",
-                            "https://www.googleapis.com/auth/gmail.modify"
+                            "https://www.googleapis.com/auth/gmail.readonly"
                         ],
                         "access_token": "<access-token-will-be-requested-by-vscode>"
                     }
@@ -56,13 +54,12 @@
                 "description": "the OAuth2 token for the user",
                 "provider": "google",
                 "scopes": [
-                    "https://www.googleapis.com/auth/gmail.readonly",
-                    "https://www.googleapis.com/auth/gmail.modify"
+                    "https://www.googleapis.com/auth/gmail.readonly"
                 ]
             }
         },
         "inputFileVersion": "v3",
         "kind": "action",
-        "actionSignature": "action/args: \"token: OAuth2Secret[Literal['google'], list[Literal['https://www.googleapis.com/auth/gmail.readonly', 'https://www.googleapis.com/auth/gmail.modify']]], email_id: str='', query: str='', fetch_attachments: bool=False, max_results: int=10\""
+        "actionSignature": "action/args: \"token: OAuth2Secret[Literal['google'], list[Literal['https://www.googleapis.com/auth/gmail.readonly']]], email_id: str='', query: str='', fetch_attachments: bool=False, max_results: int=10\""
     }
 }

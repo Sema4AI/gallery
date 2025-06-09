@@ -20,7 +20,7 @@ load_dotenv(Path(__file__).absolute().parent / "devdata" / ".env")
 def get_email_content(
     token: OAuth2Secret[
         Literal["google"],
-        list[Literal["https://www.googleapis.com/auth/gmail.readonly", "https://www.googleapis.com/auth/gmail.modify"]],
+        list[Literal["https://www.googleapis.com/auth/gmail.readonly"]],
     ],
     email_id: str = "",
     query: str = "",

@@ -20,7 +20,7 @@ def search_emails(
     query: str,
     token: OAuth2Secret[
         Literal["google"],
-        list[Literal["https://www.googleapis.com/auth/gmail.readonly", "https://www.googleapis.com/auth/gmail.modify"]],
+        list[Literal["https://www.googleapis.com/auth/gmail.readonly"]],
     ],
     max_results: int = DEFAULT_EMAIL_QUERY_COUNT,
     fetch_attachments: bool = False,
