@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.3.0] - 2025-06-09
+
+### Added
+
+- Add parameter `fetch_attachments` to actions `search_emails` and `get_email_content` to get attachments into the Files.
+
 ## [1.2.1] - 2025-04-04
 
 ### Changed
