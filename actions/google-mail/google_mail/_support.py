@@ -9,7 +9,7 @@ from email.mime.text import MIMEText
 import markdown
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
-from sema4ai.actions import ActionError
+from sema4ai.actions import ActionError, chat
 
 from google_mail._models import Attachment, Draft, Drafts, Email
 
@@ -60,7 +60,7 @@ def _send_message(service, user_id, message):
         )
         return None
     except Exception as error:
-        raise ActionError(f"An error occurred: {error}")
+        raise ActionError(f"An error occurred: {error}") from error
 
 
 def _list_messages_with_query(service, user_id="me", query="", max_results=10):
@@ -81,7 +81,7 @@ def _list_messages_with_query(service, user_id="me", query="", max_results=10):
                 msg = _get_message_by_id(service, user_id, message["id"])
                 message_list.append(msg)
     except Exception as error:
-        raise ActionError(f"An error occurred: {error}")
+        raise ActionError(f"An error occurred: {error}") from error
     return message_list
 
 
@@ -95,10 +95,10 @@ def _get_message_by_id(service, user_id, message_id):
         )
         return msg
     except Exception as error:
-        raise ActionError(f"An error occurred: {error}")
+        raise ActionError(f"An error occurred: {error}") from error
 
 
-def _get_message_details(message, return_content=False):
+def _get_message_details(service, message, return_content=False, fetch_attachments=False):
     headers = message["payload"]["headers"]
     email = Email()
     email.id_ = message["id"]
@@ -129,6 +129,19 @@ def _get_message_details(message, return_content=False):
             attachment.filename = part["filename"]
             attachment.mimetype = part["mimeType"]
             attachment.filesize = int(part["body"]["size"])
+            if fetch_attachments:
+                if "data" in part["body"]:
+                    file_bytes = base64.urlsafe_b64decode(part["body"]["data"])
+                    chat.attach_file_content(attachment.filename, file_bytes, attachment.mimetype)
+                elif "attachmentId" in part["body"]:
+                    attachment_id = part["body"]["attachmentId"]
+                    attachment_data = service.users().messages().attachments().get(
+                        userId="me", messageId=message["id"], id=attachment_id
+                    ).execute()
+                    file_bytes = base64.urlsafe_b64decode(attachment_data["data"])
+                    chat.attach_file_content(attachment.filename, file_bytes, attachment.mimetype)
+                else:
+                    raise ActionError("No data or attachmentId found in the attachment")
             email.attachments.append(attachment)
     # NOTE. Returning the html_body only if body is empty (for now)
     email.body = body if body else html_body
@@ -144,7 +157,7 @@ def _get_label_id(service, label_name):
                 return label["id"]
         raise ActionError(f'Label "{label_name}" not found.')
     except Exception as error:
-        raise ActionError(f"An error occurred while fetching label ID: {error}")
+        raise ActionError(f"An error occurred while fetching label ID: {error}") from error
 
 
 def _get_current_labels(service, message_id):
@@ -157,7 +170,7 @@ def _get_current_labels(service, message_id):
         )
         return message["labelIds"]
     except Exception as error:
-        raise ActionError(f"An error occurred while fetching labels: {error}")
+        raise ActionError(f"An error occurred while fetching labels: {error}") from error
 
 
 def _move_email_to_label(service, email_ids, new_label_id):
@@ -209,7 +222,7 @@ def _create_batch_callback(request_id, response, exception):
 def _execute_batch_with_retry(batch):
     max_retries = 5
     retry_delay = 1  # Start with 1 second delay
-    for retry in range(max_retries):
+    for _ in range(max_retries):
         try:
             batch.execute()
             return
@@ -221,7 +234,7 @@ def _execute_batch_with_retry(batch):
                 time.sleep(retry_delay)
                 retry_delay *= 2  # Exponential backoff
             else:
-                raise ActionError(f"An error occurred: {error}")
+                raise ActionError(f"An error occurred: {error}") from error
 
 
 def _get_google_service(token):
@@ -241,7 +254,7 @@ def _create_draft(service, message_body):
         print(f'Draft created with ID: {draft["id"]}')
         return draft["id"]
     except Exception as error:
-        raise ActionError(f"An error occurred: {error}")
+        raise ActionError(f"An error occurred: {error}") from error
 
 
 def _update_draft(service, draft_id, message_body):
@@ -255,7 +268,7 @@ def _update_draft(service, draft_id, message_body):
         print(f"Draft with ID {draft_id} updated.")
         return draft["id"]
     except Exception as error:
-        raise ActionError(f"An error occurred: {error}")
+        raise ActionError(f"An error occurred: {error}") from error
 
 
 def _delete_draft(service, draft_id):
@@ -263,7 +276,7 @@ def _delete_draft(service, draft_id):
         service.users().drafts().delete(userId="me", id=draft_id).execute()
         print(f"Draft with ID {draft_id} deleted.")
     except Exception as error:
-        raise ActionError(f"An error occurred: {error}")
+        raise ActionError(f"An error occurred: {error}") from error
 
 
 def _send_draft(service, draft_id):
@@ -274,7 +287,7 @@ def _send_draft(service, draft_id):
         print(f"Draft with ID {draft_id} sent.")
         return sent_message
     except Exception as error:
-        raise ActionError(f"An error occurred: {error}")
+        raise ActionError(f"An error occurred: {error}") from error
 
 
 def _get_draft_by_id(service, draft_id):
@@ -283,7 +296,7 @@ def _get_draft_by_id(service, draft_id):
         print(f"Draft with ID {draft_id} found.")
         return draft
     except Exception as error:
-        raise ActionError(f"An error occurred: {error}")
+        raise ActionError(f"An error occurred: {error}") from error
 
 
 def _get_message_headers(email):
@@ -340,4 +353,4 @@ def _remove_labels_from_emails(service, email_ids, label_ids):
                 )
             _execute_batch_with_retry(batch)
     except Exception as error:
-        raise ActionError(f"An error occurred while removing labels: {error}")
+        raise ActionError(f"An error occurred while removing labels: {error}") from error

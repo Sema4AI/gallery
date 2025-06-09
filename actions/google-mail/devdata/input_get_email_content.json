@@ -1,17 +1,39 @@
 {
     "inputs": [
         {
-            "inputName": "input-1",
+            "inputName": "multiple email query - fetch attachments False",
             "inputValue": {
                 "email_id": "",
-                "query": "from:github",
+                "query": "subject:*message 11*",
+                "fetch_attachments": false,
                 "max_results": 10,
                 "vscode:request:oauth2": {
                     "token": {
                         "type": "OAuth2Secret",
                         "provider": "google",
                         "scopes": [
-                            "https://www.googleapis.com/auth/gmail.readonly"
+                            "https://www.googleapis.com/auth/gmail.readonly",
+                            "https://www.googleapis.com/auth/gmail.modify"
+                        ],
+                        "access_token": "<access-token-will-be-requested-by-vscode>"
+                    }
+                }
+            }
+        },
+        {
+            "inputName": "multiple email query - fetch attachments True",
+            "inputValue": {
+                "email_id": "",
+                "query": "subject:*message 11*",
+                "fetch_attachments": true,
+                "max_results": 10,
+                "vscode:request:oauth2": {
+                    "token": {
+                        "type": "OAuth2Secret",
+                        "provider": "google",
+                        "scopes": [
+                            "https://www.googleapis.com/auth/gmail.readonly",
+                            "https://www.googleapis.com/auth/gmail.modify"
                         ],
                         "access_token": "<access-token-will-be-requested-by-vscode>"
                     }
@@ -25,6 +47,7 @@
         "schemaDescription": [
             "email_id: string: the email id to get the content from",
             "query: string: the query filter to apply to the emails",
+            "fetch_attachments: boolean: if True, the attachments will be saved to Files API",
             "max_results: integer: the maximum number of emails to return (default 10)"
         ],
         "managedParamsSchemaDescription": {
@@ -33,12 +56,13 @@
                 "description": "the OAuth2 token for the user",
                 "provider": "google",
                 "scopes": [
-                    "https://www.googleapis.com/auth/gmail.readonly"
+                    "https://www.googleapis.com/auth/gmail.readonly",
+                    "https://www.googleapis.com/auth/gmail.modify"
                 ]
             }
         },
         "inputFileVersion": "v3",
         "kind": "action",
-        "actionSignature": "action/args: \"token: OAuth2Secret[Literal['google'], list[Literal['https://www.googleapis.com/auth/gmail.readonly']]], email_id: str='', query: str='', max_results: int=10\""
+        "actionSignature": "action/args: \"token: OAuth2Secret[Literal['google'], list[Literal['https://www.googleapis.com/auth/gmail.readonly', 'https://www.googleapis.com/auth/gmail.modify']]], email_id: str='', query: str='', fetch_attachments: bool=False, max_results: int=10\""
     }
 }
