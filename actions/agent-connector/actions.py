@@ -605,13 +605,13 @@ def send_message(conversation_id: str, agent_id: str, message: str, sema4_api_ke
                     if msg.get("role") == "agent":
                         agent_response = msg.get("content", "")
                         print(f"Found agent response: {agent_response}")
-                        return Response(result=agent_response)
+                        return Response(result=json.dumps(agent_response))
                 
                 # If no agent message found, return the last message content
                 if isinstance(messages[-1], dict) and "content" in messages[-1]:
                     last_message = messages[-1]["content"]
                     print(f"No agent response found, returning last message: {last_message}")
-                    return Response(result=last_message)
+                    return Response(result=json.dumps(last_message))
                 
                 raise ActionError("No agent response found in conversation messages")
             else:
