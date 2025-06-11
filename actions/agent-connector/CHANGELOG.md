@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [4.0.2] - 2025-06-11
 
-### Changed
+### Fixed
 
 - Fixed a bug where agent response was not stringified resulting in a type error at run time.
 
