@@ -72,7 +72,7 @@ Proceed to Step 5.
 
 1. Generate validation report using **Successful Validation Report Template** outlined in the Appendix section below.
 2. Update work item to validation success with the complete report
-3. Output the exact same report to chat  
+3. Output the exact same report to chat
 4. Maintain report in chat history
 5. Proceed to Step 6 of payment reconciliation phase
 
@@ -118,18 +118,18 @@ CRITICAL: The payment reconciliation phase can only begin after successful compl
 1. **Store payment information**:
 
 - Store the complete payment details in the reconciliation ledger according to the document type schema. This includes processing the customer identification, account information, payment method details, and complete payment metadata. Each payment must generate a unique payment identifier that maintains traceability to the source document. Payment amounts must maintain exact decimal precision with proper rounding rules applied.
-  
+
 - Create allocation records that map all individual invoice payments to the parent payment record. Each allocation must include the precise payment amount, applied discounts, and any additional charges while maintaining proper decimal handling throughout. Invoice references must be validated against the accounts receivable system to ensure proper payment application. The allocation records must preserve the relationship between payments and invoices while tracking facility-type distributions and service categorizations.
-  
+
 - Monitor and track facility-type allocations to support reconciliation analysis. This includes maintaining running totals by facility type, tracking service-type distributions, and preserving all payment relationships. All monetary calculations must use consistent decimal precision with proper rounding rules to ensure accurate reconciliation.
 
 2. **Execute multi-level reconciliation analysis**
-  
+
 - Starting with total payment comparison, calculate the total payment amount inclusive of all discounts and charges, comparing this against the accounts receivable records. Track any payment-level variances exceeding the configured threshold (defaulting to 0.01). Document the comparison values and maintain a detailed calculation audit trail.
 - When payment-level discrepancies are found, perform facility-type analysis by aggregating invoices and payments by facility. Compare facility-level totals between remittance and accounts receivable records. Track base amounts, discounts, and charges separately while maintaining calculation precision. Generate facility-level variance reports when discrepancies are found.
 - For facilities showing discrepancies, conduct detailed invoice-level analysis. Compare individual payment allocations against invoice records, verifying base amounts and all adjustments. Document any variations at the invoice level including specific amount differences. Generate comprehensive analysis reports showing the discrepancy chain from invoice through facility to payment level.
 - Throughout all analysis, maintain decimal precision using a standard threshold of 0.01 for match determination unless explicitly configured otherwise. Every comparison must be documented with both expected and actual values, maintaining a complete audit trail of the reconciliation process.
-  
+
 3. **Proceed to step 9**
 
 ## 9. Determine Reconciliation Outcome, Generate Report & Update Work Item
@@ -191,7 +191,7 @@ CRITICAL: The payment reconciliation phase can only begin after successful compl
   1. Agent renders markdown to formatted text
   2. Tables show with proper alignment
   3. Currency values include $ and decimals
-  4. Symbols render properly (✓, ❌)
+  4. Statuses shown as (**CHECK:**, **SUCCESS:**, **DISCREPANCY:**)
   5. Headers show proper hierarchy
 
 
@@ -215,9 +215,9 @@ For the below successful validation report template, use the following instructi
 ```
 # **Validation Report**
 
-**Document**: {agent\_insight\_context.document\_name}  
-**Stage**: Validation  
-**Processing Result**: Validation Successful  
+**Document**: {agent\_insight\_context.document\_name}
+**Stage**: Validation
+**Processing Result**: Validation Successful
 **Timestamp**: {validation\_context.summary.start\_time}
 
 ## **Document Details**
@@ -294,10 +294,10 @@ For the below validation failure report template,the following instructions must
 
 ## Document Details
 
-**Document**: {agent_insight_context.document_name}  
+**Document**: {agent_insight_context.document_name}
 **Customer**: [Customer Name]
-**Stage**: Validation  
-**Processing Result**: Validation Failed  
+**Stage**: Validation
+**Processing Result**: Validation Failed
 **Timestamp**: {validation_context.summary.start_time}
 
 **Payment Reference Number**: [Payment Reference Number]
@@ -417,15 +417,15 @@ For the below successful reconciliation report template, use the following instr
 ```
 # Reconciliation Report
 
-**Document**: {agent_insight_context.document_name}  
-**Status**: RECONCILED  
-**Match Amount**: ${reconciliation_result.payment_amount:,.2f}  
+**Document**: {agent_insight_context.document_name}
+**Status**: RECONCILED
+**Match Amount**: ${reconciliation_result.payment_amount:,.2f}
 **Timestamp**: {agent_insight_context.summary.start_time}
 
 ## Summary
 
-✅ Payment successfully reconciled with AR records  
-Total matched amount: ${reconciliation_result.payment_amount:,.2f}  
+**SUCCESS:** Payment successfully reconciled with AR records
+Total matched amount: ${reconciliation_result.payment_amount:,.2f}
 All amounts within threshold of ${reconciliation_result.threshold:,.2f}
 
 ## Payment Details
@@ -443,32 +443,32 @@ All amounts within threshold of ${reconciliation_result.threshold:,.2f}
 * Payment Amount: ${reconciliation_result.payment_amount:,.2f}
 * AR Balance: ${reconciliation_result.ar_balance:,.2f}
 * Difference: ${abs(reconciliation_result.total_difference):,.2f}
-* Match Status: ✓ Within Threshold
+* Match Status: **CHECK:** Within Threshold
 
 ## Processing Details
 
 ### Document Analysis
 
 * Total Invoices: {processing_metrics.total_invoices}
-* Facility Types: {processing_metrics.facility_type_count}  
-  {for facility in processing_metrics.facility_types}  
-  • {facility}  
+* Facility Types: {processing_metrics.facility_type_count}
+  {for facility in processing_metrics.facility_types}
+  • {facility}
   {endfor}
-* Service Types: {processing_metrics.service_type_count}  
-  {for service in processing_metrics.service_types}  
-  • {service}  
+* Service Types: {processing_metrics.service_type_count}
+  {for service in processing_metrics.service_types}
+  • {service}
   {endfor}
 
 ### Facility Summaries
 
 {for facility in facility_summaries}
 
-#### {facility.facility_type}
+#### **SUCCESS:** {facility.facility_type}
 
 * Amount: ${facility.remittance_amount:,.2f}
 * Services: {", ".join(facility.service_types)}
 * Invoices: {facility.invoice_count}
-* Match Status: ✓ Reconciled  
+* Match Status: **CHECK:** Reconciled
   {endfor}
 
 ## Processing Metrics
@@ -485,7 +485,7 @@ All amounts within threshold of ${reconciliation_result.threshold:,.2f}
 * Start Time: {summary.start_time}
 * End Time: {summary.end_time}
 * Total Duration: {overall_processing_time:.2f} seconds
-* Status: ✓ Complete
+* Status: **CHECK:** Complete
 
 ## Next Steps
 
@@ -525,7 +525,7 @@ For the below reconciliation discrepancy report template, use the following inst
 **Timestamp**: {agent_insight_context.summary.start_time}
 
 ## Summary
-❌ Payment reconciliation found discrepancies requiring review
+**DISCREPANCY:** Payment reconciliation found discrepancies requiring review
 Affected Facilities: {discrepancy_summary.affected_facility_count}
 Total Difference: ${abs(reconciliation_result.total_difference):,.2f}
 
@@ -549,7 +549,7 @@ Total Difference: ${abs(reconciliation_result.total_difference):,.2f}
 ### Facility Level Discrepancies
 {for facility in discrepancy_summary.facility_differences}
 {if facility.has_discrepancy}
-#### ❌ {facility.facility_type}
+#### **DISCREPANCY:** {facility.facility_type}
 * Remittance Amount: ${facility.remittance_amount:,.2f}
 * AR System Amount: ${facility.ar_system_amount:,.2f}
 * Difference: ${abs(facility.difference):,.2f}
@@ -628,9 +628,9 @@ For the below exception report template, use the following instructions:
 ```
 # Exception Report
 
-**Document**: {agent_insight_context.document_name}  
-**Stage**: {agent_insight_context.processing_phase}  
-**Processing Status**: Exception Encountered  
+**Document**: {agent_insight_context.document_name}
+**Stage**: {agent_insight_context.processing_phase}
+**Processing Status**: Exception Encountered
 **Timestamp**: {agent_insight_context.summary.start_time}
 
 ## Exception Details
@@ -840,7 +840,7 @@ The `agent_insight_context` for the validation phase  primarily consists of thr
     - Tables per Page: Distribution of tables extracted per page.
     - Empty and Renamed Columns: Lists any columns that were dropped or renamed during extraction.
   - **Validation Results**
-    - The Validation Results section captures detailed outcomes of all validation checks performed on extracted document data. It is particularly crucial when validation failures occur, as the structured insights are instrumental for the LLM’s analysis and troubleshooting. Each result is categorized based on rule success, failure, and severity, with the following key components:
+    - The Validation Results section captures detailed outcomes of all validation checks performed on extracted document data. It is particularly crucial when validation failures occur, as the structured insights are instrumental for the LLM's analysis and troubleshooting. Each result is categorized based on rule success, failure, and severity, with the following key components:
       - Rules Passed and Failed: Total counts of passed and failed validation rules, establishing the overall success rate and highlighting areas of concern if failures are high.
       - Validation Result Details:
         - Rule ID: Unique identifier of each validation rule, allowing precise tracking of specific validation checks.
@@ -856,7 +856,7 @@ The `agent_insight_context` for the validation phase  primarily consists of thr
   - **Configuration Used**
     - **Document Type**:
       - **Non-Tabular Fields**: Lists essential fields and their requirement status (e.g., Required, Optional), providing guidance on which fields must undergo validation.
-      - **Tabular Fields**: Describes each table’s required columns (e.g., "Invoice Details" with fields like "Invoice Reference" and "Amount Due"), aligning extraction outputs with expected schema.
+      - **Tabular Fields**: Describes each table's required columns (e.g., "Invoice Details" with fields like "Invoice Reference" and "Amount Due"), aligning extraction outputs with expected schema.
     - **Document Format**:
       - **Field Mappings**: Maps extracted fields to their identifiers within the document schema to ensure extracted data follows the expected format.
       - **Prompt-related Configuration**:
