@@ -57,6 +57,66 @@
                     }
                 }
             }
+        },
+        {
+            "inputName": "search by parent folder name",
+            "inputValue": {
+                "query": "'My Folder' in parents",
+                "search_all_drives": false,
+                "basic_info_only": false,
+                "save_result_as_csv": false,
+                "vscode:request:oauth2": {
+                    "google_credentials": {
+                        "type": "OAuth2Secret",
+                        "provider": "google",
+                        "scopes": [
+                            "https://www.googleapis.com/auth/drive.readonly",
+                            "https://www.googleapis.com/auth/drive.metadata.readonly"
+                        ],
+                        "access_token": "<access-token-will-be-requested-by-vscode>"
+                    }
+                }
+            }
+        },
+        {
+            "inputName": "basic info only, all drives, custom csv filename",
+            "inputValue": {
+                "query": "name contains 'report'",
+                "search_all_drives": true,
+                "basic_info_only": true,
+                "save_result_as_csv": "custom_results.csv",
+                "vscode:request:oauth2": {
+                    "google_credentials": {
+                        "type": "OAuth2Secret",
+                        "provider": "google",
+                        "scopes": [
+                            "https://www.googleapis.com/auth/drive.readonly",
+                            "https://www.googleapis.com/auth/drive.metadata.readonly"
+                        ],
+                        "access_token": "<access-token-will-be-requested-by-vscode>"
+                    }
+                }
+            }
+        },
+        {
+            "inputName": "error handling: non-existent parent folder",
+            "inputValue": {
+                "query": "'NonExistentFolder' in parents",
+                "search_all_drives": true,
+                "basic_info_only": false,
+                "save_result_as_csv": false,
+                "vscode:request:oauth2": {
+                    "google_credentials": {
+                        "type": "OAuth2Secret",
+                        "provider": "google",
+                        "scopes": [
+                            "https://www.googleapis.com/auth/drive.readonly",
+                            "https://www.googleapis.com/auth/drive.metadata.readonly"
+                        ],
+                        "access_token": "<access-token-will-be-requested-by-vscode>"
+                    }
+                }
+            }
         }
     ],
     "metadata": {
