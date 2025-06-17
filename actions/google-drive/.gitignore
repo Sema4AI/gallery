@@ -22,3 +22,4 @@ temp/
 testrun/*
 venv/
 ./**/.env
+devdata/chat-files/*

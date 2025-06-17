@@ -1,10 +1,110 @@
 {
     "inputs": [
         {
-            "inputName": "input-1",
+            "inputName": "searching for Sema4 AI",
             "inputValue": {
                 "query": "fullText contains 'Sema4 AI'",
                 "search_all_drives": false,
+                "vscode:request:oauth2": {
+                    "google_credentials": {
+                        "type": "OAuth2Secret",
+                        "provider": "google",
+                        "scopes": [
+                            "https://www.googleapis.com/auth/drive.readonly",
+                            "https://www.googleapis.com/auth/drive.metadata.readonly"
+                        ],
+                        "access_token": "<access-token-will-be-requested-by-vscode>"
+                    }
+                }
+            }
+        },
+        {
+            "inputName": "contract search",
+            "inputValue": {
+                "query": "name contains 'contract'",
+                "search_all_drives": true,
+                "basic_info_only": true,
+                "save_result_as_csv": true,
+                "vscode:request:oauth2": {
+                    "google_credentials": {
+                        "type": "OAuth2Secret",
+                        "provider": "google",
+                        "scopes": [
+                            "https://www.googleapis.com/auth/drive.readonly",
+                            "https://www.googleapis.com/auth/drive.metadata.readonly"
+                        ],
+                        "access_token": "<access-token-will-be-requested-by-vscode>"
+                    }
+                }
+            }
+        },
+        {
+            "inputName": "extra search",
+            "inputValue": {
+                "query": "name = 'Debugging' and 'Engineering' in parents",
+                "search_all_drives": true,
+                "basic_info_only": true,
+                "save_result_as_csv": false,
+                "vscode:request:oauth2": {
+                    "google_credentials": {
+                        "type": "OAuth2Secret",
+                        "provider": "google",
+                        "scopes": [
+                            "https://www.googleapis.com/auth/drive.readonly",
+                            "https://www.googleapis.com/auth/drive.metadata.readonly"
+                        ],
+                        "access_token": "<access-token-will-be-requested-by-vscode>"
+                    }
+                }
+            }
+        },
+        {
+            "inputName": "search by parent folder name",
+            "inputValue": {
+                "query": "'My Folder' in parents",
+                "search_all_drives": false,
+                "basic_info_only": false,
+                "save_result_as_csv": false,
+                "vscode:request:oauth2": {
+                    "google_credentials": {
+                        "type": "OAuth2Secret",
+                        "provider": "google",
+                        "scopes": [
+                            "https://www.googleapis.com/auth/drive.readonly",
+                            "https://www.googleapis.com/auth/drive.metadata.readonly"
+                        ],
+                        "access_token": "<access-token-will-be-requested-by-vscode>"
+                    }
+                }
+            }
+        },
+        {
+            "inputName": "basic info only, all drives, custom csv filename",
+            "inputValue": {
+                "query": "name contains 'report'",
+                "search_all_drives": true,
+                "basic_info_only": true,
+                "save_result_as_csv": "custom_results.csv",
+                "vscode:request:oauth2": {
+                    "google_credentials": {
+                        "type": "OAuth2Secret",
+                        "provider": "google",
+                        "scopes": [
+                            "https://www.googleapis.com/auth/drive.readonly",
+                            "https://www.googleapis.com/auth/drive.metadata.readonly"
+                        ],
+                        "access_token": "<access-token-will-be-requested-by-vscode>"
+                    }
+                }
+            }
+        },
+        {
+            "inputName": "error handling: non-existent parent folder",
+            "inputValue": {
+                "query": "'NonExistentFolder' in parents",
+                "search_all_drives": true,
+                "basic_info_only": false,
+                "save_result_as_csv": false,
                 "vscode:request:oauth2": {
                     "google_credentials": {
                         "type": "OAuth2Secret",
@@ -23,8 +123,10 @@
         "actionName": "get_files_by_query",
         "actionRelativePath": "actions.py",
         "schemaDescription": [
-            "query: string: Google Drive API V3 query string for search files in the format query_term operator values.",
-            "search_all_drives: boolean: Whether to search both My Drives and all shared drives.\nDefault is set to false for better performance and will include both owned files and those that have been\nshared with the user."
+            "query: string: Google Drive API V3 query string for search files in the format query_term operator values.\nWhen using 'in parents' operator, you can use either the parent folder's ID or name.\nExample: \"name = 'Report' and 'My Folder' in parents\"\nWhen search_all_drives is True, parent folder names will be searched in shared drives first.",
+            "search_all_drives: boolean: Whether to search both My Drives and all shared drives.\nDefault is set to false for better performance and will include both owned files and those that have been\nshared with the user.",
+            "basic_info_only: boolean: Whether to return only the basic information of the files",
+            "save_result_as_csv: string: If True, saves results to 'query_result.csv'. If a string is provided,\nuses that as the filename to save the CSV results."
         ],
         "managedParamsSchemaDescription": {
             "google_credentials": {
@@ -39,6 +141,6 @@
         },
         "inputFileVersion": "v3",
         "kind": "action",
-        "actionSignature": "action/args: \"google_credentials: OAuth2Secret[Literal['google'], list[Literal['https://www.googleapis.com/auth/drive.readonly', 'https://www.googleapis.com/auth/drive.metadata.readonly']]], query: str, search_all_drives: bool=False\""
+        "actionSignature": "action/args: \"google_credentials: OAuth2Secret[Literal['google'], list[Literal['https://www.googleapis.com/auth/drive.readonly', 'https://www.googleapis.com/auth/drive.metadata.readonly']]], query: str, search_all_drives: bool=False, basic_info_only: bool=False, save_result_as_csv: Union[bool, str]=False\""
     }
 }

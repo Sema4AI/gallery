@@ -1,0 +1,118 @@
+{
+    "inputs": [
+        {
+            "inputName": "basic upload",
+            "inputValue": {
+                "filename": "custom_results.csv",
+                "drive_file_name": "custom_results_from_cursor.csv",
+                "vscode:request:oauth2": {
+                    "google_credentials": {
+                        "type": "OAuth2Secret",
+                        "provider": "google",
+                        "scopes": [
+                            "https://www.googleapis.com/auth/drive.file"
+                        ],
+                        "access_token": "<access-token-will-be-requested-by-vscode>"
+                    }
+                }
+            }
+        },
+        {
+            "inputName": "upload to parent folder",
+            "inputValue": {
+                "filename": "custom_results.csv",
+                "drive_file_name": "custom_results_from_cursor.csv",
+                "parent_folder_id": "1AyQ2h0aHnJXNyi-Uqw9Dn3xTsItXyLDO",
+                "vscode:request:oauth2": {
+                    "google_credentials": {
+                        "type": "OAuth2Secret",
+                        "provider": "google",
+                        "scopes": [
+                            "https://www.googleapis.com/auth/drive.file"
+                        ],
+                        "access_token": "<access-token-will-be-requested-by-vscode>"
+                    }
+                }
+            }
+        },
+        {
+            "inputName": "upload and share with email and writer role",
+            "inputValue": {
+                "filename": "custom_results.csv",
+                "drive_file_name": "custom_results_from_cursor.csv",
+                "share_with_email": "recipient@example.com",
+                "share_role": "writer",
+                "vscode:request:oauth2": {
+                    "google_credentials": {
+                        "type": "OAuth2Secret",
+                        "provider": "google",
+                        "scopes": [
+                            "https://www.googleapis.com/auth/drive.file"
+                        ],
+                        "access_token": "<access-token-will-be-requested-by-vscode>"
+                    }
+                }
+            }
+        },
+        {
+            "inputName": "upload to shared drive",
+            "inputValue": {
+                "filename": "custom_results.csv",
+                "drive_file_name": "Shared Drive custom_results.csv",
+                "parent_folder_id": "1Da2DGODXCPuDPKLQSEKAW0nXKDsoPhY2",
+                "vscode:request:oauth2": {
+                    "google_credentials": {
+                        "type": "OAuth2Secret",
+                        "provider": "google",
+                        "scopes": [
+                            "https://www.googleapis.com/auth/drive.file"
+                        ],
+                        "access_token": "<access-token-will-be-requested-by-vscode>"
+                    }
+                }
+            }
+        },
+        {
+            "inputName": "error: invalid parent folder id",
+            "inputValue": {
+                "filename": "custom_results.csv",
+                "drive_file_name": "Invalid Parent custom_results.csv",
+                "parent_folder_id": "1Da2DGODXCPuD",
+                "vscode:request:oauth2": {
+                    "google_credentials": {
+                        "type": "OAuth2Secret",
+                        "provider": "google",
+                        "scopes": [
+                            "https://www.googleapis.com/auth/drive.file"
+                        ],
+                        "access_token": "<access-token-will-be-requested-by-vscode>"
+                    }
+                }
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "upload_file",
+        "actionRelativePath": "actions.py",
+        "schemaDescription": [
+            "filename: string: The name of the file to prompt the user to select or upload.",
+            "drive_file_name: string: Desired name for the file in Google Drive.",
+            "parent_folder_id: string: Optional ID of the parent folder in Drive.",
+            "share_with_email: string: Optional email address to share the file with after upload.",
+            "share_role: string: Role to grant to the shared user (reader, writer, commenter, organizer, fileOrganizer). Default is 'reader'."
+        ],
+        "managedParamsSchemaDescription": {
+            "google_credentials": {
+                "type": "OAuth2Secret",
+                "description": "JSON containing Google OAuth2 credentials.",
+                "provider": "google",
+                "scopes": [
+                    "https://www.googleapis.com/auth/drive.file"
+                ]
+            }
+        },
+        "inputFileVersion": "v3",
+        "kind": "action",
+        "actionSignature": "action/args: \"google_credentials: OAuth2Secret[Literal['google'], list[Literal['https://www.googleapis.com/auth/drive.file']]], filename: str, drive_file_name: str, parent_folder_id: Optional[str]=None, share_with_email: Optional[str]=None, share_role: str='reader'\""
+    }
+}
