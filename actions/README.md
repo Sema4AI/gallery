@@ -7,6 +7,7 @@ Contains the implementation of our prebuilt AI Actions available inside Sema4.ai
 | [Actions Bootstrapper](actions-bootstrapper/README.md)           | Bootstrap new action packages                    | N/A                 |
 | [Agent Connector](agent-connector/README.md)                     | Communicate with other agents                    | N/A                 |
 | [Agents Bootstrapper](agents-bootstrapper/README.md)             | Bootstrap new agent packages with actions        | N/A                 |
+| [AI Browsing](ai-browsing/README.md)                             | AI-powered web browsing and scraping             | API key             |
 | [Browsing](browsing/README.md)                                   | Get website contents and fill forms              | N/A                 |
 | [Email](email/README.md)                                         | Send emails with any SMTP service                | SMTP credentials    |
 | [Excel](excel/README.md)                                         | Operate on local Excel files                     | N/A                 |
@@ -17,7 +18,7 @@ Contains the implementation of our prebuilt AI Actions available inside Sema4.ai
 | [Google Search](google-search/README.md)                         | Search for content with Google                   | API key             |
 | [Google Sheets](google-sheets/README.md)                         | Interact with Google Sheets                      | OAuth2              |
 | [HubSpot](hubspot/README.md)                                     | Work with HubSpot CRM objects                    | OAuth2              |
-| [Linear](linear/README.md)                                       | Handle Linear issues                             | API Key             |
+| [Linear](linear/README.md)                                       | Handle Linear issues                             | API key             |
 | [Microsoft Calendar](microsoft-calendar/README.md)               | Work with Calendar                               | OAuth2              |
 | [Microsoft Excel](microsoft-excel/README.md)                     | Interact with Microsoft 365 Excel files          | OAuth2              |
 | [Microsoft Mail](microsoft-mail/README.md)                       | Interact with Microsoft Mail                     | OAuth2              |
