@@ -1,6 +1,6 @@
 # Gallery of prebuilt AI Actions provided by Sema4.ai
 
-Contains the implementation of our prebuilt AI Actions available inside Sema4.ai Desktop and Control Room.
+Contains the implementation of our prebuilt AI Actions available inside Sema4.ai Studio and Control Room.
 
 | Action Package                                                   | Description                                      | Auth type           |
 | ---------------------------------------------------------------- | ------------------------------------------------ | ------------------- |
