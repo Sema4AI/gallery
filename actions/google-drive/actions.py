@@ -111,7 +111,7 @@ def _resolve_full_path(service: Resource, file: dict, id_to_file: dict) -> str:
                     path_parts.append("?")
                     break
         # If parent is the root of a shared drive (no parents, has driveId), use the drive's name
-        if parent.get("driveId") and not parent.get("parents"):
+        if parent.get("driveId", None) is not None and not parent.get("parents", []):
             try:
                 drive = service.drives().get(driveId=parent.get("driveId"), fields="id, name").execute()
                 path_parts.append(drive.get("name", "?"))
@@ -267,6 +267,11 @@ def _resolve_parent_folder_name(service: Resource, parent_name: str, search_all_
         # If searching all drives, prefer folders from shared drives
         if search_all_drives and any(f.get('driveId') for f in files):
             shared_folders = [f for f in files if f.get('driveId')]
+            if len(shared_folders) > 1:
+                print(f"Warning: Found {len(shared_folders)} folders with name '{parent_name}' in shared drives:")
+                for f in shared_folders:
+                    print(f"  - Name: {f.get('name')}, ID: {f.get('id')}, DriveId: {f.get('driveId')}")
+                print("Using the first match. Consider using folder ID instead of name for more precise matching.")
             selected = shared_folders[0]
             print(f"Selected shared drive folder: Name: {selected.get('name')}, ID: {selected.get('id')}, DriveId: {selected.get('driveId')}")
             return selected['id']
@@ -374,7 +379,7 @@ def get_files_by_query(
             "supportsAllDrives": True,
             "includeItemsFromAllDrives": True,
             "q": processed_query,
-            "fields": "*",
+            "fields": "files(id, name, mimeType, createdTime, modifiedTime, owners, size, version, webViewLink, permissions, parents, driveId)",
         }
 
         if search_all_drives:
@@ -601,11 +606,13 @@ def upload_file(
             except HttpError as e:
                 if "File not found" in str(e):
                     raise ActionError(f"File uploaded but sharing failed: The file is in a shared drive and you may not have permission to share it. File ID: {file_obj.id}")
-                raise ActionError(f"File uploaded but sharing failed: {str(e)}")
+                raise ActionError(f"File uploaded but sharing failed due to API error: {str(e)}")
             except Exception as e:
-                raise ActionError(f"File uploaded but sharing failed: {str(e)}")
+                raise ActionError(f"File uploaded but sharing failed due to unexpected error: {str(e)}")
         return Response(result=file_obj)
+    except HttpError as e:
+        raise ActionError(f"Failed to upload file due to API error: {str(e)}")
     except Exception as e:
-        raise ActionError(f"Failed to upload file: {str(e)}")
+        raise ActionError(f"Failed to upload file due to unexpected error: {str(e)}")
     finally:
         service.close()
