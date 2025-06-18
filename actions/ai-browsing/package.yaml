@@ -5,7 +5,7 @@ name: AI Browsing
 description: LLM assisted browsing
 
 # Package version number, recommend using semver.org
-version: 1.0.0
+version: 1.0.1
 
 # The version of the `package.yaml` format.
 spec-version: v2

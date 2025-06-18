@@ -5,7 +5,7 @@ name: Snowflake Data
 description: Various tools for interacting with Snowflake databases and other tools.
 
 # Package version number, recommend using semver.org
-version: 2.0.3
+version: 2.0.4
 
 spec-version: v2
 

@@ -5,7 +5,7 @@ name: Microsoft 365 Excel
 description: Actions for manipulating Microsoft 365 Excel files.
 
 # Package version number, recommend using semver.org
-version: 2.2.0
+version: 2.2.1
 
 # The version of the `package.yaml` format.
 spec-version: v2

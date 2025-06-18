@@ -5,7 +5,7 @@ name: Google Docs
 description: Get contents of Google Docs as Markdown
 
 # Package version number, recommend using semver.org
-version: 1.4.1
+version: 1.4.2
 
 # The version of the `package.yaml` format.
 spec-version: v2

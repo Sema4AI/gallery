@@ -5,7 +5,7 @@ name: Microsoft Mail
 description: Actions for Microsoft 365 Outlook emails.
 
 # Package version number, recommend using semver.org
-version: 1.4.0
+version: 1.4.1
 
 # The version of the `package.yaml` format.
 spec-version: v2

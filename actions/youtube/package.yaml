@@ -5,7 +5,7 @@ name: YouTube
 description: Search for videos and extract various details from YouTube videos.
 
 # Package version number, recommend using semver.org
-version: 1.1.1
+version: 1.1.2
 
 # The version of the `package.yaml` format.
 spec-version: v2

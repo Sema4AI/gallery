@@ -5,7 +5,7 @@ name: Google Search
 description: Agent can make Google searches using a custom search engine (requires API key).
 
 # Package version number, recommend using semver.org
-version: 1.2.0
+version: 1.2.1
 
 # The version of the `package.yaml` format.
 spec-version: v2

@@ -5,7 +5,7 @@ name: Microsoft Sharepoint
 description: Work with Sharepoint sites, lists and files.
 
 # Package version number, recommend using semver.org
-version: 2.3.0
+version: 2.3.1
 
 # The version of the `package.yaml` format.
 spec-version: v2

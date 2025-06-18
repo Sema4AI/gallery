@@ -5,7 +5,7 @@ name: Google Drive
 description: Interact with Google Drive resources - search files, get comments, get contents and more!
 
 # Package version number, recommend using semver.org
-version: 1.2.0
+version: 1.2.1
 
 # The version of the `package.yaml` format.
 spec-version: v2

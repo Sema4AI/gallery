@@ -5,7 +5,7 @@ name: ServiceNow
 description: Actions interacting with a ServiceNow instance.
 
 # Package version number, recommend using semver.org
-version: 1.2.0
+version: 1.2.1
 
 # The version of the `package.yaml` format.
 spec-version: v2
