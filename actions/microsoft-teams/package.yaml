@@ -16,7 +16,7 @@ dependencies:
     - python-dotenv=1.1.0
     - uv=0.6.11
   pypi:
-    - sema4ai-actions=1.3.8
+    - sema4ai-actions=1.3.13
     - pydantic[email]=2.10.4
 
 external-endpoints:

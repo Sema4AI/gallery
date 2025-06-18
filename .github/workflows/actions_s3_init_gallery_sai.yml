@@ -34,6 +34,6 @@ jobs:
         run: |
           S3_BASE_URL="s3://downloads.robocorp.com/gallery/actions"
           cd bin/publisher/gallery
-          
+
           # Copy only the manifest_sai.json
           aws s3 cp manifest_sai.json $S3_BASE_URL/manifest_sai.json --cache-control max-age=120 --content-type "text/plain"
