@@ -1,12 +1,13 @@
-from models import (
-    Links,
-    Link,
-    Form,
-    FormElement,
-    Option,
-)
 import re
 from urllib.parse import unquote, urlparse
+
+from models import (
+    Form,
+    FormElement,
+    Link,
+    Links,
+    Option,
+)
 
 
 def _clean_text(text):

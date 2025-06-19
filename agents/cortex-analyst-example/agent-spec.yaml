@@ -13,7 +13,7 @@ agent-package:
     action-packages:
     - name: Snowflake Cortex Analyst
       organization: Sema4.ai
-      version: 1.0.3
+      version: 1.0.4
       path: Sema4.ai/snowflake-cortex-analyst
       type: folder
       whitelist: ''

@@ -7,8 +7,9 @@ import urllib.parse
 from pathlib import Path
 
 import black
-import requests
+import sema4ai_http
 from sema4ai.actions import Response, action
+from urllib3.exceptions import ConnectionError
 
 
 @action
@@ -239,8 +240,10 @@ def stop_action_server(action_server_url: str) -> str:
     }
 
     try:
-        response = requests.post(f"{action_server_url}/api/shutdown", headers=headers)
-    except requests.exceptions.ConnectionError:
+        response = sema4ai_http.post(
+            f"{action_server_url}/api/shutdown", headers=headers
+        )
+    except ConnectionError:
         return "Could not connect to the server"
 
     if response.status_code == 200:
@@ -343,7 +346,7 @@ def get_action_run_logs(action_server_url: str, run_id: str) -> Response[str]:
         f"/api/runs/{run_id}/artifacts/text-content?artifact_names={artifact}",
     )
 
-    response = requests.get(target_url)
+    response = sema4ai_http.get(target_url)
 
     payload = response.json()
     output = payload[artifact]
@@ -366,7 +369,7 @@ def get_action_run_logs_latest(action_server_url: str) -> Response[str]:
 
     runs_list_url = urllib.parse.urljoin(action_server_url, "/api/runs")
 
-    runs_response = requests.get(runs_list_url)
+    runs_response = sema4ai_http.get(runs_list_url)
     runs_payload = runs_response.json()
 
     last_run = runs_payload[-1]

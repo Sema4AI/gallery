@@ -1,0 +1,23 @@
+{
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "action_name": "hubspot",
+                "agent_name": "HubspotAPI"
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "download_prebuilt_action",
+        "actionRelativePath": "actions.py",
+        "schemaDescription": [
+            "action_name: string: Name of the action package",
+            "agent_name: string: Name of the agent package"
+        ],
+        "managedParamsSchemaDescription": {},
+        "inputFileVersion": "v3",
+        "kind": "action",
+        "actionSignature": "action/args: 'action_name: str, agent_name: str'"
+    }
+}

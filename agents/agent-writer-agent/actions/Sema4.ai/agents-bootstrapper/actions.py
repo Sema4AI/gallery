@@ -6,7 +6,7 @@ from pathlib import Path
 from urllib.parse import urljoin
 
 import black
-import requests
+import sema4ai_http
 from refresh_agent_spec_helper import update_agent_spec
 from sema4ai.actions import ActionError, Response, action
 
@@ -87,7 +87,7 @@ def list_available_prebuilt_actions() -> Response[list[str]]:
     Returns:
         A list of folder names representing actions.
     """
-    response = requests.get(ACTIONS_GITHUB_URL)
+    response = sema4ai_http.get(ACTIONS_GITHUB_URL)
     if response.status_code == 200:
         data = response.json()
         folders = [item["name"] for item in data if item["type"] == "dir"]
@@ -108,7 +108,7 @@ def read_prebuild_action_capabilities(action_name: str) -> Response[str]:
         A message indicating the capabilities of the action package.
     """
     readme_url = f"{ACTIONS_GITHUB_URL}/{action_name}/README.md"
-    response = requests.get(readme_url)
+    response = sema4ai_http.get(readme_url)
     if response.status_code == 200:
         data = response.json()
         if "content" in data:
@@ -134,7 +134,7 @@ def download_file(url, save_path):
         url: The URL of the file.
         save_path: The local path to save the file.
     """
-    response = requests.get(url)
+    response = sema4ai_http.get(url)
     if response.status_code == 200:
         with open(save_path, "wb") as file:
             file.write(response.content)
@@ -152,7 +152,7 @@ def download_folder(url: str, local_path: Path) -> str:
         action_name: The action directory name that you want to download from Github.
         agent_name: The agent name where the action will be downloaded.
     """
-    response = requests.get(url)
+    response = sema4ai_http.get(url)
 
     if response.status_code == 200:
         contents = response.json()

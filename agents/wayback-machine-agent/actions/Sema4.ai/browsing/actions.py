@@ -10,11 +10,10 @@ import os
 from pathlib import Path
 from urllib.parse import urlparse
 
-import requests
+import sema4ai_http
 from dotenv import load_dotenv
 from models import DownloadedFile, Form, Links, UserAgent, WebPage
 from playwright.sync_api import TimeoutError
-from robocorp import browser
 from sema4ai.actions import Response, action
 from support import (
     _clean_text,
@@ -25,6 +24,8 @@ from support import (
     _get_page_links,
     _locator_action,
 )
+
+from robocorp import browser
 
 load_dotenv(Path(__file__).absolute().parent / "devdata" / ".env")
 
@@ -101,43 +102,48 @@ def download_file(
         content_length=0,
     )
     try:
-        with requests.get(file_url, stream=True) as response:
-            df.request_status = response.status_code
-            response.raise_for_status()  # Check for HTTP errors
+        response = sema4ai_http.get(file_url, preload_content=False)
+        df.request_status = response.status_code
+        response.raise_for_status()  # Check for HTTP errors
 
-            # Attempt to fetch the filename from the Content-Disposition header
-            content_disposition = response.headers.get("Content-Disposition", "")
-            filename = _get_filename_from_cd(content_disposition)
+        # Attempt to fetch the filename from the Content-Disposition header
+        content_disposition = response.headers.get("Content-Disposition", "")
+        filename = _get_filename_from_cd(content_disposition)
 
-            # If no filename in the header, extract from URL
-            if not filename:
-                filename = os.path.basename(urlparse(file_url).path)
+        # If no filename in the header, extract from URL
+        if not filename:
+            filename = os.path.basename(urlparse(file_url).path)
 
-            # Check file type and size from headers
-            df.content_type = response.headers.get("Content-Type", "")
-            df.content_length = int(response.headers.get("Content-Length", 0))
-            print(f"Content-Type: {df.content_type}")
-            print(f"Content-Length: {df.content_length} bytes")
+        # Check file type and size from headers
+        df.content_type = response.headers.get("Content-Type", "")
+        df.content_length = int(response.headers.get("Content-Length", 0))
+        print(f"Content-Type: {df.content_type}")
+        print(f"Content-Length: {df.content_length} bytes")
 
-            if df.content_length > max_filesize_in_megabytes * 1000000:
-                df.status = f"File is too large to download - limit is {max_filesize_in_megabytes} MB"
-                return Response(result=df)
+        if df.content_length > max_filesize_in_megabytes * 1000000:
+            df.status = f"File is too large to download - limit is {max_filesize_in_megabytes} MB"
+            return Response(result=df)
 
-            # Check if content is text-based or binary
+        if target_folder == "":
+            target_folder = os.getcwd()
+        file_path = os.path.join(target_folder, filename)
+
+        df_content = ""
+        with open(file_path, "wb") as file:
+            for chunk in response.stream(8192):
+                file.write(chunk)
+
             if "text" in df.content_type:
-                df.content = response.text
+                df_content += chunk.decode("utf-8")
 
-            if target_folder == "":
-                target_folder = os.getcwd()
-            file_path = os.path.join(target_folder, filename)
-            with open(file_path, "wb") as file:
-                for chunk in response.iter_content(chunk_size=8192):
-                    file.write(chunk)
-            df.status = f"File downloaded successfully at: {os.path.abspath(file_path)}"
-            df.filepath = os.path.abspath(file_path)  # Return the full path of the file
+        response.release_conn()
+        df.content = df_content
+        df.status = f"File downloaded successfully at: {os.path.abspath(file_path)}"
+        df.filepath = os.path.abspath(file_path)  # Return the full path of the file
     except Exception as e:
         df.filepath = ""
         df.status = f"Download failed: {str(e)}"
+
     print(df.status)
     return Response(result=df)
 
