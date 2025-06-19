@@ -115,7 +115,7 @@ jobs:
         id: check_artifacts
         run: |
           # Note that it's enough to only do it once (on single OS), running it on all 3 would result
-          # in redundant operations. 
+          # in redundant operations.
           if find bin/publisher/environments -mindepth 1 -maxdepth 1 | read; then
             echo "has_environments=true" >> $GITHUB_OUTPUT
           fi

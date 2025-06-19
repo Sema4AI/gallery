@@ -5,7 +5,7 @@ name: Google Drive
 description: Interact with Google Drive resources - search files, get comments, get contents and more!
 
 # Package version number, recommend using semver.org
-version: 1.2.0
+version: 1.2.1
 
 # The version of the `package.yaml` format.
 spec-version: v2
@@ -16,7 +16,7 @@ dependencies:
     - python-dotenv=1.1.0
     - uv=0.6.11
   pypi:
-    - sema4ai-actions=1.3.11
+    - sema4ai-actions=1.3.13
     - pydantic=2.11.7
     - google-api-python-client=2.172.0
     - google-auth-oauthlib=1.2.2
