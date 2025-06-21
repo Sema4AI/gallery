@@ -9,6 +9,7 @@ on:
       - main
     paths:
       - 'agents/**'
+      - 'bin/publisher/whitelist.json'
 
 jobs:
   build_agents:
