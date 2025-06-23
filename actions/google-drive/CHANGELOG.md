@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 - Action `get_file_by_id` attaches file into the Files
 
+## [1.2.1] - 2025-06-18
+
+- Updated sema4ai-actions version carrying a new version of pydantic
+
 ## [1.2.0] - 2025-06-16
 
 ### Added
