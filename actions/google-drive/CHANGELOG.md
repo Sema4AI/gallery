@@ -9,9 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Added
 
-- Actions `get_file_by_id` and `get_file_contents` attach a file into the Files.
-  - Custom filename can be set
-  - Attach can be disabled
+- Actions `get_file_by_id` and `get_file_contents` attach a file to the Files.
+  - A custom filename can be set
+  - The attachment can be disabled
 
 ## [1.2.1] - 2025-06-18
 
