@@ -56,17 +56,30 @@ def _get_file_by_id(service: Resource, file_id: str) -> Optional[File]:
         return None
 
 
-def _export_file_content(service: Resource, file_id: str, mime_type: str) -> BytesIO:
-    # Export the file content to the desired format
-    request = service.files().export_media(fileId=file_id, mimeType=mime_type)
+def _download_file_content(
+    service: Resource,
+    file: File,
+    mime_type: str = None
+) -> Optional[bytes]:
+    """Download the file content as bytes. Handles both Google-native and regular files. If mime_type is provided, attempts to export to that format."""
+    # Folders do not have downloadable content
+    if file.mimeType == "application/vnd.google-apps.folder":
+        return None
+
+    # Decide whether to export or download
+    export_mime = mime_type or EXPORT_MIMETYPE_MAP.get(file.mimeType)
+    if export_mime:
+        request = service.files().export_media(fileId=file.id, mimeType=export_mime)
+    else:
+        request = service.files().get_media(fileId=file.id)
+
     fh = BytesIO()
     downloader = MediaIoBaseDownload(fh, request)
-
     done = False
-    while done is False:
+    while not done:
         status, done = downloader.next_chunk()
-
-    return fh
+    fh.seek(0)
+    return fh.read()
 
 
 def _get_excel_content(file_content: BytesIO, worksheet: Optional[str] = None) -> str:
@@ -327,12 +340,20 @@ def get_file_by_id(
     service = _build_service(google_credentials)
 
     file = _get_file_by_id(service, file_id)
+    if not file:
+        raise ActionError(f"File was not found with the id: {file_id}")
+
+    if file and file.mimeType != "application/vnd.google-apps.folder":
+        try:
+            file_bytes = _download_file_content(service, file)
+            if file_bytes is not None:
+                chat.attach_file_content(name=file.name, data=file_bytes)
+        except Exception as e:
+            # Log or ignore attachment errors, but still return file metadata
+            pass
     service.close()
+    return Response(result=file)
 
-    if file:
-        return Response(result=file)
-
-    return Response(error=f"No files were found with the id: {file_id}")
 
 
 @action(is_consequential=False)
@@ -460,9 +481,16 @@ def get_file_contents(
     if not EXPORT_MIMETYPE_MAP.get(file.mimeType):
         raise ActionError(f"Type document {file.mimeType} is not supported for this operation")
 
-    file_content = _export_file_content(
-        service, file.id, EXPORT_MIMETYPE_MAP[file.mimeType]
-    )
+    file_bytes = _download_file_content(service, file, mime_type=EXPORT_MIMETYPE_MAP[file.mimeType])
+    file_content = BytesIO(file_bytes) if file_bytes is not None else None
+
+    # Attach the file as bytes to the chat (if not a folder)
+    if file.mimeType != "application/vnd.google-apps.folder":
+        try:
+            if file_bytes is not None:
+                chat.attach_file_content(name=file.name, data=file_bytes)
+        except Exception:
+            pass
 
     service.close()
 
