@@ -5,7 +5,7 @@ name: Wayback Machine
 description: Uses the Wayback Machine to detect changes to websites.
 
 # Package version number, recommend using semver.org
-version: 1.1.1
+version: 1.1.2
 
 # The version of the `package.yaml` format.
 spec-version: v2

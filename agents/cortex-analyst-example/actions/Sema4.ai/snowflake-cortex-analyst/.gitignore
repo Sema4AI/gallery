@@ -1,6 +1,5 @@
 *.pyc
 *.zip
-./**/.env
 .DS_Store
 .env
 .project
@@ -12,4 +11,4 @@ metadata.json
 output/
 temp/
 venv/
-*.pkl
+./**/.env

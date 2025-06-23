@@ -17,27 +17,27 @@ agent-package:
     model:
       provider: OpenAI
       name: gpt-4o
-    version: 1.0.1
+    version: 1.0.2
     architecture: agent
     reasoning: disabled
     runbook: runbook.md
     action-packages:
     - name: Browsing
       organization: Sema4.ai
-      version: 1.2.2
+      version: 1.3.1
       path: Sema4.ai/browsing
       type: folder
       whitelist: get_website_content,download_file,fill_elements
     - name: Actions Bootstrapper
       organization: Sema4.ai
-      version: 1.0.5
+      version: 1.1.1
       path: Sema4.ai/actions-bootstrapper
       type: folder
       whitelist:
         bootstrap_action_package,update_action_package_dependencies,update_action_package_action_dev_data,start_action_server,stop_action_server,update_action_code,open_action_code,get_action_run_logs,get_action_run_logs_latest
     - name: Agent Connector
       organization: Sema4.ai
-      version: 3.0.1
+      version: 4.0.3
       path: Sema4.ai/agent-connector
       type: folder
       whitelist:
