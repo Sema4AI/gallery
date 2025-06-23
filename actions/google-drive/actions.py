@@ -326,12 +326,16 @@ def get_file_by_id(
         ],
     ],
     file_id: str,
+    attach_to_chat: bool = True,
+    attach_with_name: str = None,
 ) -> Response[File]:
     """Get a file from Google Drive by id.
 
     Args:
         google_credentials: JSON containing Google OAuth2 credentials.
         file_id: Unique id of the file.
+        attach_to_chat: Whether to attach the file to the chat. Default is True.
+        attach_with_name: Name of the file to attach to the chat. Default is the file name.
 
     Returns:
         Message containing the details of the file or error message.
@@ -343,11 +347,13 @@ def get_file_by_id(
     if not file:
         raise ActionError(f"File was not found with the id: {file_id}")
 
-    if file and file.mimeType != "application/vnd.google-apps.folder":
+    if file and file.mimeType != "application/vnd.google-apps.folder" and attach_to_chat:
         try:
             file_bytes = _download_file_content(service, file)
+            chat_filename = attach_with_name or file.name
             if file_bytes is not None:
-                chat.attach_file_content(name=file.name, data=file_bytes)
+                chat.attach_file_content(name=chat_filename, data=file_bytes)
+                file.chat_filename = chat_filename
         except Exception as e:
             # Log or ignore attachment errors, but still return file metadata
             pass
@@ -461,6 +467,8 @@ def get_file_contents(
     ],
     name: str,
     worksheet: str = "",
+    attach_to_chat: bool = True,
+    attach_with_name: str = None,
 ) -> Response[str]:
     """Get the file contents.
 
@@ -468,6 +476,8 @@ def get_file_contents(
         google_credentials: JSON containing Google OAuth2 credentials.
         name: Name of the file.
         worksheet: Name of the worksheet in case of Excel files, default is the first sheet.
+        attach_to_chat: Whether to attach the file to the chat. Default is True.
+        attach_with_name: Name of the file to attach to the chat. Default is the file name.
 
     Returns:
         The file contents or an error message.
@@ -484,11 +494,13 @@ def get_file_contents(
     file_bytes = _download_file_content(service, file, mime_type=EXPORT_MIMETYPE_MAP[file.mimeType])
     file_content = BytesIO(file_bytes) if file_bytes is not None else None
 
-    # Attach the file as bytes to the chat (if not a folder)
-    if file.mimeType != "application/vnd.google-apps.folder":
+    # Attach the file as bytes to the chat (if not a folder and attach_to_chat is True)
+    if file.mimeType != "application/vnd.google-apps.folder" and attach_to_chat:
         try:
+            chat_filename = attach_with_name or file.name
             if file_bytes is not None:
-                chat.attach_file_content(name=file.name, data=file_bytes)
+                chat.attach_file_content(name=chat_filename, data=file_bytes)
+                file.chat_filename = chat_filename
         except Exception:
             pass
 

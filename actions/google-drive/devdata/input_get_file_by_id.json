@@ -1,9 +1,45 @@
 {
     "inputs": [
         {
-            "inputName": "input-1",
+            "inputName": "Get file and attach to chat",
             "inputValue": {
                 "file_id": "<The ID of the file to fetch>",
+                "vscode:request:oauth2": {
+                    "google_credentials": {
+                        "type": "OAuth2Secret",
+                        "provider": "google",
+                        "scopes": [
+                            "https://www.googleapis.com/auth/drive.readonly",
+                            "https://www.googleapis.com/auth/drive.metadata.readonly"
+                        ],
+                        "access_token": "<access-token-will-be-requested-by-vscode>"
+                    }
+                }
+            }
+        },
+        {
+            "inputName": "Get file and do not attach to chat",
+            "inputValue": {
+                "file_id": "<The ID of the file to fetch>",
+                "attach_to_chat": false,
+                "vscode:request:oauth2": {
+                    "google_credentials": {
+                        "type": "OAuth2Secret",
+                        "provider": "google",
+                        "scopes": [
+                            "https://www.googleapis.com/auth/drive.readonly",
+                            "https://www.googleapis.com/auth/drive.metadata.readonly"
+                        ],
+                        "access_token": "<access-token-will-be-requested-by-vscode>"
+                    }
+                }
+            }
+        },
+        {
+            "inputName": "Get file and attach to chat with a custom name",
+            "inputValue": {
+                "file_id": "<The ID of the file to fetch>",
+                "attach_with_name": "custom_name.pdf",
                 "vscode:request:oauth2": {
                     "google_credentials": {
                         "type": "OAuth2Secret",
@@ -22,7 +58,9 @@
         "actionName": "get_file_by_id",
         "actionRelativePath": "actions.py",
         "schemaDescription": [
-            "file_id: string: Unique id of the file."
+            "file_id: string: Unique id of the file.",
+            "attach_to_chat: boolean: Whether to attach the file to the chat. Default is True.",
+            "attach_with_name: string: Name of the file to attach to the chat. Default is the file name."
         ],
         "managedParamsSchemaDescription": {
             "google_credentials": {
@@ -37,6 +75,6 @@
         },
         "inputFileVersion": "v3",
         "kind": "action",
-        "actionSignature": "action/args: \"google_credentials: OAuth2Secret[Literal['google'], list[Literal['https://www.googleapis.com/auth/drive.readonly', 'https://www.googleapis.com/auth/drive.metadata.readonly']]], file_id: str\""
+        "actionSignature": "action/args: \"google_credentials: OAuth2Secret[Literal['google'], list[Literal['https://www.googleapis.com/auth/drive.readonly', 'https://www.googleapis.com/auth/drive.metadata.readonly']]], file_id: str, attach_to_chat: bool=True, attach_with_name: str=None\""
     }
 }
