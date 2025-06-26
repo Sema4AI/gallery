@@ -60,6 +60,10 @@ class File(BaseModel):
         Optional[str],
         Field(description="The location of the drive item as a full folder path, e.g. /Folder1/Folder2/FileName")
     ] = None
+    chat_filename: Annotated[
+        Optional[str],
+        Field(description="The filename used when attaching this file to chat, if applicable.")
+    ] = None
 
     def is_excel(self) -> bool:
         return self.mimeType == "application/vnd.google-apps.spreadsheet"

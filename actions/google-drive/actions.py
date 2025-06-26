@@ -56,17 +56,30 @@ def _get_file_by_id(service: Resource, file_id: str) -> Optional[File]:
         return None
 
 
-def _export_file_content(service: Resource, file_id: str, mime_type: str) -> BytesIO:
-    # Export the file content to the desired format
-    request = service.files().export_media(fileId=file_id, mimeType=mime_type)
+def _download_file_content(
+    service: Resource,
+    file: File,
+    mime_type: str = None
+) -> Optional[bytes]:
+    """Download the file content as bytes. Handles both Google-native and regular files. If mime_type is provided, attempts to export to that format."""
+    # Folders do not have downloadable content
+    if file.mimeType == "application/vnd.google-apps.folder":
+        return None
+
+    # Decide whether to export or download
+    export_mime = mime_type or EXPORT_MIMETYPE_MAP.get(file.mimeType)
+    if export_mime:
+        request = service.files().export_media(fileId=file.id, mimeType=export_mime)
+    else:
+        request = service.files().get_media(fileId=file.id)
+
     fh = BytesIO()
     downloader = MediaIoBaseDownload(fh, request)
-
     done = False
-    while done is False:
+    while not done:
         status, done = downloader.next_chunk()
-
-    return fh
+    fh.seek(0)
+    return fh.read()
 
 
 def _get_excel_content(file_content: BytesIO, worksheet: Optional[str] = None) -> str:
@@ -313,12 +326,16 @@ def get_file_by_id(
         ],
     ],
     file_id: str,
+    attach: bool = True,
+    attach_with_name: str = None,
 ) -> Response[File]:
     """Get a file from Google Drive by id.
 
     Args:
         google_credentials: JSON containing Google OAuth2 credentials.
         file_id: Unique id of the file.
+        attach: Whether to attach the file to the chat. Default is True.
+        attach_with_name: Name of the file to attach to the chat. Default is the file name.
 
     Returns:
         Message containing the details of the file or error message.
@@ -327,12 +344,22 @@ def get_file_by_id(
     service = _build_service(google_credentials)
 
     file = _get_file_by_id(service, file_id)
+    if not file:
+        raise ActionError(f"File was not found with the id: {file_id}")
+
+    if file and attach and file.mimeType != "application/vnd.google-apps.folder":
+        try:
+            file_bytes = _download_file_content(service, file)
+            if file_bytes is not None:
+                chat_filename = attach_with_name or file.name
+                chat.attach_file_content(name=chat_filename, data=file_bytes)
+                file.chat_filename = chat_filename
+        except Exception as e:
+            # Log or ignore attachment errors, but still return file metadata
+            pass
     service.close()
+    return Response(result=file)
 
-    if file:
-        return Response(result=file)
-
-    return Response(error=f"No files were found with the id: {file_id}")
 
 
 @action(is_consequential=False)
@@ -350,6 +377,7 @@ def get_files_by_query(
     search_all_drives: bool = False,
     basic_info_only: bool = False,
     save_result_as_csv: Union[bool, str] = False,
+    attach: bool = False,
 ) -> Response[FileList]:
     """Get all files from Google Drive that match the given query.
 
@@ -365,6 +393,7 @@ def get_files_by_query(
         basic_info_only: Whether to return only the basic information of the files
         save_result_as_csv: If True, saves results to 'query_result.csv'. If a string is provided,
             uses that as the filename to save the CSV results.
+        attach: Whether to attach each file to the chat. Default is False.
 
     Returns:
         A list of files or an error message if no files were found.
@@ -408,6 +437,17 @@ def get_files_by_query(
             else:
                 file_obj = File(**f)
                 file_obj.location = location
+                if attach and file_obj.mimeType != "application/vnd.google-apps.folder":
+                    try:
+                        # Use export if available, otherwise download as-is
+                        export_mime = EXPORT_MIMETYPE_MAP.get(file_obj.mimeType)
+                        file_bytes = _download_file_content(service, file_obj, mime_type=export_mime)
+                        if file_bytes is not None:
+                            chat_filename = file_obj.name
+                            chat.attach_file_content(name=chat_filename, data=file_bytes)
+                            file_obj.chat_filename = chat_filename
+                    except Exception:
+                        pass
                 files.append(file_obj)
 
         file_list = FileList(files=files)
@@ -440,6 +480,8 @@ def get_file_contents(
     ],
     name: str,
     worksheet: str = "",
+    attach: bool = True,
+    attach_with_name: str = None,
 ) -> Response[str]:
     """Get the file contents.
 
@@ -447,6 +489,8 @@ def get_file_contents(
         google_credentials: JSON containing Google OAuth2 credentials.
         name: Name of the file.
         worksheet: Name of the worksheet in case of Excel files, default is the first sheet.
+        attach: Whether to attach the file to the chat. Default is True.
+        attach_with_name: Name of the file to attach to the chat. Default is the file name.
 
     Returns:
         The file contents or an error message.
@@ -460,9 +504,17 @@ def get_file_contents(
     if not EXPORT_MIMETYPE_MAP.get(file.mimeType):
         raise ActionError(f"Type document {file.mimeType} is not supported for this operation")
 
-    file_content = _export_file_content(
-        service, file.id, EXPORT_MIMETYPE_MAP[file.mimeType]
-    )
+    file_bytes = _download_file_content(service, file, mime_type=EXPORT_MIMETYPE_MAP[file.mimeType])
+    file_content = BytesIO(file_bytes) if file_bytes is not None else None
+
+    if attach and file.mimeType != "application/vnd.google-apps.folder":
+        try:
+            if file_bytes is not None:
+                chat_filename = attach_with_name or file.name
+                chat.attach_file_content(name=chat_filename, data=file_bytes)
+                file.chat_filename = chat_filename
+        except Exception:
+            pass
 
     service.close()
 
