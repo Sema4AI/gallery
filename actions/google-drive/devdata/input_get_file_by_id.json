@@ -21,7 +21,7 @@
             "inputName": "Get file and do not attach to chat",
             "inputValue": {
                 "file_id": "<The ID of the file to fetch>",
-                "attach_to_chat": false,
+                "attach": false,
                 "vscode:request:oauth2": {
                     "google_credentials": {
                         "type": "OAuth2Secret",

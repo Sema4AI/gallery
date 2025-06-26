@@ -5,13 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
-## [1.3.0] - 2025-06-23
+## [1.3.0] - 2025-06-26
 
 ### Added
 
 - Actions `get_file_by_id` and `get_file_contents` attach a file to the Files.
   - A custom filename can be set
-  - The attachment can be disabled
+  - The attaching can be disabled
+- Action `get_files_by_query` can attach resulting files to the Files.
 
 ## [1.2.1] - 2025-06-18
 
