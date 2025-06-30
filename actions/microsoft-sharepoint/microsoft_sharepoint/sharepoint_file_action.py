@@ -5,9 +5,6 @@ Currently supporting:
 - Upload a file to the Sharepoint site
 - Searching files in the Sharepoint
 """
-
-import os
-from pathlib import Path
 from typing import Literal
 
 import sema4ai_http
@@ -22,7 +19,6 @@ from microsoft_sharepoint.support import (
     send_request,
 )
 from sema4ai.actions import ActionError, OAuth2Secret, Response, action, chat
-from robocorp.log import suppress_variables
 
 @action(is_consequential=False)
 def download_sharepoint_file(
