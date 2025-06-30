@@ -8,7 +8,7 @@ Currently supporting:
 from typing import Literal
 
 import sema4ai_http
-from microsoft_sharepoint.models import File, FileList, Location
+from microsoft_sharepoint.models import File, FileList, Location, SiteIdentifier
 from microsoft_sharepoint.sharepoint_site_action import (
     get_sharepoint_site,
     search_for_site,
@@ -27,7 +27,7 @@ def download_sharepoint_file(
         Literal["microsoft"],
         list[Literal["Files.Read"]],
     ],
-    site_id: str = "",
+    site_id: SiteIdentifier = SiteIdentifier(value=""),
     attach: bool = False,
 ) -> Response[list[str]]:
     """
@@ -36,7 +36,7 @@ def download_sharepoint_file(
     Args:
         filelist: file or files (FileList) with at least file_id or name
         token: OAuth2 token to use for the operation
-        site_id: site id to use for the operation
+        site_id: SiteIdentifier for the SharePoint site (can be a plain name like 'me', 'my files', a site name, or a full site ID).
         attach: whether to download all files matching the search criteria
 
     Returns:
@@ -53,15 +53,16 @@ def download_sharepoint_file(
         name = getattr(afile, "name", None) or afile.file.get("name") or ""
         fileinfo_data = afile.file if hasattr(afile, "file") else afile
         parent_ref = fileinfo_data.get("parentReference", {})
-        site_id = parent_ref.get("siteId", "")
+        # Use the value from SiteIdentifier
+        resolved_site_id = parent_ref.get("siteId", "") or site_id.value
         drive_type = parent_ref.get("driveType", "")
 
         if file_id:
             # Robust endpoint selection
             if drive_type == "personal":
                 download_file_url = f"{BASE_GRAPH_URL}/me/drive/items/{file_id}/content"
-            elif site_id:
-                download_file_url = f"{BASE_GRAPH_URL}/sites/{site_id}/drive/items/{file_id}/content"
+            elif resolved_site_id:
+                download_file_url = f"{BASE_GRAPH_URL}/sites/{resolved_site_id}/drive/items/{file_id}/content"
             else:
                 # If both site_id and drive_type are missing, assume OneDrive
                 download_file_url = f"{BASE_GRAPH_URL}/me/drive/items/{file_id}/content"
@@ -75,7 +76,7 @@ def download_sharepoint_file(
         elif name:
             # Search for the file by name
             from microsoft_sharepoint.sharepoint_file_action import search_sharepoint_files
-            search_resp = search_sharepoint_files(search_text=name, token=token, location=site_id)
+            search_resp = search_sharepoint_files(search_text=name, token=token, site_id=resolved_site_id)
             found_files = [f for f in search_resp.result.files if (getattr(f, "name", None) or f.file.get("name")) == name]
             if not found_files:
                 raise ActionError(f"File with name '{name}' not found.")
@@ -83,7 +84,7 @@ def download_sharepoint_file(
                 found_fileinfo = found.file if hasattr(found, "file") else found
                 found_file_id = getattr(found, "file_id", None) or found_fileinfo.get("id")
                 found_parent_ref = found_fileinfo.get("parentReference", {})
-                found_site_id = found_parent_ref.get("siteId", "")
+                found_site_id = found_parent_ref.get("siteId", "") or resolved_site_id
                 found_drive_type = found_parent_ref.get("driveType", "")
                 # Robust endpoint selection for found files
                 if found_drive_type == "personal":
@@ -111,13 +112,13 @@ def search_sharepoint_files(
         Literal["microsoft"],
         list[Literal["Files.Read.All"]],
     ],
-    location: str = "",
+    site_id: SiteIdentifier = SiteIdentifier(value=""),
 ) -> Response[FileList]:
     """
     Search files in the Sharepoint site.
 
     Args:
-        location: "me" or "my files" or the id of the Sharepoint site or empty to search in all sites
+        site_id: SiteIdentifier for the SharePoint site (can be a plain name like 'me', 'my files', a site name, or a full site ID), or empty to search in all sites
         search_text: text to search for, use "*" to search for all files
         token: OAuth2 token to use for the operation
 
@@ -135,10 +136,11 @@ def search_sharepoint_files(
             }
         ]
     }
-    if location.lower() in ["me", "my files", "myfiles"]:
+    site_id_value = site_id.value
+    if site_id_value.lower() in ["me", "my files", "myfiles"]:
         search_payload["requests"][0]["scopes"] = ["/me/drive"]
-    elif location != "":
-        search_payload["requests"][0]["scopes"] = [f"/sites/{location}/drive"]
+    elif site_id_value != "":
+        search_payload["requests"][0]["scopes"] = [f"/sites/{site_id_value}/drive"]
     search_results = send_request(
         "post", "/search/query", "Search files", headers=headers, data=search_payload
     )
@@ -147,8 +149,8 @@ def search_sharepoint_files(
         for result in search_results["value"][0]["hitsContainers"][0]["hits"]:
             parent = result["resource"]["parentReference"]
             id_field = parent["siteId"]
-            site_id = id_field.split(",")[1]
-            site_response = get_sharepoint_site(site_id=site_id, token=token)
+            resolved_site_id = id_field.split(",")[1]
+            site_response = get_sharepoint_site(site_id=SiteIdentifier(value=resolved_site_id), token=token)
             site_name = site_response.result["displayName"]
             filename = result["resource"]["name"]
             fileid = result["resource"]["id"]
@@ -172,13 +174,13 @@ def upload_file_to_sharepoint(
         Literal["microsoft"],
         list[Literal["Files.ReadWrite"]],
     ],
-    location: str = "me",
+    site_id: SiteIdentifier = SiteIdentifier(value="me"),
 ) -> Response[str]:
     """
     Upload a file to the Sharepoint site.
 
     Args:
-        location: "me" or "my files" or the name of the Sharepoint site.
+        site_id: SiteIdentifier for the SharePoint site (can be a plain name like 'me', 'my files', a site name, or a full site ID).
         filename: name of the file.
         token: OAuth2 token to use for the operation.
 
@@ -193,24 +195,25 @@ def upload_file_to_sharepoint(
     chat_file_content = chat.get_file_content(filename)
     filesize = len(chat_file_content)
 
-    if location.lower() in ["me", "my files", "myfiles"]:
+    site_id_value = site_id.value
+    if site_id_value.lower() in ["me", "my files", "myfiles"]:
         upload_url = f"{BASE_GRAPH_URL}/me/drive/root:/{filename}:/content"
         upload_session_url = (
             f"{BASE_GRAPH_URL}/me/drive/root:/{filename}:/createUploadSession"
         )
     else:
-        response = search_for_site(location, token)
+        response = search_for_site(site_id_value, token)
         sites = response.result["value"]
         if len(sites) == 0:
-            raise ActionError(f"Site {location} not found")
+            raise ActionError(f"Site {site_id_value} not found")
         elif len(sites) > 1:
-            raise ActionError(f"Multiple sites with name {location} found")
+            raise ActionError(f"Multiple sites with name {site_id_value} found")
         id_field = sites[0]["id"]
-        site_id = id_field.split(",")[1]
+        resolved_site_id = id_field.split(",")[1]
         upload_url = (
-            f"{BASE_GRAPH_URL}/sites/{site_id}/drive/root:/{filename}:/content"
+            f"{BASE_GRAPH_URL}/sites/{resolved_site_id}/drive/root:/{filename}:/content"
         )
-        upload_session_url = f"{BASE_GRAPH_URL}/sites/{site_id}/drive/root:/{filename}:/createUploadSession"
+        upload_session_url = f"{BASE_GRAPH_URL}/sites/{resolved_site_id}/drive/root:/{filename}:/createUploadSession"
     headers.update({"Content-Type": "application/octet-stream"})
     if filesize <= 4000000:  # 4MB
         upload_response = sema4ai_http.put(

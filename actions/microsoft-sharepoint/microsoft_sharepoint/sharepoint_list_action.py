@@ -11,7 +11,7 @@ from microsoft_sharepoint.sharepoint_site_action import (
     get_sharepoint_site,
     _get_my_site,
 )
-from microsoft_sharepoint.models import SharepointList, SharepointListItem, ListItem
+from microsoft_sharepoint.models import SharepointList, SharepointListItem, ListItem, SiteIdentifier
 from microsoft_sharepoint.support import (
     build_headers,
     send_request,
@@ -25,42 +25,36 @@ def get_sharepoint_lists(
         Literal["microsoft"],
         list[Literal["Sites.Read.All"]],
     ],
-    site_id: str = "",
-    site_name: str = "",
+    site: SiteIdentifier = SiteIdentifier(),
 ) -> Response[dict]:
     """
     Get lists of the Sharepoint site by site id or site name.
 
-    Use terms 'me', 'my lists', 'mylists', 'my site', 'mysite' to get lists of the user's site.
-
-    Use 'site_id' every time it is available.
-
     Args:
-        site_id: id of the Sharepoint site.
-        site_name: name of the Sharepoint site.
+        site: SiteIdentifier – The SharePoint site to operate on. Provide either site_id or site_name.
         token: OAuth2 token to use for the operation.
 
     Returns:
         Lists of the Sharepoint site
     """
-    if not site_id and not site_name:
+    if not site.site_id and not site.site_name:
         raise ActionError("Either site_id or site_name must be provided")
     headers = build_headers(token)
     mysite = _get_my_site(token)
-    if len(site_id) > 0:
-        if site_id == mysite["id"]:
+    if site.site_id:
+        if site.site_id == mysite["id"]:
             site_name = "My Site"
         else:
-            site = get_sharepoint_site(site_id=site_id, token=token)
-            site_name = site.result["name"]
-        lists = _get_lists(site_id, headers)
-    elif site_name.lower() in ["me", "my lists", "mylists", "my site", "mysite"]:
+            site_resp = get_sharepoint_site(site=site, token=token)
+            site_name = site_resp.result["name"]
+        lists = _get_lists(site.site_id, headers)
+    elif site.site_name.lower() in ["me", "my lists", "mylists", "my site", "mysite"]:
         site_name = "My Site"
         lists = _get_lists(mysite["id"], headers)
     else:
-        response = get_sharepoint_site(site_name=site_name, token=token)
-        site_id = response.result["id"]
-        lists = _get_lists(site_id, headers)
+        resp = get_sharepoint_site(site=site, token=token)
+        resolved_site_id = resp.result["id"]
+        lists = _get_lists(resolved_site_id, headers)
     return Response(
         result={"value": {"list_name": f"Lists for {site_name}", "lists": lists}}
     )
@@ -135,31 +129,28 @@ def create_sharepoint_list(
         Literal["microsoft"],
         list[Literal["Sites.Manage.All"]],
     ],
-    site_name: str = "",
-    site_id: str = "",
+    site: SiteIdentifier = SiteIdentifier(),
 ) -> Response[dict]:
     """
     Create list in the Sharepoint site by site id or site name.
 
-    Unless specified the column type is by default 'text'.
-
     Args:
         sharepoint_list: name of the list and columns to create.
-        site_name: name of the Sharepoint site.
-        site_id: id of the Sharepoint site.
+        site: SiteIdentifier – The SharePoint site to operate on. Provide either site_id or site_name.
         token: OAuth2 token to use for the operation.
 
     Returns:
         Result of the operation
     """
     print(f"GOT: {sharepoint_list}")
-    if not site_id and not site_name:
+    if not site.site_id and not site.site_name:
         raise ActionError("Either site_id or site_name must be provided")
     headers = build_headers(token)
-    if site_name:
-        response = get_sharepoint_site(site_name=site_name, token=token)
-        site_id = response.result["id"]
-    site_id = site_id if len(site_id.split(",")) == 1 else site_id.split(",")[1]
+    if site.site_id:
+        resolved_site_id = site.site_id if len(site.site_id.split(",")) == 1 else site.site_id.split(",")[1]
+    else:
+        response = get_sharepoint_site(site=site, token=token)
+        resolved_site_id = response.result["id"]
     data = {
         "displayName": sharepoint_list.list_name,
         "description": sharepoint_list.description,
@@ -169,7 +160,7 @@ def create_sharepoint_list(
     for column in sharepoint_list.columns:
         data["columns"].append({"name": column.column_name, column.column_type: {}})
     response_json = send_request(
-        "post", f"/sites/{site_id}/lists", "Create list", headers=headers, data=data
+        "post", f"/sites/{resolved_site_id}/lists", "Create list", headers=headers, data=data
     )
     return Response(result=response_json)
 
@@ -181,8 +172,7 @@ def add_sharepoint_list_item(
         Literal["microsoft"],
         list[Literal["Sites.Manage.All"]],
     ],
-    site_id: str = "",
-    site_name: str = "",
+    site: SiteIdentifier = SiteIdentifier(),
     list_id: str = "",
     list_name: str = "",
 ) -> Response[dict]:
@@ -191,8 +181,7 @@ def add_sharepoint_list_item(
 
     Args:
         new_item: The item to add (fields as dict).
-        site_id: ID of the SharePoint site.
-        site_name: Name of the SharePoint site.
+        site: SiteIdentifier – The SharePoint site to operate on. Provide either site_id or site_name.
         list_id: ID of the SharePoint list.
         list_name: Name of the SharePoint list.
         token: OAuth2 token to use for the operation.
@@ -200,27 +189,28 @@ def add_sharepoint_list_item(
     Returns:
         Result of the operation
     """
-    if not site_id and not site_name:
+    if not site.site_id and not site.site_name:
         raise ActionError("Either site_id or site_name must be provided")
     if not new_item.fields:
         raise ActionError("Cannot create an empty list item. At least one field must be provided.")
     headers = build_headers(token)
-    if site_name and not site_id:
-        response = get_sharepoint_site(site_name=site_name, token=token)
-        site_id = response.result["id"]
-    site_id = site_id if len(site_id.split(",")) == 1 else site_id.split(",")[1]
+    if site.site_id:
+        resolved_site_id = site.site_id if len(site.site_id.split(",")) == 1 else site.site_id.split(",")[1]
+    else:
+        response = get_sharepoint_site(site=site, token=token)
+        resolved_site_id = response.result["id"]
     if not list_id and list_name:
-        found = _find_list_by_name(site_id, headers, list_name)
+        found = _find_list_by_name(resolved_site_id, headers, list_name)
         if not found:
             raise ActionError(f"List '{list_name}' not found")
         list_id = found["id"]
     if not list_id:
         raise ActionError("Either list_id or list_name must be provided")
-    columns = _get_list_fields(site_id, list_id, headers)
+    columns = _get_list_fields(resolved_site_id, list_id, headers)
     data = {"fields": _map_fields_to_list_columns(new_item.fields, columns)}
     response_json = send_request(
         "post",
-        f"/sites/{site_id}/lists/{list_id}/items",
+        f"/sites/{resolved_site_id}/lists/{list_id}/items",
         "Add list item",
         headers=headers,
         data=data,
@@ -235,8 +225,7 @@ def update_sharepoint_list_item(
         Literal["microsoft"],
         list[Literal["Sites.Manage.All"]],
     ],
-    site_id: str = "",
-    site_name: str = "",
+    site: SiteIdentifier = SiteIdentifier(),
     list_id: str = "",
     list_name: str = "",
 ) -> Response[dict]:
@@ -245,8 +234,7 @@ def update_sharepoint_list_item(
 
     Args:
         update_item: The item to update (must include item_id and fields).
-        site_id: ID of the SharePoint site.
-        site_name: Name of the SharePoint site.
+        site: SiteIdentifier – The SharePoint site to operate on. Provide either site_id or site_name.
         list_id: ID of the SharePoint list.
         list_name: Name of the SharePoint list.
         token: OAuth2 token to use for the operation.
@@ -256,26 +244,27 @@ def update_sharepoint_list_item(
     """
     if not update_item.item_id:
         raise ActionError("item_id must be provided in the item")
-    if not site_id and not site_name:
+    if not site.site_id and not site.site_name:
         raise ActionError("Either site_id or site_name must be provided")
     headers = build_headers(token)
-    if site_name and not site_id:
-        response = get_sharepoint_site(site_name=site_name, token=token)
-        site_id = response.result["id"]
-    site_id = site_id if len(site_id.split(",")) == 1 else site_id.split(",")[1]
+    if site.site_id:
+        resolved_site_id = site.site_id if len(site.site_id.split(",")) == 1 else site.site_id.split(",")[1]
+    else:
+        response = get_sharepoint_site(site=site, token=token)
+        resolved_site_id = response.result["id"]
     if not list_id and list_name:
-        found = _find_list_by_name(site_id, headers, list_name)
+        found = _find_list_by_name(resolved_site_id, headers, list_name)
         if not found:
             raise ActionError(f"List '{list_name}' not found")
         list_id = found["id"]
     if not list_id:
         raise ActionError("Either list_id or list_name must be provided")
 
-    columns = _get_list_fields(site_id, list_id, headers)
+    columns = _get_list_fields(resolved_site_id, list_id, headers)
     data = {"fields": _map_fields_to_list_columns(update_item.fields.fields, columns)}
     response_json = send_request(
         "patch",
-        f"/sites/{site_id}/lists/{list_id}/items/{update_item.item_id}",
+        f"/sites/{resolved_site_id}/lists/{list_id}/items/{update_item.item_id}",
         "Update list item",
         headers=headers,
         data=data,
@@ -290,8 +279,7 @@ def delete_sharepoint_list_item(
         Literal["microsoft"],
         list[Literal["Sites.Manage.All"]],
     ],
-    site_id: str = "",
-    site_name: str = "",
+    site: SiteIdentifier = SiteIdentifier(),
     list_id: str = "",
     list_name: str = "",
 ) -> Response[dict]:
@@ -300,8 +288,7 @@ def delete_sharepoint_list_item(
 
     Args:
         item_id: ID of the item to delete.
-        site_id: ID of the SharePoint site.
-        site_name: Name of the SharePoint site.
+        site: SiteIdentifier – The SharePoint site to operate on. Provide either site_id or site_name.
         list_id: ID of the SharePoint list.
         list_name: Name of the SharePoint list.
         token: OAuth2 token to use for the operation.
@@ -311,15 +298,16 @@ def delete_sharepoint_list_item(
     """
     if not item_id:
         raise ActionError("item_id must be provided")
-    if not site_id and not site_name:
+    if not site.site_id and not site.site_name:
         raise ActionError("Either site_id or site_name must be provided")
     headers = build_headers(token)
-    if site_name and not site_id:
-        response = get_sharepoint_site(site_name=site_name, token=token)
-        site_id = response.result["id"]
-    site_id = site_id if len(site_id.split(",")) == 1 else site_id.split(",")[1]
+    if site.site_id:
+        resolved_site_id = site.site_id if len(site.site_id.split(",")) == 1 else site.site_id.split(",")[1]
+    else:
+        response = get_sharepoint_site(site=site, token=token)
+        resolved_site_id = response.result["id"]
     if not list_id and list_name:
-        found = _find_list_by_name(site_id, headers, list_name)
+        found = _find_list_by_name(resolved_site_id, headers, list_name)
         if not found:
             raise ActionError(f"List '{list_name}' not found")
         list_id = found["id"]
@@ -329,7 +317,7 @@ def delete_sharepoint_list_item(
     try:
         response_json = send_request(
             "delete",
-            f"/sites/{site_id}/lists/{list_id}/items/{item_id}",
+            f"/sites/{resolved_site_id}/lists/{list_id}/items/{item_id}",
             "Delete list item",
             headers=headers,
         )
@@ -344,8 +332,7 @@ def get_sharepoint_list_items(
         Literal["microsoft"],
         list[Literal["Sites.Read.All"]],
     ],
-    site_id: str = "",
-    site_name: str = "",
+    site: SiteIdentifier = SiteIdentifier(),
     list_id: str = "",
     list_name: str = "",
     top: int = 100,
@@ -354,8 +341,7 @@ def get_sharepoint_list_items(
     Get items from a SharePoint list by site and list id or name.
 
     Args:
-        site_id: ID of the SharePoint site.
-        site_name: Name of the SharePoint site.
+        site: SiteIdentifier – The SharePoint site to operate on. Provide either site_id or site_name.
         list_id: ID of the SharePoint list.
         list_name: Name of the SharePoint list.
         token: OAuth2 token to use for the operation.
@@ -364,15 +350,16 @@ def get_sharepoint_list_items(
     Returns:
         List of items in the SharePoint list
     """
-    if not site_id and not site_name:
+    if not site.site_id and not site.site_name:
         raise ActionError("Either site_id or site_name must be provided")
     headers = build_headers(token)
-    if site_name and not site_id:
-        response = get_sharepoint_site(site_name=site_name, token=token)
-        site_id = response.result["id"]
-    site_id = site_id if len(site_id.split(",")) == 1 else site_id.split(",")[1]
+    if site.site_id:
+        resolved_site_id = site.site_id if len(site.site_id.split(",")) == 1 else site.site_id.split(",")[1]
+    else:
+        response = get_sharepoint_site(site=site, token=token)
+        resolved_site_id = response.result["id"]
     if not list_id and list_name:
-        found = _find_list_by_name(site_id, headers, list_name)
+        found = _find_list_by_name(resolved_site_id, headers, list_name)
         if not found:
             raise ActionError(f"List '{list_name}' not found")
         list_id = found["id"]
@@ -381,7 +368,7 @@ def get_sharepoint_list_items(
     params = {"$top": top, "$expand": "fields"}
     response_json = send_request(
         "get",
-        f"/sites/{site_id}/lists/{list_id}/items",
+        f"/sites/{resolved_site_id}/lists/{list_id}/items",
         "Get list items",
         headers=headers,
         params=params,

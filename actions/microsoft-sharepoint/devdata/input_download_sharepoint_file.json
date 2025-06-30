@@ -15,7 +15,9 @@
                         }
                     ]
                 },
-                "site_id": "beissi.sharepoint.com,0f2808b8-9f27-4ce1-8fea-c853e4b75e7c,5e406ba3-49a6-424c-bed2-d4cbb1d9af72",
+                "site_id": {
+                    "value": "beissi.sharepoint.com,0f2808b8-9f27-4ce1-8fea-c853e4b75e7c,5e406ba3-49a6-424c-bed2-d4cbb1d9af72"
+                },
                 "attach": true,
                 "vscode:request:oauth2": {
                     "token": {
@@ -43,7 +45,9 @@
                         }
                     ]
                 },
-                "site_id": "beissi.sharepoint.com,0f2808b8-9f27-4ce1-8fea-c853e4b75e7c,5e406ba3-49a6-424c-bed2-d4cbb1d9af72",
+                "site_id": {
+                    "value": "beissi.sharepoint.com,0f2808b8-9f27-4ce1-8fea-c853e4b75e7c,5e406ba3-49a6-424c-bed2-d4cbb1d9af72"
+                },
                 "attach": true,
                 "vscode:request:oauth2": {
                     "token": {

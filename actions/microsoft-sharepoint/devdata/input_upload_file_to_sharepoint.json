@@ -1,10 +1,12 @@
 {
     "inputs": [
         {
-            "inputName": "input-1",
+            "inputName": "upload file to sharepoint",
             "inputValue": {
                 "filename": "Playwright and Locator training.pdf",
-                "location": "me",
+                "site_id": {
+                    "value": "me"
+                },
                 "vscode:request:oauth2": {
                     "token": {
                         "type": "OAuth2Secret",
@@ -23,7 +25,7 @@
         "actionRelativePath": "microsoft_sharepoint/sharepoint_file_action.py",
         "schemaDescription": [
             "filename: string: name of the file.",
-            "location: string: \"me\" or \"my files\" or the name of the Sharepoint site."
+            "site_id: string: \"me\" or \"my files\" or the name of the Sharepoint site."
         ],
         "managedParamsSchemaDescription": {
             "token": {
@@ -37,6 +39,6 @@
         },
         "inputFileVersion": "v3",
         "kind": "action",
-        "actionSignature": "action/args: \"filename: str, token: OAuth2Secret[Literal['microsoft'], list[Literal['Files.ReadWrite']]], location: str='me'\""
+        "actionSignature": "action/args: \"filename: str, token: OAuth2Secret[Literal['microsoft'], list[Literal['Files.ReadWrite']]], site_id: str='me'\""
     }
 }

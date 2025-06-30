@@ -46,3 +46,13 @@ class ListItem(BaseModel):
 class SharepointListItem(BaseModel):
     item_id: str = Field(description="ID of the list item", default="")
     fields: ListItem = Field(description="Field values for the list item")
+
+class SiteIdentifier(BaseModel):
+    """
+    Identifier for a SharePoint site. Can be:
+    - A full Microsoft site ID (as returned by other actions)
+    - A plain name (e.g., 'my files', 'me', or the name of the site)
+    Provide either site_id or site_name.
+    """
+    site_id: str = Field("", description="The unique Microsoft site ID, if known.")
+    site_name: str = Field("", description="The human-readable name of the site, if known.")

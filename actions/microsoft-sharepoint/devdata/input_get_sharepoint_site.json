@@ -1,10 +1,12 @@
 {
     "inputs": [
         {
-            "inputName": "input-1",
+            "inputName": "get site info",
             "inputValue": {
-                "site_id": "",
-                "site_name": "filesharing",
+                "site": {
+                    "site_id": "",
+                    "site_name": "filesharing"
+                },
                 "vscode:request:oauth2": {
                     "token": {
                         "type": "OAuth2Secret",
@@ -13,6 +15,63 @@
                             "Sites.Read.All"
                         ],
                         "access_token": "<access-token-will-be-requested-by-vscode>"
+                    }
+                }
+            }
+        },
+        {
+            "inputName": "site_id only",
+            "inputValue": {
+                "site": {
+                    "site_id": "abc123",
+                    "site_name": ""
+                },
+                "vscode:request:oauth2": {
+                    "token": {
+                        "type": "OAuth2Secret",
+                        "provider": "microsoft",
+                        "scopes": [
+                            "Sites.Read.All"
+                        ],
+                        "access_token": "<access-token>"
+                    }
+                }
+            }
+        },
+        {
+            "inputName": "site_name only",
+            "inputValue": {
+                "site": {
+                    "site_id": "",
+                    "site_name": "Test Site"
+                },
+                "vscode:request:oauth2": {
+                    "token": {
+                        "type": "OAuth2Secret",
+                        "provider": "microsoft",
+                        "scopes": [
+                            "Sites.Read.All"
+                        ],
+                        "access_token": "<access-token>"
+                    }
+                }
+            }
+        },
+        {
+            "inputName": "site_id and site_name",
+            "inputValue": {
+                "site": {
+                    "site_id": "abc123",
+                    "site_name": "Test Site"
+                },
+                "vscode:request:oauth2": {
+                    "token": {
+                        "type": "OAuth2Secret",
+                        "provider": "microsoft",
+                        "scopes": [
+                            "Sites.Read.All"
+                        ],
+                        "access_token": "<access-token>"
                     }
                 }
             }

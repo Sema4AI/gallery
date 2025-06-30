@@ -1,10 +1,12 @@
 {
     "inputs": [
         {
-            "inputName": "input-1",
+            "inputName": "search files by text",
             "inputValue": {
                 "search_text": "filetype:yaml",
-                "location": "",
+                "site_id": {
+                    "value": ""
+                },
                 "vscode:request:oauth2": {
                     "token": {
                         "type": "OAuth2Secret",
@@ -23,7 +25,7 @@
         "actionRelativePath": "microsoft_sharepoint/sharepoint_file_action.py",
         "schemaDescription": [
             "search_text: string: text to search for, use \"*\" to search for all files",
-            "location: string: \"me\" or \"my files\" or the id of the Sharepoint site or empty to search in all sites"
+            "site_id: string: \"me\" or \"my files\" or the id of the Sharepoint site or empty to search in all sites"
         ],
         "managedParamsSchemaDescription": {
             "token": {
@@ -37,6 +39,6 @@
         },
         "inputFileVersion": "v3",
         "kind": "action",
-        "actionSignature": "action/args: \"search_text: str, token: OAuth2Secret[Literal['microsoft'], list[Literal['Files.Read.All']]], location: str=''\""
+        "actionSignature": "action/args: \"search_text: str, token: OAuth2Secret[Literal['microsoft'], list[Literal['Files.Read.All']]], site_id: str=''\""
     }
 }

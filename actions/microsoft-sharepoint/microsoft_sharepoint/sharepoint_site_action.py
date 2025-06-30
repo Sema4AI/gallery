@@ -13,6 +13,7 @@ from microsoft_sharepoint.support import (
     send_request,
 )
 import re
+from microsoft_sharepoint.models import SiteIdentifier
 
 
 @action
@@ -61,41 +62,38 @@ def get_sharepoint_site(
         Literal["microsoft"],
         list[Literal["Sites.Read.All"]],
     ],
-    site_id: str = "",
-    site_name: str = "",
+    site: SiteIdentifier = SiteIdentifier(),
 ) -> Response[dict]:
     """
     Get the Sharepoint site either by id or by name.
 
     Args:
-        site_id: id of the Sharepoint site.
-        site_name: name of the Sharepoint site.
+        site: SiteIdentifier – The SharePoint site to operate on. Provide either site_id or site_name.
         token: OAuth2 token to use for the operation.
 
     Returns:
         Site details or error message
     """
-    if not site_id and not site_name:
+    if not site.site_id and not site.site_name:
         raise ActionError("Either site_id or site_name must be provided")
-    if site_id != "":
-        pass
-    elif site_name.lower() in ["me", "my site", "mysite"]:
+    if site.site_id:
+        resolved_site_id = site.site_id
+    elif site.site_name.lower() in ["me", "my site", "mysite"]:
         mysite = _get_my_site(token)
-        site_id = mysite["id"]
+        resolved_site_id = mysite["id"]
     else:
-        response = search_for_site(search_string=site_name, token=token)
-        # Filter results case-insensitively
-        matches = [site for site in response.result["value"] if site["displayName"].lower() == site_name.lower()]
+        response = search_for_site(search_string=site.site_name, token=token)
+        matches = [s for s in response.result["value"] if s["displayName"].lower() == site.site_name.lower()]
         if len(matches) > 1:
-            raise ActionError(f"Multiple sites with the same name '{site_name}' found.")
+            raise ActionError(f"Multiple sites with the same name '{site.site_name}' found.")
         elif len(matches) == 0:
-            raise ActionError(f"No site found with the given name '{site_name}'.")
+            raise ActionError(f"No site found with the given name '{site.site_name}'.")
         else:
-            site_id = matches[0]["id"]
-    site_id = site_id if len(site_id.split(",")) == 1 else site_id.split(",")[1]
+            resolved_site_id = matches[0]["id"]
+    resolved_site_id = resolved_site_id if len(resolved_site_id.split(",")) == 1 else resolved_site_id.split(",")[1]
     headers = build_headers(token)
     response_json = send_request(
-        "get", f"/sites/{site_id}", "Get site", headers=headers
+        "get", f"/sites/{resolved_site_id}", "Get site", headers=headers
     )
     return Response(result=response_json)
 

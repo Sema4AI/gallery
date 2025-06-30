@@ -1,11 +1,13 @@
 {
     "inputs": [
         {
-            "inputName": "input-1",
+            "inputName": "delete list item",
             "inputValue": {
                 "item_id": "16",
-                "site_id": "",
-                "site_name": "Communication site",
+                "site": {
+                    "site_id": "",
+                    "site_name": "Communication site"
+                },
                 "list_id": "",
                 "list_name": "Issue tracker",
                 "vscode:request:oauth2": {
@@ -16,6 +18,72 @@
                             "Sites.Manage.All"
                         ],
                         "access_token": "<access-token-will-be-requested-by-vscode>"
+                    }
+                }
+            }
+        },
+        {
+            "inputName": "site_id only",
+            "inputValue": {
+                "item_id": "1",
+                "site": {
+                    "site_id": "abc123",
+                    "site_name": ""
+                },
+                "list_id": "listid1",
+                "list_name": "",
+                "vscode:request:oauth2": {
+                    "token": {
+                        "type": "OAuth2Secret",
+                        "provider": "microsoft",
+                        "scopes": [
+                            "Sites.Manage.All"
+                        ],
+                        "access_token": "<access-token>"
+                    }
+                }
+            }
+        },
+        {
+            "inputName": "site_name only",
+            "inputValue": {
+                "item_id": "1",
+                "site": {
+                    "site_id": "",
+                    "site_name": "Test Site"
+                },
+                "list_id": "listid1",
+                "list_name": "",
+                "vscode:request:oauth2": {
+                    "token": {
+                        "type": "OAuth2Secret",
+                        "provider": "microsoft",
+                        "scopes": [
+                            "Sites.Manage.All"
+                        ],
+                        "access_token": "<access-token>"
+                    }
+                }
+            }
+        },
+        {
+            "inputName": "site_id and site_name",
+            "inputValue": {
+                "item_id": "1",
+                "site": {
+                    "site_id": "abc123",
+                    "site_name": "Test Site"
+                },
+                "list_id": "listid1",
+                "list_name": "",
+                "vscode:request:oauth2": {
+                    "token": {
+                        "type": "OAuth2Secret",
+                        "provider": "microsoft",
+                        "scopes": [
+                            "Sites.Manage.All"
+                        ],
+                        "access_token": "<access-token>"
                     }
                 }
             }

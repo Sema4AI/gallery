@@ -1,7 +1,7 @@
 {
     "inputs": [
         {
-            "inputName": "input-1",
+            "inputName": "get all sharepoint sites",
             "inputValue": {
                 "vscode:request:oauth2": {
                     "token": {
