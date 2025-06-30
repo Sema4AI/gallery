@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [3.0.0] - 2025-06-30
+
+### Added
+
+- Support for using chat files in SharePoint file actions:
+  - You can now search, download, and upload files using chat file attachments in the SharePoint integration.
+
 ## [2.3.1] - 2025-06-18
 
 - Updated sema4ai-actions version carrying a new version of pydantic
