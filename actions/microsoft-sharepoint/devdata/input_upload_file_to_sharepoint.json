@@ -5,7 +5,7 @@
             "inputValue": {
                 "filename": "Playwright and Locator training.pdf",
                 "site_id": {
-                    "value": "me"
+                    "site_id": "me"
                 },
                 "vscode:request:oauth2": {
                     "token": {
@@ -25,7 +25,8 @@
         "actionRelativePath": "microsoft_sharepoint/sharepoint_file_action.py",
         "schemaDescription": [
             "filename: string: name of the file.",
-            "site_id: string: \"me\" or \"my files\" or the name of the Sharepoint site."
+            "site_id.site_id: string: The unique Microsoft site ID, if known.",
+            "site_id.site_name: string: The human-readable name of the site, if known."
         ],
         "managedParamsSchemaDescription": {
             "token": {
@@ -39,6 +40,6 @@
         },
         "inputFileVersion": "v3",
         "kind": "action",
-        "actionSignature": "action/args: \"filename: str, token: OAuth2Secret[Literal['microsoft'], list[Literal['Files.ReadWrite']]], site_id: str='me'\""
+        "actionSignature": "action/args: \"filename: str, token: OAuth2Secret[Literal['microsoft'], list[Literal['Files.ReadWrite']]], site_id: SiteIdentifier=SiteIdentifier(site_id='me', site_name='')\""
     }
 }

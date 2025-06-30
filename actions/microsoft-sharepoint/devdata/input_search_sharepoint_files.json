@@ -1,11 +1,92 @@
 {
     "inputs": [
         {
-            "inputName": "search files by text",
+            "inputName": "search files by text (empty site_id)",
             "inputValue": {
                 "search_text": "filetype:yaml",
-                "site_id": {
-                    "value": ""
+                "site": {
+                    "site_id": "",
+                    "site_name": ""
+                },
+                "vscode:request:oauth2": {
+                    "token": {
+                        "type": "OAuth2Secret",
+                        "provider": "microsoft",
+                        "scopes": [
+                            "Files.Read.All"
+                        ],
+                        "access_token": "<access-token-will-be-requested-by-vscode>"
+                    }
+                }
+            }
+        },
+        {
+            "inputName": "search files by text (valid site_id GUID)",
+            "inputValue": {
+                "search_text": "project",
+                "site": {
+                    "site_id": "12345678-1234-1234-1234-1234567890ab",
+                    "site_name": ""
+                },
+                "vscode:request:oauth2": {
+                    "token": {
+                        "type": "OAuth2Secret",
+                        "provider": "microsoft",
+                        "scopes": [
+                            "Files.Read.All"
+                        ],
+                        "access_token": "<access-token-will-be-requested-by-vscode>"
+                    }
+                }
+            }
+        },
+        {
+            "inputName": "search files by text (site_name only)",
+            "inputValue": {
+                "search_text": "report",
+                "site": {
+                    "site_id": "",
+                    "site_name": "My Site"
+                },
+                "vscode:request:oauth2": {
+                    "token": {
+                        "type": "OAuth2Secret",
+                        "provider": "microsoft",
+                        "scopes": [
+                            "Files.Read.All"
+                        ],
+                        "access_token": "<access-token-will-be-requested-by-vscode>"
+                    }
+                }
+            }
+        },
+        {
+            "inputName": "search files by text (both site_id and site_name)",
+            "inputValue": {
+                "search_text": "presentation",
+                "site": {
+                    "site_id": "12345678-1234-1234-1234-1234567890ab",
+                    "site_name": "My Site"
+                },
+                "vscode:request:oauth2": {
+                    "token": {
+                        "type": "OAuth2Secret",
+                        "provider": "microsoft",
+                        "scopes": [
+                            "Files.Read.All"
+                        ],
+                        "access_token": "<access-token-will-be-requested-by-vscode>"
+                    }
+                }
+            }
+        },
+        {
+            "inputName": "search files by text (invalid site_id format)",
+            "inputValue": {
+                "search_text": "budget",
+                "site": {
+                    "site_id": "not-a-valid-site-id",
+                    "site_name": ""
                 },
                 "vscode:request:oauth2": {
                     "token": {
@@ -25,7 +106,8 @@
         "actionRelativePath": "microsoft_sharepoint/sharepoint_file_action.py",
         "schemaDescription": [
             "search_text: string: text to search for, use \"*\" to search for all files",
-            "site_id: string: \"me\" or \"my files\" or the id of the Sharepoint site or empty to search in all sites"
+            "site.site_id: string: The unique Microsoft site ID, if known.",
+            "site.site_name: string: The human-readable name of the site, if known."
         ],
         "managedParamsSchemaDescription": {
             "token": {
@@ -39,6 +121,6 @@
         },
         "inputFileVersion": "v3",
         "kind": "action",
-        "actionSignature": "action/args: \"search_text: str, token: OAuth2Secret[Literal['microsoft'], list[Literal['Files.Read.All']]], site_id: str=''\""
+        "actionSignature": "action/args: \"search_text: str, token: OAuth2Secret[Literal['microsoft'], list[Literal['Files.Read.All']]], site: SiteIdentifier=SiteIdentifier(site_id='', site_name='')\""
     }
 }

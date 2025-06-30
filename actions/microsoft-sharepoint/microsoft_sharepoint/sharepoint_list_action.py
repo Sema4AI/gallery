@@ -46,15 +46,15 @@ def get_sharepoint_lists(
             site_name = "My Site"
         else:
             site_resp = get_sharepoint_site(site=site, token=token)
-            site_name = site_resp.result["name"]
+            site_name = site_resp.result["displayName"]
         lists = _get_lists(site.site_id, headers)
     elif site.site_name.lower() in ["me", "my lists", "mylists", "my site", "mysite"]:
         site_name = "My Site"
         lists = _get_lists(mysite["id"], headers)
     else:
         resp = get_sharepoint_site(site=site, token=token)
-        resolved_site_id = resp.result["id"]
-        lists = _get_lists(resolved_site_id, headers)
+        site_name = resp.result["displayName"]
+        lists = _get_lists(resp.result["id"], headers)
     return Response(
         result={"value": {"list_name": f"Lists for {site_name}", "lists": lists}}
     )

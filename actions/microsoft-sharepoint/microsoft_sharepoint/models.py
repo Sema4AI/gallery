@@ -1,6 +1,7 @@
 from enum import Enum
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 from typing import Dict, Any
+import re
 
 class Location(BaseModel):
     name: str = Field(description="Name of the location", default="")
@@ -56,3 +57,27 @@ class SiteIdentifier(BaseModel):
     """
     site_id: str = Field("", description="The unique Microsoft site ID, if known.")
     site_name: str = Field("", description="The human-readable name of the site, if known.")
+
+    @field_validator("site_id")
+    @classmethod
+    def validate_site_id_format(cls, v):
+        if v == "":
+            return v
+        # Allow special values
+        if v.lower() in ["me", "my files", "myfiles"]:
+            return v
+        guid_regex = r"^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+        ms_format_regex = r"^[^,]+,[0-9a-fA-F\-]+,[0-9a-fA-F\-]+$"
+        if re.match(guid_regex, v) or re.match(ms_format_regex, v):
+            return v
+        raise ValueError(
+            "site_id must be a valid GUID, 'me', 'my files', 'myfiles', or in the format 'hostname,site-id,web-id'"
+        )
+
+    def is_valid_site_id(self):
+        v = self.site_id
+        if v == "":
+            return False
+        guid_regex = r"^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+        ms_format_regex = r"^[^,]+,[0-9a-fA-F\-]+,[0-9a-fA-F\-]+$"
+        return bool(re.match(guid_regex, v) or re.match(ms_format_regex, v))

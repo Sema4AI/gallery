@@ -1,5 +1,5 @@
 # Required: A short name for the action package
-name: Microsoft Sharepoint
+name: Microsoft SharepointX
 
 # Required: A description of what's in the action package.
 description: Work with Sharepoint sites, lists and files.

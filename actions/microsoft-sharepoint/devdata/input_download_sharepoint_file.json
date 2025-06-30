@@ -15,8 +15,9 @@
                         }
                     ]
                 },
-                "site_id": {
-                    "value": "beissi.sharepoint.com,0f2808b8-9f27-4ce1-8fea-c853e4b75e7c,5e406ba3-49a6-424c-bed2-d4cbb1d9af72"
+                "site": {
+                    "site_id": "beissi.sharepoint.com,0f2808b8-9f27-4ce1-8fea-c853e4b75e7c,5e406ba3-49a6-424c-bed2-d4cbb1d9af72",
+                    "site_name": ""
                 },
                 "attach": true,
                 "vscode:request:oauth2": {
@@ -45,8 +46,9 @@
                         }
                     ]
                 },
-                "site_id": {
-                    "value": "beissi.sharepoint.com,0f2808b8-9f27-4ce1-8fea-c853e4b75e7c,5e406ba3-49a6-424c-bed2-d4cbb1d9af72"
+                "site": {
+                    "site_id": "beissi.sharepoint.com,0f2808b8-9f27-4ce1-8fea-c853e4b75e7c,5e406ba3-49a6-424c-bed2-d4cbb1d9af72",
+                    "site_name": ""
                 },
                 "attach": true,
                 "vscode:request:oauth2": {
@@ -72,7 +74,8 @@
             "filelist.files.0.location.name: string: Name of the location",
             "filelist.files.0.location.url: string: URL of the location",
             "filelist.files.0.file: object: File details",
-            "site_id: string: site id to use for the operation",
+            "site.site_id: string: The unique Microsoft site ID, if known.",
+            "site.site_name: string: The human-readable name of the site, if known.",
             "attach: boolean: whether to download all files matching the search criteria"
         ],
         "managedParamsSchemaDescription": {
@@ -87,6 +90,6 @@
         },
         "inputFileVersion": "v3",
         "kind": "action",
-        "actionSignature": "action/args: \"filelist: FileList, token: OAuth2Secret[Literal['microsoft'], list[Literal['Files.Read']]], site_id: str='', attach: bool=False\""
+        "actionSignature": "action/args: \"filelist: FileList, token: OAuth2Secret[Literal['microsoft'], list[Literal['Files.Read']]], site: SiteIdentifier=SiteIdentifier(site_id='', site_name=''), attach: bool=False\""
     }
 }

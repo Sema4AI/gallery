@@ -23,7 +23,7 @@
             "inputName": "site_id only",
             "inputValue": {
                 "site": {
-                    "site_id": "abc123",
+                    "site_id": "ae291e2f-b4ff-4ba6-8937-4a58f7ec5217",
                     "site_name": ""
                 },
                 "vscode:request:oauth2": {
@@ -43,7 +43,7 @@
             "inputValue": {
                 "site": {
                     "site_id": "",
-                    "site_name": "Test Site"
+                    "site_name": "Communication Site"
                 },
                 "vscode:request:oauth2": {
                     "token": {
@@ -61,8 +61,8 @@
             "inputName": "site_id and site_name",
             "inputValue": {
                 "site": {
-                    "site_id": "abc123",
-                    "site_name": "Test Site"
+                    "site_id": "ae291e2f-b4ff-4ba6-8937-4a58f7ec5217",
+                    "site_name": "filesharing"
                 },
                 "vscode:request:oauth2": {
                     "token": {
