@@ -1,13 +1,50 @@
 {
     "inputs": [
         {
-            "inputName": "input-1",
+            "inputName": "single file with id and name",
             "inputValue": {
-                "filename": "yaml",
-                "site_id": "",
-                "location": "",
-                "target_folder": "./test",
-                "download_all_matching": true,
+                "filelist": {
+                    "files": [
+                        {
+                            "file_id": "01SC65K3QWRVF3HNIWTVHYC3RPFVGJ5VHP",
+                            "name": "Playwright and Locator training.pdf",
+                            "location": {
+                                "name": "Mika Hänninen",
+                                "url": "https://beissi-my.sharepoint.com/personal/mika_beissi_onmicrosoft_com/Documents/Playwright and Locator training.pdf"
+                            }
+                        }
+                    ]
+                },
+                "site_id": "beissi.sharepoint.com,0f2808b8-9f27-4ce1-8fea-c853e4b75e7c,5e406ba3-49a6-424c-bed2-d4cbb1d9af72",
+                "attach": true,
+                "vscode:request:oauth2": {
+                    "token": {
+                        "type": "OAuth2Secret",
+                        "provider": "microsoft",
+                        "scopes": [
+                            "Files.Read"
+                        ],
+                        "access_token": "<access-token-will-be-requested-by-vscode>"
+                    }
+                }
+            }
+        },
+        {
+            "inputName": "single file with name",
+            "inputValue": {
+                "filelist": {
+                    "files": [
+                        {
+                            "name": "Playwright and Locator training.pdf",
+                            "location": {
+                                "name": "Mika Hänninen",
+                                "url": "https://beissi-my.sharepoint.com/personal/mika_beissi_onmicrosoft_com/Documents/Playwright and Locator training.pdf"
+                            }
+                        }
+                    ]
+                },
+                "site_id": "beissi.sharepoint.com,0f2808b8-9f27-4ce1-8fea-c853e4b75e7c,5e406ba3-49a6-424c-bed2-d4cbb1d9af72",
+                "attach": true,
                 "vscode:request:oauth2": {
                     "token": {
                         "type": "OAuth2Secret",
@@ -25,11 +62,14 @@
         "actionName": "download_sharepoint_file",
         "actionRelativePath": "microsoft_sharepoint/sharepoint_file_action.py",
         "schemaDescription": [
-            "filename: string: name of the file to download (including the path)",
-            "site_id: string",
-            "location: string: \"me\" or \"my files\" or the name of the Sharepoint site or empty to search in all sites",
-            "target_folder: string: folder to download the file to",
-            "download_all_matching: boolean"
+            "filelist.files: array: List of files",
+            "filelist.files.0.file_id: string: ID of the file",
+            "filelist.files.0.name: string: Name of the file",
+            "filelist.files.0.location.name: string: Name of the location",
+            "filelist.files.0.location.url: string: URL of the location",
+            "filelist.files.0.file: object: File details",
+            "site_id: string: site id to use for the operation",
+            "attach: boolean: whether to download all files matching the search criteria"
         ],
         "managedParamsSchemaDescription": {
             "token": {
@@ -43,6 +83,6 @@
         },
         "inputFileVersion": "v3",
         "kind": "action",
-        "actionSignature": "action/args: \"filename: str, token: OAuth2Secret[Literal['microsoft'], list[Literal['Files.Read']]], site_id: str='', location: str='', target_folder: str='', download_all_matching: bool=False\""
+        "actionSignature": "action/args: \"filelist: FileList, token: OAuth2Secret[Literal['microsoft'], list[Literal['Files.Read']]], site_id: str='', attach: bool=False\""
     }
 }

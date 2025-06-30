@@ -12,6 +12,7 @@ from microsoft_sharepoint.support import (
     build_headers,
     send_request,
 )
+import re
 
 
 @action
@@ -23,16 +24,31 @@ def search_for_site(
     ],
 ) -> Response[dict]:
     """
-    Search for a Sharepoint site by name.
+    Search for a Sharepoint site by name or by domain/hostname.
 
     Args:
-        search_string: name of the Sharepoint site.
+        search_string: name of the Sharepoint site or hostname (e.g. 'beissi-my.sharepoint.com').
         token: OAuth2 token to use for the operation.
 
     Returns:
         Site details including the site id or error message
     """
     headers = build_headers(token)
+    # If the input looks like a domain, use the /sites/{hostname}:/ endpoint
+    if re.match(r"^[a-zA-Z0-9.-]+\.sharepoint\.com$", search_string.strip()):
+        hostname = search_string.strip()
+        try:
+            site = send_request(
+                "get",
+                f"/sites/{hostname}:/",
+                f"Get site by hostname: {hostname}",
+                headers=headers,
+            )
+            # Return in the same format as the search endpoint
+            return Response(result={"value": [site]})
+        except Exception as e:
+            return Response(result={"value": []})
+    # Otherwise, use the search endpoint
     response_json = send_request(
         "get", f"/sites?search={search_string}", "Search for site", headers=headers
     )

@@ -8,6 +8,8 @@ class Location(BaseModel):
 
 
 class File(BaseModel):
+    file_id: str = Field(description="ID of the file", default="")
+    name: str = Field(description="Name of the file", default="")
     location: Location = Field(description="Location details")
     file: Dict = Field(description="File details", default={})
 
