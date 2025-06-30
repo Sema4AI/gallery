@@ -75,8 +75,6 @@ def download_sharepoint_file(
                 chat.attach_file_content(name=item_file_name, data=download_r.data)
             downloaded_files.append(item_file_name)
         elif name:
-            # Search for the file by name
-            from microsoft_sharepoint.sharepoint_file_action import search_sharepoint_files
             search_resp = search_sharepoint_files(search_text=name, token=token, site=resolved_site_id)
             found_files = [f for f in search_resp.result.files if (getattr(f, "name", None) or f.file.get("name")) == name]
             if not found_files:

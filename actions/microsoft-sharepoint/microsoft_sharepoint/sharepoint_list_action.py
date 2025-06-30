@@ -18,6 +18,8 @@ from microsoft_sharepoint.support import (
     NotFound,
 )
 
+SPECIAL_LIST_NAMES = ["me", "my lists", "mylists", "my site", "mysite"]
+
 
 @action
 def get_sharepoint_lists(
@@ -48,7 +50,7 @@ def get_sharepoint_lists(
             site_resp = get_sharepoint_site(site=site, token=token)
             site_name = site_resp.result["displayName"]
         lists = _get_lists(site.site_id, headers)
-    elif site.site_name.lower() in ["me", "my lists", "mylists", "my site", "mysite"]:
+    elif site.site_name.lower() in SPECIAL_LIST_NAMES:
         site_name = "My Site"
         lists = _get_lists(mysite["id"], headers)
     else:
@@ -142,7 +144,6 @@ def create_sharepoint_list(
     Returns:
         Result of the operation
     """
-    print(f"GOT: {sharepoint_list}")
     if not site.site_id and not site.site_name:
         raise ActionError("Either site_id or site_name must be provided")
     headers = build_headers(token)

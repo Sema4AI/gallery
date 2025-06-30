@@ -15,6 +15,8 @@ from microsoft_sharepoint.support import (
 import re
 from microsoft_sharepoint.models import SiteIdentifier
 
+SPECIAL_SITE_NAMES = ["me", "my site", "mysite"]
+
 
 @action
 def search_for_site(
@@ -78,7 +80,7 @@ def get_sharepoint_site(
         raise ActionError("Either site_id or site_name must be provided")
     if site.site_id:
         resolved_site_id = site.site_id
-    elif site.site_name.lower() in ["me", "my site", "mysite"]:
+    elif site.site_name.lower() in SPECIAL_SITE_NAMES:
         mysite = _get_my_site(token)
         resolved_site_id = mysite["id"]
     else:
