@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+### [4.0.4] - 2025-07-01
+
+- Add backwards compatibility with older Studio versions
+
 ## [4.0.3] - 2025-06-18
 
 - Updated sema4ai-actions version carrying a new version of pydantic
