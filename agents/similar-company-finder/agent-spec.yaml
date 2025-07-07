@@ -1,5 +1,28 @@
 agent-package:
   spec-version: v2
+  agents:
+  - name: Similar Company Finder
+    description: Identifies and analyzes companies similar to a target company, evaluates
+      their similarity scores, and develops tailored sales approach strategies to
+      help sales teams effectively sell a product/service to these potential customers.
+      Requires Serper API key to work.
+    model:
+      provider: OpenAI
+      name: gpt-4o
+    version: 1.0.3
+    architecture: agent
+    reasoning: disabled
+    runbook: runbook.md
+    action-packages:
+    - name: Serper
+      organization: Sema4.ai
+      type: folder
+      version: 1.1.1
+      whitelist: ""
+      path: Sema4.ai/serper
+    knowledge: []
+    metadata:
+      mode: conversational
   exclude:
   - ./.git/**
   - ./.vscode/**
@@ -11,25 +34,3 @@ agent-package:
   - ./**/.DS_Store
   - ./**/*.pyc
   - ./*.zip
-  agents:
-  - name: Similar Company Finder
-    description: Identifies and analyzes companies similar to a target company, evaluates
-      their similarity scores, and develops tailored sales approach strategies to
-      help sales teams effectively sell a product/service to these potential customers.
-    model:
-      provider: Snowflake Cortex AI
-      name: claude-3-5-sonnet
-    version: 1.0.2
-    architecture: agent
-    reasoning: disabled
-    runbook: runbook.md
-    action-packages:
-    - name: Serper
-      organization: Sema4.ai
-      version: 1.1.1
-      path: Sema4.ai/serper
-      type: folder
-      whitelist: ''
-    knowledge: []
-    metadata:
-      mode: conversational

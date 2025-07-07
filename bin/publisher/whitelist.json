@@ -37,6 +37,8 @@
             "robocorp"
         ],
         "agents": [
+            "sales-contact-finder",
+            "similar-company-finder",
             "wayback-machine-agent"
         ]
     },

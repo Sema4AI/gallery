@@ -1,5 +1,34 @@
 agent-package:
   spec-version: v2
+  agents:
+  - name: Sales Contact Finder
+    description: Comprehensive sales intelligence specialist that researches target
+      companies, analyzes their organizational structure, identifies key decision-makers,
+      and develops customized sales approach strategies to enable effective B2B sales
+      outreach. Requires a Serper API key to work.
+    model:
+      provider: OpenAI
+      name: gpt-4o
+    version: 1.0.2
+    architecture: agent
+    reasoning: disabled
+    runbook: runbook.md
+    action-packages:
+    - name: Serper
+      organization: Sema4.ai
+      type: folder
+      version: 1.1.1
+      whitelist: ""
+      path: Sema4.ai/serper
+    - name: Browsing
+      organization: Sema4.ai
+      type: folder
+      version: 1.3.1
+      whitelist: ""
+      path: Sema4.ai/browsing
+    knowledge: []
+    metadata:
+      mode: conversational
   exclude:
   - ./.git/**
   - ./.vscode/**
@@ -11,32 +40,3 @@ agent-package:
   - ./**/.DS_Store
   - ./**/*.pyc
   - ./*.zip
-  agents:
-  - name: Sales Contact Finder
-    description: Comprehensive sales intelligence specialist that researches target
-      companies, analyzes their organizational structure, identifies key decision-makers,
-      and develops customized sales approach strategies to enable effective B2B sales
-      outreach
-    model:
-      provider: Snowflake Cortex AI
-      name: claude-3-5-sonnet
-    version: 1.0.2
-    architecture: agent
-    reasoning: disabled
-    runbook: runbook.md
-    action-packages:
-    - name: Browsing
-      organization: Sema4.ai
-      version: 1.3.1
-      path: Sema4.ai/browsing
-      type: folder
-      whitelist: ''
-    - name: Serper
-      organization: Sema4.ai
-      version: 1.1.1
-      path: Sema4.ai/serper
-      type: folder
-      whitelist: ''
-    knowledge: []
-    metadata:
-      mode: conversational
