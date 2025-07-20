@@ -471,6 +471,7 @@ def get_workbook_schema(file_path: str) -> Response[Schema]:
         )
         for sheet_name in workbook.sheetnames:
             worksheet = workbook[sheet_name]
+            worksheet.calculate_dimension()
             min_col_letter = openpyxl.utils.get_column_letter(worksheet.min_column)
             max_col_letter = openpyxl.utils.get_column_letter(worksheet.max_column)
             data_range = f"{min_col_letter}{worksheet.min_row}:{max_col_letter}{worksheet.max_row}"
