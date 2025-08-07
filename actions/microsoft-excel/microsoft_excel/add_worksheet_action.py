@@ -20,7 +20,7 @@ def add_sheet(
         token: The OAuth2 access token .
         workbook_id: The ID of the workbook.
         worksheet_name: Name of the new worksheet (Excel document).
-        If not provided the default worksheet name is used.
+            If not provided the default worksheet name is used.
     Returns:
         Message containing the spreadsheet title and url.
     """
