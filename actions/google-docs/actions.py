@@ -124,7 +124,7 @@ def create_document(
 ) -> Response[DocumentInfo]:
     """Create a new Google Document from an Extended Markdown string.
 
-     Args:
+    Args:
         title: The Google Document title
         body: The Google Document body as an Extended Markdown string.
         oauth_access_token: The OAuth2 Google access token
@@ -159,7 +159,7 @@ def append_to_document_by_id(
 ) -> Response[DocumentInfo]:
     """Appends text formated using Extended Markdown syntax to an existing Google Document by its ID.
 
-     Args:
+    Args:
         document_id: The Google Document ID
         body: The Google Document body as an Extended Markdown string
         oauth_access_token: The OAuth2 Google access token
@@ -184,7 +184,7 @@ def append_to_document_by_name(
 ) -> Response[DocumentInfo]:
     """Appends text formated using Extended Markdown syntax to an existing Google Document by its name.
 
-     Args:
+    Args:
         name: The Google Document name
         body: The Google Document body as an Extended Markdown string
         oauth_access_token: The OAuth2 Google access token

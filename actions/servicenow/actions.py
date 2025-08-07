@@ -66,7 +66,7 @@ def get_my_open_incidents(
         username: The username of the user to authenticate.
         password: The password of the user to authenticate.
         pagination: An object for pagination containing `limit` which denotes the number of items per page
-        and `next_page` the url to load the next page.
+            and `next_page` the url to load the next page.
     Returns:
         A structure representing the incidents.
     """
@@ -99,7 +99,7 @@ def get_recent_incidents(
         username: The username of the user to authenticate.
         password: The password of the user to authenticate.
         pagination: An object for pagination containing `limit` which denotes the number of items per page
-        and `next_page` the url to load the next page.
+            and `next_page` the url to load the next page.
     Returns:
         A structure representing the incidents.
     """
@@ -133,9 +133,9 @@ def search_incidents(
         username: The username of the user to authenticate.
         password: The password of the user to authenticate.
         sysparm_query: The query param to use for searching the incidents.
-        You should build this yourself based on what the user asks of you and using your current knowledge of ServiceNow API
-        pagination: An object for pagination containing `limit` which denotes the number of items per page.
-        and `next_page` the url to load the next page.
+            You should build this yourself based on what the user asks of you and using your current knowledge of ServiceNow API
+        pagination: An object for pagination containing `limit` which denotes the number of items per page
+            and `next_page` the url to load the next page.
     Returns:
         A structure representing the incidents.
     """
@@ -167,7 +167,7 @@ def get_users(
         username: The username of the user to authenticate.
         password: The password of the user to authenticate.
         pagination: An object for pagination containing `limit` which denotes the number of items per page
-        and `next_page` the url to load the next page.
+            and `next_page` the url to load the next page.
     Returns:
         A structure representing the users.
     """

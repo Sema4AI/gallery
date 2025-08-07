@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [3.0.1] - 2025-08-07
+
+### Changed
+
+- Update sema4ai-actions to `1.4.1` version
+
 ## [3.0.0] - 2025-06-30
 
 ### Added

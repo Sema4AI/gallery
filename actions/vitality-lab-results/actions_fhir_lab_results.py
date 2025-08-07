@@ -2,8 +2,9 @@ import json
 from datetime import datetime
 from typing import List
 
-from fhir_lab_results_service import FHIRLabResultsService
 from sema4ai.actions import Response, action
+
+from fhir_lab_results_service import FHIRLabResultsService
 
 fhir_lab_results_service = FHIRLabResultsService("fhir_lab_results.json")
 
@@ -39,10 +40,10 @@ def get_yearly_lab_results_snapshot(loinc_codes: str) -> Response[str]:
     Fetches the latest lab results within the last year, providing a snapshot of the most recent health status. Designed for quick health checks and monitoring current conditions. This action is not adjustable for periods beyond the last year, making it ideal for recent health trend analysis.
 
     Args:
-        - loinc_codes (str): Comma-separated list of LOINC codes for lab tests, determined by
+        loinc_codes (str): Comma-separated list of LOINC codes for lab tests, determined by
             'list_lab_tests_by_category'. Example: '12345-6,78910-1'.
 
-        - Example Request:
+            Example Request:
             {
                 "input": {
                     "loinc_codes": "13457-7,14442-8",    }
@@ -63,9 +64,9 @@ def get_historical_lab_results(
     Fetches all lab results based on provided LOINC codes within a specified date range. Ideal for in-depth health analysis for a set of tests, enabling users to trace health trends, compare lab results across multiple years.
 
     Args:
-        - loinc_codes (str): Comma-separated list of LOINC codes for lab tests Example: '12345-6,78910-1'.
-        - start_date (str): Optional start date to filter lab results, in 'YYYY-MM-DD' format. Use an empty string if no start date is provided. If both start date and end date is not provided, the method will return all the lab results for the given LOINC codes.
-        - end_date (str): Optional end date to filter lab results, in 'YYYY-MM-DD' format.  Use an empty string if no end date is provided.
+        loinc_codes (str): Comma-separated list of LOINC codes for lab tests Example: '12345-6,78910-1'.
+        start_date (str): Optional start date to filter lab results, in 'YYYY-MM-DD' format. Use an empty string if no start date is provided. If both start date and end date is not provided, the method will return all the lab results for the given LOINC codes.
+        end_date (str): Optional end date to filter lab results, in 'YYYY-MM-DD' format.  Use an empty string if no end date is provided.
     """
     loinc_codes_list = get_loinc_codes_list(loinc_codes)
     lab_results = fhir_lab_results_service.get_historical_lab_results(
