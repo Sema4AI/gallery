@@ -5,7 +5,7 @@ name: Excel
 description: Create, read and update sheets on local Excel files.
 
 # Package version number, recommend using semver.org
-version: 4.0.5
+version: 4.0.6
 
 # The version of the `package.yaml` format.
 spec-version: v2
@@ -13,10 +13,10 @@ spec-version: v2
 dependencies:
   conda-forge:
     - python=3.11.11
-    - uv=0.7.21
+    - uv=0.6.11
   pypi:
-    - sema4ai-actions=1.3.14
-    - pydantic=2.11.7
+    - sema4ai-actions=1.4.1
+    - pydantic=2.11.2
     - robocorp-excel=0.4.5
     - pandas=2.2.3
     - sema4ai-crossplatform=0.1.2
