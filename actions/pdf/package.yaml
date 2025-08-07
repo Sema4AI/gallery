@@ -19,7 +19,7 @@ dependencies:
     - poppler=25.02.0
   pypi:
     - sema4ai-actions=1.4.1
-    - pydantic=2.11.2
+    - pydantic=2.11.7
     - pypdf=5.3.0
     - pytesseract=0.3.13
     - pillow=11.1.0

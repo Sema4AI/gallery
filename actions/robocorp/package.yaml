@@ -16,7 +16,7 @@ dependencies:
     - python-dotenv=1.1.0
   pypi:
     - sema4ai-actions=1.4.1
-    - pydantic=2.11.2
+    - pydantic=2.11.7
 
 external-endpoints:
   - name: "Robocorp Control Room"

@@ -16,7 +16,7 @@ dependencies:
     - uv=0.6.11
   pypi:
     - sema4ai-actions=1.4.1
-    - pydantic=2.11.2
+    - pydantic=2.11.7
 
 external-endpoints:
   - name: "ServiceNow API"
