@@ -269,7 +269,7 @@ def list_pipelines(
 
     This is necessary to pull the ID of the stage when you need to create a new Deal.
 
-     Args:
+    Args:
          object_type: The kind of object you are searching, currently supporting: deals and tickets.
          token: An OAuth2 Public App (client) token structure used to make API calls.
 
