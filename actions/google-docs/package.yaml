@@ -1,11 +1,11 @@
 # Required: A short name for the action package
-name: Google Docs
+name: XGoogle Docs
 
 # Required: A description of what's in the action package.
 description: Get contents of Google Docs as Markdown
 
 # Package version number, recommend using semver.org
-version: 1.4.3
+version: 2.0.0
 
 # The version of the `package.yaml` format.
 spec-version: v2
@@ -17,8 +17,8 @@ dependencies:
   pypi:
     - sema4ai-actions=1.4.1
     - pydantic=2.11.7
-    - google-api-python-client=2.157.0
-    - google-auth-oauthlib=1.2.1
+    - google-api-python-client=2.178.0
+    - google-auth-oauthlib=1.2.2
     - google-auth-httplib2=0.2.0
 
 external-endpoints:

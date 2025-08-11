@@ -10,7 +10,7 @@
                         "type": "OAuth2Secret",
                         "provider": "google",
                         "scopes": [
-                            "https://www.googleapis.com/auth/drive.file"
+                            "https://www.googleapis.com/auth/documents"
                         ],
                         "access_token": "<access-token-will-be-requested-by-vscode>"
                     }
@@ -22,20 +22,22 @@
         "actionName": "append_to_document_by_id",
         "actionRelativePath": "actions.py",
         "schemaDescription": [
-            "document_id: string",
-            "body: string"
+            "document_id: string: The Google Document ID",
+            "body: string: The Google Document body as an Extended Markdown string",
+            "tab_index: int: Optional tab index to append content to a specific tab",
+            "tab_title: string: Optional tab title to append content to a specific tab"
         ],
         "managedParamsSchemaDescription": {
             "oauth_access_token": {
                 "type": "OAuth2Secret",
                 "provider": "google",
                 "scopes": [
-                    "https://www.googleapis.com/auth/drive.file"
+                    "https://www.googleapis.com/auth/documents"
                 ]
             }
         },
         "inputFileVersion": "v3",
         "kind": "action",
-        "actionSignature": "action/args: \"document_id: str, body: str, oauth_access_token: OAuth2Secret[Literal['google'], list[Literal['https://www.googleapis.com/auth/drive.file']]]\""
+        "actionSignature": "action/args: \"document_id: str, body: str, oauth_access_token: OAuth2Secret[Literal['google'], list[Literal['https://www.googleapis.com/auth/documents']]], tab_index: int=None, tab_title: str=None\""
     }
 }

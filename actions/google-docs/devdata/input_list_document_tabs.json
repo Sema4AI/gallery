@@ -1,15 +1,15 @@
 {
     "inputs": [
         {
-            "inputName": "Default get document by name",
+            "inputName": "List tabs by document ID",
             "inputValue": {
-                "name": "Sema4.ai Actions - Test Document",
+                "document_id": "1cJNggszESO44bvAlDzmpP_LluKluCd9O17t0x9wAgl4",
                 "vscode:request:oauth2": {
                     "oauth_access_token": {
                         "type": "OAuth2Secret",
                         "provider": "google",
                         "scopes": [
-                            "https://www.googleapis.com/auth/drive.readonly"
+                            "https://www.googleapis.com/auth/documents.readonly"
                         ],
                         "access_token": "<access-token-will-be-requested-by-vscode>"
                     }
@@ -17,16 +17,15 @@
             }
         },
         {
-            "inputName": "Get document from tab",
+            "inputName": "List tabs by document name",
             "inputValue": {
-                "name": "Sema4.ai Actions - Test Document",
-                "tab_title": "Tab 2",
+                "document_name": "Sema4.ai Actions - Test Document",
                 "vscode:request:oauth2": {
                     "oauth_access_token": {
                         "type": "OAuth2Secret",
                         "provider": "google",
                         "scopes": [
-                            "https://www.googleapis.com/auth/drive.readonly"
+                            "https://www.googleapis.com/auth/documents.readonly"
                         ],
                         "access_token": "<access-token-will-be-requested-by-vscode>"
                     }
@@ -35,12 +34,11 @@
         }
     ],
     "metadata": {
-        "actionName": "get_document_by_name",
+        "actionName": "list_document_tabs",
         "actionRelativePath": "actions.py",
         "schemaDescription": [
-            "name: string: The Google Document name",
-            "tab_index: int: Optional tab index to get content from a specific tab",
-            "tab_title: string: Optional tab title to get content from a specific tab"
+            "document_id: string: Optional Google Document ID",
+            "document_name: string: Optional Google Document name"
         ],
         "managedParamsSchemaDescription": {
             "oauth_access_token": {
@@ -48,12 +46,12 @@
                 "description": "The OAuth2 Google access token",
                 "provider": "google",
                 "scopes": [
-                    "https://www.googleapis.com/auth/drive.readonly"
+                    "https://www.googleapis.com/auth/documents.readonly"
                 ]
             }
         },
         "inputFileVersion": "v3",
         "kind": "action",
-        "actionSignature": "action/args: \"name: str, oauth_access_token: OAuth2Secret[Literal['google'], list[Literal['https://www.googleapis.com/auth/drive.readonly']]], tab_index: int=None, tab_title: str=None\""
+        "actionSignature": "action/args: \"oauth_access_token: OAuth2Secret[Literal['google'], list[Literal['https://www.googleapis.com/auth/documents.readonly']]], document_id: str=None, document_name: str=None\""
     }
 }

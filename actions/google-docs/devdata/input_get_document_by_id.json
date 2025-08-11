@@ -3,7 +3,7 @@
         {
             "inputName": "input-1",
             "inputValue": {
-                "document_id": "<The ID of the document to fetch>",
+                "document_id": "1cJNggszESO44bvAlDzmpP_LluKluCd9O17t0x9wAgl4",
                 "vscode:request:oauth2": {
                     "oauth_access_token": {
                         "type": "OAuth2Secret",
@@ -21,7 +21,9 @@
         "actionName": "get_document_by_id",
         "actionRelativePath": "actions.py",
         "schemaDescription": [
-            "document_id: string: The Google Document ID."
+            "document_id: string: The Google Document ID.",
+            "tab_index: int: Optional tab index to get content from a specific tab",
+            "tab_title: string: Optional tab title to get content from a specific tab"
         ],
         "managedParamsSchemaDescription": {
             "oauth_access_token": {
@@ -35,6 +37,6 @@
         },
         "inputFileVersion": "v3",
         "kind": "action",
-        "actionSignature": "action/args: \"document_id: str, oauth_access_token: OAuth2Secret[Literal['google'], list[Literal['https://www.googleapis.com/auth/documents.readonly']]]\""
+        "actionSignature": "action/args: \"document_id: str, oauth_access_token: OAuth2Secret[Literal['google'], list[Literal['https://www.googleapis.com/auth/documents.readonly']]], tab_index: int=None, tab_title: str=None\""
     }
 }

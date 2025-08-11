@@ -1,16 +1,56 @@
 {
     "inputs": [
         {
-            "inputName": "input-1",
+            "inputName": "Append to existing tab by title",
             "inputValue": {
                 "name": "Sema4.ai Actions - Test Document",
                 "body": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi tortor neque, ornare vitae lectus at, molestie tempor purus. Suspendisse potenti. Nam tellus nisl, viverra non tristique ac, blandit sit amet sapien. In hac habitasse platea dictumst. Etiam eget congue sem. Fusce accumsan ligula nec ultricies pharetra. In cursus hendrerit elit, a ultrices leo pharetra quis. Morbi et vehicula diam. Fusce dictum est sed orci tincidunt sagittis vitae eu urna.",
+                "tab_title": "Tab 2",
                 "vscode:request:oauth2": {
                     "oauth_access_token": {
                         "type": "OAuth2Secret",
                         "provider": "google",
                         "scopes": [
-                            "https://www.googleapis.com/auth/drive.file"
+                            "https://www.googleapis.com/auth/drive",
+                            "https://www.googleapis.com/auth/documents"
+                        ],
+                        "access_token": "<access-token-will-be-requested-by-vscode>"
+                    }
+                }
+            }
+        },
+        {
+            "inputName": "Append to existing tab by index",
+            "inputValue": {
+                "name": "Sema4.ai Actions - Test Document",
+                "body": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi tortor neque, ornare vitae lectus at, molestie tempor purus. Suspendisse potenti. Nam tellus nisl, viverra non tristique ac, blandit sit amet sapien. In hac habitasse platea dictumst. Etiam eget congue sem. Fusce accumsan ligula nec ultricies pharetra. In cursus hendrerit elit, a ultrices leo pharetra quis. Morbi et vehicula diam. Fusce dictum est sed orci tincidunt sagittis vitae eu urna.",
+                "tab_index": 0,
+                "vscode:request:oauth2": {
+                    "oauth_access_token": {
+                        "type": "OAuth2Secret",
+                        "provider": "google",
+                        "scopes": [
+                            "https://www.googleapis.com/auth/drive",
+                            "https://www.googleapis.com/auth/documents"
+                        ],
+                        "access_token": "<access-token-will-be-requested-by-vscode>"
+                    }
+                }
+            }
+        },
+        {
+            "inputName": "Append to non-existing tab",
+            "inputValue": {
+                "name": "Sema4.ai Actions - Test Document",
+                "body": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi tortor neque, ornare vitae lectus at, molestie tempor purus. Suspendisse potenti. Nam tellus nisl, viverra non tristique ac, blandit sit amet sapien. In hac habitasse platea dictumst. Etiam eget congue sem. Fusce accumsan ligula nec ultricies pharetra. In cursus hendrerit elit, a ultrices leo pharetra quis. Morbi et vehicula diam. Fusce dictum est sed orci tincidunt sagittis vitae eu urna.",
+                "tab_title": "Tab 3",
+                "vscode:request:oauth2": {
+                    "oauth_access_token": {
+                        "type": "OAuth2Secret",
+                        "provider": "google",
+                        "scopes": [
+                            "https://www.googleapis.com/auth/drive",
+                            "https://www.googleapis.com/auth/documents"
                         ],
                         "access_token": "<access-token-will-be-requested-by-vscode>"
                     }
@@ -22,20 +62,24 @@
         "actionName": "append_to_document_by_name",
         "actionRelativePath": "actions.py",
         "schemaDescription": [
-            "name: string",
-            "body: string"
+            "name: string: The Google Document name",
+            "body: string: The Google Document body as an Extended Markdown string",
+            "tab_index: int: Optional tab index to append content to a specific tab",
+            "tab_title: string: Optional tab title to append content to a specific tab"
         ],
         "managedParamsSchemaDescription": {
             "oauth_access_token": {
                 "type": "OAuth2Secret",
+                "description": "The OAuth2 Google access token",
                 "provider": "google",
                 "scopes": [
-                    "https://www.googleapis.com/auth/drive.file"
+                    "https://www.googleapis.com/auth/drive",
+                    "https://www.googleapis.com/auth/documents"
                 ]
             }
         },
         "inputFileVersion": "v3",
         "kind": "action",
-        "actionSignature": "action/args: \"name: str, body: str, oauth_access_token: OAuth2Secret[Literal['google'], list[Literal['https://www.googleapis.com/auth/drive.file']]]\""
+        "actionSignature": "action/args: \"name: str, body: str, oauth_access_token: OAuth2Secret[Literal['google'], list[Literal['https://www.googleapis.com/auth/drive', 'https://www.googleapis.com/auth/documents']]], tab_index: int=None, tab_title: str=None\""
     }
 }

@@ -275,6 +275,13 @@ class _Content(BaseModel, extra="ignore"):
         return "\n".join(c.to_markdown(ctx) for c in self.content)
 
 
+class TabInfo(BaseModel, extra="ignore", populate_by_name=True):
+    """Information about a document tab."""
+    tab_id: Annotated[str, Field(description="The ID of the tab.", validation_alias="tabId")]
+    title: Annotated[str, Field(description="The title of the tab.")]
+    index: Annotated[int, Field(description="The position of the tab.")]
+
+
 class DocumentInfo(BaseModel, extra="ignore", populate_by_name=True):
     # Model used to structure the action response.
     title: Annotated[str, Field(description="The title of the document.")]
@@ -285,24 +292,163 @@ class DocumentInfo(BaseModel, extra="ignore", populate_by_name=True):
             validation_alias="documentId",
         ),
     ]
+    current_tab: Annotated[TabInfo | None, Field(description="Information about the current tab being displayed.", default=None)]
+    tabs: Annotated[list[TabInfo], Field(description="List of all tabs in the document.", default_factory=list)]
 
 
 class RawDocument(DocumentInfo):
     # Model used to parse the Google API response..
     body: _Content
+    tab_contents: Annotated[list[tuple[TabInfo, _Content]], Field(default_factory=list)]
 
     @classmethod
     def from_google_response(cls, data: dict) -> Self:
+        # Handle documents with tabs structure
+        if "tabs" in data and data["tabs"]:
+            # Extract all tabs information and their content
+            all_tabs = []
+            tab_contents = []
+            current_tab_info = None
+
+            def extract_tabs_recursive(tabs_list, parent_path="", global_index=[0]):
+                tab_infos = []
+                for local_index, tab in enumerate(tabs_list):
+                    # Check different possible tab structures
+                    tab_id = tab.get("tabId")
+
+                    # Look for tab ID and title in tabProperties
+                    if not tab_id and "tabProperties" in tab:
+                        tab_props = tab["tabProperties"]
+                        tab_id = tab_props.get("tabId")
+
+                    # Try different ways to get tab title
+                    title = None
+                    if "tabProperties" in tab and "title" in tab["tabProperties"]:
+                        title = tab["tabProperties"]["title"]
+                    elif "documentTab" in tab and "title" in tab["documentTab"]:
+                        title = tab["documentTab"]["title"]
+
+                    # Fallback title if none found
+                    if not title:
+                        title = f"Tab {local_index + 1}"
+
+                    # Create tab info even without tabId (use index as fallback)
+                    if not tab_id:
+                        tab_id = f"tab_{global_index[0]}"
+
+                    # Use global index for TabInfo (sequential numbering)
+                    tab_info = TabInfo(
+                        tabId=tab_id,
+                        title=title,
+                        index=global_index[0]
+                    )
+                    tab_infos.append(tab_info)
+                    global_index[0] += 1
+
+                    # Extract tab content if available
+                    if "documentTab" in tab and "body" in tab["documentTab"]:
+                        tab_content = _Content.model_validate(
+                            tab["documentTab"]["body"],
+                            context={
+                                "inline_objects": data.get("inlineObjects"),
+                                "lists": data.get("lists"),
+                            }
+                        )
+                        tab_contents.append((tab_info, tab_content))
+
+                    # Handle child tabs recursively
+                    if "childTabs" in tab:
+                        current_path = f"{parent_path}{local_index}." if parent_path else f"{local_index}."
+                        child_tabs = extract_tabs_recursive(tab["childTabs"], current_path, global_index)
+                        tab_infos.extend(child_tabs)
+
+                return tab_infos
+
+            all_tabs = extract_tabs_recursive(data["tabs"])
+
+            # For documents with tabs, body should be empty - content is in tab_contents
+            if data["tabs"] and len(data["tabs"]) > 0:
+                # Set current tab to the first tab if tabs exist
+                if all_tabs:
+                    current_tab_info = all_tabs[0]
+
+                # Create a new data dict with empty body since content is in tabs
+                processed_data = {
+                    "documentId": data.get("documentId"),
+                    "title": data.get("title", "Untitled"),
+                    "body": {"content": []},  # Empty body for documents with tabs
+                    "current_tab": current_tab_info,
+                    "tabs": all_tabs,
+                    "tab_contents": tab_contents,
+                    "inlineObjects": data.get("inlineObjects"),
+                    "lists": data.get("lists"),
+                }
+            else:
+                # No tabs found, create empty body
+                processed_data = {
+                    "documentId": data.get("documentId"),
+                    "title": data.get("title", "Untitled"),
+                    "body": {"content": []},
+                    "current_tab": None,
+                    "tabs": [],
+                    "tab_contents": [],
+                    "inlineObjects": data.get("inlineObjects"),
+                    "lists": data.get("lists"),
+                }
+        else:
+            # Legacy document without tabs - use original data with empty tab info
+            processed_data = {
+                **data,
+                "current_tab": None,
+                "tabs": [],
+                "tab_contents": []
+            }
+
         return cls.model_validate(
-            data,
+            processed_data,
             context={
-                "inline_objects": data.get("inlineObjects"),
-                "lists": data.get("lists"),
+                "inline_objects": processed_data.get("inlineObjects"),
+                "lists": processed_data.get("lists"),
             },
         )
 
     def to_markdown(self) -> str:
+        # If document has tabs, body should be empty - don't use it
+        if self.tab_contents:
+            return ""  # Body is empty for documents with tabs
         return self.body.to_markdown(_MarkdownContext()).strip()
+
+    def to_markdown_all_tabs(self) -> str:
+        """Generate markdown with all tab contents concatenated."""
+        if not self.tab_contents:
+            # No tabs, return regular body content
+            return self.to_markdown()
+
+        ctx = _MarkdownContext()
+        parts = []
+
+        for tab_info, tab_content in self.tab_contents:
+            # Add tab header using integer index
+            parts.append(f"## Tab {tab_info.index}: {tab_info.title}")
+            parts.append("")  # Empty line after header
+
+            # Add tab content
+            tab_markdown = tab_content.to_markdown(ctx).strip()
+            if tab_markdown:
+                parts.append(tab_markdown)
+            else:
+                parts.append("*[This tab is empty]*")
+
+            # Add separator between tabs (except for the last one)
+            parts.append("")
+            parts.append("---")
+            parts.append("")
+
+        # Remove the last separator
+        if parts and parts[-3:] == ["", "---", ""]:
+            parts = parts[:-3]
+
+        return "\n".join(parts)
 
     @property
     def end_index(self) -> int:
@@ -317,11 +463,41 @@ class MarkdownDocument(DocumentInfo):
         str | None,
         Field(description="The body of the document written in Extended Markdown."),
     ] = None
+    tab_contents: Annotated[
+        list[dict] | None,
+        Field(description="All tab contents with their metadata.", default=None)
+    ] = None
 
     @classmethod
-    def from_raw_document(cls, document: RawDocument) -> Self:
+    def from_raw_document(cls, document: RawDocument, include_all_tabs: bool = False) -> Self:
+        # Process tab_contents into serializable format
+        serialized_tab_contents = None
+        if document.tab_contents:
+            serialized_tab_contents = []
+            ctx = _MarkdownContext()
+            for tab_info, tab_content in document.tab_contents:
+                serialized_tab_contents.append({
+                    "tab_info": {
+                        "tab_id": tab_info.tab_id,
+                        "title": tab_info.title,
+                        "index": tab_info.index
+                    },
+                    "markdown_content": tab_content.to_markdown(ctx).strip()
+                })
+
+        # Set body based on document structure
+        if document.tab_contents:
+            # Document has tabs - keep body empty to show clear structure
+            body = ""
+        else:
+            # Legacy document without tabs - use body content
+            body = document.to_markdown()
+
         return MarkdownDocument(
             title=document.title,
             document_id=document.document_id,
-            body=document.to_markdown(),
+            body=body,
+            current_tab=document.current_tab,
+            tabs=document.tabs,
+            tab_contents=serialized_tab_contents,
         )
