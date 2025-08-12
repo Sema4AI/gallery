@@ -39,7 +39,7 @@ def create_event(
     """
     service = _build_service(google_credentials)
 
-    event_dict = event.model_dump(mode="json", exclude={"id"})
+    event_dict = event.model_dump(mode="json", exclude={"id"}, exclude_none=True)
 
     event_dict["start"] = {"dateTime": event_dict["start"]}
     event_dict["end"] = {"dateTime": event_dict["end"]}
