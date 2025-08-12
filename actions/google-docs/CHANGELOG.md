@@ -4,28 +4,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
-## [2.0.0] - 2025-08-11
+## [2.0.0] - 2025-08-13
 
 ### Added
 
-- **Google Docs Tabs Support**: Added comprehensive support for multi-tab Google Documents
-  - New action: `list_document_tabs` - List all tabs in a Google Document with their IDs, titles, and positions
-  - Enhanced existing actions with tab parameters:
-    - `get_document_by_name` - Added `tab_index` and `tab_title` parameters to get content from specific tabs
-    - `get_document_by_id` - Added `tab_index` and `tab_title` parameters to get content from specific tabs
-    - `append_to_document_by_id` - Added `tab_index` and `tab_title` parameters to append to specific tabs
-    - `append_to_document_by_name` - Added `tab_index` and `tab_title` parameters to append to specific tabs
-  - New models: `TabInfo` for representing tab metadata
-  - Enhanced `DocumentInfo` and `MarkdownDocument` models with tab information (`current_tab`, `tabs`, `tab_contents`)
-  - Support for nested child tabs with hierarchical indexing
-  - Automatic tab content aggregation when no specific tab is specified
+- **Document tabs**: First-class support for multi-tab Google Docs (reading and appending to specific tabs).
+- **Comments**: View document comments and map them to tabs; optional comment inclusion in document reads.
 
 ### Changed
 
-- **Breaking Change**: Document retrieval now includes structured tab content when available
-- Enhanced error handling for tab-related operations
-- Improved validation to prevent conflicts between `tab_index` and `tab_title` parameters
-- Updated test data files to demonstrate new tab functionality
+- Document responses include structured tab content when available.
+− Default append targets the first tab when a document has tabs and no tab is specified.
 
 ### Fixed
 

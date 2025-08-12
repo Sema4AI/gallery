@@ -282,6 +282,45 @@ class TabInfo(BaseModel, extra="ignore", populate_by_name=True):
     index: Annotated[int, Field(description="The position of the tab.")]
 
 
+class CommentAuthor(BaseModel, extra="ignore", populate_by_name=True):
+    """Information about a comment author."""
+    display_name: Annotated[str, Field(description="The display name of the author.", validation_alias="displayName")]
+    email_address: Annotated[str | None, Field(description="The email address of the author.", validation_alias="emailAddress", default=None)]
+    me: Annotated[bool, Field(description="Whether this user is the requesting user.", default=False)]
+
+
+class CommentQuotedContent(BaseModel, extra="ignore", populate_by_name=True):
+    """Quoted file content in a comment."""
+    mime_type: Annotated[str, Field(description="The MIME type of the quoted content.", validation_alias="mimeType")]
+    value: Annotated[str, Field(description="The quoted content value.")]
+
+
+class CommentReply(BaseModel, extra="ignore", populate_by_name=True):
+    """A reply to a comment."""
+    reply_id: Annotated[str, Field(description="The ID of the reply.", validation_alias="id")]
+    content: Annotated[str, Field(description="The plain text content of the reply.")]
+    html_content: Annotated[str | None, Field(description="The HTML content of the reply.", validation_alias="htmlContent", default=None)]
+    author: Annotated[CommentAuthor, Field(description="The author of the reply.")]
+    created_time: Annotated[str, Field(description="The time when the reply was created.", validation_alias="createdTime")]
+    modified_time: Annotated[str, Field(description="The time when the reply was last modified.", validation_alias="modifiedTime")]
+    deleted: Annotated[bool, Field(description="Whether the reply has been deleted.", default=False)]
+
+
+class CommentInfo(BaseModel, extra="ignore", populate_by_name=True):
+    """Information about a document comment."""
+    comment_id: Annotated[str, Field(description="The ID of the comment.", validation_alias="id")]
+    content: Annotated[str, Field(description="The plain text content of the comment.")]
+    html_content: Annotated[str | None, Field(description="The HTML content of the comment.", validation_alias="htmlContent", default=None)]
+    author: Annotated[CommentAuthor, Field(description="The author of the comment.")]
+    created_time: Annotated[str, Field(description="The time when the comment was created.", validation_alias="createdTime")]
+    modified_time: Annotated[str, Field(description="The time when the comment was last modified.", validation_alias="modifiedTime")]
+    resolved: Annotated[bool, Field(description="Whether the comment has been resolved.", default=False)]
+    deleted: Annotated[bool, Field(description="Whether the comment has been deleted.", default=False)]
+    anchor: Annotated[str | None, Field(description="The document region as JSON string.", default=None)]
+    quoted_file_content: Annotated[CommentQuotedContent | None, Field(description="The quoted file content.", validation_alias="quotedFileContent", default=None)]
+    replies: Annotated[list[CommentReply], Field(description="List of replies to the comment.", default_factory=list)]
+
+
 class DocumentInfo(BaseModel, extra="ignore", populate_by_name=True):
     # Model used to structure the action response.
     title: Annotated[str, Field(description="The title of the document.")]
@@ -294,6 +333,7 @@ class DocumentInfo(BaseModel, extra="ignore", populate_by_name=True):
     ]
     current_tab: Annotated[TabInfo | None, Field(description="Information about the current tab being displayed.", default=None)]
     tabs: Annotated[list[TabInfo], Field(description="List of all tabs in the document.", default_factory=list)]
+    comments: Annotated[list[CommentInfo], Field(description="List of comments on the document.", default_factory=list)]
 
 
 class RawDocument(DocumentInfo):
@@ -500,4 +540,5 @@ class MarkdownDocument(DocumentInfo):
             current_tab=document.current_tab,
             tabs=document.tabs,
             tab_contents=serialized_tab_contents,
+            comments=document.comments,
         )

@@ -3,7 +3,7 @@
         {
             "inputName": "input-1",
             "inputValue": {
-                "document_id": "<The ID of the document to append the body to>",
+                "document_id": "1cJNggszESO44bvAlDzmpP_LluKluCd9O17t0x9wAgl4",
                 "body": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi tortor neque, ornare vitae lectus at, molestie tempor purus. Suspendisse potenti. Nam tellus nisl, viverra non tristique ac, blandit sit amet sapien. In hac habitasse platea dictumst. Etiam eget congue sem. Fusce accumsan ligula nec ultricies pharetra. In cursus hendrerit elit, a ultrices leo pharetra quis. Morbi et vehicula diam. Fusce dictum est sed orci tincidunt sagittis vitae eu urna.",
                 "vscode:request:oauth2": {
                     "oauth_access_token": {
@@ -24,20 +24,22 @@
         "schemaDescription": [
             "document_id: string: The Google Document ID",
             "body: string: The Google Document body as an Extended Markdown string",
-            "tab_index: int: Optional tab index to append content to a specific tab",
+            "tab_index: integer: Optional tab index to append content to a specific tab",
             "tab_title: string: Optional tab title to append content to a specific tab"
         ],
         "managedParamsSchemaDescription": {
             "oauth_access_token": {
                 "type": "OAuth2Secret",
+                "description": "The OAuth2 Google access token",
                 "provider": "google",
                 "scopes": [
-                    "https://www.googleapis.com/auth/documents"
+                    "https://www.googleapis.com/auth/documents",
+                    "https://www.googleapis.com/auth/drive.file"
                 ]
             }
         },
         "inputFileVersion": "v3",
         "kind": "action",
-        "actionSignature": "action/args: \"document_id: str, body: str, oauth_access_token: OAuth2Secret[Literal['google'], list[Literal['https://www.googleapis.com/auth/documents']]], tab_index: int=None, tab_title: str=None\""
+        "actionSignature": "action/args: \"document_id: str, body: str, oauth_access_token: OAuth2Secret[Literal['google'], list[Literal['https://www.googleapis.com/auth/drive.file', 'https://www.googleapis.com/auth/documents']]], tab_index: int=None, tab_title: str=None\""
     }
 }

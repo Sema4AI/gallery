@@ -23,21 +23,23 @@
         "actionRelativePath": "actions.py",
         "schemaDescription": [
             "title: string: The Google Document title",
-            "body: string: The Google Document body as an Extended Markdown string",
-            "tab_index: int: Optional tab index to add content to a specific tab (for existing documents)",
+            "body: string: The Google Document body as an Extended Markdown string.",
+            "tab_index: integer: Optional tab index to add content to a specific tab (for existing documents)",
             "tab_title: string: Optional tab title to add content to a specific tab (for existing documents)"
         ],
         "managedParamsSchemaDescription": {
             "oauth_access_token": {
                 "type": "OAuth2Secret",
+                "description": "The OAuth2 Google access token",
                 "provider": "google",
                 "scopes": [
-                    "https://www.googleapis.com/auth/documents"
+                    "https://www.googleapis.com/auth/documents",
+                    "https://www.googleapis.com/auth/drive.file"
                 ]
             }
         },
         "inputFileVersion": "v3",
         "kind": "action",
-        "actionSignature": "action/args: \"title: str, body: str, oauth_access_token: OAuth2Secret[Literal['google'], list[Literal['https://www.googleapis.com/auth/documents']]], tab_index: int=None, tab_title: str=None\""
+        "actionSignature": "action/args: \"title: str, body: str, oauth_access_token: OAuth2Secret[Literal['google'], list[Literal['https://www.googleapis.com/auth/documents', 'https://www.googleapis.com/auth/drive.file']]], tab_index: int=None, tab_title: str=None\""
     }
 }

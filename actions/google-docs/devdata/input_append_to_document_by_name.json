@@ -64,7 +64,7 @@
         "schemaDescription": [
             "name: string: The Google Document name",
             "body: string: The Google Document body as an Extended Markdown string",
-            "tab_index: int: Optional tab index to append content to a specific tab",
+            "tab_index: integer: Optional tab index to append content to a specific tab",
             "tab_title: string: Optional tab title to append content to a specific tab"
         ],
         "managedParamsSchemaDescription": {
@@ -73,13 +73,13 @@
                 "description": "The OAuth2 Google access token",
                 "provider": "google",
                 "scopes": [
-                    "https://www.googleapis.com/auth/drive",
-                    "https://www.googleapis.com/auth/documents"
+                    "https://www.googleapis.com/auth/documents",
+                    "https://www.googleapis.com/auth/drive.file"
                 ]
             }
         },
         "inputFileVersion": "v3",
         "kind": "action",
-        "actionSignature": "action/args: \"name: str, body: str, oauth_access_token: OAuth2Secret[Literal['google'], list[Literal['https://www.googleapis.com/auth/drive', 'https://www.googleapis.com/auth/documents']]], tab_index: int=None, tab_title: str=None\""
+        "actionSignature": "action/args: \"name: str, body: str, oauth_access_token: OAuth2Secret[Literal['google'], list[Literal['https://www.googleapis.com/auth/drive.file', 'https://www.googleapis.com/auth/documents']]], tab_index: int=None, tab_title: str=None\""
     }
 }

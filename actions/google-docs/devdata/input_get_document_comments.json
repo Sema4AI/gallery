@@ -1,31 +1,17 @@
 {
     "inputs": [
         {
-            "inputName": "List tabs by document ID",
+            "inputName": "input-1",
             "inputValue": {
-                "document_id": "1cJNggszESO44bvAlDzmpP_LluKluCd9O17t0x9wAgl4",
-                "vscode:request:oauth2": {
-                    "oauth_access_token": {
-                        "type": "OAuth2Secret",
-                        "provider": "google",
-                        "scopes": [
-                            "https://www.googleapis.com/auth/documents.readonly"
-                        ],
-                        "access_token": "<access-token-will-be-requested-by-vscode>"
-                    }
-                }
-            }
-        },
-        {
-            "inputName": "List tabs by document name",
-            "inputValue": {
+                "document_id": "",
                 "document_name": "Sema4.ai Actions - Test Document",
+                "tab_index": 1,
                 "vscode:request:oauth2": {
                     "oauth_access_token": {
                         "type": "OAuth2Secret",
                         "provider": "google",
                         "scopes": [
-                            "https://www.googleapis.com/auth/documents.readonly"
+                            "https://www.googleapis.com/auth/drive.readonly"
                         ],
                         "access_token": "<access-token-will-be-requested-by-vscode>"
                     }
@@ -34,11 +20,14 @@
         }
     ],
     "metadata": {
-        "actionName": "list_document_tabs",
+        "actionName": "get_document_comments",
         "actionRelativePath": "actions.py",
         "schemaDescription": [
             "document_id: string: Optional Google Document ID",
-            "document_name: string: Optional Google Document name"
+            "document_name: string: Optional Google Document name",
+            "tab_id: string: Optional tab ID to filter comments to a specific tab",
+            "tab_index: integer: Optional tab index to filter comments to a specific tab",
+            "tab_title: string: Optional tab title to filter comments to a specific tab"
         ],
         "managedParamsSchemaDescription": {
             "oauth_access_token": {
@@ -46,12 +35,13 @@
                 "description": "The OAuth2 Google access token",
                 "provider": "google",
                 "scopes": [
+                    "https://www.googleapis.com/auth/drive.readonly",
                     "https://www.googleapis.com/auth/documents.readonly"
                 ]
             }
         },
         "inputFileVersion": "v3",
         "kind": "action",
-        "actionSignature": "action/args: \"oauth_access_token: OAuth2Secret[Literal['google'], list[Literal['https://www.googleapis.com/auth/documents.readonly']]], document_id: str=None, document_name: str=None\""
+        "actionSignature": "action/args: \"oauth_access_token: OAuth2Secret[Literal['google'], list[Literal['https://www.googleapis.com/auth/drive.readonly', 'https://www.googleapis.com/auth/documents.readonly']]], document_id: str=None, document_name: str=None, tab_id: str=None, tab_index: int=None, tab_title: str=None\""
     }
 }
