@@ -98,19 +98,23 @@ class _ImageElementBase(_BaseStructuralElement, extra="ignore"):
 
     @field_validator("image_url", mode="after")
     def get_image_url(cls, value: str, info: ValidationInfo) -> str:
-        if (inline_objects := info.context.get("inline_objects")) is None:
-            raise RuntimeError("`inline_objects` was not passed as context")
+        context = info.context or {}
+        inline_objects = context.get("inline_objects") or {}
 
-        match inline_objects.get(value):
-            case {
-                "inlineObjectProperties": {
-                    "embeddedObject": {"imageProperties": {"contentUri": content_uri}}
-                    | {"embeddedDrawingProperties": {"contentUri": content_uri}}
-                }
-            }:
-                return content_uri
-            case _:
-                raise ValueError("Invalid image element")
+        obj = inline_objects.get(value)
+        if not obj:
+            # No inline object metadata; return the raw id to avoid failing parse
+            return value
+
+        props = obj.get("inlineObjectProperties", {})
+        embedded = props.get("embeddedObject", {})
+        content_uri = None
+        if isinstance(embedded, dict):
+            content_uri = (
+                embedded.get("imageProperties", {}).get("contentUri")
+                or embedded.get("embeddedDrawingProperties", {}).get("contentUri")
+            )
+        return content_uri or value
 
     def to_markdown(self, ctx: _MarkdownContext) -> str:
         return f"![{self.title or f'Image {uuid4()}'}]({self.image_url})"
@@ -128,30 +132,37 @@ class _ParagraphData(
         int, Field(validation_alias=AliasPath("bullet", "nestingLevel"))
     ] = 0
     list_id: Annotated[
-        _UnorderedListId | _OrderedListId,
+        _UnorderedListId | _OrderedListId | None,
         Field(validation_alias=AliasPath("bullet", "listId")),
     ] = None
 
     @field_validator("list_id", mode="before")
     def populate_list_id(cls, value: str, info: ValidationInfo) -> str | None:
-        if (inline_objects := info.context.get("lists")) is None:
-            raise RuntimeError("`lists` was not passed as context")
+        # Be resilient: missing lists context or unknown list ids should not fail parsing
+        context = info.context or {}
+        lists_ctx = context.get("lists") or {}
 
-        if (list_properties := inline_objects.get(value)) is None:
-            raise ValueError("Invalid list id")
+        list_properties = lists_ctx.get(value)
+        if not list_properties:
+            # Treat as normal text when list metadata is unavailable
+            return None
 
-        nesting_level_info = list_properties["listProperties"]["nestingLevels"][
-            info.data["nesting_level"]
-        ]
+        try:
+            nesting_level = info.data.get("nesting_level", 0)
+            nesting_levels = list_properties.get("listProperties", {}).get("nestingLevels", [])
+            nesting_level_info = nesting_levels[nesting_level]
+        except Exception:
+            # Incomplete list metadata; treat as normal text
+            return None
 
-        match nesting_level_info:
-            case {"glyphSymbol": _}:
+        # Determine list id type without pattern matching for broader compatibility
+        if isinstance(nesting_level_info, dict):
+            if "glyphSymbol" in nesting_level_info:
                 return _UnorderedListId(value)
-            case {"glyphType": _}:
+            if "glyphType" in nesting_level_info:
                 return _OrderedListId(value)
-            case _:
-                # Can't determine list type, so we treat it as a normal text.
-                return None
+        # Can't determine list type; treat as normal text
+        return None
 
     def to_markdown(self, ctx: _MarkdownContext) -> str:
         body = "".join(e.to_markdown(ctx) for e in self.elements)
@@ -447,8 +458,8 @@ class RawDocument(DocumentInfo):
         return cls.model_validate(
             processed_data,
             context={
-                "inline_objects": processed_data.get("inlineObjects"),
-                "lists": processed_data.get("lists"),
+                "inline_objects": processed_data.get("inlineObjects") or {},
+                "lists": processed_data.get("lists") or {},
             },
         )
 

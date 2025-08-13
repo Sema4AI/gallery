@@ -357,6 +357,9 @@ def _load_raw_document_tab_by_identifier(ctx: Context, document_id: str, tab_ide
         documentId=document_id,
         includeTabsContent=True
     ).execute()
+    # Ensure keys exist to satisfy downstream parsing context
+    raw_doc.setdefault("lists", {})
+    raw_doc.setdefault("inlineObjects", {})
 
     # Find the specific tab by ID or title
     tab_content = _find_tab_by_index_or_title(raw_doc.get("tabs", []), tab_identifier)
@@ -463,6 +466,8 @@ def _load_raw_document_tab(ctx: Context, document_id: str, tab_id: str) -> RawDo
         documentId=document_id,
         includeTabsContent=True
     ).execute()
+    raw_doc.setdefault("lists", {})
+    raw_doc.setdefault("inlineObjects", {})
 
     # Find the specific tab
     tab_content = _find_tab_content(raw_doc.get("tabs", []), tab_id)
@@ -578,6 +583,8 @@ def _load_raw_document(ctx: Context, document_id: str, include_comments: bool = 
         documentId=document_id,
         includeTabsContent=True
     ).execute()
+    raw_doc.setdefault("lists", {})
+    raw_doc.setdefault("inlineObjects", {})
 
     try:
         raw_document = RawDocument.from_google_response(raw_doc)
