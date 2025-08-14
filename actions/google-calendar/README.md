@@ -16,7 +16,7 @@ Give me all the events from this friday.
 ```
 
 > Here are the events from friday:
-> 
+>
 > 1. Home
 >    * Start: June 19, 2024
 >    * End: June 20, 2024
@@ -33,7 +33,7 @@ Give me all the events from this friday.
 >    * Description: Sync meeting for DevTools. Topics are raised in #dev-tools-team channel.
 >    * Attendees:
 >      * John, Doe, Albert, Robert
->      
+>
 > Let me know if you need more details or any other assistance!
 
 ```
@@ -57,3 +57,23 @@ Scopes in use:
 
     - https://www.googleapis.com/auth/calendar.events
     - https://www.googleapis.com/auth/calendar.readonly
+
+## Free/busy (transparency)
+
+You can control whether an event blocks time on your calendar via the `transparency` field.
+
+- `opaque`: counts as busy (default behavior)
+- `transparent`: does not block time (free)
+
+Example when creating:
+
+```json
+{
+  "summary": "Focus time",
+  "start": "2025-08-12T13:00:00+02:00",
+  "end": "2025-08-12T14:00:00+02:00",
+  "transparency": "transparent"
+}
+```
+
+You may also update an existing event's `transparency` using the update action.

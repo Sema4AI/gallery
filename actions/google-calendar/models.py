@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Literal
 
 from pydantic import BaseModel, Field
 from pydantic.functional_validators import BeforeValidator
@@ -100,6 +100,15 @@ class Event(BaseModel):
     reminders: Annotated[
         Reminder | None, Field(description="Reminders settings for the event")
     ] = None
+    transparency: Annotated[
+        Literal["opaque", "transparent"] | None,
+        Field(
+            description=(
+                "Whether the event blocks time on the calendar. "
+                "'opaque' means busy (default), 'transparent' means free."
+            )
+        ),
+    ] = None
 
 
 class CreateEvent(Event):
@@ -132,6 +141,15 @@ class UpdateEvent(BaseModel):
     ] = None
     reminders: Annotated[
         Reminder | None, Field(description="Reminders settings for the event")
+    ] = None
+    transparency: Annotated[
+        Literal["opaque", "transparent"] | None,
+        Field(
+            description=(
+                "Whether the event blocks time on the calendar. "
+                "Use 'opaque' for busy or 'transparent' for free."
+            )
+        ),
     ] = None
 
 

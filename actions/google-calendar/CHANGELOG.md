@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+
+## [1.2.0] - 2025-08-13
+
+### Added
+
+- Support for setting event free/busy via `transparency` ("opaque" for busy, "transparent" for free). Works with both create and update event actions.
+
 ## [1.1.3] - 2025-08-07
 
 ### Changed
