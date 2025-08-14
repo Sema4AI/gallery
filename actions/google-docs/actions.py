@@ -659,7 +659,7 @@ def _create_document(ctx, title: str) -> DocumentInfo:
 
 
 def _append_to_document(ctx: Context, document_id: str, content: str) -> DocumentInfo:
-    content = f"\n{content}"
+    #content = f"\n{content}"
     raw_document = _load_raw_document(ctx, document_id)
 
     body = BatchUpdateBody.from_markdown(
@@ -685,7 +685,8 @@ def _append_to_document(ctx: Context, document_id: str, content: str) -> Documen
 
 def _append_to_document_tab(ctx: Context, document_id: str, content: str, tab_identifier: str) -> DocumentInfo:
     """Append content to a specific tab in a document."""
-    content = f"\n{content}"
+    # Add minimal spacing without causing page breaks
+    #content = f"\n{content}"
 
     # Get document with tabs content
     raw_doc = ctx.documents.get(
@@ -714,27 +715,35 @@ def _append_to_document_tab(ctx: Context, document_id: str, content: str, tab_id
     if not target_tab_id:
         raise ActionError(f"Could not determine tab ID for tab '{tab_identifier}'")
 
-    # Create a temporary RawDocument from the tab to get the end index
-    mock_doc = {
-        "documentId": document_id,
-        "title": raw_doc.get("title", "Untitled"),
-        "body": tab_content["documentTab"]["body"],
-        "inlineObjects": raw_doc.get("inlineObjects"),
-        "lists": raw_doc.get("lists"),
-    }
+    # Use EndOfSegmentLocation for tab insertions - this is more reliable
+    # than calculating exact indices and avoids the paragraph bounds issue
+    from models.update_operations import BatchUpdateBody
 
+    # First, get the actual end index of the tab content
     try:
-        temp_raw_document = RawDocument.from_google_response(mock_doc)
-        end_index = temp_raw_document.end_index
-    except ValidationError:
-        raise ActionError("Could not parse tab content for appending")
+        temp_raw_document = RawDocument.from_google_response({
+            "documentId": document_id,
+            "title": raw_doc.get("title", "Untitled"),
+            "body": tab_content["documentTab"]["body"],
+            "inlineObjects": raw_doc.get("inlineObjects"),
+            "lists": raw_doc.get("lists"),
+        })
+        print(f"len(temp_raw_document.body): {len(temp_raw_document.body)}")
+        tab_end_index = temp_raw_document.end_index
+    except Exception:
+        tab_end_index = 1
 
-    # Create batch update body with tab-specific location
+    # Create the batch update with the correct start index for the tab
+    # Only use is_append=True if the tab has existing content (end_index > 1)
+    # For empty tabs, start fresh without leading newline
+    is_tab_empty = tab_end_index <= 1
+
+
     batch_body = BatchUpdateBody.from_markdown(
-        content, start_index=end_index - 1, is_append=True
+        content, start_index=tab_end_index, is_append=not is_tab_empty
     ).get_body()
 
-    # Add tab ID to all requests in the batch update
+    # Add tab IDs to all requests
     for request in batch_body.get("requests", []):
         if "insertText" in request:
             location = request["insertText"].get("location", {})
@@ -744,7 +753,41 @@ def _append_to_document_tab(ctx: Context, document_id: str, content: str, tab_id
             location = request["insertInlineImage"].get("location", {})
             location["tabId"] = target_tab_id
             request["insertInlineImage"]["location"] = location
-        # Add other request types as needed
+        elif "insertPageBreak" in request:
+            location = request["insertPageBreak"].get("location", {})
+            location["tabId"] = target_tab_id
+            request["insertPageBreak"]["location"] = location
+        elif "insertTable" in request:
+            location = request["insertTable"].get("location", {})
+            location["tabId"] = target_tab_id
+            request["insertTable"]["location"] = location
+        elif "updateTextStyle" in request:
+            range_obj = request["updateTextStyle"].get("range", {})
+            range_obj["tabId"] = target_tab_id
+            request["updateTextStyle"]["range"] = range_obj
+        elif "updateParagraphStyle" in request:
+            range_obj = request["updateParagraphStyle"].get("range", {})
+            range_obj["tabId"] = target_tab_id
+            request["updateParagraphStyle"]["range"] = range_obj
+        elif "createParagraphBullets" in request:
+            range_obj = request["createParagraphBullets"].get("range", {})
+            range_obj["tabId"] = target_tab_id
+            request["createParagraphBullets"]["range"] = range_obj
+        elif "updateTableCellStyle" in request:
+            # Handle table range location for cell-specific styling
+            table_range = request["updateTableCellStyle"].get("tableRange", {})
+            if table_range:
+                table_cell_location = table_range.get("tableCellLocation", {})
+                table_start_location = table_cell_location.get("tableStartLocation", {})
+                table_start_location["tabId"] = target_tab_id
+                table_cell_location["tableStartLocation"] = table_start_location
+                table_range["tableCellLocation"] = table_cell_location
+                request["updateTableCellStyle"]["tableRange"] = table_range
+            else:
+                # Handle direct table start location for whole-table styling
+                table_location = request["updateTableCellStyle"].get("tableStartLocation", {})
+                table_location["tabId"] = target_tab_id
+                request["updateTableCellStyle"]["tableStartLocation"] = table_location
 
     # Execute the batch update
     ctx.documents.batchUpdate(

@@ -5,7 +5,6 @@
             "inputValue": {
                 "document_id": "",
                 "document_name": "Sema4.ai Actions - Test Document",
-                "tab_index": 1,
                 "vscode:request:oauth2": {
                     "oauth_access_token": {
                         "type": "OAuth2Secret",

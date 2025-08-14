@@ -22,7 +22,7 @@
             "inputName": "Get document from tab",
             "inputValue": {
                 "name": "Sema4.ai Actions - Test Document",
-                "tab_title": "Tab 2",
+                "tab_title": "Tab 4",
                 "vscode:request:oauth2": {
                     "oauth_access_token": {
                         "type": "OAuth2Secret",
