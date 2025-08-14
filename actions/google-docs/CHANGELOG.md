@@ -4,6 +4,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [2.0.0] - 2025-08-13
+
+### Added
+
+- **Document tabs**: First-class support for multi-tab Google Docs (reading and appending to specific tabs).
+- **Comments**: View document comments and map them to tabs; optional comment inclusion in document reads.
+
+### Changed
+
+- Document responses include structured tab content when available.
+− Default append targets the first tab when a document has tabs and no tab is specified.
+
+### Fixed
+
+- Improved document parsing for tab-enabled Google Documents
+- Better handling of tab titles and content extraction
+
 ## [1.4.3] - 2025-08-07
 
 ### Changed
