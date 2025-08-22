@@ -65,7 +65,7 @@ def find_closest_match(target: str, candidates: list[str], threshold: float = 0.
     return best_match if best_score >= threshold else None
 
 
-def resolve_agent_by_name(client: _AgentAPIClient, agent_name: str) -> tuple[Agent | None, AgentResult | None]:
+def resolve_agent_by_name(client: _AgentAPIClient, agent_name: str) -> AgentResult:
     """Centralized function to resolve an agent by name and provide suggestions if not found.
     
     Args:
@@ -73,14 +73,15 @@ def resolve_agent_by_name(client: _AgentAPIClient, agent_name: str) -> tuple[Age
         agent_name: The name of the agent to find
         
     Returns:
-        Tuple of (agent, agent_result) where:
-        - If agent is found: (agent, None)
-        - If agent is not found: (None, agent_result_with_suggestions)
+        AgentResult with found=True and agent populated if found, or found=False with suggestions if not found
     """
     # First, try to find the agent
     agent = client.get_agent_by_name(agent_name)
     if agent:
-        return agent, None
+        return AgentResult(
+            found=True,
+            agent=agent
+        )
     
     # Agent not found, get all agents to provide suggestions
     all_agents = client.get_all_agents()
@@ -89,21 +90,13 @@ def resolve_agent_by_name(client: _AgentAPIClient, agent_name: str) -> tuple[Age
     # Find the closest matching name
     suggested_name = find_closest_match(agent_name, available_names, threshold=0.6)
     
-    agent_result = AgentResult(
+    return AgentResult(
         found=False,
         requested_name=agent_name,
         available_agent_names=available_names,
         suggested_name=suggested_name,
         message=f"Agent '{agent_name}' not found. Available agents: {', '.join(available_names)}"
     )
-    
-    return None, agent_result
-    found: bool
-    agent: Agent | None = None
-    requested_name: str | None = None
-    available_agent_names: list[str] | None = None
-    suggested_name: str | None = None
-    message: str | None = None
 
 class Conversation(BaseModel):
     id: str
@@ -139,9 +132,11 @@ def ask_agent(
     client = _AgentAPIClient(api_key=sema4_api_key.value)
     
     # First, find the agent by name
-    agent, agent_result = resolve_agent_by_name(client, agent_name)
-    if not agent:
+    agent_result = resolve_agent_by_name(client, agent_name)
+    if not agent_result.found:
         raise ActionError(agent_result.message)
+    
+    agent = agent_result.agent
     
     # If no conversation_id provided, create a new conversation
     if not conversation_id:
@@ -193,15 +188,7 @@ def get_agent_by_name(name: str, sema4_api_key: Secret) -> Response[AgentResult]
         Response containing an AgentResult with either the found agent or suggestions for available agents
     """
     client = _AgentAPIClient(api_key=sema4_api_key.value)
-    agent, agent_result = resolve_agent_by_name(client, name)
-    
-    if agent:
-        return Response(result=AgentResult(
-            found=True,
-            agent=agent
-        ))
-    
-    return Response(result=agent_result)
+    return Response(result=resolve_agent_by_name(client, name))
 
 
 @action
