@@ -66,7 +66,7 @@ class SearchResult(BaseModel):
 @action
 def search_google(q: str, num: int, api_key: Secret) -> Response[SearchResult]:
     """
-    Perform a search using the Serper API and return a structured summary.
+    Perform a search using the Serper API and return a structured summary. The number of results can be specified.
 
     Args:
         q: The search query.
