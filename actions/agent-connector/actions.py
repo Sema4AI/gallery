@@ -5,25 +5,24 @@ from sema4ai.actions import (
     Secret,
     action,
 )
+import difflib
 
-from agent_api_client import _AgentAPIClient
+from agent_api_client import _AgentAPIClient, Agent
 
-
-class Agent(BaseModel):
-    id: str
-    name: str
-    description: str | None = None
-    mode: str | None = None
-
+class AgentResult(BaseModel):
+    found: bool
+    agent: Agent | None = None
+    requested_name: str | None = None
+    available_agent_names: list[str] | None = None
+    suggested_name: str | None = None
+    message: str | None = None
 
 class Conversation(BaseModel):
     id: str
     name: str
     agent_id: str
 
-
 # Create a client instance for each function call with the API key
-
 
 @action
 def get_all_agents(sema4_api_key: Secret) -> Response[list[Agent]]:
@@ -40,18 +39,45 @@ def get_all_agents(sema4_api_key: Secret) -> Response[list[Agent]]:
 
 
 @action
-def get_agent_by_name(name: str, sema4_api_key: Secret) -> Response[Agent]:
-    """Fetches an agent by name.
+def get_agent_by_name(name: str, sema4_api_key: Secret) -> Response[AgentResult]:
+    """Fetches an agent by name. If the agent is not found, returns a result with available agent names and suggestions.
 
     Args:
         name: The name of the agent
         sema4_api_key: The API key for the Sema4 API if running in cloud. Use LOCAL if in Studio or SDK!
 
     Returns:
-        Response containing either the agent ID or an error message
+        Response containing an AgentResult with either the found agent or suggestions for available agents
     """
     client = _AgentAPIClient(api_key=sema4_api_key.value)
-    return Response(result=client.get_agent_by_name(name))
+    agent = client.get_agent_by_name(name)
+    
+    if agent:
+        return Response(result=AgentResult(
+            found=True,
+            agent=agent
+        ))
+    
+    # Agent not found, get all agents to provide suggestions
+    all_agents = client.get_all_agents()
+    available_names = [agent.name for agent in all_agents]
+    
+    # Find the closest matching name
+    suggested_name = None
+    if available_names:
+        # Use difflib to find the closest match
+        matches = difflib.get_close_matches(name, available_names, n=1, cutoff=0.6)
+        suggested_name = matches[0] if matches else None
+    
+    result = AgentResult(
+        found=False,
+        requested_name=name,
+        available_agent_names=available_names,
+        suggested_name=suggested_name,
+        message=f"Agent '{name}' not found. Available agents: {', '.join(available_names)}"
+    )
+    
+    return Response(result=result)
 
 
 @action
