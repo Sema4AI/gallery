@@ -6,57 +6,95 @@ The Agent Connector allows agents within the Sema4.ai platform to communicate wi
 intuitive interface. This connector provides actions to create communication conversations and send messages between agents,
 facilitating smooth and efficient inter-agent communication.
 
-Currently supported features:
+## Quick Start
 
-- Get agents
-- Get agent by name
-- Get conversations
-- Get a conversation
+The easiest way to interact with agents is using the `ask_agent` function:
+
+> Ask the Marketing Agent for a 10-word description of Studio
+
+## Available Actions
+
+**Primary Interface:**
+- `ask_agent()` - The simplest way to ask an agent a question by name
+
+**Agent Management:**
+- Get all agents
+- Get agent by name (with intelligent suggestions if not found)
+
+**Conversation Management:**
+- Get conversations for an agent
+- Get a specific conversation
 - Create a conversation
-- Send a message
+- Send a message to existing conversation
 
-## Prompts
+## Example Usage
+
+### Simple Agent Interaction
 
 ```
-What agents do i have running?
+Ask "Data Agent Example" to help me analyze my dataset
+```
+
+> The "Data Agent Example" responded: "I'd be happy to help you analyze your dataset! Could you please provide more details about the data you're working with?"
+> 
+> Conversation ID: `abc123-def456-ghi789` (use this to continue the conversation)
+
+### Continue a Conversation
+
+```
+Ask "Data Agent Example" to explain the previous analysis further
+```
+
+> The "Data Agent Example" responded: "Based on our previous analysis, here's a more detailed explanation..."
+
+### Get Available Agents
+
+```
+What agents do I have available?
 ```
 
 > Here are the agents you currently have running:
 > 1. Data Agent Example
-> 2. The Ultimate Data Sources Test 
+> 2. The Ultimate Data Sources Test
 
+### Intelligent Suggestions
 
-```
-Let's talk to "Data Agent Example"
-```
-> You have the following conversations available with the "Data Agent Example":
-> 1. Welcome
-> 2. Chat 2
+If you mistype an agent name, the system will suggest the closest match:
 
 ```
-Let's say "Hello" to "Welcome"
+Ask "Data Agnet" to help me
 ```
 
-> The "Data Agent Example" responded with: "Hello! How can I assist you today?"
-> If you have any specific questions or tasks for this agent, feel free to let me know!
+> Agent 'Data Agnet' not found. Did you mean 'Data Agent Example'?
+> Available agents: Data Agent Example, The Ultimate Data Sources Test
 
 ## How It Works
 
-1. **Creating a Communication Conversation**:
-    - The `create_conversation` action allows you to create a new conversation for communication with an agent by specifying the
-      agent's ID and a user-defined conversation name. This action requires an agent ID and returns a conversation ID
-      that can be used for further communication.
+### Simple Agent Communication
 
-2. **Sending Messages**:
-    - The `send_message` action enables you to send messages to an agent in a specific conversation. You need to provide 
-      the conversation ID, agent ID, and the message content. The action returns the agent's response or an error message
-      if the operation fails.
+The `ask_agent` function provides the easiest way to interact with agents:
 
-3. **Authentication**:
-    - When running in cloud environments (HTTPS), the connector uses Bearer token authentication with the provided API key.
-    - For local development (HTTP), no authentication is required. Use "LOCAL" as the API key value.
+1. **Automatic Agent Resolution**: Just provide the agent name - the system will find the agent and handle any typos with intelligent suggestions
+2. **Conversation Management**: Automatically creates new conversations when needed, or uses existing ones for follow-up messages
+3. **Structured Responses**: Returns both the agent's response and conversation ID for easy continuation
 
-By using these actions, agents within the Sema4.ai platform can effectively communicate, enabling seamless collaboration
-and information exchange.
+### Advanced Usage
 
-Let your agents talk to each other!
+For more control, you can also use the individual actions:
+
+1. **Agent Discovery**: Use `get_all_agents` to see available agents or `get_agent_by_name` for specific lookups with suggestions
+2. **Conversation Management**: Create conversations manually or retrieve existing ones
+3. **Message Sending**: Send messages to specific conversations with full control over the process
+
+### Authentication
+
+- **Cloud Environment**: Uses Bearer token authentication with your API key
+- **Local Development**: Use "LOCAL" as the API key value (no authentication required)
+
+### Intelligent Features
+
+- **Name Suggestions**: If you mistype an agent name, the system suggests the closest match
+- **Error Handling**: Clear error messages with available agent names when agents aren't found
+- **Conversation Continuity**: Easy follow-up messages using returned conversation IDs
+
+Let your agents talk to each other seamlessly!
