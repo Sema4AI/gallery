@@ -14,7 +14,7 @@ import sema4ai_http
 from dotenv import load_dotenv
 from models import DownloadedFile, Form, Links, UserAgent, WebPage
 from playwright.sync_api import TimeoutError
-from sema4ai.actions import Response, action
+from sema4ai.actions import Response, action, chat
 from support import (
     _clean_text,
     _configure_browser,
@@ -140,6 +140,13 @@ def download_file(
         df.content = df_content
         df.status = f"File downloaded successfully at: {os.path.abspath(file_path)}"
         df.filepath = os.path.abspath(file_path)  # Return the full path of the file
+        
+        # Add file to chat
+        basename = os.path.basename(file_path)
+        with open(file_path, "rb") as f:
+            chat.attach_file_content(name=basename, data=f.read())
+        print(f"Created new file in chat {basename} in location: {file_path}")
+        df.status = f"Created new file in chat {basename} in location: {file_path}"
     except Exception as e:
         df.filepath = ""
         df.status = f"Download failed: {str(e)}"
