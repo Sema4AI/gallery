@@ -8,6 +8,13 @@ Website content retrieved:
     - text content of the page
     - elements ('a', 'input', 'button', 'select', 'textarea' and 'table')
 
+## Features
+
+### File Downloads
+- Download files from URLs with size limits and custom target folders
+- **Automatic chat integration**: Downloaded files are automatically attached to the conversation
+- Files become immediately available for further processing in the chat
+
 ## Prompts
 
 ```
