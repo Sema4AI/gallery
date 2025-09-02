@@ -169,14 +169,13 @@ class _ParagraphData(
 
         if self.list_id:
             spacing = " " * (self.nesting_level * 2)
-            match self.list_id:
-                case _OrderedListId(list_id):
-                    i = ctx.get_next_list_index(str(list_id), self.nesting_level)
-                    return f"{spacing}{i}. {body}"
-                case _UnorderedListId():
-                    return f"{spacing}* {body}"
-                case _:
-                    raise ValueError(f"Invalid list id type: {self.list_id:r}")
+            if isinstance(self.list_id, _OrderedListId):
+                i = ctx.get_next_list_index(str(self.list_id), self.nesting_level)
+                return f"{spacing}{i}. {body}"
+            elif isinstance(self.list_id, _UnorderedListId):
+                return f"{spacing}* {body}"
+            else:
+                raise ValueError(f"Invalid list id type: {self.list_id:r}")
 
         elif self.style and self.style.startswith("HEADING_"):
             if not body.strip():
@@ -342,6 +341,7 @@ class DocumentInfo(BaseModel, extra="ignore", populate_by_name=True):
             validation_alias="documentId",
         ),
     ]
+    document_url: Annotated[str, Field(description="The direct link to the Google Document.")]
     current_tab: Annotated[TabInfo | None, Field(description="Information about the current tab being displayed.", default=None)]
     tabs: Annotated[list[TabInfo], Field(description="List of all tabs in the document.", default_factory=list)]
     comments: Annotated[list[CommentInfo], Field(description="List of comments on the document.", default_factory=list)]
@@ -427,6 +427,7 @@ class RawDocument(DocumentInfo):
                 processed_data = {
                     "documentId": data.get("documentId"),
                     "title": data.get("title", "Untitled"),
+                    "document_url": f"https://docs.google.com/document/d/{data.get('documentId')}/edit",
                     "body": {"content": []},  # Empty body for documents with tabs
                     "current_tab": current_tab_info,
                     "tabs": all_tabs,
@@ -439,6 +440,7 @@ class RawDocument(DocumentInfo):
                 processed_data = {
                     "documentId": data.get("documentId"),
                     "title": data.get("title", "Untitled"),
+                    "document_url": f"https://docs.google.com/document/d/{data.get('documentId')}/edit",
                     "body": {"content": []},
                     "current_tab": None,
                     "tabs": [],
@@ -547,6 +549,7 @@ class MarkdownDocument(DocumentInfo):
         return MarkdownDocument(
             title=document.title,
             document_id=document.document_id,
+            document_url=document.document_url,
             body=body,
             current_tab=document.current_tab,
             tabs=document.tabs,

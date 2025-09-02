@@ -204,7 +204,7 @@ def create_document(
     if tab_index is not None and tab_title:
         raise ActionError("Cannot specify both tab_index and tab_title. Please provide only one.")
 
-    # Note: Google Docs API doesn't currently support creating documents with multiple tabs
+    # Note: Google Docs API doesn't currently support creating docvuments with multiple tabs
     # Tab parameters are included for future compatibility but will be ignored for now
     if tab_index is not None or tab_title:
         raise ActionError("Creating documents with specific tabs is not currently supported by the Google Docs API. Create the document first, then append to specific tabs.")
@@ -607,6 +607,7 @@ def _create_document(ctx, title: str) -> DocumentInfo:
     doc_info = DocumentInfo(
         title=raw_response.get("title", title),
         document_id=raw_response.get("documentId"),
+        document_url=f"https://docs.google.com/document/d/{raw_response.get('documentId')}/edit",
         current_tab=None,
         tabs=[],
         comments=[]  # New documents don't have comments yet
@@ -675,6 +676,7 @@ def _append_to_document(ctx: Context, document_id: str, content: str) -> Documen
     doc_info = DocumentInfo(
         title=raw_document.title,
         document_id=raw_document.document_id,
+        document_url=f"https://docs.google.com/document/d/{raw_document.document_id}/edit",
         current_tab=raw_document.current_tab,
         tabs=raw_document.tabs,
         comments=_fetch_comments_from_drive_api(ctx, raw_document.document_id)
@@ -844,6 +846,7 @@ def _append_to_document_tab(ctx: Context, document_id: str, content: str, tab_id
     doc_info = DocumentInfo(
         title=raw_doc.get("title", "Untitled"),
         document_id=document_id,
+        document_url=f"https://docs.google.com/document/d/{document_id}/edit",
         current_tab=current_tab_info,
         tabs=all_tabs,
         comments=_fetch_comments_from_drive_api(ctx, document_id)
