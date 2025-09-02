@@ -2,6 +2,7 @@ from sema4ai.actions import ActionError, Response, Table
 from sema4ai.data import query, get_connection
 import concurrent.futures
 from typing import Dict, Any, List
+from data_sources import SnowflakeDataSource
 
 def process_single_table(table_name: str, connection) -> Dict[str, Any]:
     """Process a single table to get its columns, sample data, and row count."""
