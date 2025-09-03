@@ -6,12 +6,12 @@
         }
     ],
     "metadata": {
-        "actionName": "snowflake_get_warehouses",
-        "actionRelativePath": "snowflake_actions.py",
+        "actionName": "get_tables_info",
+        "actionRelativePath": "data_actions.py",
         "schemaDescription": [],
         "managedParamsSchemaDescription": {},
         "inputFileVersion": "v3",
-        "kind": "action",
-        "actionSignature": "action/args: ''"
+        "kind": "query",
+        "actionSignature": "query/args: ''"
     }
 }
