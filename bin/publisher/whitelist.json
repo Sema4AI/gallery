@@ -59,6 +59,7 @@
             "zendesk",
             "snowflake-cortex-analyst",
             "snowflake-cortex-search",
+            "snowflake-data",
             "serper",
             "perplexity",
             "robocorp"

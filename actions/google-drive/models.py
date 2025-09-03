@@ -1,4 +1,4 @@
-from typing import Annotated, Generic, List, Optional, TypeVar
+from typing import Annotated, Generic, List, Optional, TypeVar, Union
 
 from pydantic import BaseModel, Field
 
@@ -56,6 +56,14 @@ class File(BaseModel):
         Optional[List[Permission]],
         Field(description="A list of permissions granted to the file"),
     ] = None
+    location: Annotated[
+        Optional[str],
+        Field(description="The location of the drive item as a full folder path, e.g. /Folder1/Folder2/FileName")
+    ] = None
+    chat_filename: Annotated[
+        Optional[str],
+        Field(description="The filename used when attaching this file to chat, if applicable.")
+    ] = None
 
     def is_excel(self) -> bool:
         return self.mimeType == "application/vnd.google-apps.spreadsheet"
@@ -64,9 +72,22 @@ class File(BaseModel):
         return self.mimeType == "application/vnd.google-apps.document"
 
 
+class BasicFile(BaseModel):
+    id: Annotated[str, Field(description="The unique identifier for the file")]
+    name: Annotated[str, Field(description="The name of the file")]
+    location: Annotated[
+        Optional[str],
+        Field(description="The location of the drive item as a full folder path, e.g. /Folder1/Folder2/FileName")
+    ] = None
+    webViewLink: Annotated[
+        Optional[str],
+        Field(description="A URL for viewing the file in a web browser")
+    ] = None
+
+
 class FileList(BaseModel):
     files: Annotated[
-        List[File], Field(description="A list of files matching the search query")
+        list[Union[File, BasicFile]], Field(description="A list of files matching the search query")
     ]
 
 

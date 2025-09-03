@@ -5,6 +5,43 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.3.1] - 2025-08-07
+
+### Changed
+
+- Update sema4ai-actions to `1.4.1` version
+
+## [1.3.0] - 2025-06-26
+
+### Added
+
+- Actions `get_file_by_id` and `get_file_contents` attach a file to the Files.
+  - A custom filename can be set
+  - The attaching can be disabled
+- Action `get_files_by_query` can attach resulting files to the Files.
+
+## [1.2.1] - 2025-06-18
+
+- Updated sema4ai-actions version carrying a new version of pydantic
+
+## [1.2.0] - 2025-06-16
+
+### Added
+
+- New `upload_file` action to upload files to Google Drive with support for:
+  - File selection via chat interface
+  - Optional parent folder specification
+  - Optional file sharing with customizable roles
+  - Full support for shared drives
+
+### Changed
+
+- Dependency versions updated.
+- Improved `get_files_by_query` action:
+  - Now supports returning only basic file info, searching all drives, and saving results as CSV
+  - Added support for searching by parent folder name in queries (e.g., "'My Folder' in parents")
+  - Improved error handling and reporting
+
 ## [1.1.1] - 2025-04-04
 
 ### Changed

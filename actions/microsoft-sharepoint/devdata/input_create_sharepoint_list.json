@@ -1,10 +1,10 @@
 {
     "inputs": [
         {
-            "inputName": "input-1",
+            "inputName": "create list with columns",
             "inputValue": {
                 "sharepoint_list": {
-                    "list_name": "newlist23",
+                    "list_name": "totally new list",
                     "description": "my list description",
                     "columns": [
                         {
@@ -13,8 +13,10 @@
                         }
                     ]
                 },
-                "site_name": "Testing",
-                "site_id": "",
+                "site": {
+                    "site_id": "",
+                    "site_name": "Communication site"
+                },
                 "vscode:request:oauth2": {
                     "token": {
                         "type": "OAuth2Secret",
@@ -23,6 +25,54 @@
                             "Sites.Manage.All"
                         ],
                         "access_token": "<access-token-will-be-requested-by-vscode>"
+                    }
+                }
+            }
+        },
+        {
+            "inputName": "site_id only",
+            "inputValue": {
+                "sharepoint_list": {
+                    "list_name": "Test List Again",
+                    "description": "desc",
+                    "columns": []
+                },
+                "site": {
+                    "site_id": "beissi.sharepoint.com,ae291e2f-b4ff-4ba6-8937-4a58f7ec5217,e65bd6bb-5a54-4447-8da6-da8ea36c254a",
+                    "site_name": ""
+                },
+                "vscode:request:oauth2": {
+                    "token": {
+                        "type": "OAuth2Secret",
+                        "provider": "microsoft",
+                        "scopes": [
+                            "Sites.Manage.All"
+                        ],
+                        "access_token": "<access-token>"
+                    }
+                }
+            }
+        },
+        {
+            "inputName": "site_name only",
+            "inputValue": {
+                "sharepoint_list": {
+                    "list_name": "Test List and Yet Again",
+                    "description": "desc",
+                    "columns": []
+                },
+                "site": {
+                    "site_id": "",
+                    "site_name": "Communication Site"
+                },
+                "vscode:request:oauth2": {
+                    "token": {
+                        "type": "OAuth2Secret",
+                        "provider": "microsoft",
+                        "scopes": [
+                            "Sites.Manage.All"
+                        ],
+                        "access_token": "<access-token>"
                     }
                 }
             }
@@ -37,8 +87,8 @@
             "sharepoint_list.columns: array: List of columns",
             "sharepoint_list.columns.0.column_name: string: Name of the column",
             "sharepoint_list.columns.0.column_type: ['text', 'boolean', 'dateTime', 'number']",
-            "site_name: string: name of the Sharepoint site.",
-            "site_id: string: id of the Sharepoint site."
+            "site.site_id: string: The unique Microsoft site ID, if known.",
+            "site.site_name: string: The human-readable name of the site, if known."
         ],
         "managedParamsSchemaDescription": {
             "token": {
@@ -52,6 +102,6 @@
         },
         "inputFileVersion": "v3",
         "kind": "action",
-        "actionSignature": "action/args: \"sharepoint_list: SharepointList, token: OAuth2Secret[Literal['microsoft'], list[Literal['Sites.Manage.All']]], site_name: str='', site_id: str=''\""
+        "actionSignature": "action/args: \"sharepoint_list: SharepointList, token: OAuth2Secret[Literal['microsoft'], list[Literal['Sites.Manage.All']]], site: SiteIdentifier=SiteIdentifier()\""
     }
 }

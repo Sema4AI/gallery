@@ -1,8 +1,58 @@
 # Change Log
+
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](https://semver.org/).
+
+### [4.1.0] - 2025-08-21
+
+### Added
+
+- New `ask_agent()` function - the simplest way to ask an agent a question by name
+  - Automatically creates new conversations when needed
+  - Supports existing conversation IDs for follow-up messages
+  - Returns conversation ID and agent response in a structured format
+- New `MessageResponse` model for structured message responses
+- New `AgentResult` model for agent lookup results with suggestions
+- Centralized agent name resolution logic with intelligent suggestions
+- Custom string matching algorithm for finding closest agent names
+
+### Changed
+
+- Enhanced `get_agent_by_name()` function to return suggestions when agent not found
+  - Now returns available agent names and closest match suggestions
+  - Better error handling with helpful messages
+- Replaced `difflib` dependency with custom string matching function
+- Improved function ordering with `ask_agent()` as the primary interface
+- Updated function documentation to guide users toward `ask_agent()` for common use cases
+
+### Improved
+
+- Better user experience with intelligent agent name suggestions
+- Centralized code for agent resolution to eliminate duplication
+- More intuitive function naming (`ask_agent` vs `send_message_to_agent_by_name`)
+- Enhanced error messages with available agent names and suggestions
+
+### [4.0.5] - 2025-08-07
+
+### Changed
+
+- Update sema4ai-actions to `1.4.1` version
+
+## [4.0.4] - 2025-07-01
+
+- Add backwards compatibility with older Studio versions
+
+## [4.0.3] - 2025-06-18
+
+- Updated sema4ai-actions version carrying a new version of pydantic
+
+## [4.0.2] - 2025-06-11
+
+### Fixed
+
+- Fixed a bug where agent response was not stringified resulting in a type error at run time.
 
 ## [4.0.1] - 2025-05-05
 

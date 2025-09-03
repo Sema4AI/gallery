@@ -1,20 +1,22 @@
 {
     "inputs": [
         {
-            "inputName": "input-1",
+            "inputName": "update item in list",
             "inputValue": {
                 "update_item": {
                     "item_id": "26",
                     "fields": {
                         "fields": [
                             {
-                                "Title": "Was there anything wrong?"
+                                "Title": "Doubt Was there anything wrong?"
                             }
                         ]
                     }
                 },
-                "site_id": "",
-                "site_name": "Communication site",
+                "site": {
+                    "site_id": "",
+                    "site_name": "Communication site"
+                },
                 "list_id": "",
                 "list_name": "Issue tracker",
                 "vscode:request:oauth2": {
@@ -28,6 +30,68 @@
                     }
                 }
             }
+        },
+        {
+            "inputName": "site_id only",
+            "inputValue": {
+                "update_item": {
+                    "item_id": "26",
+                    "fields": {
+                        "fields": [
+                            {
+                                "Title": "A"
+                            }
+                        ]
+                    }
+                },
+                "site": {
+                    "site_id": "beissi.sharepoint.com,ae291e2f-b4ff-4ba6-8937-4a58f7ec5217,e65bd6bb-5a54-4447-8da6-da8ea36c254a",
+                    "site_name": ""
+                },
+                "list_id": "6ecd6026-57d1-4577-9011-33406880e57f",
+                "list_name": "",
+                "vscode:request:oauth2": {
+                    "token": {
+                        "type": "OAuth2Secret",
+                        "provider": "microsoft",
+                        "scopes": [
+                            "Sites.Manage.All"
+                        ],
+                        "access_token": "<access-token>"
+                    }
+                }
+            }
+        },
+        {
+            "inputName": "site_name only",
+            "inputValue": {
+                "update_item": {
+                    "item_id": "26",
+                    "fields": {
+                        "fields": [
+                            {
+                                "Title": "I guess something could be wrong"
+                            }
+                        ]
+                    }
+                },
+                "site": {
+                    "site_id": "",
+                    "site_name": "Communication Site"
+                },
+                "list_id": "6ecd6026-57d1-4577-9011-33406880e57f",
+                "list_name": "",
+                "vscode:request:oauth2": {
+                    "token": {
+                        "type": "OAuth2Secret",
+                        "provider": "microsoft",
+                        "scopes": [
+                            "Sites.Manage.All"
+                        ],
+                        "access_token": "<access-token>"
+                    }
+                }
+            }
         }
     ],
     "metadata": {
@@ -35,10 +99,9 @@
         "actionRelativePath": "microsoft_sharepoint/sharepoint_list_action.py",
         "schemaDescription": [
             "update_item.item_id: string: ID of the list item",
-            "update_item.fields.fields: array: Field values for the list item as a dictionary",
-            "update_item.fields.fields.0: object: Field values for the list item as a dictionary",
-            "site_id: string: ID of the SharePoint site.",
-            "site_name: string: Name of the SharePoint site.",
+            "update_item.fields.fields: string: Field values for the list item as a dictionary",
+            "site.site_id: string: The unique Microsoft site ID, if known.",
+            "site.site_name: string: The human-readable name of the site, if known.",
             "list_id: string: ID of the SharePoint list.",
             "list_name: string: Name of the SharePoint list."
         ],
@@ -54,6 +117,6 @@
         },
         "inputFileVersion": "v3",
         "kind": "action",
-        "actionSignature": "action/args: \"update_item: SharepointListItem, token: OAuth2Secret[Literal['microsoft'], list[Literal['Sites.Manage.All']]], site_id: str='', site_name: str='', list_id: str='', list_name: str=''\""
+        "actionSignature": "action/args: \"update_item: SharepointListItem, token: OAuth2Secret[Literal['microsoft'], list[Literal['Sites.Manage.All']]], site: SiteIdentifier=SiteIdentifier(), list_id: str='', list_name: str=''\""
     }
 }

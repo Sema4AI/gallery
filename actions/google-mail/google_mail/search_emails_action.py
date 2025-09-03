@@ -23,13 +23,16 @@ def search_emails(
         list[Literal["https://www.googleapis.com/auth/gmail.readonly"]],
     ],
     max_results: int = DEFAULT_EMAIL_QUERY_COUNT,
+    fetch_attachments: bool = False,
 ) -> Response[Emails]:
     """Search Google emails with a query filter.
 
     Please inform user if there are more than `max_results` emails.
+
     Args:
         query: the query filter to apply to the emails
         max_results: the maximum number of emails to return (default 100)
+        fetch_attachments: if True, the attachments will be saved to Files API
         token: the OAuth2 token for the user
 
     Returns:
@@ -39,6 +42,6 @@ def search_emails(
     emails = Emails(items=[])
     messages = _list_messages_with_query(service, query=query, max_results=max_results)
     for message in messages:
-        email = _get_message_details(message)
+        email = _get_message_details(service, message, fetch_attachments=fetch_attachments)
         emails.items.append(email)
     return Response(result=emails)

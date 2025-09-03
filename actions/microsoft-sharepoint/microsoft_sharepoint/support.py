@@ -48,5 +48,8 @@ def send_request(
         # Not found (e.g., item does not exist)
         raise NotFound(f"Not found on '{req_name}': {response.text}")
 
-    response.raise_for_status()  # Raises a HTTPError for bad responses
+    try:
+        response.raise_for_status()  # Raises a HTTPError for bad responses
+    except Exception as e:
+        raise ActionError(f"HTTP {response.status_code} error on '{req_name}': {response.text}") from e
 

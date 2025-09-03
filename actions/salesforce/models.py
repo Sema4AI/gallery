@@ -15,3 +15,6 @@ class SalesforceResponse(BaseModel):
     ]
     done: Annotated[bool, Field(description="Indicates if the query is complete")]
     records: Annotated[list[BaseRecord], Field(description="List of selected records")]
+
+    class Config:
+        populate_by_name = True

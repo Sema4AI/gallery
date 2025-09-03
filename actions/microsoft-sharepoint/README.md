@@ -41,7 +41,7 @@ Get a file related to studio from Community site
 > Would you like to download this file?
 
 ```
-Uploaded /Users/tommi/.robocorp/sema4ai-desktop/uploads/5ddd5f53-05c4-4333-be5d-4b3b276a7dfa/molkky-game-rules.pdf.
+Uploaded molkky-game-rules.pdf
 
 upload this file to alerts-dev-tommi
 ```

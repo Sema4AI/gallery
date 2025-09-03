@@ -24,6 +24,7 @@ def get_email_content(
     ],
     email_id: str = "",
     query: str = "",
+    fetch_attachments: bool = False,
     max_results: int = 10,
 ) -> Response[Emails]:
     """Get Google email content with specific email id or with
@@ -32,6 +33,7 @@ def get_email_content(
     Args:
         email_id: the email id to get the content from
         query: the query filter to apply to the emails
+        fetch_attachments: if True, the attachments will be saved to Files API
         max_results: the maximum number of emails to return (default 10)
         token: the OAuth2 token for the user
 
@@ -44,7 +46,7 @@ def get_email_content(
     emails = Emails(items=[])
     if email_id:
         message = _get_message_by_id(service, "me", email_id)
-        email = _get_message_details(message, return_content=True)
+        email = _get_message_details(service, message, return_content=True, fetch_attachments=fetch_attachments)
         print(f"Appending to result email of size {email.get_size_in_bytes()}")
         emails.items.append(email)
     else:
@@ -53,7 +55,7 @@ def get_email_content(
         )
         total_response_size = 0
         for message in messages:
-            email = _get_message_details(message, return_content=True)
+            email = _get_message_details(service, message, return_content=True, fetch_attachments=fetch_attachments)
             print(f"Appending to result email of size {email.get_size_in_bytes()}")
             email_size = email.get_size_in_bytes()
             total_response_size += email_size

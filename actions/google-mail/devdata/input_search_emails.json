@@ -3,8 +3,9 @@
         {
             "inputName": "input-1",
             "inputValue": {
-                "query": "from:github",
-                "max_results": 10,
+                "query": "subject:\"message 11\"",
+                "max_results": 1,
+                "fetch_attachments": true,
                 "vscode:request:oauth2": {
                     "token": {
                         "type": "OAuth2Secret",
@@ -23,7 +24,8 @@
         "actionRelativePath": "google_mail/search_emails_action.py",
         "schemaDescription": [
             "query: string: the query filter to apply to the emails",
-            "max_results: integer: the maximum number of emails to return (default 100)"
+            "max_results: integer: the maximum number of emails to return (default 100)",
+            "fetch_attachments: boolean: if True, the attachments will be saved to Files API"
         ],
         "managedParamsSchemaDescription": {
             "token": {
@@ -37,6 +39,6 @@
         },
         "inputFileVersion": "v3",
         "kind": "action",
-        "actionSignature": "action/args: \"query: str, token: OAuth2Secret[Literal['google'], list[Literal['https://www.googleapis.com/auth/gmail.readonly']]], max_results: int=DEFAULT_EMAIL_QUERY_COUNT\""
+        "actionSignature": "action/args: \"query: str, token: OAuth2Secret[Literal['google'], list[Literal['https://www.googleapis.com/auth/gmail.readonly']]], max_results: int=DEFAULT_EMAIL_QUERY_COUNT, fetch_attachments: bool=False\""
     }
 }

@@ -1,0 +1,39 @@
+{
+    "inputs": [
+        {
+            "inputName": "input-with-wrapping",
+            "inputValue": {
+                "query": "SELECT * FROM snowflake_database (SELECT COUNT(*) FROM PRODUCTION_REPORTS);"
+            }
+        },
+        {
+            "inputName": "input-without-wrapping",
+            "inputValue": {
+                "query": "SELECT COUNT(*) FROM PRODUCTION_REPORTS;"
+            }
+        },
+        {
+            "inputName": "input-with-dangerous-operation",
+            "inputValue": {
+                "query": "DROP TABLE PRODUCTION_REPORTS;"
+            }
+        },
+        {
+            "inputName": "input-with-syntax-error",
+            "inputValue": {
+                "query": "SELECT * FROM PRODUCTION_REPORTS WHERE;"
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "execute_select_query",
+        "actionRelativePath": "data_actions.py",
+        "schemaDescription": [
+            "query: string: The Snowflake SQL query to execute."
+        ],
+        "managedParamsSchemaDescription": {},
+        "inputFileVersion": "v3",
+        "kind": "query",
+        "actionSignature": "query/args: 'query: str'"
+    }
+}

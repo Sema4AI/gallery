@@ -1,11 +1,13 @@
-from sema4ai.actions import action, Secret, ActionError, Response
-import http.client
 import json
 import os
 from pathlib import Path
-from pydantic import BaseModel, Field
 from typing import List, Optional
+
+import sema4ai_http
 from dotenv import load_dotenv
+from pydantic import BaseModel, Field
+from sema4ai.actions import ActionError, Response, Secret, action
+from urllib3.exceptions import HTTPError
 
 load_dotenv(Path(__file__).absolute().parent / "devdata" / ".env")
 
@@ -80,30 +82,20 @@ def search_google(q: str, num: int, api_key: Secret) -> Response[SearchResult]:
         raise ActionError("API key is required but not provided")
 
     try:
-        conn = http.client.HTTPSConnection("google.serper.dev")
-        payload = json.dumps({"q": q, "num": num})
         headers = {"X-API-KEY": api_key, "Content-Type": "application/json"}
-        conn.request("POST", "/search", payload, headers)
-        res = conn.getresponse()
+        payload = json.dumps({"q": q, "num": num})
 
-        # Check if the response status is not successful
-        if res.status != 200:
-            error_data = res.read().decode("utf-8")
-            raise ActionError(
-                f"API request failed with status {res.status}: {error_data}"
-            )
+        response = sema4ai_http.post(
+            "https://google.serper.dev/search",
+            body=payload,
+            headers=headers,
+        )
 
-        data = res.read()
-        response = json.loads(data.decode("utf-8"))
+        response.raise_for_status()
 
-        # Parse the response using the Pydantic model
-        search_result = SearchResult(**response)
-
+        search_result = SearchResult(**response.json())
         return Response(result=search_result)
-
-    except json.JSONDecodeError:
-        raise ActionError("Failed to parse API response as JSON")
-    except http.client.HTTPException as e:
+    except HTTPError as e:
         raise ActionError(f"HTTP error occurred: {str(e)}")
     except Exception as e:
         raise ActionError(f"An unexpected error occurred: {str(e)}")

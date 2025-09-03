@@ -3,19 +3,19 @@
         {
             "inputName": "input-1",
             "inputValue": {
-                "warehouse": "compute_wh"
+                "agent_name": "HubspotAPI"
             }
         }
     ],
     "metadata": {
-        "actionName": "snowflake_get_databases",
-        "actionRelativePath": "snowflake_actions.py",
+        "actionName": "bootstrap_agent_package",
+        "actionRelativePath": "actions.py",
         "schemaDescription": [
-            "warehouse: string: The warehouse to use."
+            "agent_name: string: Name of the agent package"
         ],
         "managedParamsSchemaDescription": {},
         "inputFileVersion": "v3",
         "kind": "action",
-        "actionSignature": "action/args: 'warehouse: str'"
+        "actionSignature": "action/args: 'agent_name: str'"
     }
 }

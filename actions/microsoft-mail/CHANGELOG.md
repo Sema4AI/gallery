@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.4.2] - 2025-08-07
+
+### Changed
+
+- Update sema4ai-actions to `1.4.1` version
+
+## [1.4.1] - 2025-06-18
+
+- Updated sema4ai-actions version carrying a new version of pydantic
+
 ## [1.4.0] - 2025-04-15
 
 ### Changed

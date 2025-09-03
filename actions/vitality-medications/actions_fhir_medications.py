@@ -1,8 +1,9 @@
 import json
 from datetime import datetime
 
-from fhir_medications_service import FHIRMedicationsService
 from sema4ai.actions import Response, action
+
+from fhir_medications_service import FHIRMedicationsService
 
 fhir_medications_service = FHIRMedicationsService("fhir_medications.json")
 
@@ -71,7 +72,13 @@ def get_medication_history_by_rxnorm(rxnorm_code: str) -> str:
     """
     Retrieves a medication's  history sorted by treatmentPeriodStart for a given RxNorm code.
     The most important information to show: medication name, treatment period, dosage quantity and status
-    Used to identify changes to dosage quantity or name (generic to brandname or vice versa)
+    Used to identify changes to dosage quantity or name (generic to brandname or vice versa).
+
+    Args:
+        rxnorm_code (str): The RxNorm code of the medication to retrieve history for.
+
+    Returns:
+        str: A JSON string representing the medication's history.
     """
 
     medication_history = fhir_medications_service.get_medication_history_by_rxnorm(
