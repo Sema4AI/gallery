@@ -9,6 +9,7 @@ on:
       - main
     paths:
       - 'actions/**'
+      - 'bin/publisher/whitelist.json'
 
 jobs:
   build_packages:
