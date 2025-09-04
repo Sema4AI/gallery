@@ -2,10 +2,10 @@
 name: XGoogle Docs
 
 # Required: A description of what's in the action package.
-description: Get contents of Google Docs as Markdown
+description: Get contents of Google Docs as Markdown and download files in various formats
 
 # Package version number, recommend using semver.org
-version: 2.1.0
+version: 2.2.2
 
 # The version of the `package.yaml` format.
 spec-version: v2
@@ -21,6 +21,8 @@ dependencies:
     - google-auth-oauthlib=1.2.2
     - google-auth-httplib2=0.2.0
     - emoji=2.14.1
+    - vl-convert-python=1.8.0
+    - pillow=11.3.0
 
 external-endpoints:
   - name: "Google API"

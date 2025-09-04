@@ -520,6 +520,10 @@ class MarkdownDocument(DocumentInfo):
         list[dict] | None,
         Field(description="All tab contents with their metadata.", default=None)
     ] = None
+    download_info: Annotated[
+        dict | None,
+        Field(description="Information about downloaded file if download=True was used.", default=None)
+    ] = None
 
     @classmethod
     def from_raw_document(cls, document: RawDocument, include_all_tabs: bool = False) -> Self:
@@ -555,4 +559,5 @@ class MarkdownDocument(DocumentInfo):
             tabs=document.tabs,
             tab_contents=serialized_tab_contents,
             comments=document.comments,
+            download_info=None,  # Will be set by the action if download=True
         )

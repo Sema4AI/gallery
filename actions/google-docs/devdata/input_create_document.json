@@ -10,7 +10,9 @@
                         "type": "OAuth2Secret",
                         "provider": "google",
                         "scopes": [
-                            "https://www.googleapis.com/auth/documents"
+                            "https://www.googleapis.com/auth/documents",
+                            "https://www.googleapis.com/auth/drive.file",
+                            "https://www.googleapis.com/auth/drive"
                         ],
                         "access_token": "<access-token-will-be-requested-by-vscode>"
                     }
@@ -27,7 +29,85 @@
                         "type": "OAuth2Secret",
                         "provider": "google",
                         "scopes": [
-                            "https://www.googleapis.com/auth/documents"
+                            "https://www.googleapis.com/auth/documents",
+                            "https://www.googleapis.com/auth/drive.file",
+                            "https://www.googleapis.com/auth/drive"
+                        ],
+                        "access_token": "<access-token-will-be-requested-by-vscode>"
+                    }
+                }
+            }
+        },
+        {
+            "inputName": "embed image",
+            "inputValue": {
+                "title": "Action Test Document",
+                "body": "# Action Test Document\n\n<<chart.png>>",
+                "vscode:request:oauth2": {
+                    "oauth_access_token": {
+                        "type": "OAuth2Secret",
+                        "provider": "google",
+                        "scopes": [
+                            "https://www.googleapis.com/auth/documents",
+                            "https://www.googleapis.com/auth/drive.file",
+                            "https://www.googleapis.com/auth/drive"
+                        ],
+                        "access_token": "<access-token-will-be-requested-by-vscode>"
+                    }
+                }
+            }
+        },
+        {
+            "inputName": "embed image and vega-lite chart",
+            "inputValue": {
+                "title": "Action Test Document 3",
+                "body": "# Action Test Document 3\n\n<<chart.png>>\n\n## Vega-Lite Chart\n\n```vega-lite\n{\n  \"$schema\": \"https://vega.github.io/schema/vega-lite/v5.json\",\n  \"mark\": \"bar\",\n  \"data\": {\"values\": [{\"x\": \"A\", \"y\": 1}, {\"x\": \"B\", \"y\": 2}]},\n  \"encoding\": {\"x\": {\"field\": \"x\"}, \"y\": {\"field\": \"y\"}}\n}\n```",
+                "vscode:request:oauth2": {
+                    "oauth_access_token": {
+                        "type": "OAuth2Secret",
+                        "provider": "google",
+                        "scopes": [
+                            "https://www.googleapis.com/auth/documents",
+                            "https://www.googleapis.com/auth/drive.file",
+                            "https://www.googleapis.com/auth/drive"
+                        ],
+                        "access_token": "<access-token-will-be-requested-by-vscode>"
+                    }
+                }
+            }
+        },
+        {
+            "inputName": "Vega-Lite Schema Auto-Add Test",
+            "inputValue": {
+                "title": "Vega-Lite Schema Auto-Add Test",
+                "body": "# Vega-Lite Schema Auto-Add Test\n\nThis chart should work even without the $schema field:\n\n```vega-lite\n{\n  \"mark\": \"bar\",\n  \"data\": {\"values\": [{\"x\": \"A\", \"y\": 1}, {\"x\": \"B\", \"y\": 2}, {\"x\": \"C\", \"y\": 3}]},\n  \"encoding\": {\"x\": {\"field\": \"x\"}, \"y\": {\"field\": \"y\"}}\n}\n```\n\nAnd this one with schema should also work:\n\n```vega-lite\n{\n  \"$schema\": \"https://vega.github.io/schema/vega-lite/v5.json\",\n  \"mark\": \"line\",\n  \"data\": {\"values\": [{\"x\": 1, \"y\": 2}, {\"x\": 2, \"y\": 4}, {\"x\": 3, \"y\": 1}]},\n  \"encoding\": {\"x\": {\"field\": \"x\"}, \"y\": {\"field\": \"y\"}}\n}\n```",
+                "vscode:request:oauth2": {
+                    "oauth_access_token": {
+                        "type": "OAuth2Secret",
+                        "provider": "google",
+                        "scopes": [
+                            "https://www.googleapis.com/auth/documents",
+                            "https://www.googleapis.com/auth/drive.file",
+                            "https://www.googleapis.com/auth/drive"
+                        ],
+                        "access_token": "<access-token-will-be-requested-by-vscode>"
+                    }
+                }
+            }
+        },
+        {
+            "inputName": "Studio Analytics Dashboard",
+            "inputValue": {
+                "title": "Studio Analytics Dashboard",
+                "body": "# Studio Analytics Dashboard\n\n```vega-lite\n{\n  \"$schema\": \"https://vega.github.io/schema/vega-lite/v5.json\",\n  \"title\": {\n    \"text\": \"Studio Analytics Dashboard\",\n    \"fontSize\": 16,\n    \"fontWeight\": \"bold\"\n  },\n  \"vconcat\": [\n    {\n      \"hconcat\": [\n        {\n          \"title\": \"Weekly Active Users Trend\",\n          \"data\": {\n            \"values\": [\n              {\"week\": \"2025-05-26\", \"users\": 29},\n              {\"week\": \"2025-06-02\", \"users\": 25},\n              {\"week\": \"2025-06-09\", \"users\": 30},\n              {\"week\": \"2025-06-16\", \"users\": 43},\n              {\"week\": \"2025-06-23\", \"users\": 62},\n              {\"week\": \"2025-06-30\", \"users\": 67},\n              {\"week\": \"2025-07-07\", \"users\": 79},\n              {\"week\": \"2025-07-14\", \"users\": 60},\n              {\"week\": \"2025-07-21\", \"users\": 70},\n              {\"week\": \"2025-07-28\", \"users\": 83},\n              {\"week\": \"2025-08-04\", \"users\": 94},\n              {\"week\": \"2025-08-11\", \"users\": 95},\n              {\"week\": \"2025-08-18\", \"users\": 111}\n            ]\n          },\n          \"mark\": {\n            \"type\": \"line\",\n            \"point\": true,\n            \"color\": \"#2563eb\"\n          },\n          \"encoding\": {\n            \"x\": {\n              \"field\": \"week\",\n              \"type\": \"temporal\",\n              \"title\": \"Week\",\n              \"axis\": {\"format\": \"%b %d\"}\n            },\n            \"y\": {\n              \"field\": \"users\",\n              \"type\": \"quantitative\",\n              \"title\": \"Active Users\"\n            }\n          },\n          \"width\": 300,\n          \"height\": 200\n        },\n        {\n          \"title\": \"Growth Rate by Month\",\n          \"data\": {\n            \"values\": [\n              {\"month\": \"May\", \"avg_users\": 27},\n              {\"month\": \"Jun\", \"avg_users\": 45.5},\n              {\"month\": \"Jul\", \"avg_users\": 73},\n              {\"month\": \"Aug\", \"avg_users\": 100}\n            ]\n          },\n          \"mark\": {\n            \"type\": \"bar\",\n            \"color\": \"#16a34a\"\n          },\n          \"encoding\": {\n            \"x\": {\n              \"field\": \"month\",\n              \"type\": \"ordinal\",\n              \"title\": \"Month\"\n            },\n            \"y\": {\n              \"field\": \"avg_users\",\n              \"type\": \"quantitative\",\n              \"title\": \"Avg Users\"\n            }\n          },\n          \"width\": 250,\n          \"height\": 200\n        }\n      ]\n    },\n    {\n      \"hconcat\": [\n        {\n          \"title\": \"User Activity Distribution\",\n          \"data\": {\n            \"values\": [\n              {\"range\": \"Low (25-40)\", \"weeks\": 3},\n              {\"range\": \"Medium (41-70)\", \"weeks\": 4},\n              {\"range\": \"High (71-95)\", \"weeks\": 4},\n              {\"range\": \"Peak (96+)\", \"weeks\": 2}\n            ]\n          },\n          \"mark\": {\n            \"type\": \"arc\",\n            \"innerRadius\": 30\n          },\n          \"encoding\": {\n            \"theta\": {\n              \"field\": \"weeks\",\n              \"type\": \"quantitative\"\n            },\n            \"color\": {\n              \"field\": \"range\",\n              \"type\": \"nominal\",\n              \"scale\": {\n                \"range\": [\"#fef3c7\", \"#fbbf24\", \"#f59e0b\", \"#d97706\"]\n              }\n            }\n          },\n          \"width\": 200,\n          \"height\": 200\n        },\n        {\n          \"title\": \"Weekly Change\",\n          \"data\": {\n            \"values\": [\n              {\"week\": \"Jun 02\", \"change\": -4},\n              {\"week\": \"Jun 09\", \"change\": 5},\n              {\"week\": \"Jun 16\", \"change\": 13},\n              {\"week\": \"Jun 23\", \"change\": 19},\n              {\"week\": \"Jun 30\", \"change\": 5},\n              {\"week\": \"Jul 07\", \"change\": 12},\n              {\"week\": \"Jul 14\", \"change\": -19},\n              {\"week\": \"Jul 21\", \"change\": 10},\n              {\"week\": \"Jul 28\", \"change\": 13},\n              {\"week\": \"Aug 04\", \"change\": 11},\n              {\"week\": \"Aug 11\", \"change\": 1},\n              {\"week\": \"Aug 18\", \"change\": 16}\n            ]\n          },\n          \"mark\": \"bar\",\n          \"encoding\": {\n            \"x\": {\n              \"field\": \"week\",\n              \"type\": \"ordinal\",\n              \"title\": \"Week\",\n              \"axis\": {\"labelAngle\": -45}\n            },\n            \"y\": {\n              \"field\": \"change\",\n              \"type\": \"quantitative\",\n              \"title\": \"Week-over-Week Change\"\n            },\n            \"color\": {\n              \"condition\": {\n                \"test\": \"datum.change > 0\",\n                \"value\": \"#16a34a\"\n              },\n              \"value\": \"#dc2626\"\n            }\n          },\n          \"width\": 350,\n          \"height\": 200\n        }\n      ]\n    }\n  ],\n  \"resolve\": {\n    \"scale\": {\n      \"color\": \"independent\"\n    }\n  }\n}\n```",
+                "vscode:request:oauth2": {
+                    "oauth_access_token": {
+                        "type": "OAuth2Secret",
+                        "provider": "google",
+                        "scopes": [
+                            "https://www.googleapis.com/auth/documents",
+                            "https://www.googleapis.com/auth/drive.file",
+                            "https://www.googleapis.com/auth/drive"
                         ],
                         "access_token": "<access-token-will-be-requested-by-vscode>"
                     }
@@ -42,7 +122,9 @@
             "title: string: The Google Document title",
             "body: string: The Google Document body as an Extended Markdown string.",
             "tab_index: integer: Optional tab index to add content to a specific tab (for existing documents)",
-            "tab_title: string: Optional tab title to add content to a specific tab (for existing documents)"
+            "tab_title: string: Optional tab title to add content to a specific tab (for existing documents)",
+            "image_files: array: Optional list of local file paths to images that should be embedded in the document",
+            "image_files.0: string: Optional list of local file paths to images that should be embedded in the document"
         ],
         "managedParamsSchemaDescription": {
             "oauth_access_token": {
@@ -51,12 +133,13 @@
                 "provider": "google",
                 "scopes": [
                     "https://www.googleapis.com/auth/documents",
-                    "https://www.googleapis.com/auth/drive.file"
+                    "https://www.googleapis.com/auth/drive.file",
+                    "https://www.googleapis.com/auth/drive"
                 ]
             }
         },
         "inputFileVersion": "v3",
         "kind": "action",
-        "actionSignature": "action/args: \"title: str, body: str, oauth_access_token: OAuth2Secret[Literal['google'], list[Literal['https://www.googleapis.com/auth/documents', 'https://www.googleapis.com/auth/drive.file']]], tab_index: int=None, tab_title: str=None\""
+        "actionSignature": "action/args: \"title: str, body: str, oauth_access_token: OAuth2Secret[Literal['google'], list[Literal['https://www.googleapis.com/auth/documents', 'https://www.googleapis.com/auth/drive.file', 'https://www.googleapis.com/auth/drive']]], tab_index: int=None, tab_title: str=None, image_files: list[str]=None\""
     }
 }

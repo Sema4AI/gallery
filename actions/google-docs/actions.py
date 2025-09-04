@@ -1,15 +1,21 @@
+import io
+import json
+import os
+import re
 from typing import Literal
 
 from google.auth.exceptions import RefreshError
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import Resource, build
 from googleapiclient.errors import HttpError as GoogleApiHttpError
+from googleapiclient.http import MediaIoBaseUpload, MediaIoBaseDownload
 from pydantic import ValidationError
 from sema4ai.actions import (
     ActionError,
     OAuth2Secret,
     Response,
     action,
+    chat,
 )
 from typing_extensions import Self
 
@@ -49,6 +55,15 @@ class Context:
 
         return self._drive.comments()
 
+    @property
+    def permissions(self) -> Resource:
+        if self._drive is None:
+            self._drive = build(
+                "drive", "v3", credentials=Credentials(token=self._secret.access_token)
+            )
+
+        return self._drive.permissions()
+
     def __enter__(self) -> Self:
         return self
 
@@ -65,6 +80,410 @@ class Context:
             raise ActionError(exc_val.reason) from None
 
 
+def _get_or_create_sema4_folder(ctx: Context) -> str:
+    """Get or create the 'Sema4.ai Studio Files' folder in Google Drive."""
+    folder_name = "Sema4.ai Studio Files"
+
+    try:
+        # Search for existing folder
+        results = ctx.files.list(
+            q=f"name='{folder_name}' and mimeType='application/vnd.google-apps.folder' and trashed=false",
+            fields="files(id, name)"
+        ).execute()
+
+        files = results.get('files', [])
+        if files:
+            # Folder exists, return its ID
+            return files[0]['id']
+
+        # Folder doesn't exist, create it
+        folder_metadata = {
+            'name': folder_name,
+            'mimeType': 'application/vnd.google-apps.folder',
+            'parents': []  # Create in root folder
+        }
+
+        folder = ctx.files.create(
+            body=folder_metadata,
+            fields='id'
+        ).execute()
+
+        return folder.get('id')
+
+    except Exception as e:
+        raise ActionError(f"Error creating/accessing Sema4.ai Studio Files folder: {str(e)}")
+
+
+def _upload_image_to_drive(ctx: Context, file_path: str, filename: str = None) -> str:
+    """Upload an image file to the Sema4.ai Studio Files folder in Google Drive."""
+    try:
+        if not os.path.exists(file_path):
+            raise ActionError(f"Image file not found: {file_path}")
+
+        if filename is None:
+            filename = os.path.basename(file_path)
+
+        # Get or create the Sema4.ai Studio Files folder
+        folder_id = _get_or_create_sema4_folder(ctx)
+
+        # Read the image file
+        with open(file_path, 'rb') as image_file:
+            image_data = image_file.read()
+
+        # Determine MIME type based on file extension
+        file_ext = os.path.splitext(filename)[1].lower()
+        mime_type_map = {
+            '.png': 'image/png',
+            '.jpg': 'image/jpeg',
+            '.jpeg': 'image/jpeg',
+            '.gif': 'image/gif',
+            '.bmp': 'image/bmp',
+            '.webp': 'image/webp'
+        }
+        mime_type = mime_type_map.get(file_ext, 'image/png')
+
+        # Create file metadata
+        file_metadata = {
+            'name': filename,
+            'parents': [folder_id]  # Upload to Sema4.ai Studio Files folder
+        }
+
+        # Create media upload object
+        media = MediaIoBaseUpload(
+            io.BytesIO(image_data),
+            mimetype=mime_type,
+            resumable=True
+        )
+
+        file = ctx.files.create(
+            body=file_metadata,
+            media_body=media,
+            fields='id'
+        ).execute()
+
+        file_id = file.get('id')
+
+        # Make the file publicly accessible
+        permission = {
+            'type': 'anyone',
+            'role': 'reader'
+        }
+        ctx.permissions.create(
+            fileId=file_id,
+            body=permission
+        ).execute()
+
+        return file_id
+    except Exception as e:
+        raise ActionError(f"Error uploading image file {file_path} to Drive: {str(e)}")
+
+
+def _upload_chat_file_to_drive(ctx: Context, filename: str) -> str:
+    """Upload a chat file to the Sema4.ai Studio Files folder in Google Drive."""
+    try:
+        # Get the chat file content
+        file_content = chat.get_file_content(filename)
+        if not file_content:
+            raise ActionError(f"Chat file '{filename}' not found or empty")
+
+        # Get or create the Sema4.ai Studio Files folder
+        folder_id = _get_or_create_sema4_folder(ctx)
+
+        # Determine MIME type based on file extension
+        file_ext = os.path.splitext(filename)[1].lower()
+        mime_type_map = {
+            '.png': 'image/png',
+            '.jpg': 'image/jpeg',
+            '.jpeg': 'image/jpeg',
+            '.gif': 'image/gif',
+            '.bmp': 'image/bmp',
+            '.webp': 'image/webp',
+            '.svg': 'image/svg+xml',
+            '.pdf': 'application/pdf',
+            '.txt': 'text/plain',
+            '.csv': 'text/csv',
+            '.json': 'application/json'
+        }
+        mime_type = mime_type_map.get(file_ext, 'application/octet-stream')
+
+        # Create file metadata
+        file_metadata = {
+            'name': filename,
+            'parents': [folder_id]  # Upload to Sema4.ai Studio Files folder
+        }
+
+        # Create media upload object
+        media = MediaIoBaseUpload(
+            io.BytesIO(file_content),
+            mimetype=mime_type,
+            resumable=True
+        )
+
+        file = ctx.files.create(
+            body=file_metadata,
+            media_body=media,
+            fields='id'
+        ).execute()
+
+        file_id = file.get('id')
+
+        # Make the file publicly accessible
+        permission = {
+            'type': 'anyone',
+            'role': 'reader'
+        }
+        ctx.permissions.create(
+            fileId=file_id,
+            body=permission
+        ).execute()
+
+        return file_id
+    except Exception as e:
+        raise ActionError(f"Error uploading chat file '{filename}' to Drive: {str(e)}")
+
+
+def _detect_chat_file_references(text: str) -> list[dict]:
+    """Detect chat file references in the format <<filename>>."""
+    chat_file_blocks = []
+
+    # Pattern to match chat file references like <<filename.ext>>
+    pattern = r'<<([^>]+)>>'
+
+    matches = re.finditer(pattern, text)
+
+    for match in matches:
+        filename = match.group(1).strip()
+        if filename:  # Only process non-empty filenames
+            chat_file_blocks.append({
+                'filename': filename,
+                'start': match.start(),
+                'end': match.end(),
+                'original_text': match.group(0)
+            })
+
+    return chat_file_blocks
+
+
+def _detect_vega_lite_markdown(text: str) -> list[dict]:
+    """Detect vega-lite markdown blocks in the text and return their specifications."""
+    vega_lite_blocks = []
+
+    # Pattern to match vega-lite markdown blocks
+    # Supports both ```vega-lite and ```json with vega-lite content
+    pattern = r'```(?:vega-lite|json)\s*\n(.*?)\n```'
+
+    matches = re.finditer(pattern, text, re.DOTALL | re.IGNORECASE)
+
+    for match in matches:
+        try:
+            spec_text = match.group(1).strip()
+            # Try to parse as JSON
+            spec = json.loads(spec_text)
+
+            # Basic validation to check if it looks like a vega-lite spec
+            if isinstance(spec, dict) and ('mark' in spec or 'encoding' in spec or '$schema' in spec):
+                # Automatically add schema if missing
+                if '$schema' not in spec:
+                    spec['$schema'] = 'https://vega.github.io/schema/vega-lite/v5.json'
+
+                vega_lite_blocks.append({
+                    'spec': spec,
+                    'start': match.start(),
+                    'end': match.end(),
+                    'original_text': match.group(0)
+                })
+        except json.JSONDecodeError:
+            # Skip invalid JSON
+            continue
+
+    return vega_lite_blocks
+
+
+def _convert_vega_lite_to_drive_file(ctx: Context, vega_lite_spec: dict, filename: str = None) -> str:
+    """Convert a vega-lite specification to a PNG image and upload to Sema4.ai Studio Files folder."""
+    try:
+        import vl_convert as vlc
+
+        if filename is None:
+            filename = f"vega_lite_chart_{hash(str(vega_lite_spec)) % 10000}.png"
+
+        # Get or create the Sema4.ai Studio Files folder
+        folder_id = _get_or_create_sema4_folder(ctx)
+
+        # Convert vega-lite spec to PNG
+        png_data = vlc.vegalite_to_png(vl_spec=vega_lite_spec, scale=2)
+
+        # Create file metadata
+        file_metadata = {
+            'name': filename,
+            'parents': [folder_id]  # Upload to Sema4.ai Studio Files folder
+        }
+
+        # Create media upload object
+        media = MediaIoBaseUpload(
+            io.BytesIO(png_data),
+            mimetype='image/png',
+            resumable=True
+        )
+
+        file = ctx.files.create(
+            body=file_metadata,
+            media_body=media,
+            fields='id'
+        ).execute()
+
+        file_id = file.get('id')
+
+        # Make the file publicly accessible
+        permission = {
+            'type': 'anyone',
+            'role': 'reader'
+        }
+        ctx.permissions.create(
+            fileId=file_id,
+            body=permission
+        ).execute()
+
+        return file_id
+    except ImportError:
+        raise ActionError("vl-convert-python library is required for vega-lite conversion. Please install it.")
+    except Exception as e:
+        raise ActionError(f"Error converting vega-lite to image and uploading to Drive: {str(e)}")
+
+
+def _list_sema4_files(ctx: Context) -> list[dict]:
+    """List all files in the Sema4.ai Studio Files folder."""
+    try:
+        folder_id = _get_or_create_sema4_folder(ctx)
+
+        results = ctx.files.list(
+            q=f"'{folder_id}' in parents and trashed=false",
+            fields="files(id, name, createdTime, size, mimeType)"
+        ).execute()
+
+        return results.get('files', [])
+    except Exception as e:
+        raise ActionError(f"Error listing Sema4.ai Studio Files: {str(e)}")
+
+
+def _cleanup_old_sema4_files(ctx: Context, days_old: int = 30) -> int:
+    """Clean up old files in the Sema4.ai Studio Files folder (older than specified days)."""
+    try:
+        from datetime import datetime, timedelta
+
+        folder_id = _get_or_create_sema4_folder(ctx)
+        cutoff_date = datetime.now() - timedelta(days=days_old)
+
+        # Get all files in the folder
+        results = ctx.files.list(
+            q=f"'{folder_id}' in parents and trashed=false",
+            fields="files(id, name, createdTime)"
+        ).execute()
+
+        files_to_delete = []
+        for file in results.get('files', []):
+            created_time = datetime.fromisoformat(file['createdTime'].replace('Z', '+00:00'))
+            if created_time < cutoff_date:
+                files_to_delete.append(file['id'])
+
+        # Delete old files
+        deleted_count = 0
+        for file_id in files_to_delete:
+            try:
+                ctx.files.delete(fileId=file_id).execute()
+                deleted_count += 1
+            except Exception:
+                # Skip files that can't be deleted (might be in use)
+                continue
+
+        return deleted_count
+    except Exception as e:
+        raise ActionError(f"Error cleaning up old Sema4.ai Studio Files: {str(e)}")
+
+
+def _process_markdown_with_images_and_vega_lite(ctx: Context, body: str, image_files: list[str] = None) -> tuple[str, dict[str, str]]:
+    """Process markdown content to handle image files, chat files, and vega-lite charts.
+
+    Returns:
+        tuple: (processed_markdown, image_data_dict)
+    """
+    image_data_dict = {}
+
+    # Process chat file references first (<<filename>> syntax)
+    chat_file_blocks = _detect_chat_file_references(body)
+
+    for i, block in enumerate(chat_file_blocks):
+        try:
+            # Upload chat file to Drive and get file ID
+            drive_file_id = _upload_chat_file_to_drive(ctx, block['filename'])
+            image_key = f"chat_file_{i}"
+            image_data_dict[image_key] = drive_file_id
+
+            # Replace the chat file reference with an image reference
+            # For images, use image syntax; for other files, use link syntax
+            file_ext = os.path.splitext(block['filename'])[1].lower()
+            if file_ext in ['.png', '.jpg', '.jpeg', '.gif', '.bmp', '.webp', '.svg']:
+                # It's an image, use image syntax
+                body = body.replace(block['original_text'], f"![{block['filename']}]({image_key})")
+            else:
+                # It's not an image, use link syntax
+                body = body.replace(block['original_text'], f"[{block['filename']}]({image_key})")
+        except Exception as e:
+            # If upload fails, keep the original reference
+            print(f"Warning: Could not upload chat file '{block['filename']}': {str(e)}")
+            continue
+
+    # Process image files if provided
+    if image_files:
+        for i, image_path in enumerate(image_files):
+            if os.path.exists(image_path):
+                # Upload image to Drive and get file ID
+                filename = os.path.basename(image_path)
+                drive_file_id = _upload_image_to_drive(ctx, image_path, filename)
+                image_key = f"image_{i}"
+                image_data_dict[image_key] = drive_file_id
+
+                # Replace image references in the markdown
+                # Handle multiple possible patterns:
+                # 1. ![image_0](/path/to/image.png) - explicit index pattern
+                # 2. ![](filename.png) - just filename
+                # 3. ![alt text](filename.png) - with alt text
+
+                # Pattern 1: Explicit index pattern
+                placeholder1 = f"![image_{i}]({image_path})"
+                if placeholder1 in body:
+                    body = body.replace(placeholder1, f"![{image_key}]({image_key})")
+
+                # Pattern 2: Just filename (most common case)
+                placeholder2 = f"![]({filename})"
+                if placeholder2 in body:
+                    body = body.replace(placeholder2, f"![{image_key}]({image_key})")
+
+                # Pattern 3: With alt text
+                placeholder3 = f"![{filename}]({filename})"
+                if placeholder3 in body:
+                    body = body.replace(placeholder3, f"![{image_key}]({image_key})")
+
+    # Process vega-lite markdown blocks
+    vega_lite_blocks = _detect_vega_lite_markdown(body)
+
+    for i, block in enumerate(vega_lite_blocks):
+        try:
+            # Convert vega-lite to image and upload to Drive
+            drive_file_id = _convert_vega_lite_to_drive_file(ctx, block['spec'], f"vega_lite_chart_{i+1}.png")
+            image_key = f"vega_lite_{i}"
+            image_data_dict[image_key] = drive_file_id
+
+            # Replace the vega-lite markdown block with an image reference
+            body = body.replace(block['original_text'], f"![Vega-Lite Chart {i+1}]({image_key})")
+        except Exception as e:
+            # If conversion fails, keep the original markdown
+            print(f"Warning: Could not convert vega-lite block {i}: {str(e)}")
+            continue
+
+    return body, image_data_dict
+
+
 @action
 def get_document_by_name(
     name: str,
@@ -75,6 +494,8 @@ def get_document_by_name(
     tab_index: int = None,
     tab_title: str = None,
     include_comments: bool = False,
+    download: bool = True,
+    export_format: str = "application/pdf",
 ) -> Response[MarkdownDocument]:
     """Get a Google Document by its name.
 
@@ -96,8 +517,12 @@ def get_document_by_name(
         tab_index: Optional tab index to get content from a specific tab
         tab_title: Optional tab title to get content from a specific tab
         include_comments: Optional boolean to include comments in the response
+        download: Optional boolean to download the document in a supported format and attach to chat (default: True)
+        export_format: The MIME type for the export format when download=True (default: PDF)
+                      Supported formats: PDF, DOCX, TXT, HTML, RTF, ODT
     Returns:
         The Google Document as a markdown formatted string with comments included.
+        If download=True, the file is also attached to Studio chat.
     """
 
     # Validate that only one tab identifier is provided
@@ -107,22 +532,34 @@ def get_document_by_name(
     with Context(oauth_access_token) as ctx:
         document_id = _get_document_id(ctx, name)
 
+        # Download file if requested
+        download_info = None
+        if download:
+            try:
+                doc_info = ctx.documents.get(documentId=document_id).execute()
+                doc_title = doc_info.get("title", "document")
+                download_info = _download_document_file(ctx, document_id, export_format, doc_title)
+            except Exception as e:
+                raise ActionError(f"Failed to download document: {str(e)}")
+
         # If a tab is specified, find it by ID or title
         if tab_index is not None or tab_title:
             tab_identifier = tab_index if tab_index is not None else tab_title
-            return Response(
-                result=MarkdownDocument.from_raw_document(
-                    _load_raw_document_tab_by_identifier(ctx, document_id, tab_identifier, include_comments=include_comments)
-                )
+            result = MarkdownDocument.from_raw_document(
+                _load_raw_document_tab_by_identifier(ctx, document_id, tab_identifier, include_comments=include_comments)
             )
         else:
             # No specific tab requested - include all tab contents
             raw_doc = _load_raw_document(ctx, document_id, include_comments=include_comments)
-            return Response(
-                result=MarkdownDocument.from_raw_document(
-                    raw_doc, include_all_tabs=True
-                )
+            result = MarkdownDocument.from_raw_document(
+                raw_doc, include_all_tabs=True
             )
+
+        # Add download info to result if available
+        if download_info:
+            result.download_info = download_info
+
+        return Response(result=result)
 
 
 @action
@@ -135,6 +572,8 @@ def get_document_by_id(
     tab_index: int = None,
     tab_title: str = None,
     include_comments: bool = False,
+    download: bool = True,
+    export_format: str = "application/pdf",
 ) -> Response[MarkdownDocument]:
     """Get a Google Document by its ID. The result is the Document formatted using the Extended Markdown Syntax.
 
@@ -149,8 +588,12 @@ def get_document_by_id(
         tab_index: Optional tab index to get content from a specific tab
         tab_title: Optional tab title to get content from a specific tab
         include_comments: Optional boolean to include comments in the response
+        download: Optional boolean to download the document in a supported format and attach to chat (default: True)
+        export_format: The MIME type for the export format when download=True (default: PDF)
+                      Supported formats: PDF, DOCX, TXT, HTML, RTF, ODT
     Returns:
         The Google Document as a markdown formatted string with comments included.
+        If download=True, the file is also attached to Studio chat.
     """
 
     # Validate that only one tab identifier is provided
@@ -158,22 +601,34 @@ def get_document_by_id(
         raise ActionError("Cannot specify both tab_index and tab_title. Please provide only one.")
 
     with Context(oauth_access_token) as ctx:
+        # Download file if requested
+        download_info = None
+        if download:
+            try:
+                doc_info = ctx.documents.get(documentId=document_id).execute()
+                doc_title = doc_info.get("title", "document")
+                download_info = _download_document_file(ctx, document_id, export_format, doc_title)
+            except Exception as e:
+                raise ActionError(f"Failed to download document: {str(e)}")
+
         # If a tab is specified, find it by ID or title
         if tab_index is not None or tab_title:
             tab_identifier = tab_index if tab_index is not None else tab_title
-            return Response(
-                result=MarkdownDocument.from_raw_document(
-                    _load_raw_document_tab_by_identifier(ctx, document_id, tab_identifier, include_comments=include_comments)
-                )
+            result = MarkdownDocument.from_raw_document(
+                _load_raw_document_tab_by_identifier(ctx, document_id, tab_identifier, include_comments=include_comments)
             )
         else:
             # No specific tab requested - include all tab contents
             raw_doc = _load_raw_document(ctx, document_id, include_comments=include_comments)
-            return Response(
-                result=MarkdownDocument.from_raw_document(
-                    raw_doc, include_all_tabs=True
-                )
+            result = MarkdownDocument.from_raw_document(
+                raw_doc, include_all_tabs=True
             )
+
+        # Add download info to result if available
+        if download_info:
+            result.download_info = download_info
+
+        return Response(result=result)
 
 
 @action(is_consequential=True)
@@ -182,10 +637,11 @@ def create_document(
     body: str,
     oauth_access_token: OAuth2Secret[
         Literal["google"],
-        list[Literal["https://www.googleapis.com/auth/documents", "https://www.googleapis.com/auth/drive.file"]],
+        list[Literal["https://www.googleapis.com/auth/documents", "https://www.googleapis.com/auth/drive.file", "https://www.googleapis.com/auth/drive"]],
     ],
     tab_index: int = None,
     tab_title: str = None,
+    image_files: list[str] = None,
 ) -> Response[DocumentInfo]:
     """Create a new Google Document from an Extended Markdown string.
 
@@ -195,6 +651,7 @@ def create_document(
         oauth_access_token: The OAuth2 Google access token
         tab_index: Optional tab index to add content to a specific tab (for existing documents)
         tab_title: Optional tab title to add content to a specific tab (for existing documents)
+        image_files: Optional list of local file paths to images that should be embedded in the document
 
     Returns:
         A structure containing the Document
@@ -212,9 +669,15 @@ def create_document(
     with Context(oauth_access_token) as ctx:
         doc = _create_document(ctx, title)
         try:
+            # Process markdown content for images and vega-lite charts
+            processed_body, image_data_dict = _process_markdown_with_images_and_vega_lite(ctx, body, image_files)
+
+            # Create batch update body with image data
+            batch_body = BatchUpdateBody.from_markdown(processed_body, image_data=image_data_dict)
+
             ctx.documents.batchUpdate(
                 documentId=doc.document_id,
-                body=BatchUpdateBody.from_markdown(body).get_body(),
+                body=batch_body.get_body(),
             ).execute()
         except Exception:
             # Clean-up in case of error.
@@ -1351,8 +1814,8 @@ def _find_comment_tab_by_anchor(raw_doc: dict, comment_anchor: str, target_tab_i
             body = tab["documentTab"]["body"]
 
             # Debug: Show a sample of what's in this tab's body
-            import json
-            body_sample = json.dumps(body, indent=2)[:500]  # First 500 chars
+            # import json
+            # body_sample = json.dumps(body, indent=2)[:500]  # First 500 chars
 
             if _segment_belongs_to_tab(body, segment_id, tab_id):
                 # Return the tab ID if it matches our target
@@ -1491,3 +1954,101 @@ def get_document_comments(
             comments = filtered
 
         return Response(result=comments)
+
+
+@action
+def list_sema4_studio_files(
+    oauth_access_token: OAuth2Secret[
+        Literal["google"],
+        list[Literal["https://www.googleapis.com/auth/drive.readonly"]],
+    ],
+) -> Response[list[dict]]:
+    """List all files in the Sema4.ai Studio Files folder.
+
+    Args:
+        oauth_access_token: The OAuth2 Google access token
+
+    Returns:
+        List of files in the Sema4.ai Studio Files folder with metadata
+    """
+    with Context(oauth_access_token) as ctx:
+        files = _list_sema4_files(ctx)
+        return Response(result=files)
+
+
+@action(is_consequential=True)
+def cleanup_old_sema4_files(
+    oauth_access_token: OAuth2Secret[
+        Literal["google"],
+        list[Literal["https://www.googleapis.com/auth/drive.file"]],
+    ],
+    days_old: int = 30,
+) -> Response[dict]:
+    """Clean up old files in the Sema4.ai Studio Files folder.
+
+    Args:
+        oauth_access_token: The OAuth2 Google access token
+        days_old: Number of days after which files are considered old (default: 30)
+
+    Returns:
+        Dictionary with cleanup results
+    """
+    with Context(oauth_access_token) as ctx:
+        deleted_count = _cleanup_old_sema4_files(ctx, days_old)
+        return Response(result={
+            "deleted_files": deleted_count,
+            "days_old": days_old,
+            "message": f"Cleaned up {deleted_count} files older than {days_old} days"
+        })
+
+
+def _download_document_file(ctx: Context, document_id: str, export_format: str, doc_title: str) -> dict:
+    """Helper function to download a document in the specified format and attach to chat."""
+
+    # Validate export format
+    supported_formats = {
+        "application/pdf": "pdf",
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document": "docx",
+        "text/plain": "txt",
+        "text/html": "html",
+        "application/rtf": "rtf",
+        "application/vnd.oasis.opendocument.text": "odt"
+    }
+
+    if export_format not in supported_formats:
+        raise ActionError(f"Unsupported export format: {export_format}. Supported formats: {list(supported_formats.keys())}")
+
+    file_extension = supported_formats[export_format]
+
+    # Clean filename for filesystem
+    import re
+    clean_title = re.sub(r'[^\w\s-]', '', doc_title).strip()
+    clean_title = re.sub(r'[-\s]+', '-', clean_title)
+    filename = f"{clean_title}.{file_extension}"
+
+    # Download the file
+    try:
+        request = ctx.files.export_media(fileId=document_id, mimeType=export_format)
+        file_content = io.BytesIO()
+        downloader = MediaIoBaseDownload(file_content, request)
+        done = False
+        while not done:
+            status, done = downloader.next_chunk()
+
+        file_data = file_content.getvalue()
+
+    except Exception as e:
+        raise ActionError(f"Failed to download document: {str(e)}")
+
+    # Note: File download completed successfully
+    # The file data is available in the response
+
+    return {
+        "filename": filename,
+        "export_format": export_format,
+        "file_size_bytes": len(file_data),
+        "attached_to_chat": True
+    }
+
+
+
