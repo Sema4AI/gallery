@@ -37,6 +37,7 @@
             "robocorp"
         ],
         "agents": [
+            "oil-and-gas-analyst",
             "wayback-machine-agent"
         ]
     },
@@ -68,7 +69,8 @@
             "cortex-analyst-example",
             "cortex-search-example",
             "sales-contact-finder",
-            "similar-company-finder"
+            "similar-company-finder",
+            "oil-and-gas-analyst"
         ]
     }
 }
