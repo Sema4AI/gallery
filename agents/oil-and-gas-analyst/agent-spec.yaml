@@ -1,0 +1,46 @@
+agent-package:
+  spec-version: v2
+  agents:
+  - name: Oil and Gas Analyst
+    description: Analyze North Dakota oil well production data.
+    model:
+      provider: Amazon
+      name: anthropic.claude-3-5-sonnet-20240620-v1:0
+    version: 0.0.1
+    architecture: agent
+    reasoning: disabled
+    runbook: runbook.md
+    conversation-guide: conversation-guide.yaml
+    action-packages:
+    - name: Oil Gas Reports
+      organization: MyActions
+      type: folder
+      version: 0.0.7
+      whitelist: ""
+      path: MyActions/oil-gas-reports
+    - name: Browsing
+      organization: Sema4.ai
+      type: folder
+      version: 1.3.3
+      whitelist: download_file
+      path: Sema4.ai/browsing
+    - name: Web Search
+      organization: MyActions
+      type: folder
+      version: 1.0.0
+      whitelist: ""
+      path: MyActions/web-search
+    knowledge: []
+    metadata:
+      mode: conversational
+  exclude:
+  - ./.git/**
+  - ./.vscode/**
+  - ./devdata/**
+  - ./output/**
+  - ./venv/**
+  - ./.venv/**
+  - ./**/.env
+  - ./**/.DS_Store
+  - ./**/*.pyc
+  - ./*.zip

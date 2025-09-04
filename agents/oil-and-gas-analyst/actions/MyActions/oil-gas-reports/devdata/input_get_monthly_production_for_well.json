@@ -1,0 +1,27 @@
+{
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "wellName": "PORTER 26-35 4H",
+                "year": 2024
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "get_monthly_production_for_well",
+        "actionRelativePath": "data_actions.py",
+        "schemaDescription": [
+            "wellName: string: Name of the specific well.",
+            "year: integer: Year for which to retrieve data."
+        ],
+        "managedParamsSchemaDescription": {
+            "datasource": {
+                "type": "DataSource"
+            }
+        },
+        "inputFileVersion": "v3",
+        "kind": "query",
+        "actionSignature": "query/args: 'datasource: OilGasDataSource, wellName: str, year: int'"
+    }
+}

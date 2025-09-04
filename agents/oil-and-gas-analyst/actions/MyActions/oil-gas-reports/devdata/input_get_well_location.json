@@ -1,0 +1,21 @@
+{
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "wellName": "TARTAR USA 13-20H"
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "get_well_location",
+        "actionRelativePath": "data_actions.py",
+        "schemaDescription": [
+            "wellName: string: Name of the well."
+        ],
+        "managedParamsSchemaDescription": {},
+        "inputFileVersion": "v3",
+        "kind": "query",
+        "actionSignature": "query/args: 'wellName: str'"
+    }
+}
