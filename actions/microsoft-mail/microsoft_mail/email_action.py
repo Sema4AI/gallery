@@ -12,6 +12,7 @@ Currently supporting:
 - Forwarding an existing email.
 - Moving an email to a different folder.
 - Retrieving details of a specific email by ID.
+- Retrieving details of a specific email by subject.
 - Listing all folders in the user's mailbox.
 - Subscribing to notifications for new emails or other mailbox changes.
 - Deleting all active subscriptions for notifications.
@@ -21,6 +22,7 @@ Currently supporting:
 """
 
 from sema4ai.actions import action, OAuth2Secret, Response, ActionError
+from sema4ai.actions.chat import attach_file
 from microsoft_mail.models import Email, EmailAttachment, Emails, MessageFlag
 from microsoft_mail.support import (
     _find_folder,
@@ -36,6 +38,7 @@ from typing import Literal
 from pathlib import Path
 import os
 import base64
+import tempfile
 
 from microsoft_mail.support import build_headers, send_request
 
@@ -581,11 +584,10 @@ def get_email_by_id(
     ],
     email_id: str,
     show_full_body: bool = False,
-    save_attachments: str = None,
-    make_dirs: bool = False,
+    save_attachments: bool = False,
 ) -> Response:
     """
-    Get the details of a specific email and save attachments to the local file system.
+    Get the details of a specific email and optionally attach files to the chat.
 
     By default shows email's body preview. If you want to see the full body,
     set 'show_full_body' to True.
@@ -596,8 +598,7 @@ def get_email_by_id(
         token: OAuth2 token to use for the operation.
         email_id: The unique identifier of the email to retrieve.
         show_full_body: Whether to show the full body content.
-        save_attachments: Whether to save the attachments to the local file system.
-        make_dirs: Whether to create the directory for saving attachments if it doesn't exist.
+        save_attachments: Whether to attach the email attachments to the chat using sema4ai.actions.chat.
 
     Returns:
         The message details.
@@ -628,31 +629,140 @@ def get_email_by_id(
         )
         attachments = attachments_response.get("value", [])
 
-        if save_attachments == ".":
-            save_path = os.getcwd()
-        elif save_attachments.lower() == "downloads":
-            save_path = os.path.join(os.path.expanduser("~"), "Downloads")
-        else:
-            save_path = save_attachments
-
-        if make_dirs:
-            os.makedirs(save_path, exist_ok=True)
-
         message["attachments"] = []
         for attachment in attachments:
             attachment_name = attachment["name"]
             attachment_content = attachment["contentBytes"]
-            file_path = os.path.join(save_path, attachment_name)
-            base_name, extension = os.path.splitext(attachment_name)
-            index = 1
-            while os.path.exists(file_path):
-                file_path = os.path.join(save_path, f"{base_name}_{index}{extension}")
-                index += 1
-            with open(file_path, "wb") as file:
-                file.write(base64.b64decode(attachment_content))
-            message["attachments"].append(file_path)
+
+            # Create a temporary file to save the attachment
+            with tempfile.NamedTemporaryFile(delete=False, suffix=f"_{attachment_name}") as temp_file:
+                temp_file.write(base64.b64decode(attachment_content))
+                temp_file_path = temp_file.name
+
+            # Attach the file to the chat using sema4ai.actions.chat
+            attach_file(temp_file_path, name=attachment_name)
+            message["attachments"].append(attachment_name)
 
     return Response(result=message)
+
+
+@action
+def get_email_by_subject(
+    token: OAuth2Secret[
+        Literal["microsoft"],
+        list[Literal["Mail.Read"]],
+    ],
+    subject: str,
+    folder_to_search: str = "inbox",
+    show_full_body: bool = False,
+    save_attachments: bool = False,
+    exact_match: bool = False,
+) -> Response:
+    """
+    Get the details of a specific email by subject and optionally attach files to the chat.
+
+    By default shows email's body preview. If you want to see the full body,
+    set 'show_full_body' to True.
+
+    The full 'body' of the email might return too much information for the chat to handle.
+
+    Args:
+        token: OAuth2 token to use for the operation.
+        subject: The subject line to search for.
+        folder_to_search: The folder to search for emails. Default is 'inbox'.
+        show_full_body: Whether to show the full body content.
+        save_attachments: Whether to attach the email attachments to the chat using sema4ai.actions.chat.
+        exact_match: Whether to match the subject exactly (case-insensitive). Default is False (partial match).
+
+    Returns:
+        The message details of the first email found with the matching subject.
+        Raises ActionError if no email is found with the specified subject.
+    """
+    if not subject:
+        raise ActionError("Subject is required")
+
+    headers = build_headers(token)
+    headers["ConsistencyLevel"] = "eventual"
+
+    # Build search query based on exact_match parameter
+    if exact_match:
+        search_query = f"subject eq '{subject}'"
+    else:
+        search_query = f"contains(subject, '{subject}')"
+
+    # Handle folder filtering
+    if folder_to_search == "inbox":
+        inbox_folder_id = _get_inbox_folder_id(token)
+        search_query = f"{search_query} AND parentFolderId eq '{inbox_folder_id}'"
+    elif folder_to_search:
+        folders = list_folders(token).result
+        folder_found = _find_folder(folders, folder_to_search)
+        if folder_found is None:
+            raise ActionError(f"Folder '{folder_to_search}' not found.")
+        folder_to_search_id = folder_found["id"]
+        search_query = f"{search_query} AND parentFolderId eq '{folder_to_search_id}'"
+    else:
+        # If no folder is provided, search in all folders except 'Sent Items'
+        folders = list_folders(token).result
+        folder_found = _find_folder(folders, "Sent Items")
+        send_items_folder_id = folder_found["id"]
+        search_query = f"{search_query} AND parentFolderId ne '{send_items_folder_id}'"
+
+    # Search for emails with the subject
+    query = f"/me/messages?$top=1&$filter={search_query}"
+    messages_result = send_request(
+        "get",
+        query,
+        "search emails by subject",
+        headers=headers,
+    )
+
+    messages = messages_result.get("value", [])
+    if not messages:
+        raise ActionError(f"No email found with subject containing '{subject}'")
+
+    # Get the first matching email
+    message = messages[0]
+    email_id = message["id"]
+
+    # Get full email details
+    full_message = send_request(
+        "get",
+        f"/me/messages/{email_id}",
+        "get email by subject",
+        headers=headers,
+    )
+
+    if show_full_body:
+        full_message.pop("bodyPreview", None)
+    else:
+        full_message.pop("body", None)
+
+    if save_attachments:
+        # Fetch attachments separately
+        attachments_response = send_request(
+            "get",
+            f"/me/messages/{email_id}/attachments",
+            "get email attachments",
+            headers=headers,
+        )
+        attachments = attachments_response.get("value", [])
+
+        full_message["attachments"] = []
+        for attachment in attachments:
+            attachment_name = attachment["name"]
+            attachment_content = attachment["contentBytes"]
+
+            # Create a temporary file to save the attachment
+            with tempfile.NamedTemporaryFile(delete=False, suffix=f"_{attachment_name}") as temp_file:
+                temp_file.write(base64.b64decode(attachment_content))
+                temp_file_path = temp_file.name
+
+            # Attach the file to the chat using sema4ai.actions.chat
+            attach_file(temp_file_path, name=attachment_name)
+            full_message["attachments"].append(attachment_name)
+
+    return Response(result=full_message)
 
 
 @action
