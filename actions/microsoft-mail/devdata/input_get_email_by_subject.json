@@ -1,11 +1,13 @@
 {
     "inputs": [
         {
-            "inputName": "get email without attachments",
+            "inputName": "get email by subject - partial match",
             "inputValue": {
-                "email_id": "AAMkADljMzQ1YTc1LTRmYzItNDAzNC1hOGY4LWRkYjQyZmQ1NWYzYwBGAAAAAAD_YFfAbcBcSY3mIrVczQAlBwCocMixc6q8QqX43pcAKHryAAAAAAEMAACocMixc6q8QqX43pcAKHryAAUkAIMFAAA=",
+                "subject": "check this one",
+                "folder_to_search": "inbox",
                 "show_full_body": false,
                 "save_attachments": false,
+                "exact_match": false,
                 "vscode:request:oauth2": {
                     "token": {
                         "type": "OAuth2Secret",
@@ -19,11 +21,13 @@
             }
         },
         {
-            "inputName": "get email with attachments attached to chat",
+            "inputName": "get email by subject - exact match",
             "inputValue": {
-                "email_id": "",
+                "subject": "Weekly Team Meeting",
+                "folder_to_search": "inbox",
                 "show_full_body": false,
-                "save_attachments": true,
+                "save_attachments": false,
+                "exact_match": true,
                 "vscode:request:oauth2": {
                     "token": {
                         "type": "OAuth2Secret",
@@ -37,11 +41,33 @@
             }
         },
         {
-            "inputName": "get email with full body and attachments",
+            "inputName": "get email by subject with attachments",
             "inputValue": {
-                "email_id": "",
+                "subject": "check this one",
+                "folder_to_search": "inbox",
                 "show_full_body": true,
                 "save_attachments": true,
+                "exact_match": false,
+                "vscode:request:oauth2": {
+                    "token": {
+                        "type": "OAuth2Secret",
+                        "provider": "microsoft",
+                        "scopes": [
+                            "Mail.Read"
+                        ],
+                        "access_token": ""
+                    }
+                }
+            }
+        },
+        {
+            "inputName": "get email by subject from specific folder",
+            "inputValue": {
+                "subject": "project",
+                "folder_to_search": "Drafts",
+                "show_full_body": false,
+                "save_attachments": false,
+                "exact_match": false,
                 "vscode:request:oauth2": {
                     "token": {
                         "type": "OAuth2Secret",
@@ -56,12 +82,14 @@
         }
     ],
     "metadata": {
-        "actionName": "get_email_by_id",
+        "actionName": "get_email_by_subject",
         "actionRelativePath": "microsoft_mail/email_action.py",
         "schemaDescription": [
-            "email_id: string: The unique identifier of the email to retrieve.",
+            "subject: string: The subject line to search for.",
+            "folder_to_search: string: The folder to search for emails. Default is 'inbox'.",
             "show_full_body: boolean: Whether to show the full body content.",
-            "save_attachments: boolean: Whether to attach the email attachments to the chat using sema4ai.actions.chat."
+            "save_attachments: boolean: Whether to attach the email attachments to the chat using sema4ai.actions.chat.",
+            "exact_match: boolean: Whether to match the subject exactly (case-insensitive). Default is False (partial match)."
         ],
         "managedParamsSchemaDescription": {
             "token": {
@@ -75,6 +103,6 @@
         },
         "inputFileVersion": "v3",
         "kind": "action",
-        "actionSignature": "action/args: \"token: OAuth2Secret[Literal['microsoft'], list[Literal['Mail.Read']]], email_id: str, show_full_body: bool=False, save_attachments: bool=False\""
+        "actionSignature": "action/args: \"token: OAuth2Secret[Literal['microsoft'], list[Literal['Mail.Read']]], subject: str, folder_to_search: str='inbox', show_full_body: bool=False, save_attachments: bool=False, exact_match: bool=False\""
     }
 }
