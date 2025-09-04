@@ -209,3 +209,65 @@ def _find_folder(folders, folder_to_search):
             if result:
                 return result
     return None
+
+
+def _check_category_exists(token, category_name, headers):
+    """Check if a category exists in master categories."""
+    try:
+        response = send_request(
+            "get",
+            "/me/outlook/masterCategories",
+            "check category exists",
+            headers=headers,
+        )
+        if response and "value" in response:
+            categories = response["value"]
+            return any(cat["displayName"] == category_name for cat in categories)
+        return False
+    except Exception:
+        return False
+
+
+def _create_category(token, category_name, category_color, headers):
+    """Create a new category in master categories."""
+    payload = {
+        "displayName": category_name,
+        "color": category_color
+    }
+    try:
+        send_request(
+            "post",
+            "/me/outlook/masterCategories",
+            "create category",
+            headers=headers,
+            data=payload,
+        )
+        return True
+    except Exception:
+        return False
+
+
+def _get_category_info(token, category_name, headers):
+    """Get information about a specific category from master categories."""
+    try:
+        response = send_request(
+            "get",
+            "/me/outlook/masterCategories",
+            "get category info",
+            headers=headers,
+        )
+        if response and "value" in response:
+            categories = response["value"]
+            for cat in categories:
+                if cat["displayName"] == category_name:
+                    return cat
+        return None
+    except Exception:
+        return None
+
+
+def _ensure_category_exists(token, category_name, headers, category_color="Preset19"):
+    """Ensure a category exists in master categories, create it if it doesn't.
+    Uses the provided color or defaults to Preset19."""
+    if not _check_category_exists(token, category_name, headers):
+        _create_category(token, category_name, category_color, headers)

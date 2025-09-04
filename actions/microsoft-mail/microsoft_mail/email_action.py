@@ -19,11 +19,15 @@ Currently supporting:
 - Deleting a specific subscription by ID.
 - Getting a list of active subscriptions.
 - Retrieving details of a specific folder in the user's mailbox.
+- Adding categories to emails.
+- Removing categories from emails.
+- Listing master categories with their colors.
+- Flagging emails with different statuses.
 """
 
 from sema4ai.actions import action, OAuth2Secret, Response, ActionError
 from sema4ai.actions.chat import attach_file
-from microsoft_mail.models import Email, EmailAttachment, Emails, MessageFlag
+from microsoft_mail.models import Email, EmailAttachment, Emails, MessageFlag, Category
 from microsoft_mail.support import (
     _find_folder,
     _get_inbox_folder_id,
@@ -32,6 +36,8 @@ from microsoft_mail.support import (
     _delete_subscription,
     _get_folder_structure,
     _get_me,
+    _ensure_category_exists,
+    _get_category_info,
 )
 from dotenv import load_dotenv
 from typing import Literal
@@ -57,27 +63,70 @@ def list_emails(
     properties_to_return: str = "",
     max_emails_to_return: int = -1,
     return_only_count: bool = False,
+    has_attachments: bool = False,
 ) -> Response[Emails]:
     """
-    List emails in the user's mailbox matching search query.
+    List emails in the user's mailbox matching search query using Microsoft Graph API OData syntax.
 
     When searching emails in a specific folder, the folder name should be provided in the 'folder_to_search' parameter and NOT in the 'search_query'.
 
     Use action 'filter_by_recipients' if there are any conditions related to recipients ('to', 'cc', 'bcc' or 'from').
 
-    For any date comparison use:
-        - consider Monday as beginning of the week
-        - date in ISO 8601 format (e.g., '2024-08-24')
-        - use boolean operators (e.g., 'AND', 'OR', 'NOT'). These operators must be in uppercase.
-        - comparison operators 'ge', 'le', 'eq', 'ne' (e.g., 'receivedDateTime ge 2024-08-24')
+    Microsoft Graph API Query Syntax Examples:
+
+    Basic Queries:
+        - "*" or "" - Get all emails
+        - "hasAttachments eq true" - Emails with attachments
+        - "isRead eq false" - Unread emails
+        - "importance eq 'high'" - High importance emails
+        - "flag/flagStatus eq 'flagged'" - Flagged emails
+
+    Date/Time Queries:
+        - "receivedDateTime ge 2024-01-01T00:00:00Z" - Emails from 2024 onwards
+        - "receivedDateTime ge 2024-01-01" - Emails from 2024 onwards (date only)
+        - "receivedDateTime ge 2024-01-01 AND receivedDateTime le 2024-12-31" - Emails in 2024
+        - "createdDateTime ge 2024-01-01T00:00:00Z" - Emails created from 2024
+
+    Subject/Body Queries:
+        - "contains(subject, 'meeting')" - Subject contains 'meeting'
+        - "subject eq 'Important Update'" - Exact subject match
+        - "contains(body/content, 'urgent')" - Body contains 'urgent'
+        - "startswith(subject, 'RE:')" - Subject starts with 'RE:'
+
+    Sender/Recipient Queries:
+        - "from/emailAddress/address eq 'john@example.com'" - From specific sender
+        - "contains(from/emailAddress/address, '@company.com')" - From company domain
+        - "toRecipients/any(r: r/emailAddress/address eq 'jane@example.com')" - To specific recipient
+
+    Combined Queries:
+        - "hasAttachments eq true AND receivedDateTime ge 2024-01-01" - Attachments from 2024
+        - "isRead eq false AND importance eq 'high'" - Unread high importance
+        - "contains(subject, 'urgent') OR importance eq 'high'" - Urgent subject OR high importance
+        - "receivedDateTime ge 2024-01-01 AND (hasAttachments eq true OR importance eq 'high')" - Complex query
+
+    Folder Queries:
+        - Use folder_to_search parameter instead of parentFolderId in search_query
+        - "inbox" - Search in inbox folder
+        - "Sent Items" - Search in sent items
+        - "Drafts" - Search in drafts folder
+        - Custom folder names work if they exist
+
+    Query Rules:
+        - Use uppercase boolean operators: AND, OR, NOT
+        - Use single quotes for string values: 'value'
+        - Use ISO 8601 format for dates: 2024-01-01T00:00:00Z
+        - Use comparison operators: eq, ne, gt, ge, lt, le
+        - Use functions: contains(), startswith(), endswith()
+        - Group conditions with parentheses: (condition1 OR condition2) AND condition3
 
     Args:
         token: OAuth2 token to use for the operation.
-        search_query: query to search for emails. Keep spaces in folder names if user gives spaces.
+        search_query: OData query to search for emails. Use Microsoft Graph API syntax.
         folder_to_search: The folder to search for emails. Default is 'inbox'.
-        properties_to_return: The properties to return in the response. Default is all properties. Comma separated list of properties, like 'idsubject,body,toRecipients'.
+        properties_to_return: The properties to return in the response. Default is all properties. Comma separated list of properties, like 'id,subject,body,toRecipients'.
         max_emails_to_return: Maximum number of emails to return. Default is -1 (return all emails).
         return_only_count: Limit response size, but still return the count matching the query.
+        has_attachments: Filter emails to only include those with attachments. Default is False.
 
     Returns:
         List of the emails matching the search query.
@@ -96,13 +145,27 @@ def list_emails(
     headers = build_headers(token)
     headers["ConsistencyLevel"] = "eventual"
     folders = []
-    search_query = "" if search_query == "*" else search_query
+
+    # Handle has_attachments parameter
+    if has_attachments:
+        if search_query == "*" or search_query == "":
+            search_query = "hasAttachments eq true"
+        else:
+            search_query = f"({search_query}) AND hasAttachments eq true"
+    else:
+        # Keep "*" as "*" for "get all" queries, only convert empty string
+        search_query = "*" if search_query == "*" else ("" if search_query == "" else search_query)
+
+    # Handle folder filtering
+    use_folder_endpoint = False
     if folder_to_search == "inbox":
         inbox_folder_id = _get_inbox_folder_id(token)
         if len(search_query) > 0:
             search_query = f"{search_query} AND parentFolderId eq '{inbox_folder_id}'"
         else:
             search_query = f"parentFolderId eq '{inbox_folder_id}'"
+        # Try using the folder-specific endpoint instead of parentFolderId filter
+        use_folder_endpoint = True
     elif folder_to_search:
         folders = folders or list_folders(token).result
         folder_found = _find_folder(folders, folder_to_search)
@@ -127,7 +190,35 @@ def list_emails(
         else:
             search_query = f"parentFolderId ne '{send_items_folder_id}'"
     emails = Emails(items=[], count=0)
-    query = f"/me/messages?{items_per_query}{count_param}&$filter={search_query}"
+
+    # Enable client-side filtering for hasAttachments when folder filtering is involved
+    # This is a workaround for Microsoft Graph API issues with hasAttachments + parentFolderId
+    needs_client_side_filtering = has_attachments and folder_to_search == "inbox"
+
+    # Use folder-specific endpoint for inbox to avoid parentFolderId filter issues
+    if use_folder_endpoint and folder_to_search == "inbox":
+        # Remove parentFolderId from search_query since we're using folder endpoint
+        search_query_for_endpoint = search_query.replace(f" AND parentFolderId eq '{inbox_folder_id}'", "").replace(f"parentFolderId eq '{inbox_folder_id}'", "")
+        if search_query_for_endpoint.strip() == "" or search_query_for_endpoint.strip() == "*":
+            # For "get all" queries, don't use $filter parameter
+            query = f"/me/mailFolders/{inbox_folder_id}/messages?{items_per_query}{count_param}"
+        else:
+            query = f"/me/mailFolders/{inbox_folder_id}/messages?{items_per_query}{count_param}&$filter={search_query_for_endpoint}"
+    else:
+        if search_query.strip() == "" or search_query.strip() == "*":
+            # For "get all" queries, don't use $filter parameter
+            query = f"/me/messages?{items_per_query}{count_param}"
+        else:
+            query = f"/me/messages?{items_per_query}{count_param}&$filter={search_query}"
+
+    # If we're doing client-side filtering, remove hasAttachments from the query
+    if needs_client_side_filtering:
+        # Remove hasAttachments from the query since we'll filter client-side
+        query_without_attachments = query.replace("&$filter=hasAttachments eq true", "").replace("&$filter=hasAttachments eq true AND", "&$filter=")
+        if "&$filter=" in query_without_attachments and query_without_attachments.split("&$filter=")[1].strip() == "":
+            query_without_attachments = query_without_attachments.replace("&$filter=", "")
+        query = query_without_attachments
+
     while query:
         messages_result = send_request(
             "get",
@@ -150,6 +241,18 @@ def list_emails(
                 query = None
                 break
         query = messages_result.get("@odata.nextLink", None)
+
+    # Apply client-side filtering for hasAttachments when needed
+    if needs_client_side_filtering:
+        filtered_emails = []
+        for email in emails.items:
+            # Check if email has attachments
+            has_attachments_value = email.get("hasAttachments", False)
+            if has_attachments_value:
+                filtered_emails.append(email)
+        emails.items = filtered_emails
+        emails.count = len(filtered_emails)
+
     if return_only_count:
         emails.items = emails.items[:50]
     return Response(result=emails)
@@ -980,3 +1083,152 @@ def flag_email(
         headers=headers,
     )
     return Response(result=flag_response)
+
+
+@action(is_consequential=True)
+def add_category(
+    token: OAuth2Secret[Literal["microsoft"], list[Literal["Mail.ReadWrite"]]],
+    email_id: str,
+    category: Category,
+) -> Response:
+    """
+    Add a category to an email while preserving existing categories.
+    Creates the category in master categories if it doesn't exist.
+
+    Args:
+        token: The OAuth2 token for authentication.
+        email_id: The unique identifier of the email to add the category to.
+        category: The category to add to the email (includes display_name and color).
+
+    Returns:
+        Response indicating the result of the category addition operation.
+    """
+    headers = build_headers(token)
+
+    # 1. Creates the category if it doesn't exist - Check if category exists in master categories and create if needed
+    _ensure_category_exists(token, category.display_name, headers, category.color)
+
+    # Verify the category was created with the correct color
+    category_info = _get_category_info(token, category.display_name, headers)
+    if category_info and category_info.get("color", "").lower() != category.color.lower():
+        print(f"Warning: Category color mismatch. Expected {category.color}, but found {category_info.get('color')}")
+    else:
+        print(f"Category '{category.display_name}' created successfully with color {category_info.get('color') if category_info else category.color}")
+
+    # 2. Preserves existing categories - Get the current categories and add the new one without removing existing ones
+    current_message = send_request(
+        "get",
+        f"/me/messages/{email_id}",
+        "get email for categories",
+        headers=headers,
+    )
+
+    # Get existing categories or initialize empty list
+    existing_categories = current_message.get("categories", [])
+
+    # Add the new category if it doesn't already exist (preserve existing categories)
+    if category.display_name not in existing_categories:
+        existing_categories.append(category.display_name)
+    else:
+        return Response(result=f"Category '{category.display_name}' already exists on this email")
+
+    # Update the email with the new categories
+    data = {
+        "categories": existing_categories
+    }
+
+    update_response = send_request(
+        "patch",
+        f"/me/messages/{email_id}",
+        "add category to email",
+        data=data,
+        headers=headers,
+    )
+    return Response(result=update_response)
+
+
+@action(is_consequential=True)
+def remove_category(
+    token: OAuth2Secret[Literal["microsoft"], list[Literal["Mail.ReadWrite"]]],
+    email_id: str,
+    category_name: str,
+) -> Response:
+    """
+    Remove a category from an email.
+
+    Args:
+        token: The OAuth2 token for authentication.
+        email_id: The unique identifier of the email to remove the category from.
+        category_name: The name of the category to remove.
+
+    Returns:
+        Response indicating the result of the category removal operation.
+    """
+    headers = build_headers(token)
+
+    # First, get the current categories of the email
+    current_message = send_request(
+        "get",
+        f"/me/messages/{email_id}",
+        "get email for categories",
+        headers=headers,
+    )
+
+    # Get existing categories or initialize empty list
+    # Categories are returned as an array of strings (category names)
+    existing_categories = current_message.get("categories", [])
+
+    # Check if category exists and remove it
+    if category_name not in existing_categories:
+        raise ActionError(f"Category '{category_name}' not found on this email")
+
+    # Remove the category from the list
+    updated_categories = [cat for cat in existing_categories if cat != category_name]
+
+    # Update the email with the updated categories
+    data = {
+        "categories": updated_categories
+    }
+
+    update_response = send_request(
+        "patch",
+        f"/me/messages/{email_id}",
+        "remove category from email",
+        data=data,
+        headers=headers,
+    )
+    return Response(result=update_response)
+
+
+@action
+def list_master_categories(
+    token: OAuth2Secret[Literal["microsoft"], list[Literal["Mail.ReadWrite"]]],
+) -> Response:
+    """
+    List all master categories with their colors.
+
+    Args:
+        token: The OAuth2 token for authentication.
+
+    Returns:
+        Response containing the list of master categories with their colors.
+    """
+    headers = build_headers(token)
+
+    try:
+        response = send_request(
+            "get",
+            "/me/outlook/masterCategories",
+            "list master categories",
+            headers=headers,
+        )
+        if response and "value" in response:
+            categories = response["value"]
+            return Response(result={
+                "categories": categories,
+                "count": len(categories)
+            })
+        else:
+            return Response(result={"categories": [], "count": 0})
+    except Exception as e:
+        raise ActionError(f"Error listing master categories: {str(e)}")
