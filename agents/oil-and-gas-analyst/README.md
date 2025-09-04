@@ -17,6 +17,3 @@ This is a demo agent that analyzes North Dakota oil well production data.
 
 ## Prompts
 1. Tell me everything you know about the well with the highest production
-
-## Todo
-There is no reason this demo should run on anyone's laptop. We should move it to the work room.
