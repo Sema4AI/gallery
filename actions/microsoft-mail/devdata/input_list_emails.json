@@ -46,7 +46,7 @@
                 "search_query": "*",
                 "folder_to_search": "inbox",
                 "properties_to_return": "id,subject,from,receivedDateTime,hasAttachments",
-                "max_emails_to_return": 10,
+                "max_emails_to_return": 100,
                 "return_only_count": false,
                 "has_attachments": true,
                 "vscode:request:oauth2": {
@@ -71,6 +71,68 @@
                 "max_emails_to_return": 20,
                 "return_only_count": false,
                 "has_attachments": true,
+                "vscode:request:oauth2": {
+                    "token": {
+                        "type": "OAuth2Secret",
+                        "provider": "microsoft",
+                        "scopes": [
+                            "Mail.Read",
+                            "User.Read"
+                        ],
+                        "access_token": "<access-token-will-be-requested-by-vscode>"
+                    }
+                }
+            }
+        },
+        {
+            "inputName": "input-5",
+            "inputValue": {
+                "search_query": "*",
+                "folder_to_search": "inbox",
+                "properties_to_return": "id,subject,from,receivedDateTime,hasAttachments",
+                "max_emails_to_return": 50,
+                "return_only_count": false,
+                "has_attachments": false,
+                "vscode:request:oauth2": {
+                    "token": {
+                        "type": "OAuth2Secret",
+                        "provider": "microsoft",
+                        "scopes": [
+                            "Mail.Read",
+                            "User.Read"
+                        ],
+                        "access_token": "<access-token-will-be-requested-by-vscode>"
+                    }
+                }
+            }
+        },
+        {
+            "inputName": "input-6",
+            "inputValue": {
+                "search_query": "*",
+                "folder_to_search": "",
+                "properties_to_return": "id,subject,from,receivedDateTime,hasAttachments",
+                "max_emails_to_return": 10,
+                "return_only_count": false,
+                "has_attachments": true,
+                "vscode:request:oauth2": {
+                    "token": {
+                        "type": "OAuth2Secret",
+                        "provider": "microsoft",
+                        "scopes": [
+                            "Mail.Read",
+                            "User.Read"
+                        ],
+                        "access_token": "<access-token-will-be-requested-by-vscode>"
+                    }
+                }
+            }
+        },
+        {
+            "inputName": "list 5 latest emails",
+            "inputValue": {
+                "search_query": "*",
+                "max_emails_to_return": 5,
                 "vscode:request:oauth2": {
                     "token": {
                         "type": "OAuth2Secret",

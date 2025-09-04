@@ -66,23 +66,64 @@ def list_emails(
     has_attachments: bool = False,
 ) -> Response[Emails]:
     """
-    List emails in the user's mailbox matching search query.
+    List emails in the user's mailbox matching search query using Microsoft Graph API OData syntax.
 
     When searching emails in a specific folder, the folder name should be provided in the 'folder_to_search' parameter and NOT in the 'search_query'.
 
     Use action 'filter_by_recipients' if there are any conditions related to recipients ('to', 'cc', 'bcc' or 'from').
 
-    For any date comparison use:
-        - consider Monday as beginning of the week
-        - date in ISO 8601 format (e.g., '2024-08-24')
-        - use boolean operators (e.g., 'AND', 'OR', 'NOT'). These operators must be in uppercase.
-        - comparison operators 'ge', 'le', 'eq', 'ne' (e.g., 'receivedDateTime ge 2024-08-24')
+    Microsoft Graph API Query Syntax Examples:
+
+    Basic Queries:
+        - "*" or "" - Get all emails
+        - "hasAttachments eq true" - Emails with attachments
+        - "isRead eq false" - Unread emails
+        - "importance eq 'high'" - High importance emails
+        - "flag/flagStatus eq 'flagged'" - Flagged emails
+
+    Date/Time Queries:
+        - "receivedDateTime ge 2024-01-01T00:00:00Z" - Emails from 2024 onwards
+        - "receivedDateTime ge 2024-01-01" - Emails from 2024 onwards (date only)
+        - "receivedDateTime ge 2024-01-01 AND receivedDateTime le 2024-12-31" - Emails in 2024
+        - "createdDateTime ge 2024-01-01T00:00:00Z" - Emails created from 2024
+
+    Subject/Body Queries:
+        - "contains(subject, 'meeting')" - Subject contains 'meeting'
+        - "subject eq 'Important Update'" - Exact subject match
+        - "contains(body/content, 'urgent')" - Body contains 'urgent'
+        - "startswith(subject, 'RE:')" - Subject starts with 'RE:'
+
+    Sender/Recipient Queries:
+        - "from/emailAddress/address eq 'john@example.com'" - From specific sender
+        - "contains(from/emailAddress/address, '@company.com')" - From company domain
+        - "toRecipients/any(r: r/emailAddress/address eq 'jane@example.com')" - To specific recipient
+
+    Combined Queries:
+        - "hasAttachments eq true AND receivedDateTime ge 2024-01-01" - Attachments from 2024
+        - "isRead eq false AND importance eq 'high'" - Unread high importance
+        - "contains(subject, 'urgent') OR importance eq 'high'" - Urgent subject OR high importance
+        - "receivedDateTime ge 2024-01-01 AND (hasAttachments eq true OR importance eq 'high')" - Complex query
+
+    Folder Queries:
+        - Use folder_to_search parameter instead of parentFolderId in search_query
+        - "inbox" - Search in inbox folder
+        - "Sent Items" - Search in sent items
+        - "Drafts" - Search in drafts folder
+        - Custom folder names work if they exist
+
+    Query Rules:
+        - Use uppercase boolean operators: AND, OR, NOT
+        - Use single quotes for string values: 'value'
+        - Use ISO 8601 format for dates: 2024-01-01T00:00:00Z
+        - Use comparison operators: eq, ne, gt, ge, lt, le
+        - Use functions: contains(), startswith(), endswith()
+        - Group conditions with parentheses: (condition1 OR condition2) AND condition3
 
     Args:
         token: OAuth2 token to use for the operation.
-        search_query: query to search for emails. Keep spaces in folder names if user gives spaces.
+        search_query: OData query to search for emails. Use Microsoft Graph API syntax.
         folder_to_search: The folder to search for emails. Default is 'inbox'.
-        properties_to_return: The properties to return in the response. Default is all properties. Comma separated list of properties, like 'idsubject,body,toRecipients'.
+        properties_to_return: The properties to return in the response. Default is all properties. Comma separated list of properties, like 'id,subject,body,toRecipients'.
         max_emails_to_return: Maximum number of emails to return. Default is -1 (return all emails).
         return_only_count: Limit response size, but still return the count matching the query.
         has_attachments: Filter emails to only include those with attachments. Default is False.
@@ -112,13 +153,19 @@ def list_emails(
         else:
             search_query = f"({search_query}) AND hasAttachments eq true"
     else:
-        search_query = "" if search_query == "*" else search_query
+        # Keep "*" as "*" for "get all" queries, only convert empty string
+        search_query = "*" if search_query == "*" else ("" if search_query == "" else search_query)
+
+    # Handle folder filtering
+    use_folder_endpoint = False
     if folder_to_search == "inbox":
         inbox_folder_id = _get_inbox_folder_id(token)
         if len(search_query) > 0:
             search_query = f"{search_query} AND parentFolderId eq '{inbox_folder_id}'"
         else:
             search_query = f"parentFolderId eq '{inbox_folder_id}'"
+        # Try using the folder-specific endpoint instead of parentFolderId filter
+        use_folder_endpoint = True
     elif folder_to_search:
         folders = folders or list_folders(token).result
         folder_found = _find_folder(folders, folder_to_search)
@@ -143,7 +190,35 @@ def list_emails(
         else:
             search_query = f"parentFolderId ne '{send_items_folder_id}'"
     emails = Emails(items=[], count=0)
-    query = f"/me/messages?{items_per_query}{count_param}&$filter={search_query}"
+
+    # Enable client-side filtering for hasAttachments when folder filtering is involved
+    # This is a workaround for Microsoft Graph API issues with hasAttachments + parentFolderId
+    needs_client_side_filtering = has_attachments and folder_to_search == "inbox"
+
+    # Use folder-specific endpoint for inbox to avoid parentFolderId filter issues
+    if use_folder_endpoint and folder_to_search == "inbox":
+        # Remove parentFolderId from search_query since we're using folder endpoint
+        search_query_for_endpoint = search_query.replace(f" AND parentFolderId eq '{inbox_folder_id}'", "").replace(f"parentFolderId eq '{inbox_folder_id}'", "")
+        if search_query_for_endpoint.strip() == "" or search_query_for_endpoint.strip() == "*":
+            # For "get all" queries, don't use $filter parameter
+            query = f"/me/mailFolders/{inbox_folder_id}/messages?{items_per_query}{count_param}"
+        else:
+            query = f"/me/mailFolders/{inbox_folder_id}/messages?{items_per_query}{count_param}&$filter={search_query_for_endpoint}"
+    else:
+        if search_query.strip() == "" or search_query.strip() == "*":
+            # For "get all" queries, don't use $filter parameter
+            query = f"/me/messages?{items_per_query}{count_param}"
+        else:
+            query = f"/me/messages?{items_per_query}{count_param}&$filter={search_query}"
+
+    # If we're doing client-side filtering, remove hasAttachments from the query
+    if needs_client_side_filtering:
+        # Remove hasAttachments from the query since we'll filter client-side
+        query_without_attachments = query.replace("&$filter=hasAttachments eq true", "").replace("&$filter=hasAttachments eq true AND", "&$filter=")
+        if "&$filter=" in query_without_attachments and query_without_attachments.split("&$filter=")[1].strip() == "":
+            query_without_attachments = query_without_attachments.replace("&$filter=", "")
+        query = query_without_attachments
+
     while query:
         messages_result = send_request(
             "get",
@@ -166,6 +241,18 @@ def list_emails(
                 query = None
                 break
         query = messages_result.get("@odata.nextLink", None)
+
+    # Apply client-side filtering for hasAttachments when needed
+    if needs_client_side_filtering:
+        filtered_emails = []
+        for email in emails.items:
+            # Check if email has attachments
+            has_attachments_value = email.get("hasAttachments", False)
+            if has_attachments_value:
+                filtered_emails.append(email)
+        emails.items = filtered_emails
+        emails.count = len(filtered_emails)
+
     if return_only_count:
         emails.items = emails.items[:50]
     return Response(result=emails)
