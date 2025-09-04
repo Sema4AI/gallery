@@ -19,6 +19,70 @@
                     }
                 }
             }
+        },
+        {
+            "inputName": "input-2",
+            "inputValue": {
+                "search_query": "hasAttachments eq true",
+                "folder_to_search": "inbox",
+                "properties_to_return": "subject,from,receivedDateTime",
+                "return_only_count": false,
+                "vscode:request:oauth2": {
+                    "token": {
+                        "type": "OAuth2Secret",
+                        "provider": "microsoft",
+                        "scopes": [
+                            "Mail.Read",
+                            "User.Read"
+                        ],
+                        "access_token": "<access-token-will-be-requested-by-vscode>"
+                    }
+                }
+            }
+        },
+        {
+            "inputName": "input-3",
+            "inputValue": {
+                "search_query": "*",
+                "folder_to_search": "inbox",
+                "properties_to_return": "id,subject,from,receivedDateTime,hasAttachments",
+                "max_emails_to_return": 10,
+                "return_only_count": false,
+                "has_attachments": true,
+                "vscode:request:oauth2": {
+                    "token": {
+                        "type": "OAuth2Secret",
+                        "provider": "microsoft",
+                        "scopes": [
+                            "Mail.Read",
+                            "User.Read"
+                        ],
+                        "access_token": "<access-token-will-be-requested-by-vscode>"
+                    }
+                }
+            }
+        },
+        {
+            "inputName": "input-4",
+            "inputValue": {
+                "search_query": "receivedDateTime gt 2024-09-26",
+                "folder_to_search": "inbox",
+                "properties_to_return": "id,subject,from,receivedDateTime,hasAttachments",
+                "max_emails_to_return": 20,
+                "return_only_count": false,
+                "has_attachments": true,
+                "vscode:request:oauth2": {
+                    "token": {
+                        "type": "OAuth2Secret",
+                        "provider": "microsoft",
+                        "scopes": [
+                            "Mail.Read",
+                            "User.Read"
+                        ],
+                        "access_token": "<access-token-will-be-requested-by-vscode>"
+                    }
+                }
+            }
         }
     ],
     "metadata": {
@@ -29,7 +93,8 @@
             "folder_to_search: string: The folder to search for emails. Default is 'inbox'.",
             "properties_to_return: string: The properties to return in the response. Default is all properties. Comma separated list of properties, like 'idsubject,body,toRecipients'.",
             "max_emails_to_return: integer: Maximum number of emails to return. Default is -1 (return all emails).",
-            "return_only_count: boolean: Limit response size, but still return the count matching the query."
+            "return_only_count: boolean: Limit response size, but still return the count matching the query.",
+            "has_attachments: boolean: Filter emails to only include those with attachments. Default is False."
         ],
         "managedParamsSchemaDescription": {
             "token": {
@@ -44,6 +109,6 @@
         },
         "inputFileVersion": "v3",
         "kind": "action",
-        "actionSignature": "action/args: \"token: OAuth2Secret[Literal['microsoft'], list[Literal['Mail.Read', 'User.Read']]], search_query: str, folder_to_search: str='inbox', properties_to_return: str='', max_emails_to_return: int=-1, return_only_count: bool=False\""
+        "actionSignature": "action/args: \"token: OAuth2Secret[Literal['microsoft'], list[Literal['Mail.Read', 'User.Read']]], search_query: str, folder_to_search: str='inbox', properties_to_return: str='', max_emails_to_return: int=-1, return_only_count: bool=False, has_attachments: bool=False\""
     }
 }
