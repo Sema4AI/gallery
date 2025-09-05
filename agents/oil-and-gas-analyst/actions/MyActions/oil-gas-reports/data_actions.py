@@ -102,7 +102,7 @@ def get_total_production_by_field(datasource: OilGasDataSource,
 @query
 def get_top_producing_wells(limit: int) -> Response[Table]:
     """
-    Get the top producing wells based on oil production.
+    Get the top producing wells based on total combined production.
 
     Args:
         limit: Number of top wells to return.
@@ -112,14 +112,17 @@ def get_top_producing_wells(limit: int) -> Response[Table]:
     """
     query = """
     SELECT * FROM public_demo (
-        SELECT WellName, 
-            SUM(CAST(Oil AS NUMERIC)) as Oil, 
-            SUM(CAST(Wtr AS NUMERIC)) as Wtr, 
-            SUM(CAST(Gas AS NUMERIC)) as Gas
+        SELECT wellname, 
+            SUM(oil) as TotalOil, 
+            SUM(wtr) as TotalWtr, 
+            SUM(gas) as TotalGas,
+            SUM(oil) + SUM(wtr) + SUM(gas) as TotalProduction
         FROM og_production_reports
-        WHERE CAST(Oil AS NUMERIC) > 0
-        GROUP BY WellName
-        ORDER BY Oil DESC
+        WHERE oil != 'NaN'::NUMERIC 
+        AND wtr != 'NaN'::NUMERIC 
+        AND gas != 'NaN'::NUMERIC
+        GROUP BY wellname
+        ORDER BY TotalProduction DESC
         LIMIT $limit
     );
     """
