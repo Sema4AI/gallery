@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2.1.0] - 2025-09-04
+
+### Added
+
+- Added `has_attachments` boolean parameter to `list_emails` action for filtering emails with attachments
+- Added comprehensive Microsoft Graph API OData query syntax examples in `list_emails` docstring
+- Added actions for adding/removing category to/from an email.
+
+### Changed
+
+- Enhanced folder-specific endpoint usage for inbox queries to improve reliability
+
 ## [2.0.0] - 2025-09-04
 
 ## BREAKING CHANGE
