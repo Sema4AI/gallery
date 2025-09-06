@@ -1,0 +1,25 @@
+{
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "startDate": "2024-01-01",
+                "endDate": "2024-10-01",
+                "fieldName": "ALEXANDER"
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "get_production_by_date_range_and_field",
+        "actionRelativePath": "data_actions.py",
+        "schemaDescription": [
+            "startDate: string: Start date of the range (format: 'MM/DD/YYYY').",
+            "endDate: string: End date of the range (format: 'MM/DD/YYYY').",
+            "fieldName: string: Name of the field to filter by."
+        ],
+        "managedParamsSchemaDescription": {},
+        "inputFileVersion": "v3",
+        "kind": "query",
+        "actionSignature": "query/args: 'startDate: str, endDate: str, fieldName: str'"
+    }
+}

@@ -1,0 +1,25 @@
+question-groups:
+- title: Introduction
+  questions:
+  - Hello agent, what can you do?
+- title: Exploration
+  questions:
+  - Show me the top 5 wells
+  - Show me the production history for a specific well
+  - Show me the map and file links for this well
+- title: Specific Well Analysis
+  questions:
+  - Can you show me the monthly production data for a specific well
+  - Can you show me the exponential decline curve for this well using 2024 data?
+  - Show me the map link for this well
+  - Show me all the wells within 200 meters of this well
+  - Show me the well file link
+  - How many wells does the operator of this well operate?
+  - Show me a heatmap of wells per field
+- title: Well Deep Dive
+  questions:
+  - Can you show me the monthly production data for a specific well
+  - Can you show me the exponential decline curve for this well using 2024 data?
+  - Can you show me the decline curve for all the other wells within 10 meters?
+  - Can you search for any news about this well or the area it's in for the time around
+    the operational issues?

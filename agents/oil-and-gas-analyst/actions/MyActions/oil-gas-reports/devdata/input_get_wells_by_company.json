@@ -1,0 +1,21 @@
+{
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "company": "GRAYSON"
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "get_wells_by_company",
+        "actionRelativePath": "data_actions.py",
+        "schemaDescription": [
+            "company: string: Name of the company."
+        ],
+        "managedParamsSchemaDescription": {},
+        "inputFileVersion": "v3",
+        "kind": "query",
+        "actionSignature": "query/args: 'company: str'"
+    }
+}
