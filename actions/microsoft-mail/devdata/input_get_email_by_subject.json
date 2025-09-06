@@ -43,7 +43,7 @@
         {
             "inputName": "get email by subject with attachments",
             "inputValue": {
-                "subject": "check this one",
+                "subject": "Test Email with Attachment",
                 "folder_to_search": "inbox",
                 "show_full_body": true,
                 "save_attachments": true,
