@@ -12,6 +12,12 @@ agent-package:
     runbook: runbook.md
     conversation-guide: conversation-guide.yaml
     action-packages:
+    - name: Web Search
+      organization: MyActions
+      type: folder
+      version: 1.0.0
+      whitelist: ""
+      path: MyActions/web-search
     - name: Oil Gas Reports
       organization: MyActions
       type: folder
@@ -24,12 +30,6 @@ agent-package:
       version: 1.3.3
       whitelist: download_file
       path: Sema4.ai/browsing
-    - name: Web Search
-      organization: MyActions
-      type: folder
-      version: 1.0.0
-      whitelist: ""
-      path: MyActions/web-search
     knowledge: []
     metadata:
       mode: conversational
