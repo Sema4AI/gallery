@@ -263,15 +263,9 @@ class ReviewSearchResult(BaseModel):
 @action
 def search_google(q: str, num: int, api_key: Secret) -> Response[SearchResult]:
     """
-    Perform a search using the Serper API and return a structured summary. The number of results can be specified.
-
-    Args:
-        q: The search query.
-        num: The number of results to return.
-        api_key: The API key for authentication.
-
-    Returns:
-        SearchResult: A structured summary of the search results.
+    Perform a comprehensive Google search using the Serper API. Returns organic results, knowledge graphs, related questions, and more.
+    
+    You can specify the number of results to return (num, default: 10, max: 100).
     """
     # Validate inputs
     _validate_query(q)
@@ -296,21 +290,9 @@ def search_news(
     page: int = 1
 ) -> Response[NewsSearchResult]:
     """
-    Search for news articles using the Serper API with publication dates and source information.
-
-    Args:
-        q: The news search query.
-        api_key: The API key for authentication.
-        gl: Country code.
-        location: Location filter.
-        hl: Language code.
-        tbs: Time-based filter for news recency.
-        autocorrect: Enable/disable autocorrect.
-        num: Number of results (default: 10).
-        page: Page number (default: 1).
-
-    Returns:
-        NewsSearchResult: A structured summary of the news search results.
+    Search for recent news articles with publication dates, sources, and images. Perfect for staying updated on current events.
+    
+    You can specify the number of articles (num, default: 10), page number (page, default: 1), country (gl), and time filter (tbs: "qdr:h" for hour, "qdr:d" for day, "qdr:w" for week, "qdr:m" for month).
     """
     # Validate inputs
     _validate_query(q)
@@ -337,20 +319,9 @@ def search_shopping(
     page: int = 1
 ) -> Response[ShoppingSearchResult]:
     """
-    Search for products using the Serper API with pricing, ratings, and vendor information.
-
-    Args:
-        q: The product search query.
-        api_key: The API key for authentication.
-        gl: Country code.
-        location: Location filter.
-        hl: Language code.
-        autocorrect: Enable/disable autocorrect.
-        num: Number of results (default: 10).
-        page: Page number (default: 1).
-
-    Returns:
-        ShoppingSearchResult: A structured summary of the shopping search results.
+    Search for products with prices, ratings, and vendor information. Perfect for price comparison and product research.
+    
+    You can specify the number of products (num, default: 10), page number (page, default: 1), and country for localized pricing (gl).
     """
     # Validate inputs
     _validate_query(q)
@@ -376,19 +347,9 @@ def search_scholar(
     page: int = 1
 ) -> Response[ScholarSearchResult]:
     """
-    Search for academic papers and scholarly articles using the Serper API with citation data.
-
-    Args:
-        q: The academic search query.
-        api_key: The API key for authentication.
-        gl: Country code.
-        location: Location filter.
-        hl: Language code.
-        autocorrect: Enable/disable autocorrect.
-        page: Page number (default: 1).
-
-    Returns:
-        ScholarSearchResult: A structured summary of the scholarly search results.
+    Search for academic papers and scholarly articles with citations, publication info, and PDF links. Perfect for research and literature reviews.
+    
+    You can specify the page number (page, default: 1) and country for regional academic sources (gl).
     """
     # Validate inputs
     _validate_query(q)
@@ -410,16 +371,9 @@ def search_patents(
     page: int = 1
 ) -> Response[PatentSearchResult]:
     """
-    Search for patents and patent documents using the Serper API.
-
-    Args:
-        q: The patent search query.
-        api_key: The API key for authentication.
-        num: Number of results (default: 10).
-        page: Page number (default: 1).
-
-    Returns:
-        PatentSearchResult: A structured summary of the patent search results.
+    Search for patents with detailed metadata including inventors, filing dates, and PDF documents. Perfect for IP research and prior art searches.
+    
+    You can specify the number of patents (num, default: 10) and page number (page, default: 1).
     """
     # Validate inputs
     _validate_query(q)
@@ -443,19 +397,9 @@ def search_maps(
     page: int = 1
 ) -> Response[MapSearchResult]:
     """
-    Enhanced geographic search using the Serper API with detailed place information and opening hours.
-
-    Args:
-        q: The location search query.
-        api_key: The API key for authentication.
-        ll: GPS coordinates in format '@latitude,longitude,zoom'.
-        placeid: Google Place ID.
-        cid: Customer/location ID.
-        hl: Language code.
-        page: Page number (default: 1).
-
-    Returns:
-        MapSearchResult: A structured summary of the map search results.
+    Enhanced geographic search with detailed place information, opening hours, and ratings. Perfect for finding local businesses and locations.
+    
+    You can specify GPS coordinates (ll: '@latitude,longitude,zoom'), Google Place ID (placeid), or business ID (cid). Page number defaults to 1.
     """
     # Validate inputs
     _validate_query(q)
@@ -484,21 +428,9 @@ def search_places(
     page: int = 1
 ) -> Response[PlaceSearchResult]:
     """
-    Search for local businesses and places using the Serper API with contact and rating information.
-
-    Args:
-        q: The place search query.
-        api_key: The API key for authentication.
-        gl: Country code.
-        location: Location filter.
-        hl: Language code.
-        tbs: Time-based filter.
-        autocorrect: Enable/disable autocorrect.
-        num: Number of results (default: 10).
-        page: Page number (default: 1).
-
-    Returns:
-        PlaceSearchResult: A structured summary of the place search results.
+    Search for local businesses and places with contact information, ratings, and categories. Perfect for finding services and establishments.
+    
+    You can specify the number of places (num, default: 10), page number (page, default: 1), country (gl), and location filter.
     """
     # Validate inputs
     _validate_query(q)
@@ -526,21 +458,9 @@ def search_reviews(
     hl: Optional[str] = None
 ) -> Response[ReviewSearchResult]:
     """
-    Search for reviews of specific businesses or places using the Serper API.
-
-    Args:
-        api_key: The API key for authentication.
-        fid: Feature/business ID.
-        cid: Customer/client ID.
-        placeid: Google Place ID.
-        sortBy: Sort method (e.g., 'Most relevant').
-        topicId: Topic identifier.
-        nextPageToken: Pagination token.
-        gl: Country code.
-        hl: Language code.
-
-    Returns:
-        ReviewSearchResult: A structured summary of the review search results.
+    Search for customer reviews of specific businesses or places with ratings, dates, and detailed feedback. Perfect for reputation analysis.
+    
+    Requires at least one ID: business ID (fid), customer ID (cid), or Google Place ID (placeid). You can sort by "Most relevant", "Newest", "Highest rating", or "Lowest rating".
     """
     # Validate inputs
     if not any([fid, cid, placeid]):
