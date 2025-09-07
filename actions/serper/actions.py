@@ -248,12 +248,24 @@ class PlaceSearchResult(BaseModel):
     credits: int = Field(description="The number of credits used", default=0)
 
 
+class ReviewUser(BaseModel):
+    name: Optional[str] = Field(description="Reviewer name", default=None)
+    thumbnail: Optional[str] = Field(description="Reviewer profile image", default=None)
+    link: Optional[str] = Field(description="Reviewer profile link", default=None)
+    reviews: Optional[int] = Field(description="Number of reviews by user", default=None)
+    photos: Optional[int] = Field(description="Number of photos by user", default=None)
+
+
 class ReviewResult(BaseModel):
     title: Optional[str] = Field(description="Review title", default=None)
     rating: Optional[float] = Field(description="Review rating", default=None)
-    text: Optional[str] = Field(description="Review text", default=None)
-    author: Optional[str] = Field(description="Review author", default=None)
+    snippet: Optional[str] = Field(description="Review text content", default=None)
+    text: Optional[str] = Field(description="Review text (legacy field)", default=None)
+    user: Optional[ReviewUser] = Field(description="Review author information", default=None)
+    author: Optional[str] = Field(description="Review author (legacy field)", default=None)
     date: Optional[str] = Field(description="Review date", default=None)
+    isoDate: Optional[str] = Field(description="Review date in ISO format", default=None)
+    likes: Optional[int] = Field(description="Number of likes on review", default=None)
     position: Optional[int] = Field(description="Result position", default=None)
 
 
@@ -445,7 +457,7 @@ def search_maps(
     Enhanced geographic search with detailed place information, opening hours, and ratings. Perfect for finding local businesses and locations.
     
     You can specify GPS coordinates (ll: '@latitude,longitude,zoom'), Google Place ID (placeid), or business ID (cid). Page number defaults to 1.
-    
+    e in
     Args:
         q: Location search query
         api_key: Serper API key for authentication
