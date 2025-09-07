@@ -1,7 +1,8 @@
+
 import json
 import os
 from pathlib import Path
-from typing import List, Optional
+from typing import List, Optional, Dict, Union
 
 import sema4ai_http
 from dotenv import load_dotenv
@@ -10,6 +11,73 @@ from sema4ai.actions import ActionError, Response, Secret, action
 from urllib3.exceptions import HTTPError
 
 load_dotenv(Path(__file__).absolute().parent / "devdata" / ".env")
+
+
+# Input validation functions
+def _validate_url(url: str) -> None:
+    """Validate URL format for lens search."""
+    if not url or not isinstance(url, str):
+        raise ActionError("URL is required and must be a string")
+    if not url.startswith(('http://', 'https://')):
+        raise ActionError("URL must start with http:// or https://")
+
+
+def _validate_query(q: str) -> None:
+    """Validate search query is not empty."""
+    if not q or not isinstance(q, str) or not q.strip():
+        raise ActionError("Search query is required and cannot be empty")
+
+
+def _validate_coordinates(ll: str) -> None:
+    """Validate GPS coordinates format."""
+    if not ll.startswith('@'):
+        raise ActionError("GPS coordinates must start with '@' (format: @latitude,longitude,zoom)")
+    parts = ll[1:].split(',')
+    if len(parts) < 2:
+        raise ActionError("GPS coordinates must include latitude and longitude (format: @latitude,longitude,zoom)")
+
+
+def _validate_positive_integer(value: int, param_name: str) -> None:
+    """Validate that a parameter is a positive integer."""
+    if not isinstance(value, int) or value <= 0:
+        raise ActionError(f"{param_name} must be a positive integer")
+
+
+# Helper functions for common operations
+def _get_api_key(api_key: Secret) -> str:
+    """Extract and validate API key."""
+    key = api_key.value or os.getenv("SERPER_API_KEY")
+    if not key:
+        raise ActionError("API key is required but not provided")
+    return key
+
+
+def _build_payload(base_params: dict, optional_params: dict = None) -> dict:
+    """Build API payload, only including non-None optional parameters."""
+    payload = base_params.copy()
+    if optional_params:
+        for key, value in optional_params.items():
+            if value is not None:
+                payload[key] = value
+    return payload
+
+
+def _make_serper_request(endpoint: str, payload: dict, api_key_str: str, result_class):
+    """Make request to Serper API and return parsed result."""
+    try:
+        headers = {"X-API-KEY": api_key_str, "Content-Type": "application/json"}
+        response = sema4ai_http.post(
+            f"https://google.serper.dev/{endpoint}",
+            body=json.dumps(payload),
+            headers=headers,
+        )
+        response.raise_for_status()
+        search_result = result_class(**response.json())
+        return Response(result=search_result)
+    except HTTPError as e:
+        raise ActionError(f"HTTP error occurred: {str(e)}")
+    except Exception as e:
+        raise ActionError(f"An unexpected error occurred: {str(e)}")
 
 
 # Define Pydantic models for the response
@@ -63,6 +131,135 @@ class SearchResult(BaseModel):
     credits: int = Field(description="The number of credits used", default=0)
 
 
+# New models for additional search endpoints
+class NewsResult(BaseModel):
+    title: str = Field(description="Article headline", default="")
+    link: str = Field(description="Article URL", default="")
+    snippet: str = Field(description="Article summary", default="")
+    date: str = Field(description="Publication date", default="")
+    source: str = Field(description="News source", default="")
+    imageUrl: Optional[str] = Field(description="Article image", default=None)
+    position: int = Field(description="Result position", default=0)
+
+
+class NewsSearchResult(BaseModel):
+    searchParameters: dict = Field(description="The search parameters used", default={})
+    news: List[NewsResult] = Field(description="A list of news results", default=[])
+    credits: int = Field(description="The number of credits used", default=0)
+
+
+class ShoppingResult(BaseModel):
+    title: str = Field(description="Product name", default="")
+    source: str = Field(description="Vendor/retailer", default="")
+    link: str = Field(description="Product page URL", default="")
+    price: str = Field(description="Product price", default="")
+    imageUrl: str = Field(description="Product image", default="")
+    rating: float = Field(description="Product rating", default=0.0)
+    ratingCount: int = Field(description="Number of ratings", default=0)
+    productId: str = Field(description="Unique product identifier", default="")
+    position: int = Field(description="Result position", default=0)
+
+
+class ShoppingSearchResult(BaseModel):
+    searchParameters: dict = Field(description="The search parameters used", default={})
+    shopping: List[ShoppingResult] = Field(description="A list of shopping results", default=[])
+    credits: int = Field(description="The number of credits used", default=0)
+
+
+class ScholarResult(BaseModel):
+    title: str = Field(description="Paper title", default="")
+    link: str = Field(description="Paper URL", default="")
+    publicationInfo: str = Field(description="Author and publication details", default="")
+    snippet: str = Field(description="Paper abstract/summary", default="")
+    year: int = Field(description="Publication year", default=0)
+    citedBy: int = Field(description="Citation count", default=0)
+    pdfUrl: Optional[str] = Field(description="Direct PDF link", default=None)
+    id: str = Field(description="Unique paper identifier", default="")
+    position: int = Field(description="Result position", default=0)
+
+
+class ScholarSearchResult(BaseModel):
+    searchParameters: dict = Field(description="The search parameters used", default={})
+    organic: List[ScholarResult] = Field(description="A list of scholarly results", default=[])
+    credits: int = Field(description="The number of credits used", default=0)
+
+
+class PatentResult(BaseModel):
+    title: str = Field(description="Patent title", default="")
+    link: str = Field(description="Patent URL", default="")
+    snippet: str = Field(description="Patent description/abstract", default="")
+    position: int = Field(description="Result position", default=0)
+    priorityDate: Optional[str] = Field(description="Priority date", default=None)
+    filingDate: Optional[str] = Field(description="Filing date", default=None)
+    grantDate: Optional[str] = Field(description="Grant date", default=None)
+    publicationDate: Optional[str] = Field(description="Publication date", default=None)
+    inventor: Optional[str] = Field(description="Inventor name(s)", default=None)
+    assignee: Optional[str] = Field(description="Patent assignee/owner", default=None)
+    publicationNumber: Optional[str] = Field(description="Publication number", default=None)
+    language: Optional[str] = Field(description="Patent language", default=None)
+    pdfUrl: Optional[str] = Field(description="Direct PDF link", default=None)
+    figures: Optional[List[str]] = Field(description="Patent figures/images", default=None)
+
+
+class PatentSearchResult(BaseModel):
+    searchParameters: dict = Field(description="The search parameters used", default={})
+    organic: List[PatentResult] = Field(description="A list of patent results", default=[])
+    credits: int = Field(description="The number of credits used", default=0)
+
+
+class EnhancedPlace(BaseModel):
+    position: int = Field(description="Result position", default=0)
+    title: str = Field(description="Place name", default="")
+    address: Optional[str] = Field(description="Full address", default=None)
+    latitude: float = Field(description="GPS latitude", default=0.0)
+    longitude: float = Field(description="GPS longitude", default=0.0)
+    rating: float = Field(description="Average rating", default=0.0)
+    ratingCount: int = Field(description="Number of reviews", default=0)
+    priceLevel: Optional[str] = Field(description="Price range indicator (e.g., '$$$')", default=None)
+    type: Optional[str] = Field(description="Primary business type", default=None)
+    types: Optional[List[str]] = Field(description="All business type categories", default=None)
+    website: Optional[str] = Field(description="Business website", default=None)
+    phoneNumber: Optional[str] = Field(description="Contact phone number", default=None)
+    description: Optional[str] = Field(description="Business description", default=None)
+    openingHours: Optional[Dict[str, str]] = Field(description="Operating hours by day", default=None)
+    thumbnailUrl: Optional[str] = Field(description="Place thumbnail image", default=None)
+    cid: Optional[str] = Field(description="Customer/place ID (numeric)", default=None)
+    fid: Optional[str] = Field(description="Feature ID (hex format)", default=None)
+    placeId: Optional[str] = Field(description="Google Place ID", default=None)
+    # Keep legacy field for backward compatibility
+    category: str = Field(description="Business category (legacy field)", default="")
+    placeid: Optional[str] = Field(description="Google Place ID (legacy field)", default=None)
+
+
+class MapSearchResult(BaseModel):
+    searchParameters: dict = Field(description="The search parameters used", default={})
+    ll: Optional[str] = Field(description="GPS coordinates if provided", default=None)
+    places: List[EnhancedPlace] = Field(description="A list of places", default=[])
+    credits: int = Field(description="The number of credits used", default=0)
+
+
+class PlaceSearchResult(BaseModel):
+    searchParameters: dict = Field(description="The search parameters used", default={})
+    places: List[EnhancedPlace] = Field(description="A list of places", default=[])
+    credits: int = Field(description="The number of credits used", default=0)
+
+
+class ReviewResult(BaseModel):
+    title: Optional[str] = Field(description="Review title", default=None)
+    rating: Optional[float] = Field(description="Review rating", default=None)
+    text: Optional[str] = Field(description="Review text", default=None)
+    author: Optional[str] = Field(description="Review author", default=None)
+    date: Optional[str] = Field(description="Review date", default=None)
+    position: Optional[int] = Field(description="Result position", default=None)
+
+
+class ReviewSearchResult(BaseModel):
+    searchParameters: dict = Field(description="The search parameters used", default={})
+    reviews: List[ReviewResult] = Field(description="A list of review results", default=[])
+    credits: int = Field(description="The number of credits used", default=0)
+
+
+
 @action
 def search_google(q: str, num: int, api_key: Secret) -> Response[SearchResult]:
     """
@@ -76,26 +273,285 @@ def search_google(q: str, num: int, api_key: Secret) -> Response[SearchResult]:
     Returns:
         SearchResult: A structured summary of the search results.
     """
-    # Check if API key is provided
-    api_key = api_key.value or os.getenv("SERPER_API_KEY")
-    if not api_key:
-        raise ActionError("API key is required but not provided")
+    # Validate inputs
+    _validate_query(q)
+    _validate_positive_integer(num, "num")
+    
+    # Build payload and make request
+    payload = _build_payload({"q": q, "num": num})
+    api_key_str = _get_api_key(api_key)
+    return _make_serper_request("search", payload, api_key_str, SearchResult)
 
-    try:
-        headers = {"X-API-KEY": api_key, "Content-Type": "application/json"}
-        payload = json.dumps({"q": q, "num": num})
 
-        response = sema4ai_http.post(
-            "https://google.serper.dev/search",
-            body=payload,
-            headers=headers,
-        )
+@action
+def search_news(
+    q: str,
+    api_key: Secret,
+    gl: Optional[str] = None,
+    location: Optional[str] = None,
+    hl: Optional[str] = None,
+    tbs: Optional[str] = None,
+    autocorrect: Optional[bool] = None,
+    num: int = 10,
+    page: int = 1
+) -> Response[NewsSearchResult]:
+    """
+    Search for news articles using the Serper API with publication dates and source information.
 
-        response.raise_for_status()
+    Args:
+        q: The news search query.
+        api_key: The API key for authentication.
+        gl: Country code.
+        location: Location filter.
+        hl: Language code.
+        tbs: Time-based filter for news recency.
+        autocorrect: Enable/disable autocorrect.
+        num: Number of results (default: 10).
+        page: Page number (default: 1).
 
-        search_result = SearchResult(**response.json())
-        return Response(result=search_result)
-    except HTTPError as e:
-        raise ActionError(f"HTTP error occurred: {str(e)}")
-    except Exception as e:
-        raise ActionError(f"An unexpected error occurred: {str(e)}")
+    Returns:
+        NewsSearchResult: A structured summary of the news search results.
+    """
+    # Validate inputs
+    _validate_query(q)
+    _validate_positive_integer(num, "num")
+    _validate_positive_integer(page, "page")
+    
+    # Build payload and make request
+    base_params = {"q": q, "num": num, "page": page}
+    optional_params = {"gl": gl, "location": location, "hl": hl, "tbs": tbs, "autocorrect": autocorrect}
+    payload = _build_payload(base_params, optional_params)
+    api_key_str = _get_api_key(api_key)
+    return _make_serper_request("news", payload, api_key_str, NewsSearchResult)
+
+
+@action
+def search_shopping(
+    q: str,
+    api_key: Secret,
+    gl: Optional[str] = None,
+    location: Optional[str] = None,
+    hl: Optional[str] = None,
+    autocorrect: Optional[bool] = None,
+    num: int = 10,
+    page: int = 1
+) -> Response[ShoppingSearchResult]:
+    """
+    Search for products using the Serper API with pricing, ratings, and vendor information.
+
+    Args:
+        q: The product search query.
+        api_key: The API key for authentication.
+        gl: Country code.
+        location: Location filter.
+        hl: Language code.
+        autocorrect: Enable/disable autocorrect.
+        num: Number of results (default: 10).
+        page: Page number (default: 1).
+
+    Returns:
+        ShoppingSearchResult: A structured summary of the shopping search results.
+    """
+    # Validate inputs
+    _validate_query(q)
+    _validate_positive_integer(num, "num")
+    _validate_positive_integer(page, "page")
+    
+    # Build payload and make request
+    base_params = {"q": q, "num": num, "page": page}
+    optional_params = {"gl": gl, "location": location, "hl": hl, "autocorrect": autocorrect}
+    payload = _build_payload(base_params, optional_params)
+    api_key_str = _get_api_key(api_key)
+    return _make_serper_request("shopping", payload, api_key_str, ShoppingSearchResult)
+
+
+@action
+def search_scholar(
+    q: str,
+    api_key: Secret,
+    gl: Optional[str] = None,
+    location: Optional[str] = None,
+    hl: Optional[str] = None,
+    autocorrect: Optional[bool] = None,
+    page: int = 1
+) -> Response[ScholarSearchResult]:
+    """
+    Search for academic papers and scholarly articles using the Serper API with citation data.
+
+    Args:
+        q: The academic search query.
+        api_key: The API key for authentication.
+        gl: Country code.
+        location: Location filter.
+        hl: Language code.
+        autocorrect: Enable/disable autocorrect.
+        page: Page number (default: 1).
+
+    Returns:
+        ScholarSearchResult: A structured summary of the scholarly search results.
+    """
+    # Validate inputs
+    _validate_query(q)
+    _validate_positive_integer(page, "page")
+    
+    # Build payload and make request
+    base_params = {"q": q, "page": page}
+    optional_params = {"gl": gl, "location": location, "hl": hl, "autocorrect": autocorrect}
+    payload = _build_payload(base_params, optional_params)
+    api_key_str = _get_api_key(api_key)
+    return _make_serper_request("scholar", payload, api_key_str, ScholarSearchResult)
+
+
+@action
+def search_patents(
+    q: str,
+    api_key: Secret,
+    num: int = 10,
+    page: int = 1
+) -> Response[PatentSearchResult]:
+    """
+    Search for patents and patent documents using the Serper API.
+
+    Args:
+        q: The patent search query.
+        api_key: The API key for authentication.
+        num: Number of results (default: 10).
+        page: Page number (default: 1).
+
+    Returns:
+        PatentSearchResult: A structured summary of the patent search results.
+    """
+    # Validate inputs
+    _validate_query(q)
+    _validate_positive_integer(num, "num")
+    _validate_positive_integer(page, "page")
+    
+    # Build payload and make request
+    payload = _build_payload({"q": q, "num": num, "page": page})
+    api_key_str = _get_api_key(api_key)
+    return _make_serper_request("patents", payload, api_key_str, PatentSearchResult)
+
+
+@action
+def search_maps(
+    q: str,
+    api_key: Secret,
+    ll: Optional[str] = None,
+    placeid: Optional[str] = None,
+    cid: Optional[str] = None,
+    hl: Optional[str] = None,
+    page: int = 1
+) -> Response[MapSearchResult]:
+    """
+    Enhanced geographic search using the Serper API with detailed place information and opening hours.
+
+    Args:
+        q: The location search query.
+        api_key: The API key for authentication.
+        ll: GPS coordinates in format '@latitude,longitude,zoom'.
+        placeid: Google Place ID.
+        cid: Customer/location ID.
+        hl: Language code.
+        page: Page number (default: 1).
+
+    Returns:
+        MapSearchResult: A structured summary of the map search results.
+    """
+    # Validate inputs
+    _validate_query(q)
+    _validate_positive_integer(page, "page")
+    if ll:
+        _validate_coordinates(ll)
+    
+    # Build payload and make request
+    base_params = {"q": q, "page": page}
+    optional_params = {"ll": ll, "placeid": placeid, "cid": cid, "hl": hl}
+    payload = _build_payload(base_params, optional_params)
+    api_key_str = _get_api_key(api_key)
+    return _make_serper_request("maps", payload, api_key_str, MapSearchResult)
+
+
+@action
+def search_places(
+    q: str,
+    api_key: Secret,
+    gl: Optional[str] = None,
+    location: Optional[str] = None,
+    hl: Optional[str] = None,
+    tbs: Optional[str] = None,
+    autocorrect: Optional[bool] = None,
+    num: int = 10,
+    page: int = 1
+) -> Response[PlaceSearchResult]:
+    """
+    Search for local businesses and places using the Serper API with contact and rating information.
+
+    Args:
+        q: The place search query.
+        api_key: The API key for authentication.
+        gl: Country code.
+        location: Location filter.
+        hl: Language code.
+        tbs: Time-based filter.
+        autocorrect: Enable/disable autocorrect.
+        num: Number of results (default: 10).
+        page: Page number (default: 1).
+
+    Returns:
+        PlaceSearchResult: A structured summary of the place search results.
+    """
+    # Validate inputs
+    _validate_query(q)
+    _validate_positive_integer(num, "num")
+    _validate_positive_integer(page, "page")
+    
+    # Build payload and make request
+    base_params = {"q": q, "num": num, "page": page}
+    optional_params = {"gl": gl, "location": location, "hl": hl, "tbs": tbs, "autocorrect": autocorrect}
+    payload = _build_payload(base_params, optional_params)
+    api_key_str = _get_api_key(api_key)
+    return _make_serper_request("places", payload, api_key_str, PlaceSearchResult)
+
+
+@action
+def search_reviews(
+    api_key: Secret,
+    fid: Optional[str] = None,
+    cid: Optional[str] = None,
+    placeid: Optional[str] = None,
+    sortBy: Optional[str] = None,
+    topicId: Optional[str] = None,
+    nextPageToken: Optional[str] = None,
+    gl: Optional[str] = None,
+    hl: Optional[str] = None
+) -> Response[ReviewSearchResult]:
+    """
+    Search for reviews of specific businesses or places using the Serper API.
+
+    Args:
+        api_key: The API key for authentication.
+        fid: Feature/business ID.
+        cid: Customer/client ID.
+        placeid: Google Place ID.
+        sortBy: Sort method (e.g., 'Most relevant').
+        topicId: Topic identifier.
+        nextPageToken: Pagination token.
+        gl: Country code.
+        hl: Language code.
+
+    Returns:
+        ReviewSearchResult: A structured summary of the review search results.
+    """
+    # Validate inputs
+    if not any([fid, cid, placeid]):
+        raise ActionError("At least one of fid, cid, or placeid must be provided")
+    
+    # Build payload and make request
+    base_params = {}
+    optional_params = {"fid": fid, "cid": cid, "placeid": placeid, "sortBy": sortBy, 
+                      "topicId": topicId, "nextPageToken": nextPageToken, "gl": gl, "hl": hl}
+    payload = _build_payload(base_params, optional_params)
+    api_key_str = _get_api_key(api_key)
+    return _make_serper_request("reviews", payload, api_key_str, ReviewSearchResult)
+
+
