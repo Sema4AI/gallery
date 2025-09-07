@@ -184,6 +184,10 @@ class ScholarSearchResult(BaseModel):
     credits: int = Field(description="The number of credits used", default=0)
 
 
+class PatentFigure(BaseModel):
+    imageUrl: str = Field(description="URL of the patent figure image")
+
+
 class PatentResult(BaseModel):
     title: str = Field(description="Patent title", default="")
     link: str = Field(description="Patent URL", default="")
@@ -198,7 +202,7 @@ class PatentResult(BaseModel):
     publicationNumber: Optional[str] = Field(description="Publication number", default=None)
     language: Optional[str] = Field(description="Patent language", default=None)
     pdfUrl: Optional[str] = Field(description="Direct PDF link", default=None)
-    figures: Optional[List[str]] = Field(description="Patent figures/images", default=None)
+    figures: Optional[List[PatentFigure]] = Field(description="Patent figures/images", default=None)
 
 
 class PatentSearchResult(BaseModel):
