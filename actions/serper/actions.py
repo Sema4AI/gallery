@@ -266,6 +266,11 @@ def search_google(q: str, num: int, api_key: Secret) -> Response[SearchResult]:
     Perform a comprehensive Google search using the Serper API. Returns organic results, knowledge graphs, related questions, and more.
     
     You can specify the number of results to return (num, default: 10, max: 100).
+    
+    Args:
+        q: Search query string
+        num: Number of search results to return (1-100)
+        api_key: Serper API key for authentication
     """
     # Validate inputs
     _validate_query(q)
@@ -293,6 +298,17 @@ def search_news(
     Search for recent news articles with publication dates, sources, and images. Perfect for staying updated on current events.
     
     You can specify the number of articles (num, default: 10), page number (page, default: 1), country (gl), and time filter (tbs: "qdr:h" for hour, "qdr:d" for day, "qdr:w" for week, "qdr:m" for month).
+    
+    Args:
+        q: News search query
+        api_key: Serper API key for authentication
+        gl: Country code for localized results
+        location: Location filter for regional news
+        hl: Language code for results
+        tbs: Time filter for news recency
+        autocorrect: Enable automatic spelling correction
+        num: Number of articles to return
+        page: Page number for pagination
     """
     # Validate inputs
     _validate_query(q)
@@ -322,6 +338,16 @@ def search_shopping(
     Search for products with prices, ratings, and vendor information. Perfect for price comparison and product research.
     
     You can specify the number of products (num, default: 10), page number (page, default: 1), and country for localized pricing (gl).
+    
+    Args:
+        q: Product search query
+        api_key: Serper API key for authentication
+        gl: Country code for localized pricing
+        location: Location for regional availability
+        hl: Language code for product descriptions
+        autocorrect: Enable automatic spelling correction
+        num: Number of products to return
+        page: Page number for pagination
     """
     # Validate inputs
     _validate_query(q)
@@ -350,6 +376,15 @@ def search_scholar(
     Search for academic papers and scholarly articles with citations, publication info, and PDF links. Perfect for research and literature reviews.
     
     You can specify the page number (page, default: 1) and country for regional academic sources (gl).
+    
+    Args:
+        q: Academic search query
+        api_key: Serper API key for authentication
+        gl: Country code for regional academic sources
+        location: Location filter for institutional research
+        hl: Language code for papers
+        autocorrect: Enable automatic spelling correction
+        page: Page number for pagination
     """
     # Validate inputs
     _validate_query(q)
@@ -374,6 +409,12 @@ def search_patents(
     Search for patents with detailed metadata including inventors, filing dates, and PDF documents. Perfect for IP research and prior art searches.
     
     You can specify the number of patents (num, default: 10) and page number (page, default: 1).
+    
+    Args:
+        q: Patent search query
+        api_key: Serper API key for authentication
+        num: Number of patents to return
+        page: Page number for pagination
     """
     # Validate inputs
     _validate_query(q)
@@ -400,6 +441,15 @@ def search_maps(
     Enhanced geographic search with detailed place information, opening hours, and ratings. Perfect for finding local businesses and locations.
     
     You can specify GPS coordinates (ll: '@latitude,longitude,zoom'), Google Place ID (placeid), or business ID (cid). Page number defaults to 1.
+    
+    Args:
+        q: Location search query
+        api_key: Serper API key for authentication
+        ll: GPS coordinates in format '@latitude,longitude,zoom'
+        placeid: Google Place ID for specific location lookup
+        cid: Customer/location ID for business lookup
+        hl: Language code for results
+        page: Page number for pagination
     """
     # Validate inputs
     _validate_query(q)
@@ -431,6 +481,17 @@ def search_places(
     Search for local businesses and places with contact information, ratings, and categories. Perfect for finding services and establishments.
     
     You can specify the number of places (num, default: 10), page number (page, default: 1), country (gl), and location filter.
+    
+    Args:
+        q: Place search query
+        api_key: Serper API key for authentication
+        gl: Country code for localized results
+        location: Location filter for regional search
+        hl: Language code for results
+        tbs: Time-based filter for business hours or recency
+        autocorrect: Enable automatic spelling correction
+        num: Number of places to return
+        page: Page number for pagination
     """
     # Validate inputs
     _validate_query(q)
@@ -461,6 +522,17 @@ def search_reviews(
     Search for customer reviews of specific businesses or places with ratings, dates, and detailed feedback. Perfect for reputation analysis.
     
     Requires at least one ID: business ID (fid), customer ID (cid), or Google Place ID (placeid). You can sort by "Most relevant", "Newest", "Highest rating", or "Lowest rating".
+    
+    Args:
+        api_key: Serper API key for authentication
+        fid: Feature/business ID from Google Maps
+        cid: Customer/client ID for the business
+        placeid: Google Place ID for the location
+        sortBy: Sort method for reviews
+        topicId: Topic identifier for filtered reviews
+        nextPageToken: Pagination token for additional results
+        gl: Country code for localized reviews
+        hl: Language code for review text
     """
     # Validate inputs
     if not any([fid, cid, placeid]):
