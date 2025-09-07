@@ -1,0 +1,36 @@
+{
+    "inputs": [
+        {
+            "inputName": "Search for laptop deals",
+            "inputValue": {
+                "q": "gaming laptop",
+                "num": 5,
+                "gl": "us",
+                "hl": "en",
+                "api_key": ""
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "search_shopping",
+        "actionRelativePath": "actions.py",
+        "schemaDescription": [
+            "q: string: The product search query.",
+            "num: integer: Number of results (default: 10).",
+            "gl: string: Country code.",
+            "hl: string: Language code."
+        ],
+        "managedParamsSchemaDescription": {
+            "api_key": {
+                "type": "Secret",
+                "description": "The API key for authentication."
+            }
+        },
+        "inputFileVersion": "v3",
+        "kind": "action",
+        "actionSignature": "action/args: 'q: str, api_key: Secret, gl: Optional[str] = None, location: Optional[str] = None, hl: Optional[str] = None, autocorrect: Optional[bool] = None, num: int = 10, page: int = 1'"
+    }
+}
+
+
+
