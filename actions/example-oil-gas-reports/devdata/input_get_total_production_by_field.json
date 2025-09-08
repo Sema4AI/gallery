@@ -1,0 +1,25 @@
+{
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "fieldName": "ALEXANDER"
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "get_total_production_by_field",
+        "actionRelativePath": "data_actions.py",
+        "schemaDescription": [
+            "fieldName: string: Name of the field."
+        ],
+        "managedParamsSchemaDescription": {
+            "datasource": {
+                "type": "DataSource"
+            }
+        },
+        "inputFileVersion": "v3",
+        "kind": "query",
+        "actionSignature": "query/args: 'datasource: OilGasDataSource, fieldName: str'"
+    }
+}

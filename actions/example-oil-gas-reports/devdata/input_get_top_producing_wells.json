@@ -1,0 +1,21 @@
+{
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "limit": 10
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "get_top_producing_wells",
+        "actionRelativePath": "data_actions.py",
+        "schemaDescription": [
+            "limit: integer: Number of top wells to return."
+        ],
+        "managedParamsSchemaDescription": {},
+        "inputFileVersion": "v3",
+        "kind": "query",
+        "actionSignature": "query/args: 'limit: int'"
+    }
+}
