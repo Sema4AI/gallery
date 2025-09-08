@@ -1,5 +1,5 @@
 # Required: A short name for the action package
-name: Example - Web Search
+name: Example Web Search
 
 # Required: A description of what's in the action package.
 description: Example action package demonstrating Google search API integration with Sema4.ai demo API, showcasing structured data extraction including organic results, knowledge graph, places, and related searches.
