@@ -228,11 +228,17 @@ class EnhancedPlace(BaseModel):
     thumbnailUrl: Optional[str] = Field(description="Place thumbnail image", default=None)
     cid: Optional[str] = Field(description="Customer/place ID (numeric)", default=None)
     fid: Optional[str] = Field(description="Feature ID (hex format)", default=None)
-    placeId: Optional[str] = Field(description="Google Place ID", default=None)
-    # Keep legacy field for backward compatibility
+    placeId: Optional[str] = Field(
+        description="Google Place ID (accepts both 'placeId' and legacy 'placeid' keys)",
+        default=None,
+        alias="placeid",
+        alias_priority=2
+    )
+    # 'placeid' is supported as a legacy alias for backward compatibility
     category: str = Field(description="Business category (legacy field)", default="")
-    placeid: Optional[str] = Field(description="Google Place ID (legacy field)", default=None)
 
+    class Config:
+        allow_population_by_field_name = True
 
 class MapSearchResult(BaseModel):
     searchParameters: dict = Field(description="The search parameters used", default={})
