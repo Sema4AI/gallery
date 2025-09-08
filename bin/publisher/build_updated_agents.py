@@ -22,6 +22,8 @@ dest_agents_folder = os.path.join(script_dir, "agents")
 manifest_file = os.path.join(dest_agents_folder, "manifest.json")
 spcs_manifest_file = os.path.join(dest_agents_folder, "manifest_spcs.json")
 
+manifest_v2_file = os.path.join(dest_agents_folder, "manifest_v2.json")
+spcs_manifest_v2_file = os.path.join(dest_agents_folder, "manifest_spcs_v2.json")
 
 @task
 def build_updated_agents():
@@ -29,8 +31,16 @@ def build_updated_agents():
         get_working_dir(), "published_agents_manifest.json"
     )
 
+    published_manifest_v2_path = os.path.join(
+        get_working_dir(), "published_agents_manifest_v2.json"
+    )
+
     download_file(
         "https://cdn.sema4.ai/gallery/agents/manifest.json", published_manifest_path
+    )
+
+    download_file(
+        "https://cdn.sema4.ai/gallery/agents/manifest_v2.json", published_manifest_v2_path
     )
 
     try:
@@ -38,6 +48,14 @@ def build_updated_agents():
     except Exception:
         log_error("Reading published agents manifest failed, exiting...")
         return
+
+    # For manifest v2, we don't want to stop the execution if the manifest is not already published. In such a case,
+    # we simply use an empty one as "base".
+    try:
+        published_manifest_v2: AgentsManifest = read_json_file(published_manifest_v2_path)
+    except Exception:
+        log_error("Reading published agents manifest v2 failed, exiting...")
+        published_manifest_v2 = AgentsManifest(agents=dict(), organization=None)
 
     get_action_server()
     agent_cli_path = get_agent_cli()
@@ -63,11 +81,11 @@ def build_updated_agents():
         published_manifest, update_manifest
     )
 
-    with open("whitelist.json", "r") as f:
+    with open("agents_whitelist.json", "r") as f:
         whitelist = json.load(f)
 
-    save_manifest(new_manifest, manifest_file, whitelist["standard"]["agents"])
-    save_manifest(new_manifest, spcs_manifest_file, whitelist["spcs"]["agents"])
+    save_manifest(new_manifest, manifest_file, whitelist["standard"])
+    save_manifest(new_manifest, spcs_manifest_file, whitelist["spcs"])
 
 
 if __name__ == "__main__":

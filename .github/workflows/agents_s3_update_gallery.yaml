@@ -9,7 +9,8 @@ on:
       - main
     paths:
       - 'agents/**'
-      - 'bin/publisher/whitelist.json'
+      - 'bin/publisher/agents_whitelist.json'
+      - 'bin/publisher/agents_whitelist_v2.json'
 
 jobs:
   build_agents:
@@ -27,14 +28,19 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Check if manifest.json exists
+      - name: Check if manifests exist
         run: |
-          if curl --head --silent --fail https://cdn.sema4.ai/gallery/agents/manifest.json; then
-            echo "manifest.json exists. Proceeding with the workflow."
-          else
-            echo "manifest.json does not exist. Stopping the workflow."
-          exit 1
-          fi
+          BASE_URL="https://cdn.sema4.ai/gallery/agents"
+          files=("manifest.json" "manifest_spcs.json" "manifest_v2.json" "manifest_spcs_v2.json")
+
+          for f in "${files[@]}"; do
+            if curl --head --silent --fail "$BASE_URL/$f" > /dev/null; then
+              echo "$f exists. Proceeding."
+            else
+              echo "$f does not exist. Stopping the workflow."
+              exit 1
+            fi
+          done
 
       - name: Build updated agents
         run: |

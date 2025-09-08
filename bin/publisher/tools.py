@@ -9,7 +9,7 @@ from utils import get_working_dir
 
 as_version = "2.6.0"
 rcc_version = "v18.1.1"
-agent_cli_version = "v1.0.1"
+agent_cli_version = "v2.1.2"
 
 
 def get_agent_cli_path() -> str:
@@ -77,7 +77,7 @@ def download_agent_cli() -> str:
         url = f"https://cdn.sema4.ai/agent-cli/releases/{agent_cli_version}/windows64/agent-cli.exe"
         agent_cli_exe = os.path.join(working_dir, "agent-cli.exe")
     elif system == "darwin":
-        url = f"https://cdn.sema4.ai/agent-cli/releases/{agent_cli_version}/macos64/agent-cli"
+        url = f"https://cdn.sema4.ai/agent-cli/releases/{agent_cli_version}/macos-arm64/agent-cli"
         agent_cli_exe = os.path.join(working_dir, "agent-cli")
     elif system == "linux":
         url = f"https://cdn.sema4.ai/agent-cli/releases/{agent_cli_version}/linux64/agent-cli"
