@@ -1,0 +1,23 @@
+{
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "fieldName": "NORTH FORK",
+                "year": "2024"
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "get_monthly_production_trends",
+        "actionRelativePath": "data_actions.py",
+        "schemaDescription": [
+            "fieldName: string: Name of the field, make sure the parameter is used in all lower case 'fieldname'",
+            "year: string: Year for which to retrieve data."
+        ],
+        "managedParamsSchemaDescription": {},
+        "inputFileVersion": "v3",
+        "kind": "query",
+        "actionSignature": "query/args: 'fieldName: str, year: str'"
+    }
+}

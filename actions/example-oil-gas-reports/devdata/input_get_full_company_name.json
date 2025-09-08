@@ -1,0 +1,21 @@
+{
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "company": "hess"
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "get_company_names",
+        "actionRelativePath": "data_actions.py",
+        "schemaDescription": [
+            "company: string: Partial name of the company to search for."
+        ],
+        "managedParamsSchemaDescription": {},
+        "inputFileVersion": "v3",
+        "kind": "query",
+        "actionSignature": "query/args: 'company: str'"
+    }
+}

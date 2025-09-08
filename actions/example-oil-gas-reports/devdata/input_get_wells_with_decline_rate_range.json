@@ -1,0 +1,32 @@
+{
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "monthsToAnalyze": 6,
+                "minDeclineRate": 0.25,
+                "maxDeclineRate": 0.5,
+                "limit": 10
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "get_wells_with_decline_rate_range",
+        "actionRelativePath": "data_actions.py",
+        "schemaDescription": [
+            "monthsToAnalyze: integer: Number of months to analyze for decline (default: 6)",
+            "minDeclineRate: number: Minimum overall decline rate to include in results (default: 0.05 or 5%)",
+            "maxDeclineRate: number: Maximum overall decline rate to include in results (default: 0.5 or 50%)",
+            "limit: integer: Maximum number of wells to return (default: 1000)"
+        ],
+        "managedParamsSchemaDescription": {
+            "datasource": {
+                "type": "DataSource",
+                "description": "DataSource"
+            }
+        },
+        "inputFileVersion": "v3",
+        "kind": "query",
+        "actionSignature": "query/args: 'datasource: OilGasDataSource, monthsToAnalyze: int=6, minDeclineRate: float=0.05, maxDeclineRate: float=0.5, limit: int=1000'"
+    }
+}

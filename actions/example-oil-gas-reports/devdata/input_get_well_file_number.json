@@ -1,0 +1,21 @@
+{
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "wellName": "Porter 26-35 4H"
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "get_well_file_number",
+        "actionRelativePath": "data_actions.py",
+        "schemaDescription": [
+            "wellName: string: Name of the well to search for."
+        ],
+        "managedParamsSchemaDescription": {},
+        "inputFileVersion": "v3",
+        "kind": "query",
+        "actionSignature": "query/args: 'wellName: str'"
+    }
+}
