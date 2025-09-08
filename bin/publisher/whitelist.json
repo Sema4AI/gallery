@@ -7,6 +7,8 @@
             "ai-browsing",
             "browsing",
             "email-sending",
+            "example-oil-gas-reports",
+            "example-web-search",
             "excel",
             "google-calendar",
             "google-docs",
@@ -37,7 +39,6 @@
             "robocorp"
         ],
         "agents": [
-            "oil-and-gas-analyst",
             "wayback-machine-agent"
         ]
     },
@@ -47,6 +48,8 @@
             "browsing",
             "email",
             "excel",
+            "example-oil-gas-reports",
+            "example-web-search",
             "free-web-search",
             "google-search",
             "hubspot",
@@ -69,8 +72,7 @@
             "cortex-analyst-example",
             "cortex-search-example",
             "sales-contact-finder",
-            "similar-company-finder",
-            "oil-and-gas-analyst"
+            "similar-company-finder"
         ]
     }
 }
