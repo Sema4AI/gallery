@@ -1,0 +1,27 @@
+{
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "wellName": "BOLKEN 24-12",
+                "radius": 2000
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "find_wells_within_radius",
+        "actionRelativePath": "data_actions.py",
+        "schemaDescription": [
+            "wellName: string: Name of the well to use as the center point.",
+            "radius: integer: Radius in meters."
+        ],
+        "managedParamsSchemaDescription": {
+            "datasource": {
+                "type": "DataSource"
+            }
+        },
+        "inputFileVersion": "v3",
+        "kind": "query",
+        "actionSignature": "query/args: 'datasource: OilGasDataSource, wellName: str, radius: int'"
+    }
+}

@@ -1,0 +1,25 @@
+{
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "wellName": "Porter 26-35 4H",
+                "startDate": "1/1/2024",
+                "endDate": "8/31/2024"
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "compare_well_monthly_production",
+        "actionRelativePath": "data_actions.py",
+        "schemaDescription": [
+            "wellName: string: List of well names to compare.",
+            "startDate: string: Start date of the comparison period (format: 'MM/DD/YYYY').",
+            "endDate: string: End date of the comparison period (format: 'MM/DD/YYYY')."
+        ],
+        "managedParamsSchemaDescription": {},
+        "inputFileVersion": "v3",
+        "kind": "query",
+        "actionSignature": "query/args: 'wellName: str, startDate: str, endDate: str'"
+    }
+}

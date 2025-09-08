@@ -1,0 +1,23 @@
+{
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "fieldName": "ALEXANDER",
+                "limit": 10
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "get_top_producing_wells_by_field",
+        "actionRelativePath": "data_actions.py",
+        "schemaDescription": [
+            "fieldName: string: Name of the field to filter by - make sure the case is all upper case.",
+            "limit: integer: Number of top wells to return."
+        ],
+        "managedParamsSchemaDescription": {},
+        "inputFileVersion": "v3",
+        "kind": "query",
+        "actionSignature": "query/args: 'fieldName: str, limit: int'"
+    }
+}
