@@ -10,7 +10,6 @@ on:
     paths:
       - 'agents/**'
       - 'bin/publisher/agents_whitelist.json'
-      - 'bin/publisher/agents_whitelist_v2.json'
 
 jobs:
   build_agents:
@@ -114,6 +113,8 @@ jobs:
 
           # Copy the updated manifest
           aws s3 cp manifest.json $S3_BASE_URL/manifest.json --cache-control max-age=120 --content-type "text/plain"
+          aws s3 cp manifest_v2.json $S3_BASE_URL/manifest_v2.json --cache-control max-age=120 --content-type "text/plain"
 
           # Copy the updated manifest_spcs.json
           aws s3 cp manifest_spcs.json $S3_BASE_URL/manifest_spcs.json --cache-control max-age=120 --content-type "text/plain"
+          aws s3 cp manifest_spcs_v2.json $S3_BASE_URL/manifest_spcs_v2.json --cache-control max-age=120 --content-type "text/plain"
