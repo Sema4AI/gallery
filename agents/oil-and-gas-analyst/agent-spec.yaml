@@ -12,18 +12,18 @@ agent-package:
     runbook: runbook.md
     conversation-guide: conversation-guide.yaml
     action-packages:
-    - name: Web Search
-      organization: MyActions
+    - name: Example Web Search
+      organization: Sema4.ai
       type: folder
       version: 1.0.0
       whitelist: ""
-      path: MyActions/web-search
-    - name: Oil Gas Reports
-      organization: MyActions
+      path: Sema4.ai/example-web-search
+    - name: Example Oil Gas Reports
+      organization: Sema4.ai
       type: folder
-      version: 0.0.7
+      version: 1.0.0
       whitelist: ""
-      path: MyActions/oil-gas-reports
+      path: Sema4.ai/example-oil-gas-reports
     - name: Browsing
       organization: Sema4.ai
       type: folder

@@ -1,11 +1,29 @@
 {
   "standard": [
-    "wayback-machine-agent"
+    {
+      "name": "wayback-machine-agent"
+    },
+    {
+      "name": "oil-and-gas-analyst",
+      "required_studio_version": ">=1.5.0"
+    }
   ],
   "spcs": [
-    "cortex-analyst-example",
-    "cortex-search-example",
-    "sales-contact-finder",
-    "similar-company-finder"
+    {
+      "name": "cortex-analyst-example"
+    },
+    {
+      "name": "cortex-search-example"
+    },
+    {
+      "name": "sales-contact-finder"
+    },
+    {
+      "name": "similar-company-finder"
+    },
+    {
+      "name": "oil-and-gas-analyst",
+      "required_studio_version": ">=1.5.0"
+    }
   ]
 }

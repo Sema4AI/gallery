@@ -2,10 +2,10 @@ import json
 from typing import List, Optional
 
 import sema4ai_http
-from dotenv import load_dotenv
 from pydantic import BaseModel, Field
-from sema4ai.actions import ActionError, Response, Secret, action
+from sema4ai.actions import ActionError, Response, action
 from urllib3.exceptions import HTTPError
+
 
 # Define Pydantic models for the response
 class KnowledgeGraph(BaseModel):

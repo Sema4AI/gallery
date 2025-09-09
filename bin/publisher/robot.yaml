@@ -5,9 +5,6 @@ tasks:
   Build all packages:
     shell: python -m robocorp.tasks run build_all_packages.py
 
-  Build all agents:
-    shell: python -m robocorp.tasks run build_all_agents.py
-
   Build updated packages:
     shell: python -m robocorp.tasks run build_updated_packages.py
 

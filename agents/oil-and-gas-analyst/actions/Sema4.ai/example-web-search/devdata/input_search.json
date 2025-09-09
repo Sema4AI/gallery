@@ -1,0 +1,23 @@
+{
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "q": "artificial intelligence trends 2024",
+                "num": 5
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "search",
+        "actionRelativePath": "actions.py",
+        "schemaDescription": [
+            "q: string: The search query.",
+            "num: integer: The number of results to return."
+        ],
+        "managedParamsSchemaDescription": {},
+        "inputFileVersion": "v3",
+        "kind": "action",
+        "actionSignature": "action/args: 'q: str, num: int'"
+    }
+}
