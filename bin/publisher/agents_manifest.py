@@ -5,7 +5,7 @@ import shutil
 import subprocess
 from pathlib import Path
 
-from bin.publisher.models import AgentsWhitelistEntry, AgentInfo
+from models import AgentsWhitelistEntry, AgentInfo
 from models import AgentActionPackage, AgentsManifest, AgentVersionInfo
 from utils import read_yaml_file
 

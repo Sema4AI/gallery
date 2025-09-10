@@ -5,7 +5,7 @@ from agents_manifest import (
     generate_consolidated_manifest,
     save_manifest,
 )
-from bin.publisher.models import AgentsWhitelistEntry
+from models import AgentsWhitelistEntry
 from models import AgentsManifest, AgentsWhitelist
 from robocorp.tasks import task
 from tools import get_action_server, get_agent_cli

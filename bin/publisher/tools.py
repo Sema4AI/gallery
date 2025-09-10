@@ -7,8 +7,8 @@ import subprocess
 import requests
 from utils import get_working_dir
 
-as_version = "2.14.2"
-rcc_version = "v18.1.1"
+as_version = "2.14.3"
+rcc_version = "v19.0.2"
 agent_cli_version = "v2.1.2"
 
 
