@@ -18,7 +18,7 @@ jobs:
       id-token: write # required by AWS aws-actions/configure-aws-credentials
       contents: read
     env:
-      RCC_VERSION: v18.1.1
+      RCC_VERSION: v19.0.2
 
     outputs:
       has_agents: ${{ steps.check_artifacts.outputs.has_agents }}
