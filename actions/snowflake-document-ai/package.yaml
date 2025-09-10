@@ -1,10 +1,10 @@
 spec-version: v2
 
 # Required: A short name for the action package
-name: Snowflake Data
+name: Snowflake Document AI
 
 # Required: A description of what's in the action package.
-description: Actions for querying and understanding any data in Snowflake. With this package your agent will understand the data, and then be able to generate SQL queries and run them.
+description: Extract data from files using Snowflake Document AI's one-shot parsing.
 
 # Package version number, recommend using semver.org
 version: 0.0.1
@@ -16,6 +16,25 @@ dependencies:
   pypi:
   - sema4ai-actions=1.4.2
   - sema4ai-data=1.0.10
+  - snowflake-connector-python[pandas]=3.17.3
+  - snowflake=1.7.0
+  - pyjwt=2.10.1
+
+dev-dependencies:
+  conda-forge:
+  - pytest=8.4.2
+  - types-requests=2.32.4.20250611
+  - ruff=0.12.8
+  - mypy=1.17.1
+
+dev-tasks:
+  test: pytest tests
+  lint: |
+    ruff check .
+    ruff format --check .
+  typecheck: mypy --follow-imports=silent --strict .
+  prettify: |
+    ruff format .
 
 packaging:
   # By default, all files and folders in this directory are packaged when uploaded.
