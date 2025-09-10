@@ -102,31 +102,31 @@ def build_updated_packages():
     )
     new_manifest_sai["organization"] = "Sema4.ai"
 
-    with open("whitelist.json", "r") as f:
+    with open("action_packages_whitelist.json", "r") as f:
         whitelist = json.load(f)
 
     save_manifest(
         new_manifest,
         os.path.join(gallery_actions_folder, "manifest.json"),
-        whitelist["standard"]["actions"],
+        whitelist["standard"],
     )
 
     save_manifest(
         new_manifest_sai,
         os.path.join(gallery_actions_folder, "manifest_sai.json"),
-        whitelist["standard"]["actions"],
+        whitelist["standard"],
     )
 
     save_manifest(
         new_manifest,
         os.path.join(gallery_actions_folder, "manifest_spcs.json"),
-        whitelist["spcs"]["actions"],
+        whitelist["spcs"],
     )
 
     save_manifest(
         new_manifest_sai,
         os.path.join(gallery_actions_folder, "manifest_sai_spcs.json"),
-        whitelist["spcs"]["actions"],
+        whitelist["spcs"],
     )
 
 

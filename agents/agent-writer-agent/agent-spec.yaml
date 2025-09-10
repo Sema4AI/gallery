@@ -31,7 +31,7 @@ agent-package:
       whitelist: get_website_content,download_file,fill_elements
     - name: Agents Bootstrapper
       organization: Sema4.ai
-      version: 1.3.1
+      version: 1.2.1
       path: Sema4.ai/agents-bootstrapper
       type: folder
       whitelist: 'bootstrap_agent_package,open_agent_code,refresh_agent_package_spec,list_available_prebuilt_actions,read_prebuild_action_capabilities,download_prebuilt_action,publish_to_sema4_ai_studio,bootstrap_action_package,update_action_package_dependencies,update_action_code'

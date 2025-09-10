@@ -1,5 +1,5 @@
 # Required: A short name for the action package
-name: Example - Oil Gas Reports
+name: Example Oil Gas Reports
 
 # Required: A description of what's in the action package.
 description: Example action package demonstrating oil and gas production data analysis using PostgreSQL database queries, showcasing well production tracking, field analysis, and decline curve modeling.

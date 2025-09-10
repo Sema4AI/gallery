@@ -3,9 +3,9 @@ import os
 import re
 import shutil
 import subprocess
-from copy import deepcopy
 from pathlib import Path
 
+from models import AgentsWhitelistEntry, AgentInfo
 from models import AgentActionPackage, AgentsManifest, AgentVersionInfo
 from utils import read_yaml_file
 
@@ -13,16 +13,20 @@ from utils import read_yaml_file
 def generate_agents_manifest(
     input_folder: str,
     dest_agents_folder: str,
-    published_manifest: dict,
+    published_manifest: AgentsManifest,
+    whitelist: list[AgentsWhitelistEntry],
     agent_cli_path: str,
 ) -> AgentsManifest:
     """
     Generates the manifest file for the agents.
+    It only generates Agent entries if their respective versions are not already published, i.e., not present
+    in the published manifest.
 
     Parameters:
         input_folder (str): The path to the folder containing prepared gallery agents folders.
         dest_agents_folder (str): Path where to store agent information that is then copied over to S3.
-        published_manifest (dict): A dictionary containing the manifest data for the agents.
+        published_manifest (AgentsManifest): A dictionary containing the manifest data for the already published agents.
+        whitelist: (list[AgentsWhitelistEntry]): A list of agents that are whitelisted in a given context.
         agent_cli_path (str): The path to the agent cli file.
     """
     manifest: AgentsManifest = {"agents": {}, "organization": "Sema4.ai"}
@@ -45,14 +49,18 @@ def generate_agents_manifest(
         agent_name = agent_spec_data["name"]
         agent_version = agent_spec_data["version"]
 
-        if is_agent_published(published_manifest, agent_name, agent_version):
+        kebab_case_agent_name = to_kebab_case(agent_name)
+
+        whitelist_entry = get_whitelist_entry(kebab_case_agent_name, whitelist)
+
+        # If a given Agent is not whitelisted for a given manifest, or it's current version is already published, skip it.
+        if not whitelist_entry or is_agent_published(published_manifest, agent_name, agent_version):
             continue
 
         with open(os.path.join(agent_folder, "runbook.md")) as file:
             runbook_content = file.read()
 
         actions = get_actions_info(agent_spec_data["action-packages"])
-        kebab_case_agent_name = to_kebab_case(agent_name)
         base_url = "https://cdn.sema4.ai/gallery/agents/"
 
         agent_info: AgentVersionInfo = {
@@ -69,16 +77,30 @@ def generate_agents_manifest(
             "action_packages": actions,
         }
 
-        # Copy the interested files to be uploaded in S3
+        # Copy the interesting files to be uploaded in S3
         dest = Path(dest_agents_folder) / kebab_case_agent_name / agent_version
-        os.makedirs(dest)
 
-        shutil.copyfile(
-            Path(agent_folder) / "agent-spec.yaml", dest / "agent-spec.yaml"
-        )
-        shutil.copyfile(Path(agent_folder) / "CHANGELOG.md", dest / "CHANGELOG.md")
+        # Only copy the agent files into agents output directory if it doesn't exist yet.
+        # If it does, it means that the agent was already copied while generating other manifests.
+        if not os.path.exists(dest):
+            os.makedirs(dest)
 
-        manifest["agents"][agent_name] = {"name": agent_name, "versions": [agent_info]}
+            shutil.copyfile(
+                Path(agent_folder) / "agent-spec.yaml", dest / "agent-spec.yaml"
+            )
+            shutil.copyfile(Path(agent_folder) / "CHANGELOG.md", dest / "CHANGELOG.md")
+
+        agent_info: AgentInfo = {
+            "name": agent_name,
+            "versions": [agent_info],
+        }
+
+        # If the whitelist entry defines a required Studio version, add it to the manifest.
+        if "required_studio_version" in whitelist_entry:
+            agent_info["requiredStudioVersion"] = whitelist_entry["required_studio_version"]
+            agent_info["required_studio_version"] = whitelist_entry["required_studio_version"]
+
+        manifest["agents"][agent_name] = agent_info
 
     return manifest
 
@@ -147,19 +169,15 @@ def get_actions_info(action_packages: list[dict]) -> list[AgentActionPackage]:
     return actions
 
 
-def save_manifest(
-    manifest: AgentsManifest, file_path: str, whitelist: list[str]
-) -> None:
-    whitelist_manifest = deepcopy(manifest)
-    for agent_name in list(whitelist_manifest["agents"].keys()):
-        if agent_name.lower().replace(" ", "-") not in whitelist:
-            del whitelist_manifest["agents"][agent_name]
+def get_whitelist_entry(kebab_case_agent_name: str, whitelist: list[AgentsWhitelistEntry]) -> AgentsWhitelistEntry | None:
+    return next((entry for entry in whitelist if entry["name"] == kebab_case_agent_name), None)
 
+def save_manifest(manifest: AgentsManifest, file_path: str) -> None:
     with open(file_path, "w") as file:
-        json.dump(whitelist_manifest, file, indent=2)
+        json.dump(manifest, file, indent=2)
 
 
-def is_agent_published(published_manifest: dict, agent_name: str, version: str) -> bool:
+def is_agent_published(published_manifest: AgentsManifest, agent_name: str, version: str) -> bool:
     manifest_agent_versions = (
         published_manifest.get("agents").get(agent_name, {}).get("versions", [])
     )

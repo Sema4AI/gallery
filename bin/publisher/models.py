@@ -1,4 +1,4 @@
-from typing import TypedDict
+from typing import TypedDict, NotRequired
 
 
 class ActionInfo(TypedDict):
@@ -72,6 +72,9 @@ class AgentVersionInfo(TypedDict):
 class AgentInfo(TypedDict):
     name: str
     versions: list[AgentVersionInfo]
+    # @TODO: Remove camelCase field when Studio adjust the expected field name.
+    requiredStudioVersion: NotRequired[str]
+    required_studio_version: NotRequired[str]
 
 
 class AgentsManifest(TypedDict):
@@ -81,3 +84,13 @@ class AgentsManifest(TypedDict):
 
 class ActionVersionInfoWithMethods(ActionVersionInfo):
     methods: list[ActionMethodInfo]
+
+
+class AgentsWhitelistEntry(TypedDict):
+    name: str
+    required_studio_version: str
+
+
+class AgentsWhitelist(TypedDict):
+    standard: list[AgentsWhitelistEntry]
+    spcs: list[AgentsWhitelistEntry]

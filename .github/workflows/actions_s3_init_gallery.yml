@@ -11,7 +11,7 @@ jobs:
       id-token: write # required by AWS aws-actions/configure-aws-credentials
       contents: read
     env:
-      RCC_VERSION: v18.1.1
+      RCC_VERSION: v19.0.2
 
     outputs:
       has_packages: ${{ steps.check_artifacts.outputs.has_packages }}
@@ -55,7 +55,7 @@ jobs:
     if: ${{ needs.build_packages.outputs.has_packages == 'true' }}
     runs-on: ${{ matrix.os }}
     env:
-      RCC_VERSION: v18.1.1
+      RCC_VERSION: v19.0.2
     strategy:
       fail-fast: false
       matrix:

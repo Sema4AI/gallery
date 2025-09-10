@@ -13,5 +13,8 @@ manifest_sai_spcs.json
 published_manifest.json
 published_manifest_sai.json
 published_agents_manifest.json
+published_agents_manifest_spcs.json
+published_agents_manifest_spcs_v2.json
+published_agents_manifest_v2.json
 **/.DS_STORE
 !runbooks/manifest.json

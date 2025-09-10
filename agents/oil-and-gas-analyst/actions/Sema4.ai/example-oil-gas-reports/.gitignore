@@ -8,6 +8,8 @@
 .venv/
 .vscode
 metadata.json
+__action_server_metadata__.json
 output/
 temp/
 venv/
+./**/.env
