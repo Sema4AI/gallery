@@ -1,0 +1,45 @@
+agent-package:
+  spec-version: v2
+  agents:
+  - name: Excel Patent Search & Information Summarizer
+    description: |-
+      Summarizes and gets specific info about 100s of patents at once.
+      Either paste in a list or an Excel file as input.
+      Define what you want from the patent in the runbook.
+    model:
+      provider: Amazon
+      name: anthropic.claude-3-5-sonnet-20240620-v1:0
+    version: 0.0.1
+    architecture: agent
+    reasoning: disabled
+    runbook: runbook.md
+    conversation-guide: conversation-guide.yaml
+    agent-settings:
+      conversation_turns_kept_in_context: 21
+    action-packages:
+    - name: Serper
+      organization: MyActions
+      type: folder
+      version: 1.2.0
+      whitelist: search_google,search_scholar,search_patents
+      path: MyActions/serper
+    - name: Excel
+      organization: Sema4.ai
+      type: folder
+      version: 4.0.6
+      whitelist: ""
+      path: Sema4.ai/excel
+    knowledge: []
+    metadata:
+      mode: conversational
+  exclude:
+  - ./.git/**
+  - ./.vscode/**
+  - ./devdata/**
+  - ./output/**
+  - ./venv/**
+  - ./.venv/**
+  - ./**/.env
+  - ./**/.DS_Store
+  - ./**/*.pyc
+  - ./*.zip
