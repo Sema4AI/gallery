@@ -51,17 +51,15 @@ What's the average order value by month for the last 6 months?
 
 ## Authorization
 
-This action package uses Snowflake's standard authentication methods to connect to your data warehouse.
+This action package uses Snowflake's native Python connector to interact with your data warehouse. **The connection must be established externally in Studio before using these actions.**
 
-To authenticate with Snowflake, you need to provide the following connection information, or have your Studio linked to Snowflake.
+### Required Permissions
 
-### Setting up Snowflake Connection
-
-1. **Ensure proper permissions:**
+1. **Database Access:**
    - Your user account needs `SELECT` permissions on the tables you want to query
    - For the `get_tables_info` action, you need access to `INFORMATION_SCHEMA`
 
-2. **Configure warehouse and database:**
+2. **Warehouse Configuration:**
    - Make sure the specified warehouse is running or can be auto-resumed
    - Verify the database and schema names are correct and accessible
 
@@ -70,4 +68,4 @@ To authenticate with Snowflake, you need to provide the following connection inf
 - **Query Safety**: Only `SELECT` queries are allowed - all other operations (DROP, DELETE, INSERT, etc.) are blocked
 - **Input Validation**: Queries are validated before execution to prevent dangerous operations
 - **Error Handling**: Comprehensive error messages help diagnose connection and query issues
-- **Automatic Wrapping**: Queries are automatically wrapped in the proper Snowflake connection context
+- **Direct Connection**: Uses native Snowflake connector for optimal performance and compatibility

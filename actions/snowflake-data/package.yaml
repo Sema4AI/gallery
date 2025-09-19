@@ -7,7 +7,7 @@ name: Snowflake Data
 description: Actions for interacting with any data in Snowflake
 
 # Package version number, recommend using semver.org
-version: 0.0.1
+version: 0.0.2
 
 dependencies:
   conda-forge:
@@ -15,7 +15,9 @@ dependencies:
   - uv=0.6.11
   pypi:
   - sema4ai-actions=1.4.2
-  - sema4ai-data=1.0.8
+  - sema4ai-data=1.0.10
+  - snowflake-connector-python=3.17.3
+  - pandas=2.3.2
 
 packaging:
   # By default, all files and folders in this directory are packaged when uploaded.
