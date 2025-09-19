@@ -11,6 +11,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 - Update sema4ai-actions to `1.4.1` version
 
+## [1.2.1] - 2025-09-19
+
+### Added
+
+- Exponential backoff retries for Serper `search_google` action on 429 and 5xx responses, honoring `Retry-After` when present
+
 ## [1.1.1] - 2025-06-18
 
 - Updated sema4ai-actions version carrying a new version of pydantic
