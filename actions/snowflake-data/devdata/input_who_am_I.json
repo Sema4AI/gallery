@@ -1,39 +1,42 @@
 {
     "inputs": [
         {
-            "inputName": "input-valid-query",
+            "inputName": "input-works",
             "inputValue": {
-                "query": "SELECT * FROM PRODUCTION_REPORTS LIMIT 10;",
                 "warehouse": "COMPUTE_WH",
                 "database": "OIL_AND_GAS",
                 "schema": "PUBLIC"
             }
         },
         {
-            "inputName": "input-invalid-query",
+            "inputName": "input-nok-wh",
             "inputValue": {
-                "query": "SELECT * FROM INVALID_TABLE LIMIT 10;",
-                "warehouse": "COMPUTE_WH",
+                "warehouse": "COMPUTE_WODSDDSDS",
                 "database": "OIL_AND_GAS",
                 "schema": "PUBLIC"
             }
         },
         {
-            "inputName": "input-invalid-db-name",
+            "inputName": "input-nok-db",
             "inputValue": {
-                "query": "SELECT * FROM PRODUCTION_REPORTS LIMIT 10;",
                 "warehouse": "COMPUTE_WH",
                 "database": "OIL_AND_GASSSSUSS",
                 "schema": "PUBLIC"
             }
+        },
+        {
+            "inputName": "input-nok-schema",
+            "inputValue": {
+                "warehouse": "COMPUTE_WH",
+                "database": "OIL_AND_GAS",
+                "schema": "PUBLIC_INVALID"
+            }
         }
     ],
     "metadata": {
-        "actionName": "execute_select_query",
+        "actionName": "who_am_I",
         "actionRelativePath": "data_actions.py",
-        "schemaDescription": [
-            "query: string: The Snowflake SQL query to execute."
-        ],
+        "schemaDescription": [],
         "managedParamsSchemaDescription": {
             "warehouse": {
                 "type": "Secret",
@@ -50,6 +53,6 @@
         },
         "inputFileVersion": "v3",
         "kind": "action",
-        "actionSignature": "action/args: 'query: str, warehouse: Secret, database: Secret, schema: Secret'"
+        "actionSignature": "action/args: 'warehouse: Secret, database: Secret, schema: Secret'"
     }
 }
