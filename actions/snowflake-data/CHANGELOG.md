@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.0.3] - 2025-09-23
+
+### Changed
+- **IMPROVED**: Updated `get_tables_info` action to return a more informative error message if no tables are found
+
 ## [0.0.2] - 2025-09-19
 
 ### Changed

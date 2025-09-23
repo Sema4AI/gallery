@@ -109,6 +109,10 @@ def get_tables_info(warehouse: Secret, database: Secret, schema: Secret) -> Resp
             tables_data = cursor.fetchall()
             table_names = [str(row[0]) for row in tables_data]
         
+        # Check if any tables were found
+        if not table_names:
+            return Response(result="No tables found in the specified database and schema. Please verify the database and schema names, and ensure you have the necessary permissions to view tables.")
+        
         # Process tables in parallel for much better performance
         all_results = []
         

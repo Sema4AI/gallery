@@ -7,7 +7,7 @@ name: Snowflake Data
 description: Actions for interacting with any data in Snowflake
 
 # Package version number, recommend using semver.org
-version: 0.0.2
+version: 0.0.3
 
 dependencies:
   conda-forge:
