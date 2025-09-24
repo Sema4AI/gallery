@@ -18,14 +18,14 @@ def query_knowledge_base(
     datasource: DocumentIntelligenceDataSource,
     pg_vector: DocumentIntelligencePGVector,
     sema4_api_key: Secret,
-    request: Sema4aiQueryKnowledgeBaseRequest,
+    query_data: Sema4aiQueryKnowledgeBaseRequest,
 ) -> Response[list[dict]]:
     """Get document in data model format.
     Args:
         datasource: Document intelligence data source connection
         pg_vector: Document intelligence PGVector data source connection
         sema4_api_key: Sema4.ai cloud backend API key
-        request: Query knowledge base request containing document_id, document_name, natural_language_query, and relevance
+        query_data: Query knowledge base data
 
     Note: either file_name or document_id is required. If both are provided, a composite search is performed.
 
@@ -38,10 +38,10 @@ def query_knowledge_base(
     di_service = build_di_service(datasource, sema4_api_key.value, pg_vector=pg_vector)
 
     table_result = di_service.knowledge_base.query(
-        document_name=request.document_name,
-        document_id=request.document_id,
-        natural_language_query=request.natural_language_query,
-        relevance=request.relevance,
+        document_name=query_data.document_name,
+        document_id=query_data.document_id,
+        natural_language_query=query_data.natural_language_query,
+        relevance=query_data.relevance,
     )
 
     return Response(result=table_result)
