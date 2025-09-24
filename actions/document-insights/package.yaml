@@ -1,7 +1,7 @@
 name: document-insights
 description: Explore structured and unstructured documents with Sema4.ai
 spec-version: v2
-version: 0.1.0
+version: 1.0.0
 dependencies:
   conda-forge:
   - python=3.11.12
