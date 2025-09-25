@@ -57,7 +57,7 @@
         {
             "inputName": "Get document with PDF download",
             "inputValue": {
-                "name": "Sema4.ai Actions - Test Document",
+                "name": "Stock Market Analysis – Webinar branch br-blue-heart-adyyvlqv",
                 "download": true,
                 "export_format": "application/pdf",
                 "vscode:request:oauth2": {
@@ -82,8 +82,8 @@
             "tab_index: integer: Optional tab index to get content from a specific tab",
             "tab_title: string: Optional tab title to get content from a specific tab",
             "include_comments: boolean: Optional boolean to include comments in the response",
-            "download: boolean: Optional boolean to download the document in a supported format and attach to chat (default: False)",
-            "export_format: string: The MIME type for the export format when download=True (default: PDF)"
+            "download: boolean: Optional boolean to download the document in a supported format and attach to chat (default: True)",
+            "export_format: string: The MIME type for the export format when download=True (default: PDF)\nSupported formats: PDF, DOCX, TXT, HTML, RTF, ODT"
         ],
         "managedParamsSchemaDescription": {
             "oauth_access_token": {
@@ -98,6 +98,6 @@
         },
         "inputFileVersion": "v3",
         "kind": "action",
-        "actionSignature": "action/args: \"name: str, oauth_access_token: OAuth2Secret[Literal['google'], list[Literal['https://www.googleapis.com/auth/documents.readonly', 'https://www.googleapis.com/auth/drive.readonly']]], tab_index: int=None, tab_title: str=None, include_comments: bool=False, download: bool=False, export_format: str='application/pdf'\""
+        "actionSignature": "action/args: \"name: str, oauth_access_token: OAuth2Secret[Literal['google'], list[Literal['https://www.googleapis.com/auth/documents.readonly', 'https://www.googleapis.com/auth/drive.readonly']]], tab_index: int=None, tab_title: str=None, include_comments: bool=False, download: bool=True, export_format: str='application/pdf'\""
     }
 }

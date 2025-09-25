@@ -1,0 +1,37 @@
+{
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "vscode:request:oauth2": {
+                    "oauth_access_token": {
+                        "type": "OAuth2Secret",
+                        "provider": "google",
+                        "scopes": [
+                            "https://www.googleapis.com/auth/drive.readonly"
+                        ],
+                        "access_token": "<access-token-will-be-requested-by-vscode>"
+                    }
+                }
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "list_sema4_files",
+        "actionRelativePath": "actions.py",
+        "schemaDescription": [],
+        "managedParamsSchemaDescription": {
+            "oauth_access_token": {
+                "type": "OAuth2Secret",
+                "description": "The OAuth2 Google access token",
+                "provider": "google",
+                "scopes": [
+                    "https://www.googleapis.com/auth/drive.readonly"
+                ]
+            }
+        },
+        "inputFileVersion": "v3",
+        "kind": "action",
+        "actionSignature": "action/args: \"oauth_access_token: OAuth2Secret[Literal['google'], list[Literal['https://www.googleapis.com/auth/drive.readonly']]]\""
+    }
+}

@@ -1,0 +1,68 @@
+{
+    "inputs": [
+        {
+            "inputName": "search for analytics documents",
+            "inputValue": {
+                "search_query": "analytics",
+                "max_results": 5,
+                "search_content": false,
+                "search_metadata": true,
+                "vscode:request:oauth2": {
+                    "oauth_access_token": {
+                        "type": "OAuth2Secret",
+                        "provider": "google",
+                        "scopes": [
+                            "https://www.googleapis.com/auth/drive.readonly",
+                            "https://www.googleapis.com/auth/documents.readonly"
+                        ],
+                        "access_token": "<access-token-will-be-requested-by-vscode>"
+                    }
+                }
+            }
+        },
+        {
+            "inputName": "search for project documents",
+            "inputValue": {
+                "search_query": "project report",
+                "max_results": 10,
+                "search_content": true,
+                "search_metadata": true,
+                "vscode:request:oauth2": {
+                    "oauth_access_token": {
+                        "type": "OAuth2Secret",
+                        "provider": "google",
+                        "scopes": [
+                            "https://www.googleapis.com/auth/drive.readonly",
+                            "https://www.googleapis.com/auth/documents.readonly"
+                        ],
+                        "access_token": "<access-token-will-be-requested-by-vscode>"
+                    }
+                }
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "search_documents",
+        "actionRelativePath": "actions.py",
+        "schemaDescription": [
+            "search_query: string: The search term to match against documents",
+            "max_results: integer: Maximum number of results to return (default: 10, max: 50)",
+            "search_content: boolean: Whether to search within document content (slower but more comprehensive)",
+            "search_metadata: boolean: Whether to search in metadata like owner names and descriptions"
+        ],
+        "managedParamsSchemaDescription": {
+            "oauth_access_token": {
+                "type": "OAuth2Secret",
+                "description": "The OAuth2 Google access token",
+                "provider": "google",
+                "scopes": [
+                    "https://www.googleapis.com/auth/drive.readonly",
+                    "https://www.googleapis.com/auth/documents.readonly"
+                ]
+            }
+        },
+        "inputFileVersion": "v3",
+        "kind": "action",
+        "actionSignature": "action/args: \"search_query: str, oauth_access_token: OAuth2Secret[Literal['google'], list[Literal['https://www.googleapis.com/auth/drive.readonly', 'https://www.googleapis.com/auth/documents.readonly']]], max_results: int=10, search_content: bool=False, search_metadata: bool=True\""
+    }
+}

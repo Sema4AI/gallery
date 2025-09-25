@@ -347,6 +347,21 @@ class DocumentInfo(BaseModel, extra="ignore", populate_by_name=True):
     comments: Annotated[list[CommentInfo], Field(description="List of comments on the document.", default_factory=list)]
 
 
+class SearchResult(BaseModel, extra="ignore", populate_by_name=True):
+    """Information about a document found in search results."""
+    document_id: Annotated[str, Field(description="The ID of the document.")]
+    name: Annotated[str, Field(description="The title/name of the document.")]
+    similarity_score: Annotated[float, Field(description="Similarity score between 0 and 1, where 1 is a perfect match.", ge=0, le=1)]
+    match_reasons: Annotated[list[str], Field(description="List of reasons why this document matched (e.g., 'name (0.85)', 'content (0.60)').", default_factory=list)]
+    created_time: Annotated[str | None, Field(description="ISO timestamp when the document was created.", default=None)]
+    modified_time: Annotated[str | None, Field(description="ISO timestamp when the document was last modified.", default=None)]
+    owners: Annotated[list[str], Field(description="List of document owners (display names or email addresses).", default_factory=list)]
+    web_view_link: Annotated[str | None, Field(description="Link to view the document in Google Docs web interface.", default=None)]
+    document_url: Annotated[str, Field(description="Direct link to edit the document in Google Docs.")]
+    description: Annotated[str | None, Field(description="Document description if available.", default=None)]
+    content_preview: Annotated[str | None, Field(description="Preview snippet of document content around the search match.", default=None)]
+
+
 class RawDocument(DocumentInfo):
     # Model used to parse the Google API response..
     body: _Content

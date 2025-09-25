@@ -14,7 +14,7 @@ Please note that the current implementation return the documents in Extended Mar
 
 ## Download Features
 
-The `get_document_by_name` and `get_document_by_id` actions now support downloading Google Docs files in various formats and automatically attaching them to Studio chat:
+The `get_document_by_name` and `get_document_by_id` actions now support downloading Google Docs files in various formats and automatically attaching them to chat:
 
 ### Supported Export Formats
 - **PDF** (`application/pdf`) - Portable Document Format
@@ -48,7 +48,7 @@ get_document_by_name(
 )
 ```
 
-When `download=True`, the file is automatically attached to the Studio chat using `chat.attach_file_content()`, making it available for further processing or analysis. The response includes both the markdown content and download information.
+When `download=True`, the file is automatically attached to the chat using `chat.attach_file_content()`, making it available for further processing or analysis. The response includes both the markdown content and download information.
 
 ## Prompts
 

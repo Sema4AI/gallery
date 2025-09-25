@@ -3,12 +3,13 @@
         {
             "inputName": "input-1",
             "inputValue": {
+                "days_old": 0,
                 "vscode:request:oauth2": {
                     "oauth_access_token": {
                         "type": "OAuth2Secret",
                         "provider": "google",
                         "scopes": [
-                            "https://www.googleapis.com/auth/drive.readonly"
+                            "https://www.googleapis.com/auth/drive.file"
                         ],
                         "access_token": "<access-token-will-be-requested-by-vscode>"
                     }
@@ -17,21 +18,23 @@
         }
     ],
     "metadata": {
-        "actionName": "list_sema4_studio_files",
+        "actionName": "cleanup_old_sema4_files",
         "actionRelativePath": "actions.py",
-        "schemaDescription": [],
+        "schemaDescription": [
+            "days_old: integer: Number of days after which files are considered old (default: 30)"
+        ],
         "managedParamsSchemaDescription": {
             "oauth_access_token": {
                 "type": "OAuth2Secret",
                 "description": "The OAuth2 Google access token",
                 "provider": "google",
                 "scopes": [
-                    "https://www.googleapis.com/auth/drive.readonly"
+                    "https://www.googleapis.com/auth/drive.file"
                 ]
             }
         },
         "inputFileVersion": "v3",
         "kind": "action",
-        "actionSignature": "action/args: \"oauth_access_token: OAuth2Secret[Literal['google'], list[Literal['https://www.googleapis.com/auth/drive.readonly']]]\""
+        "actionSignature": "action/args: \"oauth_access_token: OAuth2Secret[Literal['google'], list[Literal['https://www.googleapis.com/auth/drive.file']]], days_old: int=30\""
     }
 }
