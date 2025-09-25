@@ -266,7 +266,7 @@ def _detect_vega_lite_markdown(text: str) -> list[dict]:
 
     # Pattern to match vega-lite markdown blocks
     # Supports both ```vega-lite and ```json with vega-lite content
-    pattern = r'```(?:vega-lite|json)\s*\n(.*?)\n```'
+    pattern = r'```(?:vega-lite|vega|json)\s*\n(.*?)\n```'
 
     matches = re.finditer(pattern, text, re.DOTALL | re.IGNORECASE)
 
@@ -2132,54 +2132,23 @@ def search_documents(
     ],
     max_results: int = 10,
     search_content: bool = False,
-    search_metadata: bool = True,
 ) -> Response[list[SearchResult]]:
-    """Search Google Documents using fuzzy matching on names, content, and metadata.
+    """Search Google Documents by name, owner, description, and optionally content.
 
-    This action performs an enhanced search across Google Documents in your Drive with multiple search strategies:
+    Use this action to find documents when you know partial names, keywords, author names,
+    or need to search within document text. Supports fuzzy matching for approximate searches.
 
-    SEARCH STRATEGIES:
-    1. Document names (always enabled) - Uses fuzzy matching for approximate name searches
-    2. Document content (optional) - Searches within document text content
-    3. Metadata (optional) - Searches owner names and document descriptions
-    4. Native Google Drive search - Uses Google's built-in fullText search for exact matches
-
-    PARAMETER USAGE GUIDE:
-
-    search_query examples:
-    - "project report" - Finds docs with similar names like "Project Status Report", "Final Project Report"
-    - "meeting notes" - Matches "Meeting Notes", "Team Meeting Minutes", etc.
-    - "analytics dashboard" - Finds documents containing these terms in name or content
-    - "john" - Finds documents owned by users named John (when search_metadata=True)
-    - "quarterly revenue" - Searches for this phrase in content (when search_content=True)
-
-    search_content parameter:
-    - False (default, faster): Only searches names, metadata, and uses Google's native search
-    - True (slower): Also searches within document content for comprehensive results
-    - Use True when looking for specific content/phrases inside documents
-
-    search_metadata parameter:
-    - True (default): Searches document owners, descriptions, and other metadata
-    - False: Skip metadata search for faster results
-    - Useful for finding documents by author ("docs by sarah") or description keywords
-
-    TIME-BASED SEARCHES:
-    Note: This action does NOT filter by dates. For recent documents, use broad search terms
-    and check the returned 'modified_time' field. Google Drive API doesn't support
-    date range queries in this action.
-
-    PERFORMANCE TIPS:
-    - Start with search_content=False for faster results
-    - Use search_content=True when you need to find specific phrases inside documents
-    - Increase max_results if you need more comprehensive results
-    - Use specific keywords rather than full sentences for better matches
+    When to use:
+    - Finding documents with similar names ("project report" matches "Q1 Project Status Report")
+    - Searching by author ("documents by john", "sarah's files")
+    - Looking for content keywords (use search_content=True for text within documents)
+    - General document discovery when exact names are unknown
 
     Args:
-        search_query: Search terms to match against documents (supports fuzzy matching)
+        search_query: Keywords, partial names, author names, or phrases to search for
         oauth_access_token: The OAuth2 Google access token
         max_results: Maximum number of results to return (default: 10, max: 50)
-        search_content: Whether to search within document content (slower but more comprehensive)
-        search_metadata: Whether to search in metadata like owner names and descriptions
+        search_content: Set to True to search inside document text (slower but finds content matches)
 
     Returns:
         List of SearchResult objects with document info, similarity scores, and match reasons, sorted by relevance
@@ -2251,29 +2220,28 @@ def search_documents(
                 if name_score > 0:
                     match_reasons.append(f"name ({name_score:.2f})")
 
-                # Search metadata if enabled
-                if search_metadata:
-                    metadata_score = 0
+                # Search metadata (always enabled)
+                metadata_score = 0
 
-                    # Search in owner names
-                    for owner in owners:
-                        owner_name = owner.get('displayName', owner.get('emailAddress', '')).lower()
-                        owner_score = _calculate_fuzzy_score(search_query_lower, owner_name)
-                        if owner_score > metadata_score:
-                            metadata_score = owner_score
-                            if owner_score > 0.3:
-                                match_reasons.append(f"owner ({owner_score:.2f})")
+                # Search in owner names
+                for owner in owners:
+                    owner_name = owner.get('displayName', owner.get('emailAddress', '')).lower()
+                    owner_score = _calculate_fuzzy_score(search_query_lower, owner_name)
+                    if owner_score > metadata_score:
+                        metadata_score = owner_score
+                        if owner_score > 0.3:
+                            match_reasons.append(f"owner ({owner_score:.2f})")
 
-                    # Search in description
-                    if description:
-                        desc_score = _calculate_fuzzy_score(search_query_lower, description.lower())
-                        if desc_score > metadata_score:
-                            metadata_score = desc_score
-                            if desc_score > 0.3:
-                                match_reasons.append(f"description ({desc_score:.2f})")
+                # Search in description
+                if description:
+                    desc_score = _calculate_fuzzy_score(search_query_lower, description.lower())
+                    if desc_score > metadata_score:
+                        metadata_score = desc_score
+                        if desc_score > 0.3:
+                            match_reasons.append(f"description ({desc_score:.2f})")
 
-                    # Add metadata score to total (weighted lower than name)
-                    total_score = max(total_score, metadata_score * 0.6)
+                # Add metadata score to total (weighted lower than name)
+                total_score = max(total_score, metadata_score * 0.6)
 
                 content_preview = ""
 
