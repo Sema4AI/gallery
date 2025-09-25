@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 
 @query
-def query_knowledge_base(
+def query_document_in_kb(
     datasource: DocumentIntelligenceDataSource,
     pg_vector: DocumentIntelligencePGVector,
     sema4_api_key: Secret,

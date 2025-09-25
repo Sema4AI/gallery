@@ -26,7 +26,7 @@ class Sema4aiExtractRequest(BaseModel):
         default=None,
         description="The job ID of the file to extract from a previous parse. Mutually exclusive with file_name.",
     )
-    schema: Annotated[
+    extraction_schema: Annotated[
         str | dict,
         Field(
             description="The JSONSchema which describes the desired extracted output from the file."

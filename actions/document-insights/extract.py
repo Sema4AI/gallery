@@ -27,7 +27,7 @@ def extract(
     else:
         raise ActionError("One of file_name or job_id must be provided")
 
-    if not extract_req.schema:
+    if not extract_req.extraction_schema:
         raise ActionError(
             "Must provide a JSONSchema in the schema. This schema must describe an object and controls the extracted data."
         )
@@ -36,7 +36,7 @@ def extract(
 
     extract_resp: ExtractResponse = extraction_service.extract_with_schema(
         local_file if extract_req.file_name else job_id,
-        extract_req.schema,
+        extract_req.extraction_schema,
         prompt="",  # Generic instructions that apply to the document as a whole
         extraction_config=extract_req.extraction_config,
         start_page=extract_req.start_page,
