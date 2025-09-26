@@ -33,7 +33,9 @@
     "free-web-search",
     "serper",
     "perplexity",
-    "robocorp"
+    "robocorp",
+    "document-intelligence",
+    "document-insights"
   ],
   "spcs": [
     "ai-browsing",
