@@ -15,12 +15,23 @@
                 "database": "OIL_AND_GASSSSUSS",
                 "schema": "PUBLIC"
             }
+        },
+        {
+            "inputName": "input-data-filter",
+            "inputValue": {
+                "warehouse": "DEFAULT_WH",
+                "database": "SNOWFLAKE",
+                "schema": "DATA_SHARING_USAGE",
+                "table_filter": "listing_telemetry_daily,listing_events_daily"
+            }
         }
     ],
     "metadata": {
         "actionName": "get_tables_info",
         "actionRelativePath": "data_actions.py",
-        "schemaDescription": [],
+        "schemaDescription": [
+            "table_filter: string: Optional filter to limit which tables/views to include. Can be:\n- A specific table name (e.g., \"CUSTOMERS\")\n- A pattern with wildcards (e.g., \"SALES_*\" or \"*_FACT\")\n- A comma-separated list with exact names (e.g., \"CUSTOMERS,ORDERS,PRODUCTS\")\n- A comma-separated list with wildcards (e.g., \"SALES_*,*_FACT,CUSTOMERS\")\n- Leave empty to get all tables and views"
+        ],
         "managedParamsSchemaDescription": {
             "warehouse": {
                 "type": "Secret",
@@ -37,6 +48,6 @@
         },
         "inputFileVersion": "v3",
         "kind": "action",
-        "actionSignature": "action/args: 'warehouse: Secret, database: Secret, schema: Secret'"
+        "actionSignature": "action/args: \"warehouse: Secret, database: Secret, schema: Secret, table_filter: str=''\""
     }
 }

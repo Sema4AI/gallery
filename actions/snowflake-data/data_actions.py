@@ -78,7 +78,7 @@ def process_single_table(table_name: str, warehouse: str, database: str, schema:
         }
 
 @action
-def get_tables_info(warehouse: Secret, database: Secret, schema: Secret) -> Response[str]:
+def get_tables_info(warehouse: Secret, database: Secret, schema: Secret, table_filter: str = "") -> Response[str]:
     """
     Returns all available database tables, along with details of each of their columns with datatypes, and a random sample of 10 rows to give a hint how the data looks in practise. ALWAYS use this method before running any queries against database.
 
@@ -86,6 +86,12 @@ def get_tables_info(warehouse: Secret, database: Secret, schema: Secret) -> Resp
         warehouse: The Snowflake warehouse to use
         database: The Snowflake database to use  
         schema: The Snowflake schema to use
+        table_filter: Optional filter to limit which tables/views to include. Can be:
+                     - A specific table name (e.g., "CUSTOMERS")
+                     - A pattern with wildcards (e.g., "SALES_*" or "*_FACT")
+                     - A comma-separated list with exact names (e.g., "CUSTOMERS,ORDERS,PRODUCTS")
+                     - A comma-separated list with wildcards (e.g., "SALES_*,*_FACT,CUSTOMERS")
+                     - Leave empty to get all tables and views
 
     Returns:
         A markdown structure that includes all available database tables, along with details of each of their columns with datatypes, and a random sample of 10 rows to give a hint how the data looks in practise.
@@ -97,21 +103,62 @@ def get_tables_info(warehouse: Secret, database: Secret, schema: Secret) -> Resp
             cursor.execute(f"USE DATABASE {database.value}")
             cursor.execute(f"USE SCHEMA {schema.value}")
             
-            # Now get all tables
-            tables_query = """
-            SELECT table_name, table_type
-            FROM information_schema.tables
-            WHERE table_type = 'BASE TABLE'
-            ORDER BY table_name
+            # Build the tables query with optional filtering
+            base_query = """
+                SELECT
+                table_name,
+                table_type
+                FROM
+                information_schema.tables
+                WHERE
+                table_type IN ('BASE TABLE', 'VIEW')
             """
             
-            cursor.execute(tables_query)
+            # Add filtering logic if table_filter is provided
+            if table_filter.strip():
+                # Handle comma-separated list of table names (with or without wildcards)
+                if ',' in table_filter:
+                    table_list = [name.strip() for name in table_filter.split(',')]
+                    filter_conditions = []
+                    query_params = []
+                    
+                    for table_name in table_list:
+                        if '*' in table_name or '%' in table_name:
+                            # Handle wildcard pattern in list
+                            pattern = table_name.replace('*', '%').upper()
+                            filter_conditions.append("UPPER(table_name) LIKE ?")
+                            query_params.append(pattern)
+                        else:
+                            # Handle exact match in list
+                            filter_conditions.append("UPPER(table_name) = ?")
+                            query_params.append(table_name.upper())
+                    
+                    tables_query = base_query + f" AND ({' OR '.join(filter_conditions)}) ORDER BY table_type, table_name"
+                    cursor.execute(tables_query, query_params)
+                # Handle single wildcard pattern
+                elif '*' in table_filter or '%' in table_filter:
+                    # Convert * to % for SQL LIKE pattern
+                    pattern = table_filter.replace('*', '%').upper()
+                    tables_query = base_query + " AND UPPER(table_name) LIKE ? ORDER BY table_type, table_name"
+                    cursor.execute(tables_query, (pattern,))
+                # Handle exact table name match
+                else:
+                    tables_query = base_query + " AND UPPER(table_name) = ? ORDER BY table_type, table_name"
+                    cursor.execute(tables_query, (table_filter.upper(),))
+            else:
+                # No filter - get all tables
+                tables_query = base_query + " ORDER BY table_type, table_name"
+                cursor.execute(tables_query)
+            
             tables_data = cursor.fetchall()
             table_names = [str(row[0]) for row in tables_data]
         
         # Check if any tables were found
         if not table_names:
-            return Response(result="No tables found in the specified database and schema. Please verify the database and schema names, and ensure you have the necessary permissions to view tables.")
+            if table_filter.strip():
+                return Response(result=f"No tables found matching the filter '{table_filter}' in the specified database and schema. Please verify the filter pattern and ensure the tables exist.")
+            else:
+                return Response(result="No tables found in the specified database and schema. Please verify the database and schema names, and ensure you have the necessary permissions to view tables.")
         
         # Process tables in parallel for much better performance
         all_results = []
