@@ -71,3 +71,14 @@ class MessageFlag(BaseModel):
 
     class Config:
         use_enum_values = True
+
+
+class Category(BaseModel):
+    display_name: str = Field(description="Display name of the category")
+    color: Optional[str] = Field(default="Preset19", description="Color of the category (e.g., Preset19, Preset0, etc.)")
+
+
+class CategoryList(BaseModel):
+    categories: Annotated[
+        List[Category], Field(description="A list of categories")
+    ] = []

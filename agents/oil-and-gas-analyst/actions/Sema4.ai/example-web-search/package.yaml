@@ -1,0 +1,40 @@
+# Required: A short name for the action package
+name: Example Web Search
+
+# Required: A description of what's in the action package.
+description: Example action package demonstrating Google search API integration with Sema4.ai demo API, showcasing structured data extraction including organic results, knowledge graph, places, and related searches.
+
+# Required: The version of the action package.
+version: 1.0.0
+
+# The version of the `package.yaml` format.
+spec-version: v2
+
+dependencies:
+  conda-forge:
+    - python=3.11.11
+    - uv=0.8.11
+  pypi:
+    - sema4ai-actions=1.4.2
+    - pydantic=2.11.7
+
+external-endpoints:
+  - name: "Web Search API"
+    description: "Accesses the web search through Sema4.ai demo API to retrieve information."
+    additional-info-link: "https://sema4.ai/docs/team-edition"
+    rules:
+      - host: "demo-services.sema4ai.dev"
+        port: 443
+
+packaging:
+  exclude:
+    - ./.git/**
+    - ./.vscode/**
+    - ./devdata/**
+    - ./output/**
+    - ./venv/**
+    - ./.venv/**
+    - ./.DS_Store/**
+    - ./**/*.pyc
+    - ./**/*.zip
+    - ./**/.env

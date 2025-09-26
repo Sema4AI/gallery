@@ -1,11 +1,11 @@
 {
     "inputs": [
         {
-            "inputName": "save attachments to current directory",
+            "inputName": "get email without attachments",
             "inputValue": {
-                "email_id": "",
+                "email_id": "AAMkADljMzQ1YTc1LTRmYzItNDAzNC1hOGY4LWRkYjQyZmQ1NWYzYwBGAAAAAAD_YFfAbcBcSY3mIrVczQAlBwCocMixc6q8QqX43pcAKHryAAAAAAEMAACocMixc6q8QqX43pcAKHryAAUkAIMFAAA=",
                 "show_full_body": false,
-                "save_attachments": ".",
+                "save_attachments": false,
                 "vscode:request:oauth2": {
                     "token": {
                         "type": "OAuth2Secret",
@@ -19,11 +19,11 @@
             }
         },
         {
-            "inputName": "save attachments to Downloads directory",
+            "inputName": "get email with attachments attached to chat",
             "inputValue": {
                 "email_id": "",
                 "show_full_body": false,
-                "save_attachments": "downloads",
+                "save_attachments": true,
                 "vscode:request:oauth2": {
                     "token": {
                         "type": "OAuth2Secret",
@@ -37,48 +37,11 @@
             }
         },
         {
-            "inputName": "save attachments to custom directory",
+            "inputName": "get email with full body and attachments",
             "inputValue": {
                 "email_id": "",
-                "show_full_body": false,
-                "save_attachments": "e:\\temp",
-                "vscode:request:oauth2": {
-                    "token": {
-                        "type": "OAuth2Secret",
-                        "provider": "microsoft",
-                        "scopes": [
-                            "Mail.Read"
-                        ],
-                        "access_token": ""
-                    }
-                }
-            }
-        },
-        {
-            "inputName": "save attachments to custom directory and create the directory if it doesn't exist",
-            "inputValue": {
-                "email_id": "",
-                "show_full_body": false,
-                "save_attachments": "e:\\temp\\xyz",
-                "make_dirs": true,
-                "vscode:request:oauth2": {
-                    "token": {
-                        "type": "OAuth2Secret",
-                        "provider": "microsoft",
-                        "scopes": [
-                            "Mail.Read"
-                        ],
-                        "access_token": ""
-                    }
-                }
-            }
-        },
-        {
-            "inputName": "save attachments to custom directory fails because the directory doesn't exist",
-            "inputValue": {
-                "email_id": "",
-                "show_full_body": false,
-                "save_attachments": "e:\\temp\\xyz2",
+                "show_full_body": true,
+                "save_attachments": true,
                 "vscode:request:oauth2": {
                     "token": {
                         "type": "OAuth2Secret",
@@ -98,8 +61,7 @@
         "schemaDescription": [
             "email_id: string: The unique identifier of the email to retrieve.",
             "show_full_body: boolean: Whether to show the full body content.",
-            "save_attachments: string: Whether to save the attachments to the local file system.",
-            "make_dirs: boolean: Whether to create the directory for saving attachments if it doesn't exist."
+            "save_attachments: boolean: Whether to attach the email attachments to the chat using sema4ai.actions.chat."
         ],
         "managedParamsSchemaDescription": {
             "token": {
@@ -113,6 +75,6 @@
         },
         "inputFileVersion": "v3",
         "kind": "action",
-        "actionSignature": "action/args: \"token: OAuth2Secret[Literal['microsoft'], list[Literal['Mail.Read']]], email_id: str, show_full_body: bool=False, save_attachments: str=None, make_dirs: bool=False\""
+        "actionSignature": "action/args: \"token: OAuth2Secret[Literal['microsoft'], list[Literal['Mail.Read']]], email_id: str, show_full_body: bool=False, save_attachments: bool=False\""
     }
 }

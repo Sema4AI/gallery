@@ -1,0 +1,58 @@
+{
+    "inputs": [
+        {
+            "inputName": "input-works",
+            "inputValue": {
+                "warehouse": "COMPUTE_WH",
+                "database": "OIL_AND_GAS",
+                "schema": "PUBLIC"
+            }
+        },
+        {
+            "inputName": "input-nok-wh",
+            "inputValue": {
+                "warehouse": "COMPUTE_WODSDDSDS",
+                "database": "OIL_AND_GAS",
+                "schema": "PUBLIC"
+            }
+        },
+        {
+            "inputName": "input-nok-db",
+            "inputValue": {
+                "warehouse": "COMPUTE_WH",
+                "database": "OIL_AND_GASSSSUSS",
+                "schema": "PUBLIC"
+            }
+        },
+        {
+            "inputName": "input-nok-schema",
+            "inputValue": {
+                "warehouse": "COMPUTE_WH",
+                "database": "OIL_AND_GAS",
+                "schema": "PUBLIC_INVALID"
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "who_am_I",
+        "actionRelativePath": "data_actions.py",
+        "schemaDescription": [],
+        "managedParamsSchemaDescription": {
+            "warehouse": {
+                "type": "Secret",
+                "description": "The Snowflake warehouse to use"
+            },
+            "database": {
+                "type": "Secret",
+                "description": "The Snowflake database to use  "
+            },
+            "schema": {
+                "type": "Secret",
+                "description": "The Snowflake schema to use"
+            }
+        },
+        "inputFileVersion": "v3",
+        "kind": "action",
+        "actionSignature": "action/args: 'warehouse: Secret, database: Secret, schema: Secret'"
+    }
+}

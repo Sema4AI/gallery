@@ -1,0 +1,21 @@
+{
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "wellName": "TARTAR USA 13-20H"
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "predict_oil_production_for_well",
+        "actionRelativePath": "data_actions.py",
+        "schemaDescription": [
+            "wellName: string: Name of the well to predict oil production for."
+        ],
+        "managedParamsSchemaDescription": {},
+        "inputFileVersion": "v3",
+        "kind": "predict",
+        "actionSignature": "predict/args: 'wellName: str'"
+    }
+}

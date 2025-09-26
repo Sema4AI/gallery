@@ -5,6 +5,35 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2.1.0] - 2025-09-04
+
+### Added
+
+- Added `has_attachments` boolean parameter to `list_emails` action for filtering emails with attachments
+- Added comprehensive Microsoft Graph API OData query syntax examples in `list_emails` docstring
+- Added actions for adding/removing category to/from an email.
+
+### Changed
+
+- Enhanced folder-specific endpoint usage for inbox queries to improve reliability
+
+## [2.0.0] - 2025-09-04
+
+## BREAKING CHANGE
+
+- Attachment saving no longer supports local filesystem. Instead files are saved into Agent Chat Files.
+
+### Added
+
+- Added `get_email_by_subject` action
+
+### Changed
+
+- Modified `save_attachments` parameter in `get_email_by_id` action from string to boolean with default False
+- When `save_attachments=True`, attachments are now saved with Files API
+- Removed `make_dirs` parameter as it's no longer needed with the new attachment approach
+- Updated dependencies
+
 ## [1.4.2] - 2025-08-07
 
 ### Changed

@@ -6,8 +6,8 @@ channels:
   - conda-forge
 
 dependencies:
-  - python=3.10.14                # https://pyreadiness.org/3.10
-  - uv=0.2.6
+  - python=3.11.11                # https://pyreadiness.org/3.10
+  - uv=0.8.11
   - pip:
-    - robocorp==2.0.2             # https://pypi.org/project/robocorp
-    - requests==2.32.3
+    - robocorp==3.0.0             # https://pypi.org/project/robocorp
+    - requests==2.32.5

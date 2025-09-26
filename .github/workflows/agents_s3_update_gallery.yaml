@@ -9,6 +9,7 @@ on:
       - main
     paths:
       - 'agents/**'
+      - 'bin/publisher/agents_whitelist.json'
 
 jobs:
   build_agents:
@@ -17,7 +18,7 @@ jobs:
       id-token: write # required by AWS aws-actions/configure-aws-credentials
       contents: read
     env:
-      RCC_VERSION: v18.1.1
+      RCC_VERSION: v19.0.2
 
     outputs:
       has_agents: ${{ steps.check_artifacts.outputs.has_agents }}
@@ -26,14 +27,19 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Check if manifest.json exists
+      - name: Check if manifests exist
         run: |
-          if curl --head --silent --fail https://cdn.sema4.ai/gallery/agents/manifest.json; then
-            echo "manifest.json exists. Proceeding with the workflow."
-          else
-            echo "manifest.json does not exist. Stopping the workflow."
-          exit 1
-          fi
+          BASE_URL="https://cdn.sema4.ai/gallery/agents"
+          files=("manifest.json" "manifest_spcs.json" "manifest_v2.json" "manifest_spcs_v2.json")
+
+          for f in "${files[@]}"; do
+            if curl --head --silent --fail "$BASE_URL/$f" > /dev/null; then
+              echo "$f exists. Proceeding."
+            else
+              echo "$f does not exist. Stopping the workflow."
+              exit 1
+            fi
+          done
 
       - name: Build updated agents
         run: |
@@ -107,6 +113,8 @@ jobs:
 
           # Copy the updated manifest
           aws s3 cp manifest.json $S3_BASE_URL/manifest.json --cache-control max-age=120 --content-type "text/plain"
+          aws s3 cp manifest_v2.json $S3_BASE_URL/manifest_v2.json --cache-control max-age=120 --content-type "text/plain"
 
           # Copy the updated manifest_spcs.json
           aws s3 cp manifest_spcs.json $S3_BASE_URL/manifest_spcs.json --cache-control max-age=120 --content-type "text/plain"
+          aws s3 cp manifest_spcs_v2.json $S3_BASE_URL/manifest_spcs_v2.json --cache-control max-age=120 --content-type "text/plain"

@@ -13,3 +13,4 @@ output/
 temp/
 venv/
 ./**/.env
+devdata/chat-files

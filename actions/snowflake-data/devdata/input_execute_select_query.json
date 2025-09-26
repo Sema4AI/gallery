@@ -1,0 +1,55 @@
+{
+    "inputs": [
+        {
+            "inputName": "input-valid-query",
+            "inputValue": {
+                "query": "SELECT * FROM PRODUCTION_REPORTS LIMIT 10;",
+                "warehouse": "COMPUTE_WH",
+                "database": "OIL_AND_GAS",
+                "schema": "PUBLIC"
+            }
+        },
+        {
+            "inputName": "input-invalid-query",
+            "inputValue": {
+                "query": "SELECT * FROM INVALID_TABLE LIMIT 10;",
+                "warehouse": "COMPUTE_WH",
+                "database": "OIL_AND_GAS",
+                "schema": "PUBLIC"
+            }
+        },
+        {
+            "inputName": "input-invalid-db-name",
+            "inputValue": {
+                "query": "SELECT * FROM PRODUCTION_REPORTS LIMIT 10;",
+                "warehouse": "COMPUTE_WH",
+                "database": "OIL_AND_GASSSSUSS",
+                "schema": "PUBLIC"
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "execute_select_query",
+        "actionRelativePath": "data_actions.py",
+        "schemaDescription": [
+            "query: string: The Snowflake SQL query to execute."
+        ],
+        "managedParamsSchemaDescription": {
+            "warehouse": {
+                "type": "Secret",
+                "description": "The Snowflake warehouse to use"
+            },
+            "database": {
+                "type": "Secret",
+                "description": "The Snowflake database to use  "
+            },
+            "schema": {
+                "type": "Secret",
+                "description": "The Snowflake schema to use"
+            }
+        },
+        "inputFileVersion": "v3",
+        "kind": "action",
+        "actionSignature": "action/args: 'query: str, warehouse: Secret, database: Secret, schema: Secret'"
+    }
+}

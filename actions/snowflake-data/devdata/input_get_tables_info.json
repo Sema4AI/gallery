@@ -1,0 +1,42 @@
+{
+    "inputs": [
+        {
+            "inputName": "input-data-exists",
+            "inputValue": {
+                "warehouse": "COMPUTE_WH",
+                "database": "OIL_AND_GAS",
+                "schema": "PUBLIC"
+            }
+        },
+        {
+            "inputName": "input-data-nok",
+            "inputValue": {
+                "warehouse": "COMPUTE_WH",
+                "database": "OIL_AND_GASSSSUSS",
+                "schema": "PUBLIC"
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "get_tables_info",
+        "actionRelativePath": "data_actions.py",
+        "schemaDescription": [],
+        "managedParamsSchemaDescription": {
+            "warehouse": {
+                "type": "Secret",
+                "description": "The Snowflake warehouse to use"
+            },
+            "database": {
+                "type": "Secret",
+                "description": "The Snowflake database to use  "
+            },
+            "schema": {
+                "type": "Secret",
+                "description": "The Snowflake schema to use"
+            }
+        },
+        "inputFileVersion": "v3",
+        "kind": "action",
+        "actionSignature": "action/args: 'warehouse: Secret, database: Secret, schema: Secret'"
+    }
+}

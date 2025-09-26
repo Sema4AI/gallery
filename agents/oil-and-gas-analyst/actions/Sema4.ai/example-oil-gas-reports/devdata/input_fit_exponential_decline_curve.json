@@ -1,0 +1,25 @@
+{
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "wellName": "Porter 26-35 4H",
+                "startDate": "1/1/2024",
+                "endDate": "8/1/2024"
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "fit_exponential_decline_curve",
+        "actionRelativePath": "data_actions.py",
+        "schemaDescription": [
+            "wellName: string: Name of the well",
+            "startDate: string: Start date of the analysis period (format: 'MM/DD/YYYY')",
+            "endDate: string: End date of the analysis period (format: 'MM/DD/YYYY')"
+        ],
+        "managedParamsSchemaDescription": {},
+        "inputFileVersion": "v3",
+        "kind": "query",
+        "actionSignature": "query/args: 'wellName: str, startDate: str, endDate: str'"
+    }
+}
