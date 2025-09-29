@@ -104,9 +104,11 @@ def generate_agents_manifest(
         if not os.path.isdir(agent_folder):
             continue
 
-        is_agent_valid = validate_agent(agent_folder, agent_cli_path)
-        if not is_agent_valid:
-            continue
+        # TODO (Kari 2025-09-29): Validation logic is moving to agent-server, away from agent-cli
+        #                         Re-enable agent validation after the logic is provided in some new way
+        #is_agent_valid = validate_agent(agent_folder, agent_cli_path)
+        #if not is_agent_valid:
+        #    continue
 
         agent_spec_data = read_yaml_file(os.path.join(agent_folder, "agent-spec.yaml"))[
             "agent-package"
