@@ -212,7 +212,20 @@ def generate_consolidated_manifest(
         if not is_agent_published(
             new_manifest, updated_agent_name, updated_agent_version
         ):
-            versions_info.append(updated_agent_info["versions"][0])
+            # Check if this version already exists in the manifest
+            existing_version_index = None
+            for i, existing_version in enumerate(versions_info):
+                if existing_version.get("version") == updated_agent_version:
+                    existing_version_index = i
+                    break
+            
+            if existing_version_index is not None:
+                # Update existing version with new fields
+                versions_info[existing_version_index] = updated_agent_info["versions"][0]
+            else:
+                # Add new version
+                versions_info.append(updated_agent_info["versions"][0])
+            
             agent_info["versions"] = sorted(versions_info, key=lambda x: x["version"])
 
     return new_manifest
