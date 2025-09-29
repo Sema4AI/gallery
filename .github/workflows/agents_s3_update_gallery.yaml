@@ -91,11 +91,17 @@ jobs:
           cd bin/publisher/agents
           ls -la
 
-          # Copy the Agents subdirectories. Note that since this is an update workflow,
+          # Sync the Agents subdirectories. Note that since this is an update workflow,
           # subdirectories will only contain agents which version's was actually bumped.
           # cache-control max-age=31536000, because these should be immutable.
+          # The excludes avoid overwriting existing files. These must be immutable once uploaded.
           for dir in */; do
-            aws s3 cp "$dir" "$S3_BASE_URL/$dir" --recursive --cache-control max-age=31536000
+            aws s3 sync "$dir" "$S3_BASE_URL/$dir" \
+              --cache-control max-age=31536000 \
+              --exclude "agent-spec.yaml" \
+              --exclude "CHANGELOG.md" \
+              --exclude "*.zip" \
+              --exclude "__agent_package_metadata__.json"
 
               returnCode=$?
 
