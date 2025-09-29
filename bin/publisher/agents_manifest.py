@@ -171,6 +171,20 @@ def generate_agents_manifest(
         zip_dest_path = dest / f"{kebab_case_agent_name}.zip"
         if not os.path.exists(zip_dest_path):
             shutil.copyfile(zip_file_path, zip_dest_path)
+        
+        # Extract and copy the agent package metadata from the zip file
+        metadata_dest_path = dest / "__agent_package_metadata__.json"
+        if not os.path.exists(metadata_dest_path):
+            import zipfile
+            try:
+                with zipfile.ZipFile(zip_file_path, 'r') as zip_ref:
+                    if "__agent_package_metadata__.json" in zip_ref.namelist():
+                        zip_ref.extract("__agent_package_metadata__.json", dest)
+                        print(f"Extracted agent package metadata for {agent_name} {agent_version}")
+                    else:
+                        print(f"Warning: __agent_package_metadata__.json not found in zip for {agent_name} {agent_version}")
+            except Exception as e:
+                print(f"Error extracting metadata from zip for {agent_name} {agent_version}: {str(e)}")
 
         agent_info: AgentInfo = {
             "name": agent_name,
