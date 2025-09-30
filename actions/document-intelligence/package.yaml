@@ -1,6 +1,6 @@
 name: document-intelligence
 description: Actions for Sema4.ai Document Intelligence
-version: 2.0.0
+version: 2.0.1
 spec-version: v2
 dependencies:
   conda-forge:
@@ -9,10 +9,10 @@ dependencies:
   pypi:
   - jsonschema=4.25.0      # https://github.com/python-jsonschema/jsonschema/blob/main/CHANGELOG.rst
   - pdf2image=1.17.0        # https://github.com/Belval/pdf2image/releases
-  - sema4ai-actions=1.4.1  # https://github.com/Sema4AI/actions/blob/master/actions/docs/CHANGELOG.md
+  - sema4ai-actions=1.4.3  # https://github.com/Sema4AI/actions/blob/master/actions/docs/CHANGELOG.md
   - sema4ai-data=1.0.10
   - reductoai=0.9.0         # https://github.com/reductoai/reducto-python-sdk/blob/main/CHANGELOG.m
-  - sema4ai-docint=0.8.4
+  - sema4ai-docint=0.10.0
 dev-dependencies:
   conda-forge:
   - pytest=8.3.5
