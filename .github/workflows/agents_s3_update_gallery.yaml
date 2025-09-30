@@ -94,27 +94,28 @@ jobs:
           # Sync the Agents subdirectories. Note that since this is an update workflow,
           # subdirectories will only contain agents which version's was actually bumped.
           # cache-control max-age=31536000, because these should be immutable.
-          # The excludes avoid overwriting existing files. These must be immutable once uploaded.
+          # Using s3api put-object with --if-none-match to prevent overwriting existing files.
           for dir in */; do
-            aws s3 sync "$dir" "$S3_BASE_URL/$dir" \
-              --cache-control max-age=31536000 \
-              --exclude "agent-spec.yaml" \
-              --exclude "CHANGELOG.md" \
-              --exclude "*.zip" \
-              --exclude "__agent_package_metadata__.json"
-
-              returnCode=$?
+              find "$dir" -type f | while read -r file; do
+                  s3_key="gallery/agents/${file}"
+                  aws s3api put-object --bucket "downloads.robocorp.com" --key "$s3_key" --body "$file" --cache-control "max-age=31536000" --if-none-match "*"
+                  
+                  returnCode=$?
+                  if [ $returnCode -ne 0 ]; then
+                    echo "Upload of '$file' failed, exiting..."
+                    exit 1
+                  fi
+              done
 
               # If the upload of any agent fails, we want to break the workflow, as to not update the manifest,
               # which should be the only source of truth.
               # Even if some agent will be uploaded before other one fails, manifest won't include them,
               # and therefore they won't be available in clients to download, and will be eligible to re-upload
               # on the next Gallery update run.
-              if [ $returnCode -ne 0 ]; then
+              if [ $? -ne 0 ]; then
                 echo "Upload of '$dir' agent failed, exiting..."
                 exit 1
               fi
-
           done
 
           # Copy the updated manifest
