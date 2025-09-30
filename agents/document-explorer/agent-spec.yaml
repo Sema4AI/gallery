@@ -1,0 +1,33 @@
+agent-package:
+  spec-version: v2
+  agents:
+  - name: Document Explorer
+    description: Analyze documents using Sema4.ai Document Intelligence.
+    model:
+      provider: OpenAI
+      name: gpt-4o
+    version: 1.0.0
+    architecture: agent
+    reasoning: disabled
+    runbook: runbook.md
+    action-packages:
+    - name: document-insights
+      organization: Sema4.ai
+      type: folder
+      version: 1.0.1
+      whitelist: ''
+      path: Sema4.ai/document-insights
+    knowledge: []
+    metadata:
+      mode: conversational
+  exclude:
+  - ./.git/**
+  - ./.vscode/**
+  - ./devdata/**
+  - ./output/**
+  - ./venv/**
+  - ./.venv/**
+  - ./**/.env
+  - ./**/.DS_Store
+  - ./**/*.pyc
+  - ./*.zip
