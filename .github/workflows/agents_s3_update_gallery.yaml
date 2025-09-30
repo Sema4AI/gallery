@@ -94,16 +94,24 @@ jobs:
           # Sync the Agents subdirectories. Note that since this is an update workflow,
           # subdirectories will only contain agents which version's was actually bumped.
           # cache-control max-age=31536000, because these should be immutable.
-          # Using s3api put-object with --if-none-match to prevent overwriting existing files.
+          # Check if files exist before uploading to avoid overwriting existing files.
           for dir in */; do
               find "$dir" -type f | while read -r file; do
                   s3_key="gallery/test-agents/${file}"
-                  aws s3api put-object --bucket "downloads.robocorp.com" --key "$s3_key" --body "$file" --cache-control "max-age=31536000" --if-none-match "*"
+                  cdn_url="https://cdn.sema4.ai/$s3_key"
                   
-                  returnCode=$?
-                  if [ $returnCode -ne 0 ]; then
-                    echo "Upload of '$file' failed, exiting..."
-                    exit 1
+                  # Check if file exists in S3 using curl
+                  if curl --head --silent --fail "$cdn_url" > /dev/null; then
+                      echo "File $s3_key already exists in S3, skipping..."
+                  else
+                      echo "Uploading $file to s3://downloads.robocorp.com/$s3_key"
+                      aws s3 cp "$file" "s3://downloads.robocorp.com/$s3_key" --cache-control "max-age=31536000"
+                      
+                      returnCode=$?
+                      if [ $returnCode -ne 0 ]; then
+                        echo "Upload of '$file' failed, exiting..."
+                        exit 1
+                      fi
                   fi
               done
 
