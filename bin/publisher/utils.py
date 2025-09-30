@@ -27,6 +27,11 @@ def sha256(filepath: str, hash_type: str = "sha256") -> str:
     return hash_obj.hexdigest()
 
 
+def calculate_file_hash(filepath: str) -> str:
+    """Calculate the SHA-256 hash of a file and return the hex digest."""
+    return sha256(filepath, "sha256")
+
+
 def log_error(error_message: str, sub_folder_path: str = None) -> None:
     with open("log.txt", "a") as log_file:
         message = f"Error in folder {sub_folder_path}: " if sub_folder_path else ""
