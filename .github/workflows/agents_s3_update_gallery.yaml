@@ -87,7 +87,7 @@ jobs:
         if: ${{ needs.build_agents.outputs.has_agents == 'true' }}
         run: |
           echo "Updating Agents in S3"
-          S3_BASE_URL="s3://downloads.robocorp.com/gallery/agents"
+          S3_BASE_URL="s3://downloads.robocorp.com/gallery/test-agents"
           cd bin/publisher/agents
           ls -la
 
@@ -97,7 +97,7 @@ jobs:
           # Using s3api put-object with --if-none-match to prevent overwriting existing files.
           for dir in */; do
               find "$dir" -type f | while read -r file; do
-                  s3_key="gallery/agents/${file}"
+                  s3_key="gallery/test-agents/${file}"
                   aws s3api put-object --bucket "downloads.robocorp.com" --key "$s3_key" --body "$file" --cache-control "max-age=31536000" --if-none-match "*"
                   
                   returnCode=$?
