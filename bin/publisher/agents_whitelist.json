@@ -4,6 +4,9 @@
       "name": "wayback-machine-agent"
     },
     {
+      "name": "document-explorer"
+    },
+    {
       "name": "oil-and-gas-analyst",
       "required_studio_version": ">=1.5.0"
     }
