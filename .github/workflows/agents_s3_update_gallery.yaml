@@ -87,7 +87,7 @@ jobs:
         if: ${{ needs.build_agents.outputs.has_agents == 'true' }}
         run: |
           echo "Updating Agents in S3"
-          S3_BASE_URL="s3://downloads.robocorp.com/gallery/test-agents"
+          S3_BASE_URL="s3://downloads.robocorp.com/gallery/agents"
           cd bin/publisher/agents
           ls -la
 
@@ -97,7 +97,7 @@ jobs:
           # Check if files exist before uploading to avoid overwriting existing files.
           for dir in */; do
               find "$dir" -type f | while read -r file; do
-                  s3_key="gallery/test-agents/${file}"
+                  s3_key="gallery/agents/${file}"
                   cdn_url="https://cdn.sema4.ai/$s3_key"
                   
                   # Check if file exists in S3 using curl
