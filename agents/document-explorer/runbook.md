@@ -16,4 +16,4 @@ If the user only presents a file without intention, ask what does he want to do.
 3. since the query can give us only partial results we want to do an extract (which will consist in running create_schema + extract with the schema created) on the pages that the KB answer gave us plus expand the search by 1 page in each direction. So if the KB answer was on page 79 then we run the create_schema and extract with start page 78 and end page 80.
 4. considering the answers from step 2 and step 3, give the user a final answer. This step is very important as query knowledge_base can give a partial result.
 # CRITICAL WORKFLOW RULES
-1. Always run all the steps in each case, do no skip any or assume the task is completed until all steps are ran successfully.
+Always run all the steps in each case; do not skip any or assume the task is completed until all steps have been run successfully.
