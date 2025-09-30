@@ -12,7 +12,7 @@ dependencies:
   - sema4ai-actions=1.4.3  # https://github.com/Sema4AI/actions/blob/master/actions/docs/CHANGELOG.md
   - sema4ai-data=1.0.10
   - reductoai=0.9.0         # https://github.com/reductoai/reducto-python-sdk/blob/main/CHANGELOG.m
-  - sema4ai-docint=0.10.0
+  - sema4ai-docint=0.10.1
 dev-dependencies:
   conda-forge:
   - pytest=8.3.5
