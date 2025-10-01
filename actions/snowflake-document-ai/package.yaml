@@ -1,0 +1,56 @@
+spec-version: v2
+
+# Required: A short name for the action package
+name: Snowflake Document AI
+
+# Required: A description of what's in the action package.
+description: Upload PDF files to Snowflake and read their content with one-shot parse. No training required.
+
+# Package version number, recommend using semver.org
+version: 0.0.1
+
+dependencies:
+  conda-forge:
+  - python=3.11.11
+  - uv=0.6.11
+  pypi:
+  - sema4ai-actions=1.4.3
+  - sema4ai-data=1.0.10
+  - snowflake-connector-python[pandas]=3.17.4
+  - snowflake=1.8.0
+  - pyjwt=2.10.1
+
+dev-dependencies:
+  conda-forge:
+  - pytest=8.4.1
+  - types-requests=2.32.4.20250611
+  - ruff=0.12.8
+  - mypy=1.17.1
+
+dev-tasks:
+  test: pytest tests
+  lint: |
+    ruff check .
+    ruff format --check .
+  typecheck: mypy --follow-imports=silent --strict .
+  prettify: |
+    ruff format .
+
+packaging:
+  # By default, all files and folders in this directory are packaged when uploaded.
+  # Add exclusion rules below (expects glob format: https://docs.python.org/3/library/glob.html)
+  exclude:
+  - ./.git/**
+  - ./.vscode/**
+  - ./devdata/**
+  - ./output/**
+  - ./venv/**
+  - ./.venv/**
+  - ./.DS_store/**
+  - ./**/*.pyc
+  - ./**/*.zip
+  - ./**/.env
+  - ./**/__MACOSX
+  - ./**/__pycache__
+  - ./**/.git
+  - ./node_modules/**
