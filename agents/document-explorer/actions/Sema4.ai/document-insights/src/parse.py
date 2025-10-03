@@ -1,11 +1,12 @@
 from pathlib import Path
 
 from reducto.types import ParseResponse
-from sema4ai.actions import Secret, action
+from reducto.types.shared.parse_response import ResultFullResult
+from sema4ai.actions import ActionError, Secret, action
 from sema4ai.actions.chat import get_file
 from sema4ai_docint import build_extraction_service
 
-from models import Sema4aiParseResponse
+from src.models import Sema4aiParseResponse
 
 
 @action
@@ -25,4 +26,11 @@ def parse(sema4_api_key: Secret, file_name: str) -> Sema4aiParseResponse:
     extraction_service = build_extraction_service(sema4_api_key.value)
     parse_resp: ParseResponse = extraction_service.parse(local_file)
 
-    return Sema4aiParseResponse(job_id=parse_resp.job_id, result=parse_resp.result)
+    # The sema4ai-docint library guarantees a ResultFullResult, but the types don't reflect that.
+    if not isinstance(parse_resp.result, ResultFullResult):
+        raise ActionError(
+            f"Unexpected result type: {type(parse_resp.result)}. Expected ResultFullResult."
+        )
+    full_parse_result: ResultFullResult = parse_resp.result
+
+    return Sema4aiParseResponse(job_id=parse_resp.job_id, result=full_parse_result)

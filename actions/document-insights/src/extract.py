@@ -3,7 +3,7 @@ from sema4ai.actions import ActionError, Secret, action
 from sema4ai.actions.chat import get_file
 from sema4ai_docint import build_extraction_service
 
-from models import Sema4aiExtractRequest, Sema4aiExtractResponse
+from src.models import Sema4aiExtractRequest, Sema4aiExtractResponse
 
 
 @action
@@ -32,11 +32,19 @@ def extract(
             "Must provide a JSONSchema in the schema. This schema must describe an object and controls the extracted data."
         )
 
+    # Coerce the input into a dict
+    if isinstance(extract_req.extraction_schema, str):
+        import json
+
+        extraction_schema = json.loads(extract_req.extraction_schema)
+    else:
+        extraction_schema = extract_req.extraction_schema
+
     extraction_service = build_extraction_service(sema4_api_key.value)
 
     extract_resp: ExtractResponse = extraction_service.extract_with_schema(
         local_file if extract_req.file_name else job_id,
-        extract_req.extraction_schema,
+        extraction_schema,
         prompt="",  # Generic instructions that apply to the document as a whole
         extraction_config=extract_req.extraction_config,
         start_page=extract_req.start_page,

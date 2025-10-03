@@ -1,7 +1,7 @@
 from sema4ai.actions import action
 from sema4ai_docint.agent_server_client import AgentServerClient
 
-from models import Sema4aiCreateSchemaRequest, Sema4aiCreateSchemaResponse
+from src.models import Sema4aiCreateSchemaRequest, Sema4aiCreateSchemaResponse
 
 
 @action
@@ -23,4 +23,4 @@ def create_schema(
         end_page=create_schema_req.end_page,
     )
 
-    return Sema4aiCreateSchemaResponse(schema=schema)
+    return Sema4aiCreateSchemaResponse(generated_schema=schema)

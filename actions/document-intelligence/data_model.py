@@ -248,7 +248,9 @@ def set_data_model_prompt(
 
 @query
 def create_business_views(
-    datasource: DocumentIntelligenceDataSource, data_model_name: str, force: bool = False
+    datasource: DocumentIntelligenceDataSource,
+    data_model_name: str,
+    force: bool = False,
 ) -> Response[dict[str, Any]]:
     """Create SQL views for a data model in the database.
 
@@ -265,7 +267,9 @@ def create_business_views(
     """
     try:
         di_service = build_di_service(datasource)
-        result = di_service.data_model.create_business_views(data_model_name, force=force)
+        result = di_service.data_model.create_business_views(
+            data_model_name, force=force
+        )
     except Exception as e:
         raise ActionError(f"Failed to create business views: {e}") from e
 
