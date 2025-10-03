@@ -36,8 +36,10 @@ DISABLE_SSL_VERIFICATION = False
 
 class ExtractResult(BaseModel):
     """The extracted content from a document with optional citations."""
+
     extracted_content: dict[str, Any]
     citations: dict[str, Any] | None = None
+
 
 @action
 def extract_document(
@@ -79,7 +81,10 @@ def extract_document(
             document_layout_prompt,
         )
 
-        return ExtractResult(extracted_content=extract_result.extracted_content, citations=extract_result.citations)
+        return ExtractResult(
+            extracted_content=extract_result.extracted_content,
+            citations=extract_result.citations,
+        )
     except Exception as e:
         logger.error(f"Error processing document: {str(e)}")
         raise ActionError(f"Failed to process document: {str(e)}") from e

@@ -1,15 +1,28 @@
 import logging
+from typing import Any
 
-from data_sources import (
+from src.data_sources import (
     DocumentIntelligenceDataSource,
     DocumentIntelligencePGVector,
 )
-from models import Sema4aiQueryKnowledgeBaseRequest
-from sema4ai.actions import Response, Secret
+from src.models import Sema4aiQueryKnowledgeBaseRequest
+
+from sema4ai.actions import ActionError, Response, Secret
 from sema4ai.data import query
-from sema4ai_docint import build_di_service
+from sema4ai_docint import build_di_service, DIService
+from sema4ai_docint.services._knowledge_base_service import _KnowledgeBaseService
 
 logger = logging.getLogger(__name__)
+
+
+def _require_kb_service(di_service: DIService) -> _KnowledgeBaseService:
+    """
+    Raise an error if the knowledge base service is not available.
+    """
+    kb_service = di_service.knowledge_base
+    if kb_service is None:
+        raise ActionError("KnowledgeBase Service requires a PGVector datasource.")
+    return kb_service
 
 
 @query
@@ -18,7 +31,7 @@ def query_document_in_kb(
     pg_vector: DocumentIntelligencePGVector,
     sema4_api_key: Secret,
     query_data: Sema4aiQueryKnowledgeBaseRequest,
-) -> Response[list[dict]]:
+) -> Response[list[dict[str, Any]]]:
     """Get document in data model format.
     Args:
         datasource: Document intelligence data source connection
@@ -35,13 +48,17 @@ def query_document_in_kb(
         ActionError: If document or data model not found
     """
     di_service = build_di_service(datasource, sema4_api_key.value, pg_vector=pg_vector)
+    kb_service = _require_kb_service(di_service)
 
-    table_result = di_service.knowledge_base.query(
+    query_result = kb_service.query(
         document_name=query_data.document_name,
         document_id=query_data.document_id,
         natural_language_query=query_data.natural_language_query,
         relevance=query_data.relevance,
     )
+
+    # Convert the result to a list of dictionaries
+    table_result = [result.model_dump() for result in query_result]
 
     return Response(result=table_result)
 
@@ -65,7 +82,8 @@ def ingest(
         Success message with the document id of the inserted document.
     """
     di_service = build_di_service(datasource, sema4_api_key.value, pg_vector=pg_vector)
+    kb_service = _require_kb_service(di_service)
 
-    result_message = di_service.knowledge_base.ingest(file_name)
+    result_message = kb_service.ingest(file_name)
 
     return Response(result=result_message)

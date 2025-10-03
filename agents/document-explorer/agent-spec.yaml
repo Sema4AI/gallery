@@ -14,7 +14,7 @@ agent-package:
     - name: Document Insights
       organization: Sema4.ai
       type: folder
-      version: 1.0.2
+      version: 1.2.0
       whitelist: ''
       path: Sema4.ai/document-insights
     knowledge: []
@@ -31,3 +31,6 @@ agent-package:
   - ./**/.DS_Store
   - ./**/*.pyc
   - ./*.zip
+  - ./**/.mypy_cache
+  - ./**/.pytest_cache
+  - ./**/.ruff_cache
