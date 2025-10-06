@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.1.0] - 2025-10-06
+
+### Changed
+- Support for Semantic Views
+- **Return results as Table instead of list**
+- Return table is limited to 10000 rows by default to prevent memory issues, it can be overridden by the `row_limit` parameter
+- Added error handling for warehouse, database and schema name misspelling and query syntax error
+- Updated dependencies
+
 ## [1.0.5] - 2025-08-07
 
 ### Changed

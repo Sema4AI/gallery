@@ -1,25 +1,61 @@
 {
     "inputs": [
         {
-            "inputName": "input-clean",
+            "inputName": "single-file-clean",
             "inputValue": {
                 "message": "Which regions are experiencing the fastest growth in sales in 2024?",
-                "semantic_model_file": "@CORTEX_ANALYST_DEMO.REVENUE_TIMESERIES.RAW_DATA/revenue_timeseries.yaml"
+                "semantic_model": "@CORTEX_ANALYST_DEMO.REVENUE_TIMESERIES.RAW_DATA/revenue_timeseries.yaml"
             }
         },
         {
-            "inputName": "input-from-snowsight",
+            "inputName": "single-file-from-snowsight",
             "inputValue": {
                 "message": "Which regions are experiencing the fastest growth in sales in 2024?",
-                "semantic_model_file": "'@\"CORTEX_ANALYST_DEMO\".\"REVENUE_TIMESERIES\".\"RAW_DATA\"/revenue_timeseries.yaml'"
+                "semantic_model": "'@\"CORTEX_ANALYST_DEMO\".\"REVENUE_TIMESERIES\".\"RAW_DATA\"/revenue_timeseries.yaml'"
             }
         },
         {
-            "inputName": "input-spaces",
+            "inputName": "single-file-with-spaces",
             "inputValue": {
                 "message": "Which regions are experiencing the fastest growth in sales in 2024?",
-                "semantic_model_file": "'@\"CORTEX_ANALYST_DEMO\".\"REVENUE_TIMESERIES\".\"RAW_DATA\"/revenue timeseries.yaml'"
+                "semantic_model": "'@\"CORTEX_ANALYST_DEMO\".\"REVENUE_TIMESERIES\".\"RAW_DATA\"/revenue timeseries.yaml'"
             }
+        },
+        {
+            "inputName": "single-file-quoted-db",
+            "inputValue": {
+                "message": "What is the total number of calls handled by all agents from January 1, 2025 to September 30, 2025?",
+                "semantic_model": "@\"CALL_CENTER_DATA\".\"PUBLIC\".\"FILES\"/CALL_DATA_MODEL.yaml"
+            }
+        },
+        {
+            "inputName": "single-view-clean",
+            "inputValue": {
+                "message": "Who are the top performing agents?",
+                "semantic_model": "CALL_CENTER_DATA.PUBLIC.CALL_VIEW"
+            }
+        },
+        {
+            "inputName": "single-view-with-quotes",
+            "inputValue": {
+                "message": "Give me top 5 most unsatisfied customers?",
+                "semantic_model": "\"CALL_CENTER_DATA\".\"PUBLIC\".\"CALL_VIEW\""
+            }
+        },
+        {
+            "inputName": "single-view-wrapped-quotes",
+            "inputValue": {
+                "message": "What are the top performing products?",
+                "semantic_model": "'CALL_CENTER_DATA.PUBLIC.CALL_VIEW'"
+            }
+        },
+        {
+            "inputName": "mixed-types-error-test",
+            "inputValue": {
+                "message": "This should fail - mixing files and views",
+                "semantic_model": "@\"CALL_CENTER_DATA\".\"PUBLIC\".\"FILES\"/CALL_DATA_MODEL.yaml, CALL_CENTER_DATA.PUBLIC.CALL_VIEW"
+            },
+            "comment": "This test case should raise a ValueError because it mixes file paths and view names"
         }
     ],
     "metadata": {
@@ -29,13 +65,13 @@
             "message: string: The message to send."
         ],
         "managedParamsSchemaDescription": {
-            "semantic_model_file": {
+            "semantic_model": {
                 "type": "Secret",
-                "description": "The path to a Snowflake Stage containing the semantic model file."
+                "description": "The semantic model specification. Can be: a single file path (starts with @), a single view name, multiple file paths (comma-separated), or multiple view names (comma-separated)."
             }
         },
         "inputFileVersion": "v3",
         "kind": "action",
-        "actionSignature": "action/args: 'semantic_model_file: Secret, message: str'"
+        "actionSignature": "action/args: 'semantic_model: Secret, message: str'"
     }
 }
