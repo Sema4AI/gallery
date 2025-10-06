@@ -2,7 +2,7 @@ import base64
 import datetime
 from decimal import Decimal
 
-from sema4ai.actions import Response, Secret, action, Table
+from sema4ai.actions import ActionError, Response, Secret, action, Table
 from utils import execute_query
 
 
@@ -66,33 +66,41 @@ def snowflake_execute_query(
         The results of the query as a Table (limited to row_limit rows).
     """
 
-    result = execute_query(
-        query=query,
-        warehouse=warehouse.value,
-        database=database.value,
-        schema=schema.value,
-        numeric_args=numeric_args,
-    )
-    
-    # Apply row limit to prevent memory issues
-    limited_result = result[:row_limit] if result else []
-    
-    # Convert list of dicts to Table format (columns and rows)
-    if limited_result:
-        columns = list(limited_result[0].keys())
-        # Ensure consistent column order and serialize values for JSON compatibility
-        rows = [[serialize_value(row[col]) for col in columns] for row in limited_result]
+    try:
+        result = execute_query(
+            query=query,
+            warehouse=warehouse.value,
+            database=database.value,
+            schema=schema.value,
+            numeric_args=numeric_args,
+        )
         
-        # Add warning row if results were truncated
-        if len(result) > row_limit:
-            # Add a special column to indicate truncation
-            columns_with_warning = ["_RESULT_INFO"] + columns
-            warning_row = [
-                f"⚠️ Results truncated: showing {row_limit} of {len(result)} total rows. Add LIMIT to your SQL for better performance."
-            ] + [""] * len(columns)
-            rows_with_warning = [warning_row] + [[""] + row for row in rows]
-            return Response(result=Table(columns=columns_with_warning, rows=rows_with_warning))
+        # Apply row limit to prevent memory issues
+        limited_result = result[:row_limit] if result else []
         
-        return Response(result=Table(columns=columns, rows=rows))
-    else:
-        return Response(result=Table(columns=[], rows=[]))
+        # Convert list of dicts to Table format (columns and rows)
+        if limited_result:
+            columns = list(limited_result[0].keys())
+            # Ensure consistent column order and serialize values for JSON compatibility
+            rows = [[serialize_value(row[col]) for col in columns] for row in limited_result]
+            
+            # Add warning row if results were truncated
+            if len(result) > row_limit:
+                # Add a special column to indicate truncation
+                columns_with_warning = ["_RESULT_INFO"] + columns
+                warning_row = [
+                    f"⚠️ Results truncated: showing {row_limit} of {len(result)} total rows. Add LIMIT to your SQL for better performance."
+                ] + [""] * len(columns)
+                rows_with_warning = [warning_row] + [[""] + row for row in rows]
+                return Response(result=Table(columns=columns_with_warning, rows=rows_with_warning))
+            
+            return Response(result=Table(columns=columns, rows=rows))
+        else:
+            return Response(result=Table(columns=[], rows=[]))
+    
+    except ValueError as e:
+        # Convert ValueError (from utils.py) to ActionError for proper error reporting
+        raise ActionError(str(e)) from e
+    except Exception as e:
+        # Catch any other unexpected errors
+        raise ActionError(f"Failed to execute Snowflake query: {str(e)}") from e
