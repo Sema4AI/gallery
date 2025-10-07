@@ -73,7 +73,7 @@ def ask_cortex_analyst(
     Sends a message to the Cortex Analyst.
 
     Args:
-        semantic_model: The semantic model specification. Can be:
+        semantic_model: The semantic model file path or view name. Can be:
             - A single file path (starts with @): '@DB.SCHEMA.STAGE/file.yaml'
             - A single view name fully qualified: 'DB.SCHEMA.VIEW_NAME'
             - Multiple file paths (comma-separated): '@DB.SCHEMA.STAGE/file1.yaml, @DB.SCHEMA.STAGE/file2.yaml'
