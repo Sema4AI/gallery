@@ -24,14 +24,14 @@
         {
             "inputName": "single-file-quoted-db",
             "inputValue": {
-                "message": "What is the total number of calls handled by all agents from January 1, 2025 to September 30, 2025?",
+                "message": "What is the total number of calls handled by all agents per month all time?",
                 "semantic_model": "@\"CALL_CENTER_DATA\".\"PUBLIC\".\"FILES\"/CALL_DATA_MODEL.yaml"
             }
         },
         {
             "inputName": "single-view-clean",
             "inputValue": {
-                "message": "Who are the top performing agents?",
+                "message": "Who are the top 5 agents with the highest average agent rating?",
                 "semantic_model": "CALL_CENTER_DATA.PUBLIC.CALL_VIEW"
             }
         },
@@ -43,9 +43,17 @@
             }
         },
         {
+            "inputName": "single-view-unqualified",
+            "inputValue": {
+                "message": "Give me top 5 most unsatisfied customers?",
+                "semantic_model": "CALL_VIEW"
+            },
+            "comment": "Example with unqualified view name requiring database and schema parameters"
+        },
+        {
             "inputName": "single-view-wrapped-quotes",
             "inputValue": {
-                "message": "What are the top performing products?",
+                "message": "Give me top 5 most unsatisfied customers?",
                 "semantic_model": "'CALL_CENTER_DATA.PUBLIC.CALL_VIEW'"
             }
         },
@@ -56,6 +64,13 @@
                 "semantic_model": "@\"CALL_CENTER_DATA\".\"PUBLIC\".\"FILES\"/CALL_DATA_MODEL.yaml, CALL_CENTER_DATA.PUBLIC.CALL_VIEW"
             },
             "comment": "This test case should raise a ValueError because it mixes file paths and view names"
+        },
+        {
+            "inputName": "model-across-two-databases",
+            "inputValue": {
+                "message": "Which month had the highest volume of oil production ever?",
+                "semantic_model": "@\"CALL_CENTER_DATA\".\"PUBLIC\".\"FILES\"/TWO_DBS.yaml"
+            }
         }
     ],
     "metadata": {
@@ -67,7 +82,7 @@
         "managedParamsSchemaDescription": {
             "semantic_model": {
                 "type": "Secret",
-                "description": "The semantic model specification. Can be: a single file path (starts with @), a single view name, multiple file paths (comma-separated), or multiple view names (comma-separated)."
+                "description": "The semantic model specification. Can be:\n- A single file path (starts with @): '@DB.SCHEMA.STAGE/file.yaml'\n- A single view name fully qualified: 'DB.SCHEMA.VIEW_NAME'\n- Multiple file paths (comma-separated): '@DB.SCHEMA.STAGE/file1.yaml, @DB.SCHEMA.STAGE/file2.yaml'\n- Multiple view names (comma-separated): 'DB.SCHEMA.VIEW1, DB.SCHEMA.VIEW2'"
             }
         },
         "inputFileVersion": "v3",

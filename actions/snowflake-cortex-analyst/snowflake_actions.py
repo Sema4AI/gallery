@@ -44,18 +44,17 @@ def serialize_value(value):
 def snowflake_execute_query(
     query: str,
     warehouse: Secret,
-    database: Secret,
-    schema: Secret,
     numeric_args: list = None,
     row_limit: int = 10000,
 ) -> Response[Table]:
     """
     Executes a specific query and returns results as a Table.
+    
+    All table and column references in the query should use fully qualified names 
+    (e.g., DATABASE.SCHEMA.TABLE) to work across different databases and schemas.
 
     Args:
-        query: The query to execute.
-        database: Your Snowflake database to use for queries.
-        schema: Your Snowflake schema to use for queries.
+        query: The query to execute. Use fully qualified table names (DATABASE.SCHEMA.TABLE).
         warehouse: Your Snowflake virtual warehouse to use for queries.
         numeric_args: A list of numeric arguments to pass to the query.
         row_limit: Maximum number of rows to return (default: 10000). 
@@ -70,8 +69,6 @@ def snowflake_execute_query(
         result = execute_query(
             query=query,
             warehouse=warehouse.value,
-            database=database.value,
-            schema=schema.value,
             numeric_args=numeric_args,
         )
         

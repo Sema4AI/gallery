@@ -65,14 +65,17 @@ def parse_semantic_model_input(input_value: str) -> tuple[str, str | list[str]]:
 
 
 @action
-def ask_cortex_analyst(semantic_model: Secret, message: str) -> Response[dict]:
+def ask_cortex_analyst(
+    semantic_model: Secret, 
+    message: str
+) -> Response[dict]:
     """
     Sends a message to the Cortex Analyst.
 
     Args:
         semantic_model: The semantic model specification. Can be:
             - A single file path (starts with @): '@DB.SCHEMA.STAGE/file.yaml'
-            - A single view name: 'DB.SCHEMA.VIEW_NAME'
+            - A single view name fully qualified: 'DB.SCHEMA.VIEW_NAME'
             - Multiple file paths (comma-separated): '@DB.SCHEMA.STAGE/file1.yaml, @DB.SCHEMA.STAGE/file2.yaml'
             - Multiple view names (comma-separated): 'DB.SCHEMA.VIEW1, DB.SCHEMA.VIEW2'
         message: The message to send.
@@ -81,6 +84,7 @@ def ask_cortex_analyst(semantic_model: Secret, message: str) -> Response[dict]:
         The response from the Cortex Analyst that contains an SQL query if successful.
     """
     try:
+        
         with get_snowflake_connection() as conn:
             # Parse the semantic model input to determine the correct API field
             field_name, field_value = parse_semantic_model_input(semantic_model.value)
@@ -119,7 +123,7 @@ def ask_cortex_analyst(semantic_model: Secret, message: str) -> Response[dict]:
             
             try:
                 response = requests.post(
-                    f"{base_url}", headers=headers, json=request_body, verify=False
+                    f"{base_url}", headers=headers, json=request_body, verify=True
                 )
                 response.raise_for_status()
                 return Response(result=response.json())
@@ -142,10 +146,19 @@ def ask_cortex_analyst(semantic_model: Secret, message: str) -> Response[dict]:
                 # Provide helpful context based on the field name
                 model_info = f"{field_name}={field_value}"
                 
+                # Add specific guidance for view-based models
+                view_guidance = ""
+                if 'view' in field_name.lower():
+                    view_guidance = (
+                        f"  - Semantic view name must be fully qualified (e.g., 'DATABASE.SCHEMA.VIEW_NAME')\n"
+                        f"    Your value: '{field_value}' - ensure it includes database and schema\n"
+                    )
+                
                 error_message = (
                     f"Cortex Analyst API error (HTTP {response.status_code}): {error_detail}\n"
                     f"Request used: {model_info}\n"
                     f"Common issues:\n"
+                    f"{view_guidance}"
                     f"  - Semantic model file/view does not exist or is not accessible\n"
                     f"  - Insufficient permissions to access the model\n"
                     f"  - Invalid semantic model specification\n"

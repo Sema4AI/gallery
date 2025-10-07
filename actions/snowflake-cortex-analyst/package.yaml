@@ -5,7 +5,7 @@ name: Snowflake Cortex Analyst
 description: Snowflake Cortex reliably answers business questions based on your structured data in Snowflake.
 
 # Package version number, recommend using semver.org
-version: 1.1.0
+version: 2.0.0
 
 spec-version: v2
 
@@ -16,7 +16,7 @@ dependencies:
   pypi:
     - sema4ai-actions=1.4.3
     - sema4ai-data=1.0.10
-    - snowflake-connector-python[pandas]=3.17.4
+    - snowflake-connector-python[pandas]=3.18.0
     - pandas=2.3.3
     - snowflake=1.8.0
     - pyjwt=2.10.1
