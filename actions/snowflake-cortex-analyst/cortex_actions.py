@@ -90,7 +90,7 @@ def ask_cortex_analyst(
             field_name, field_value = parse_semantic_model_input(semantic_model.value)
             
             request_body = {
-                "timeout": 50000,
+                "timeout": 600, # 10 minutes
                 "messages": [
                     {"role": "user", "content": [{"type": "text", "text": message}]}
                 ],

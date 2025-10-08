@@ -80,17 +80,6 @@ def snowflake_execute_query(
             columns = list(limited_result[0].keys())
             # Ensure consistent column order and serialize values for JSON compatibility
             rows = [[serialize_value(row[col]) for col in columns] for row in limited_result]
-            
-            # Add warning row if results were truncated
-            if len(result) > row_limit:
-                # Add a special column to indicate truncation
-                columns_with_warning = ["_RESULT_INFO"] + columns
-                warning_row = [
-                    f"⚠️ Results truncated: showing {row_limit} of {len(result)} total rows. Add LIMIT to your SQL for better performance."
-                ] + [""] * len(columns)
-                rows_with_warning = [warning_row] + [[""] + row for row in rows]
-                return Response(result=Table(columns=columns_with_warning, rows=rows_with_warning))
-            
             return Response(result=Table(columns=columns, rows=rows))
         else:
             return Response(result=Table(columns=[], rows=[]))
