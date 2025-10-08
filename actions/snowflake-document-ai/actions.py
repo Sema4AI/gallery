@@ -8,17 +8,22 @@ import tempfile
 import datetime
 
 @action
-def list_stage_files(database_name: Secret, schema_name: Secret, stage_name: Secret) -> Response[list]:
+def list_stage_files(
+    database_name: Secret, 
+    schema_name: Secret, 
+    stage_name: Secret, 
+    limit: int = 10) -> Response[list]:
     """
-    Lists all files in a specific Snowflake stage.
+    Lists the most recently modified files in a specific Snowflake stage.
     
     Args:
         database_name: The name of the database containing the stage
         schema_name: The name of the schema containing the stage
         stage_name: The name of the stage
+        limit: Maximum number of files to return (default: 10)
         
     Returns:
-        A list of files in the specified stage with their details
+        A list of the most recently modified files in the specified stage with their details
     """
     try:
         with get_snowflake_connection() as conn:
@@ -31,7 +36,20 @@ def list_stage_files(database_name: Secret, schema_name: Secret, stage_name: Sec
             
             # Use fully qualified stage name
             fully_qualified_stage = f'@"{db_name}"."{schema}"."{stage}"'
+            
+            # Use a query to list, order, and limit the results in Snowflake
+            query = f"""
+            SELECT * 
+            FROM TABLE(RESULT_SCAN(LAST_QUERY_ID()))
+            ORDER BY "last_modified" DESC
+            LIMIT {limit}
+            """
+            
+            # First execute LIST to populate results
             cursor.execute(f'LIST {fully_qualified_stage}')
+            
+            # Then query those results with ordering and limiting
+            cursor.execute(query)
             
             # Convert result to list of dicts
             columns = [desc[0] for desc in cursor.description]
@@ -150,9 +168,6 @@ def parse_document(
                 fully_qualified_path = f"@{db_name}.{schema}.{stage}/{stage_file_path}"
                 print(f"[{datetime.datetime.now().strftime('%H:%M:%S.%f')}] File uploaded to: {fully_qualified_path}")
                 
-                print(f"[{datetime.datetime.now().strftime('%H:%M:%S.%f')}] Waiting for scheduled task to process the file (runs every 1 minute)...")
-                time_module.sleep(3)
-                
                 # Prepare the upload result
                 upload_result = {
                     "status": "success",
@@ -170,7 +185,7 @@ def parse_document(
                 query = f"""
                 SELECT AI_PARSE_DOCUMENT (
                     TO_FILE('{fully_qualified_path}'),
-                    {{'mode': 'LAYOUT' , 'page_split': true}}) AS monthly_stats;
+                    {{'mode': 'LAYOUT' , 'page_split': true}}) AS parsed_document;
                 """
                 print(f"Executing query: {query}")
                 cursor.execute(query)
