@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [2.0.0] - 2025-10-07
+
+**NOTE! This version changes the action parameters/secrets and will require the agents to be redeployed.**
+
+### Changed
+- Support for Semantic Views
+- **Return results as Table instead of list**
+- Return table is limited to 10000 rows by default to prevent memory issues, it can be overridden by the `row_limit` parameter
+- Simplified parameter NOT to need database and schema when the semantic model is a view name - this means that all queries should be fully qualified now
+- Added error handling for warehouse, database and schema name misspelling and query syntax error
+- Updated dependencies
+- Changed requests to have TLS verification enabled
+
 ## [1.0.5] - 2025-08-07
 
 ### Changed
