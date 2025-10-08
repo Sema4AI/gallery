@@ -70,7 +70,7 @@ def parse_document(
     stage_path: str = ""
 ) -> Response[dict]:
     """
-    Uploads a PDF file from the chat to a specified Snowflake stage and parses it's content using Snowflake Document AI.
+    Uploads a file (PDF, PPTX, DOCX, JPEG, JPG, PNG, TIFF, TIF, HTML, TXT) from the chat to a specified Snowflake stage and parses it's content using Snowflake Document AI.
     
     Args:
         filename: The name of the file to upload from chat
@@ -84,9 +84,7 @@ def parse_document(
     """
     try:
         print(f"Starting process_document for file: {filename}")
-        # Set a static maximum wait time for polling
-        max_wait_seconds = 240
-        
+
         # Get the file from chat
         print("Getting file from chat...")
         chat_file = chat.get_file(filename)
@@ -180,7 +178,9 @@ def parse_document(
                     "query_id": status
                 }
                 print("Upload completed successfully")
-                
+
+                # TODO: handle image (OCR) files differently than others - page splitting does not work for them
+
                 # Now do the parsing
                 query = f"""
                 SELECT AI_PARSE_DOCUMENT (

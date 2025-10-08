@@ -1,13 +1,13 @@
 # Snowflake Document AI
 
-This action package enables you to upload PDF documents to Snowflake and extract their content using [Snowflake Document AI](https://docs.snowflake.com/en/user-guide/snowflake-cortex/document-ai/overview). It uses one-shot parsing with no training required, making it easy to extract structured data from PDFs.
+This action package enables you to upload PDF documents to Snowflake and extract their content using [Snowflake Document AI](https://docs.snowflake.com/en/user-guide/snowflake-cortex/document-ai/overview). It uses one-shot parsing with no training required, making it easy to extract structured data from PDFs and image files.
 
 ## What it does
 
 This action package provides two main capabilities:
 
 1. **List Stage Files**: List all files currently stored in a Snowflake stage
-2. **Parse Document**: Upload PDF files and extract their content using AI-powered parsing
+2. **Parse Document**: Upload PDF or image file files and extract their content using AI-powered parsing
 
 The parsing uses Snowflake's `AI_PARSE_DOCUMENT` function which can extract text, tables, and other structured content from PDFs in layout-aware mode.
 
@@ -87,8 +87,13 @@ Uploads a PDF file from chat and parses its content using Snowflake Document AI.
 - Extract tables and structured data from reports
 - Convert PDF documents to structured JSON for further processing
 
-## Limitations
+## Input requirements
 
-- Only supports PDF files
-- Requires Snowflake Document AI to be enabled in your account
+Details up to date [here](https://docs.snowflake.com/en/user-guide/snowflake-cortex/parse-document#input-requirements).
+
+- File types: PDF, PPTX, DOCX, JPEG, JPG, PNG, TIFF, TIF, HTML, TXT
+- Maximum file size: 100 MB
+- Maximum number of pages: 500
+- Stage encryption: Server-side encryption
+- Requires Snowflake Document AI to be enabled and set upin your account
 - Processing time depends on document complexity and size - timeouts are possible with larger documents

@@ -1,9 +1,29 @@
 {
     "inputs": [
         {
-            "inputName": "input-1",
+            "inputName": "input-pdf",
             "inputValue": {
                 "filename": "2025monthlystats.pdf",
+                "stage_path": "",
+                "database_name": "OIL_AND_GAS",
+                "schema_name": "PUBLIC",
+                "stage_name": "FILE_INPUT"
+            }
+        },
+        {
+            "inputName": "input-png",
+            "inputValue": {
+                "filename": "dynamo-invoice.png",
+                "stage_path": "",
+                "database_name": "OIL_AND_GAS",
+                "schema_name": "PUBLIC",
+                "stage_name": "FILE_INPUT"
+            }
+        },
+        {
+            "inputName": "input-pptx",
+            "inputValue": {
+                "filename": "test-presentation.pptx",
                 "stage_path": "",
                 "database_name": "OIL_AND_GAS",
                 "schema_name": "PUBLIC",
