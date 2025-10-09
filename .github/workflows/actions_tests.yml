@@ -36,7 +36,7 @@ jobs:
     env:
       # Set it to "latest" if you want the bleeding edge.
       # ACTION_SERVER_VERSION: {{ vars.ACTION_SERVER_VERSION }}
-      ACTION_SERVER_VERSION: "latest"  # not relying yet on evnironments
+      ACTION_SERVER_VERSION: "2.15.0"  # not relying yet on evnironments
 
     steps:
       - name: Checkout repository
