@@ -622,8 +622,12 @@ def get_stage_files(warehouse: Secret, stage_name: str, limit: int = 20) -> Resp
     Returns:
         A Table with all files in the stage and their properties.
         Sorted by last_modified descending (newest first).
-        First column is full_stage_path (@database.schema.stage/path/to/file) for easy copy/paste.
-        Other columns include: name (file path in stage), size (bytes), md5 (checksum), last_modified (timestamp), and other metadata from Snowflake.
+        Columns:
+        - full_stage_path: Complete path for copy/paste (@DATABASE.SCHEMA.STAGE/file.txt)
+        - name: Clean file path within stage (folders only, no stage name prefix)
+        - size: File size in bytes
+        - md5: File checksum
+        - last_modified: Timestamp
     """
     try:
         # Handle @ prefix if provided
@@ -716,6 +720,7 @@ def get_stage_files(warehouse: Secret, stage_name: str, limit: int = 20) -> Resp
                     
                     # Snowflake's LIST may return paths with stage name as a prefix directory
                     # e.g., for stage "FILES", it returns "files/myfile.txt" instead of "myfile.txt"
+                    file_name_clean = file_name
                     if isinstance(file_name, str):
                         # Check if name already includes the full stage path
                         if file_name.startswith(fully_qualified_stage_quoted) or file_name.startswith(fully_qualified_stage_simple):
@@ -727,12 +732,11 @@ def get_stage_files(warehouse: Secret, stage_name: str, limit: int = 20) -> Resp
                         else:
                             # Remove stage name prefix if it appears at the start (case-insensitive)
                             # Snowflake sometimes adds the stage name as a directory prefix
-                            file_name_clean = file_name
                             if '/' in file_name:
                                 first_part = file_name.split('/')[0]
                                 # Check if first part matches stage name (case-insensitive)
                                 if first_part.upper() == stage.upper():
-                                    # Remove the stage name prefix
+                                    # Remove the stage name prefix for both full_path and clean name
                                     file_name_clean = '/'.join(file_name.split('/')[1:])
                             
                             # Construct full path
@@ -744,7 +748,14 @@ def get_stage_files(warehouse: Secret, stage_name: str, limit: int = 20) -> Resp
                         full_path = fully_qualified_stage_simple
                     
                     # Build row with full_stage_path first, then all original columns
-                    row = [full_path] + [serialize_value(file_dict.get(col)) for col in columns]
+                    # But replace the 'name' column value with the cleaned version
+                    row = [full_path]
+                    for col in columns:
+                        if col == 'name':
+                            # Use cleaned name without stage prefix
+                            row.append(serialize_value(file_name_clean))
+                        else:
+                            row.append(serialize_value(file_dict.get(col)))
                     serialized_rows.append(row)
                 
                 return Response(result=Table(columns=output_columns, rows=serialized_rows))

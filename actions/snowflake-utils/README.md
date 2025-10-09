@@ -1,36 +1,21 @@
-# Snowflake Cortex Integration
+# Snowflake Utilities
 
-This action package provides seamless integration with Snowflake Cortex Analyst capabilities.
+A comprehensive set of actions for working with Snowflake databases. Enables agents to discover, query, and interact with Snowflake data and stages.
 
-## Available Actions
+## What it does
 
-### Cortex Analyst Integration
+**Discovery & Permissions:**
+- View session info (current user, role, warehouse, database, schema)
+- Show grants and permissions for troubleshooting access issues
+- List databases, schemas, tables, views, semantic views, and stages
 
-#### `ask_cortex_analyst`
-Enables natural language interactions with your data through Cortex Analyst:
-- Semantic model integration
-- Natural language query processing
-- SQL generation capabilities
+**Data Access:**
+- Execute SQL queries and return results as tables
+- List files in Snowflake stages with metadata
+- Download files from stages directly into chat
 
-#### `snowflake_execute_query`
-Provides direct query execution capabilities against Snowflake:
-- Secure connection handling
-- Parameter support
-- Warehouse/Database/Schema configuration
+**Access Validation:**
+- Check permissions on databases and schemas
+- Detailed error messages with hints for resolving permission issues
 
-#### Cortex Analyst Configuration
-
-When using these actions, you need to configure several secrets:
-- Semantic Model File location or a view name
-- Warehouse
-- Database
-- Schema
-
-These values are stored in your Sema4.ai Studio or Control Room and requested from you when creating or deploying the agent.
-
-Example values:
-
-- Semantic Model File: "@PRODUCTION_RESULTS.PUBLIC.STAGE1/oil_gas.yml" or "PRODUCTION_RESULTS.PUBLIC.VIEW1"
-- Warehouse: COMPUTE_WH
-- Database: PRODUCTION_RESULTS
-- Schema: PUBLIC
+> **Note:** This package is designed for development and debugging in Sema4.ai Studio. Review security implications before deploying to production.
