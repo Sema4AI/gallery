@@ -1,0 +1,59 @@
+{
+    "inputs": [
+        {
+            "inputName": "input-pdf",
+            "inputValue": {
+                "filename": "2025monthlystats.pdf",
+                "stage_path": "",
+                "database_name": "OIL_AND_GAS",
+                "schema_name": "PUBLIC",
+                "stage_name": "FILE_INPUT"
+            }
+        },
+        {
+            "inputName": "input-png",
+            "inputValue": {
+                "filename": "dynamo-invoice.png",
+                "stage_path": "",
+                "database_name": "OIL_AND_GAS",
+                "schema_name": "PUBLIC",
+                "stage_name": "FILE_INPUT"
+            }
+        },
+        {
+            "inputName": "input-pptx",
+            "inputValue": {
+                "filename": "test-presentation.pptx",
+                "stage_path": "",
+                "database_name": "OIL_AND_GAS",
+                "schema_name": "PUBLIC",
+                "stage_name": "FILE_INPUT"
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "parse_document",
+        "actionRelativePath": "actions.py",
+        "schemaDescription": [
+            "filename: string: The name of the file to upload from chat",
+            "stage_path: string: Optional subfolder path within the stage"
+        ],
+        "managedParamsSchemaDescription": {
+            "database_name": {
+                "type": "Secret",
+                "description": "The database containing the stage"
+            },
+            "schema_name": {
+                "type": "Secret",
+                "description": "The schema containing the stage"
+            },
+            "stage_name": {
+                "type": "Secret",
+                "description": "The name of the stage"
+            }
+        },
+        "inputFileVersion": "v3",
+        "kind": "action",
+        "actionSignature": "action/args: \"filename: str, database_name: Secret, schema_name: Secret, stage_name: Secret, stage_path: str=''\""
+    }
+}

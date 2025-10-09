@@ -66,58 +66,14 @@ def execute_query(
     with get_snowflake_connection(warehouse, database, schema) as conn, closing(
         conn.cursor()
     ) as cursor:
-        try:
-            if warehouse:
-                cursor.execute(f'USE WAREHOUSE "{warehouse.upper()}"')
-        except snowflake.connector.errors.ProgrammingError as e:
-            raise ValueError(
-                f"Failed to use warehouse '{warehouse}'. "
-                f"Error: {str(e)}\n"
-                f"Common issues:\n"
-                f"  - Warehouse does not exist\n"
-                f"  - Insufficient permissions to use this warehouse\n"
-                f"  - Warehouse name is misspelled"
-            ) from e
-        
-        try:
-            if database:
-                cursor.execute(f'USE DATABASE "{database.upper()}"')
-        except snowflake.connector.errors.ProgrammingError as e:
-            raise ValueError(
-                f"Failed to use database '{database}'. "
-                f"Error: {str(e)}\n"
-                f"Common issues:\n"
-                f"  - Database does not exist\n"
-                f"  - Insufficient permissions to access this database\n"
-                f"  - Database name is misspelled"
-            ) from e
-        
-        try:
-            if schema:
-                cursor.execute(f'USE SCHEMA "{schema.upper()}"')
-        except snowflake.connector.errors.ProgrammingError as e:
-            raise ValueError(
-                f"Failed to use schema '{schema}'. "
-                f"Error: {str(e)}\n"
-                f"Common issues:\n"
-                f"  - Schema does not exist\n"
-                f"  - Insufficient permissions to access this schema\n"
-                f"  - Schema name is misspelled"
-            ) from e
+        if warehouse:
+            cursor.execute(f'USE WAREHOUSE "{warehouse.upper()}"')
+        if database:
+            cursor.execute(f'USE DATABASE "{database.upper()}"')
+        if schema:
+            cursor.execute(f'USE SCHEMA "{schema.upper()}"')
 
-        try:
-            cursor.execute(query, numeric_args)
-        except snowflake.connector.errors.ProgrammingError as e:
-            raise ValueError(
-                f"Failed to execute query. "
-                f"Error: {str(e)}\n"
-                f"Query: {query}\n"
-                f"Common issues:\n"
-                f"  - Table or view does not exist\n"
-                f"  - SQL syntax error\n"
-                f"  - Insufficient permissions to access the objects\n"
-                f"  - Object names are misspelled"
-            ) from e
+        cursor.execute(query, numeric_args)
 
         if cursor._query_result_format == "arrow":
             results = cursor.fetch_pandas_all()
