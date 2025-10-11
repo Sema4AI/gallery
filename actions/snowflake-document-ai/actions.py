@@ -70,7 +70,7 @@ def parse_document(
     stage_path: str = ""
 ) -> Response[dict]:
     """
-    Uploads a file (PDF, PPTX, DOCX, JPEG, JPG, PNG, TIFF, TIF, HTML, TXT) from the chat to a specified Snowflake stage and parses it's content using Snowflake Document AI.
+    Uploads a file (PDF, PPTX, DOCX) from the chat to a specified Snowflake stage and parses it's content using Snowflake Document AI.
     
     Args:
         filename: The name of the file to upload from chat
@@ -83,45 +83,46 @@ def parse_document(
         Details of the uploaded file, and the json string of the document ai processing results.
     """
     try:
-        print(f"Starting process_document for file: {filename}")
+        print("Starting document processing")
 
         # Get the file from chat
-        print("Getting file from chat...")
         chat_file = chat.get_file(filename)
         temp_file_path = str(chat_file)
-        print(f"Got file: {temp_file_path}")
         
         # Extract just the original filename without path
         original_filename = os.path.basename(filename)
-        print(f"Original filename: {original_filename}")
         
         # Create a filename with timestamp to ensure uniqueness
         file_base, file_ext = os.path.splitext(original_filename)
+        file_ext_lower = file_ext.lower()
+
+        # Validate supported file types (Snowflake AI_PARSE_DOCUMENT supports .pdf, .docx, .pptx)
+        supported_extensions = {'.pdf', '.docx', '.pptx'}
+        if file_ext_lower not in supported_extensions:
+            unsupported_msg = (
+                f"Unsupported file type '{file_ext}'. Only PDF, DOCX, and PPTX are supported "
+                f"by AI_PARSE_DOCUMENT for this action. See docs: https://docs.snowflake.com/en/user-guide/snowflake-cortex/parse-document"
+            )
+            return Response(error=unsupported_msg)
         timestamp = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
         unique_filename = f"{file_base}_{timestamp}{file_ext}"
-        print(f"Using unique filename: {unique_filename}")
         
         # Create a temporary directory to hold our renamed file
-        print("Creating temporary directory...")
         with tempfile.TemporaryDirectory() as temp_dir:
             # Create a path for our correctly named file
             correct_name_path = os.path.join(temp_dir, unique_filename)
-            print(f"Correct name path: {correct_name_path}")
             
             # Copy the temporary file to our new path with the correct name
-            print("Copying file...")
             shutil.copy2(temp_file_path, correct_name_path)
             
-            print("Establishing Snowflake connection...")
+            print("Connecting to Snowflake...")
             with get_snowflake_connection() as conn:
                 cursor = conn.cursor()
-                print("Connected to Snowflake")
                 
                 # Access Secret values
                 db_name = database_name.value.upper()
                 schema = schema_name.value.upper()
                 stage = stage_name.value.upper()
-                print(f"Using stage: {db_name}.{schema}.{stage}")
                 
                 # Construct fully qualified stage name
                 fully_qualified_stage = f'@"{db_name}"."{schema}"."{stage}"'
@@ -133,27 +134,24 @@ def parse_document(
                     clean_path = stage_path.strip('/')
                     if clean_path:
                         stage_location = f'{fully_qualified_stage}/{clean_path}'
-                print(f"Stage location: {stage_location}")
                 
                 # Record the upload time to use for polling
                 upload_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')
-                print(f"Upload time: {upload_time}")
                 
                 # Execute PUT command with the correctly named file
                 put_command = f"PUT 'file://{correct_name_path}' '{stage_location}' OVERWRITE=TRUE AUTO_COMPRESS=FALSE SOURCE_COMPRESSION=NONE"
-                print(f"[{datetime.datetime.now().strftime('%H:%M:%S.%f')}] Executing PUT command to upload file...")
+                print("Uploading file to stage...")
                 try:
                     cursor.execute(put_command)
-                    print(f"[{datetime.datetime.now().strftime('%H:%M:%S.%f')}] PUT command executed successfully")
+                    print("Upload completed")
                 except Exception as put_error:
-                    print(f"[{datetime.datetime.now().strftime('%H:%M:%S.%f')}] Error executing PUT command: {str(put_error)}")
+                    print("Upload failed")
                     raise
                 
                 # Get results of the upload
                 result_rows = cursor.fetchall()
                 status = cursor.sfqid
-                print(f"[{datetime.datetime.now().strftime('%H:%M:%S.%f')}] Upload completed with status ID: {status}")
-                print(f"[{datetime.datetime.now().strftime('%H:%M:%S.%f')}] File upload status: {result_rows}")
+                print("Upload acknowledged by Snowflake")
                 
                 # Create file paths for the response
                 if stage_path:
@@ -164,7 +162,6 @@ def parse_document(
                 
                 # Create the fully qualified path including the file (like @DB.SCHEMA.STAGE/path/file.ext)
                 fully_qualified_path = f"@{db_name}.{schema}.{stage}/{stage_file_path}"
-                print(f"[{datetime.datetime.now().strftime('%H:%M:%S.%f')}] File uploaded to: {fully_qualified_path}")
                 
                 # Prepare the upload result
                 upload_result = {
@@ -177,7 +174,6 @@ def parse_document(
                     "upload_time": upload_time,
                     "query_id": status
                 }
-                print("Upload completed successfully")
 
                 # TODO: handle image (OCR) files differently than others - page splitting does not work for them
 
@@ -187,37 +183,31 @@ def parse_document(
                     TO_FILE('{fully_qualified_path}'),
                     {{'mode': 'LAYOUT' , 'page_split': true}}) AS parsed_document;
                 """
-                print(f"Executing query: {query}")
+                print("Parsing document via AI_PARSE_DOCUMENT...")
                 cursor.execute(query)
                 
-                print("Fetching results...")
                 rows = cursor.fetchall()
-                print(f"Got {len(rows) if rows else 0} results")
                 
                 processing_result = None
                 if rows and len(rows) > 0:
                     # Convert row to dict
                     columns = [desc[0] for desc in cursor.description]
                     processing_result = dict(zip(columns, rows[0]))
-                    print(f"Available columns: {columns}")
-                    print(f"Found processing result with {len(processing_result)} fields")
-                else:
-                    print("No processing results found")
                 
-                print("Query completed")
+                print("Parsing completed")
                 
                 # Combine upload result with parsed result
                 combined_result = {
                     "upload": upload_result,
                     "parsed": processing_result
                 }
-                print("Returning combined result")
+                print("Returning result")
                 
                 return Response(result=combined_result)
                 
     except Exception as e:
         error_msg = f"Error processing document {filename}: {str(e)}"
-        print(f"ERROR: {error_msg}")
+        print("ERROR during document processing")
         import traceback
         print(f"Traceback: {traceback.format_exc()}")
         return Response(error=error_msg)
