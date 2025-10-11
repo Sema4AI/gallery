@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [2.0.1] - 2025-10-09
+
+### Changed
+
+- Cortex Analyst REST API calls now use host with Snowflake account names with hyphens `-` instead of underscores `_`. This solves some of the reported issues with SSL certificates.
+
 ## [2.0.0] - 2025-10-07
 
 **NOTE! This version changes the action parameters/secrets and will require the agents to be redeployed.**
