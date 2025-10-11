@@ -58,6 +58,7 @@
     "snowflake-cortex-analyst",
     "snowflake-cortex-search",
     "snowflake-data",
+    "snowflake-document-ai",
     "serper",
     "perplexity",
     "robocorp"
