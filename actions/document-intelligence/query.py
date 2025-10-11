@@ -40,9 +40,8 @@ def _references_allowed_view(sql_query: str, views: list[dict]) -> bool:
     for view_name in view_names:
         if not view_name:
             continue
-        if (
-            re.search(rf"from\s+{re.escape(view_name)}\b", sql_lower)
-            or f"from document_intelligence.{view_name}" in sql_lower
+        if re.search(
+            rf"from\s+document_intelligence\.{re.escape(view_name)}\b", sql_lower
         ):
             return True
     return False
