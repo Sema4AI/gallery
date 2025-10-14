@@ -25,7 +25,8 @@ def extract(
     if extract_req.file_name:
         local_file = get_file(extract_req.file_name)
     elif extract_req.job_id:
-        job_id = extract_req.job_id
+        # Format job_id with jobid:// prefix for Reducto to recognize it as a job reference
+        job_id = f"jobid://{extract_req.job_id}"
     else:
         raise ActionError("One of file_name or job_id must be provided")
 
