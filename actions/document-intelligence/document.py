@@ -1,10 +1,10 @@
 import json
 import logging
-from pydantic import BaseModel
-from typing import Any
+from typing import Annotated, Any
 
 from data_sources import DocumentIntelligenceDataSource
-from sema4ai.actions import ActionError, Response, Secret, action
+from pydantic import BaseModel
+from sema4ai.actions import ActionError, Response, Secret, SecretSpec, action
 from sema4ai.actions.chat import get_file
 from sema4ai.data import query
 from sema4ai_docint import build_di_service
@@ -20,10 +20,10 @@ from sema4ai_docint.extraction.transform import _apply_mapping
 from sema4ai_docint.models import (
     DataModel,
     Document,
+    ExtractionResult,
     Mapping,
     MappingRow,
     initialize_dataserver,
-    ExtractionResult,
 )
 from sema4ai_docint.models.constants import PROJECT_NAME
 from sema4ai_docint.utils import normalize_name
@@ -36,12 +36,14 @@ DISABLE_SSL_VERIFICATION = False
 
 class ExtractResult(BaseModel):
     """The extracted content from a document with optional citations."""
+
     extracted_content: dict[str, Any]
     citations: dict[str, Any] | None = None
 
+
 @action
 def extract_document(
-    sema4_api_key: Secret,
+    sema4_api_key: Annotated[Secret, SecretSpec(tag="document-intelligence")],
     datasource: DocumentIntelligenceDataSource,
     file_name: str,
     extraction_schema: ExtractionSchemaInput,
@@ -71,15 +73,20 @@ def extract_document(
     pdf_path = get_file(file_name)
     try:
         di_service = build_di_service(datasource, sema4_api_key.value)
-        extract_result: ExtractionResult = di_service.extraction.extract_details(
-            pdf_path,
-            extraction_schema,
-            data_model_prompt,
-            extraction_config,
-            document_layout_prompt,
+        extract_result: ExtractionResult = (
+            di_service.extraction.extract_with_data_model(
+                pdf_path,
+                extraction_schema,
+                data_model_prompt,
+                extraction_config,
+                document_layout_prompt,
+            )
         )
 
-        return ExtractResult(extracted_content=extract_result.extracted_content, citations=extract_result.citations)
+        return ExtractResult(
+            extracted_content=extract_result.results,
+            citations=extract_result.citations,
+        )
     except Exception as e:
         logger.error(f"Error processing document: {str(e)}")
         raise ActionError(f"Failed to process document: {str(e)}") from e
@@ -197,7 +204,7 @@ def find_documents_by_layout(
 
 @query
 def ingest(
-    sema4_api_key: Secret,
+    sema4_api_key: Annotated[Secret, SecretSpec(tag="document-intelligence")],
     datasource: DocumentIntelligenceDataSource,
     file_name: str,
     data_model_name: str,
@@ -313,7 +320,7 @@ def query_document(
 
 @query
 def extract_and_transform_content(
-    sema4_api_key: Secret,
+    sema4_api_key: Annotated[Secret, SecretSpec(tag="document-intelligence")],
     params: ExtractAndTransformContentParams,
     datasource: DocumentIntelligenceDataSource,
 ) -> Response[dict[str, Any]]:

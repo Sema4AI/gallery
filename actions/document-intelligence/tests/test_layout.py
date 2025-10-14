@@ -1,7 +1,6 @@
 from unittest.mock import Mock
 
 
-
 class TestCreateTranslationSchema:
     """Test cases for create_translation_schema action"""
 
