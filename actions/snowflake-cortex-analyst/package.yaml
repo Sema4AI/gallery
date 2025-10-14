@@ -5,7 +5,7 @@ name: Snowflake Cortex Analyst
 description: Snowflake Cortex reliably answers business questions based on your structured data in Snowflake.
 
 # Package version number, recommend using semver.org
-version: 2.0.1
+version: 2.0.2
 
 spec-version: v2
 
