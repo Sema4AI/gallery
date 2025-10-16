@@ -1,0 +1,24 @@
+{
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "warehouse": "COMPUTE_WH"
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "show_grants",
+        "actionRelativePath": "snowflake_actions.py",
+        "schemaDescription": [],
+        "managedParamsSchemaDescription": {
+            "warehouse": {
+                "type": "Secret",
+                "description": "The Snowflake warehouse to use"
+            }
+        },
+        "inputFileVersion": "v3",
+        "kind": "action",
+        "actionSignature": "action/args: 'warehouse: Secret'"
+    }
+}

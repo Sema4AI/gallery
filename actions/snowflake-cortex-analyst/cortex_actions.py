@@ -111,7 +111,7 @@ def ask_cortex_analyst(
                     token = f.read().strip()
                 token_type = "OAUTH"
             else:
-                base_url = f"https://{conn.account}.snowflakecomputing.com/api/v2/cortex/analyst/message"
+                base_url = f"https://{conn.account.replace('_', '-')}.snowflakecomputing.com/api/v2/cortex/analyst/message"
                 token_type = "KEYPAIR_JWT"
                 token = conn.auth_class._jwt_token
 
@@ -159,6 +159,7 @@ def ask_cortex_analyst(
                     f"Request used: {model_info}\n"
                     f"Common issues:\n"
                     f"{view_guidance}"
+                    f"  - User's default role does not have permissions to access the schema or stage (Analyst uses Python SDK and REST API calls which means default role is always used)\n"
                     f"  - Semantic model file/view does not exist or is not accessible\n"
                     f"  - Insufficient permissions to access the model\n"
                     f"  - Invalid semantic model specification\n"

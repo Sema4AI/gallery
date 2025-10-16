@@ -11,7 +11,7 @@ from typing import Generator
 
 from conversations import ConversationNotFoundError, get_conversation_id
 from dotenv import load_dotenv
-from models import Messages, ThreadMessage, ThreadMessageList
+from models import MessageSendResult, Messages, ThreadMessage, ThreadMessageList
 from sema4ai.actions import ActionError, Response, Secret, action
 from slack_sdk import WebClient as SlackWebClient
 from slack_sdk.errors import SlackApiError
@@ -38,9 +38,12 @@ def _build_api_client(access_token: Secret) -> Generator[SlackWebClient, None, N
 
 @action(is_consequential=True)
 def send_message_to_channel(
-    channel_name: str, message: str, access_token: Secret = DEV_SLACK_ACCESS_TOKEN
-) -> Response[bool]:
-    """Sends a message to the specified Slack channel.
+    channel_name: str,
+    message: str,
+    thread_ts: str = "",
+    access_token: Secret = DEV_SLACK_ACCESS_TOKEN,
+) -> Response[MessageSendResult]:
+    """Sends a message to the specified Slack channel or as a reply to a thread.
 
     Based on how the Slack access token was generated, the message can be sent straight
     from the bot or on behalf of the user which obtained the token. You can detect a
@@ -50,18 +53,29 @@ def send_message_to_channel(
     Args:
         channel_name: Slack channel to send the message to.
         message: Message to send on the Slack channel.
+        thread_ts: Optional thread timestamp to reply to an existing message thread.
+            Use the message_ts or thread_ts from a previous message to reply in that thread.
         access_token: The Slack application access token.
 
     Returns:
-        A structure containing a boolean if the message was successfully sent or an
-        error if such occurred.
+        A structure containing the success status, channel ID, message timestamp,
+        and thread timestamp which can be used for subsequent thread replies.
     """
     with _build_api_client(access_token) as client:
-        response = client.chat_postMessage(
-            channel=get_conversation_id(channel_name, client=client), text=message
-        ).validate()
+        channel_id = get_conversation_id(channel_name, client=client)
+        post_params = {"channel": channel_id, "text": message}
+        if thread_ts:
+            post_params["thread_ts"] = thread_ts
 
-    return Response(result=bool(response.data.get("ok", False)))
+        response = client.chat_postMessage(**post_params).validate()
+
+    result = MessageSendResult(
+        success=bool(response.data.get("ok", False)),
+        channel_id=response.data.get("channel", channel_id),
+        message_ts=response.data.get("ts", ""),
+        thread_ts=response.data.get("thread_ts"),
+    )
+    return Response(result=result)
 
 
 def _get_message_replies(

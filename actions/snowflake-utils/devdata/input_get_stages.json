@@ -1,0 +1,34 @@
+{
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "database_schema": "CALL_CENTER_DATA.PUBLIC",
+                "warehouse": "COMPUTE_WH"
+            }
+        },
+        {
+            "inputName": "input-error",
+            "inputValue": {
+                "database_schema": "CALL_CENTER_DATA.PIBLIC",
+                "warehouse": "COMPUTE_WH"
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "get_stages",
+        "actionRelativePath": "snowflake_actions.py",
+        "schemaDescription": [
+            "database_schema: string: The database and schema in format \"database.schema\" (e.g., \"MY_DB.PUBLIC\")"
+        ],
+        "managedParamsSchemaDescription": {
+            "warehouse": {
+                "type": "Secret",
+                "description": "The Snowflake warehouse to use"
+            }
+        },
+        "inputFileVersion": "v3",
+        "kind": "action",
+        "actionSignature": "action/args: 'warehouse: Secret, database_schema: str'"
+    }
+}

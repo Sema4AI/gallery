@@ -1,4 +1,4 @@
-from typing import Annotated
+from typing import Annotated, Any
 
 from pydantic import BaseModel, Field
 from reducto.types.shared.parse_response import ResultFullResult
@@ -27,13 +27,13 @@ class Sema4aiExtractRequest(BaseModel):
         description="The job ID of the file to extract from a previous parse. Mutually exclusive with file_name.",
     )
     extraction_schema: Annotated[
-        str | dict,
+        str | dict[str, Any],
         Field(
             description="The JSONSchema which describes the desired extracted output from the file."
         ),
     ]
     extraction_config: Annotated[
-        dict, Field(description="Advanced Reducto configuration.")
+        dict[str, Any], Field(description="Advanced Reducto configuration.")
     ] = Field(default={})
 
     start_page: int | None = Field(
@@ -51,7 +51,7 @@ class Sema4aiExtractResponse(BaseModel):
     Response from Reducto ExtractResponse.
     """
 
-    result: Annotated[dict, Field(description="The extracted data.")]
+    result: Annotated[dict[str, Any], Field(description="The extracted data.")]
 
 
 class Sema4aiCreateSchemaRequest(BaseModel):
@@ -77,8 +77,8 @@ class Sema4aiCreateSchemaResponse(BaseModel):
     Response from Sema4ai CreateSchemaResponse.
     """
 
-    schema: Annotated[
-        dict,
+    generated_schema: Annotated[
+        dict[str, Any],
         Field(description="A JSONSchema which describes the given file."),
     ]
 
