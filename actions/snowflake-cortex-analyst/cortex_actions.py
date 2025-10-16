@@ -159,6 +159,7 @@ def ask_cortex_analyst(
                     f"Request used: {model_info}\n"
                     f"Common issues:\n"
                     f"{view_guidance}"
+                    f"  - User's default role does not have permissions to access the schema or stage (Analyst uses Python SDK and REST API calls which means default role is always used)\n"
                     f"  - Semantic model file/view does not exist or is not accessible\n"
                     f"  - Insufficient permissions to access the model\n"
                     f"  - Invalid semantic model specification\n"

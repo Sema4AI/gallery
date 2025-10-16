@@ -5,10 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [2.0.2] - 2025-10-14
+
+### Changed
+- Updated error message to include information about the default role and schema/stage access permissions.
+
 ## [2.0.1] - 2025-10-09
 
 ### Changed
-
 - Cortex Analyst REST API calls now use host with Snowflake account names with hyphens `-` instead of underscores `_`. This solves some of the reported issues with SSL certificates.
 
 ## [2.0.0] - 2025-10-07

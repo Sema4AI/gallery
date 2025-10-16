@@ -1,11 +1,11 @@
 # Required: A short name for the action package
-name: Snowflake Cortex Analyst
+name: Snowflake Dev Utils
 
 # Required: A description of what's in the action package.
-description: Snowflake Cortex reliably answers business questions based on your structured data in Snowflake.
+description: Utilities and helpers for working with Snowflake in Sema4.ai Studio. See the grants, debug errors and more!
 
 # Package version number, recommend using semver.org
-version: 2.0.2
+version: 0.0.1
 
 spec-version: v2
 

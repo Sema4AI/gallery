@@ -1,0 +1,33 @@
+{
+    "inputs": [
+        {
+            "inputName": "input-no-filter",
+            "inputValue": {
+                "warehouse": "COMPUTE_WH"
+            }
+        },
+        {
+            "inputName": "input-with-filter",
+            "inputValue": {
+                "warehouse": "COMPUTE_WH",
+                "database_filter": "oil"
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "get_databases_schemas",
+        "actionRelativePath": "snowflake_actions.py",
+        "schemaDescription": [
+            "database_filter: string: Optional filter to match database names (case-insensitive). \nWill match databases containing this string. \nE.g., \"oil\" matches \"OIL_AND_GAS\", \"oil_data\", \"MY_OIL_DB\""
+        ],
+        "managedParamsSchemaDescription": {
+            "warehouse": {
+                "type": "Secret",
+                "description": "The Snowflake warehouse to use"
+            }
+        },
+        "inputFileVersion": "v3",
+        "kind": "action",
+        "actionSignature": "action/args: 'warehouse: Secret, database_filter: str=None'"
+    }
+}
