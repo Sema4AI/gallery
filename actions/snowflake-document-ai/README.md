@@ -1,13 +1,13 @@
 # Snowflake Document AI
 
-This action package enables you to upload PDF documents to Snowflake and extract their content using [Snowflake Document AI](https://docs.snowflake.com/en/user-guide/snowflake-cortex/document-ai/overview). It uses one-shot parsing with no training required, making it easy to extract structured data from PDFs and image files.
+This action package enables you to upload PDF, DOCX, or PPTX documents to Snowflake and extract their content using [Snowflake Document AI](https://docs.snowflake.com/en/user-guide/snowflake-cortex/document-ai/overview). It uses one-shot parsing with no training required, making it easy to extract structured data from digital documents.
 
 ## What it does
 
 This action package provides two main capabilities:
 
 1. **List Stage Files**: List all files currently stored in a Snowflake stage
-2. **Parse Document**: Upload PDF or image file files and extract their content using AI-powered parsing
+2. **Parse Document**: Upload PDF, DOCX, or PPTX files and extract their content using AI-powered parsing
 
 The parsing uses Snowflake's `AI_PARSE_DOCUMENT` function which can extract text, tables, and other structured content from PDFs in layout-aware mode.
 
@@ -16,7 +16,7 @@ The parsing uses Snowflake's `AI_PARSE_DOCUMENT` function which can extract text
 Before using this action, you need:
 
 1. **Snowflake Account**: An active Snowflake account with Document AI enabled
-2. **Database, Schema, and Stage**: A Snowflake stage configured to store your PDF files
+2. **Database, Schema, and Stage**: A Snowflake stage configured to store your document files
 3. **Authentication**: One of the following authentication methods:
    - Username and password
    - Key pair authentication
@@ -39,7 +39,7 @@ Lists the most recently modified files in a specific Snowflake stage.
 
 ### 2. Parse Document
 
-Uploads a PDF file from chat and parses its content using Snowflake Document AI.
+Uploads a PDF, DOCX, or PPTX file from chat and parses its content using Snowflake Document AI.
 
 **Parameters:**
 - `filename` (string): The name of the file to upload from chat
@@ -91,9 +91,9 @@ Uploads a PDF file from chat and parses its content using Snowflake Document AI.
 
 Details up to date [here](https://docs.snowflake.com/en/user-guide/snowflake-cortex/parse-document#input-requirements).
 
-- File types: PDF, PPTX, DOCX, JPEG, JPG, PNG, TIFF, TIF, HTML, TXT
+- File types: PDF, PPTX, DOCX (images/HTML/TXT are not supported by this action)
 - Maximum file size: 100 MB
 - Maximum number of pages: 500
 - Stage encryption: Server-side encryption
-- Requires Snowflake Document AI to be enabled and set upin your account
+- Requires Snowflake Document AI to be enabled and set up in your account
 - Processing time depends on document complexity and size - timeouts are possible with larger documents
