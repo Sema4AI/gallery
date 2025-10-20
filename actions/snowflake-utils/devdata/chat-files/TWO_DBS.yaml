@@ -1,0 +1,449 @@
+name: TWO_DBS
+description: This is a combo of call center data AND oil and gas data
+tables:
+  - name: CALLS
+    base_table:
+      database: CALL_CENTER_DATA
+      schema: PUBLIC
+      table: CALLS
+    dimensions:
+      - name: AGENT_ID
+        description: Unique identifier for the agent who handled the call.
+        expr: AGENT_ID
+        data_type: VARCHAR(16777216)
+        sample_values:
+          - AGENT_25
+          - AGENT_18
+          - AGENT_29
+      - name: CALL_ID
+        description: Unique identifier for each call made.
+        expr: CALL_ID
+        data_type: VARCHAR(16777216)
+        sample_values:
+          - CALL_3
+          - CALL_130
+          - CALL_41
+      - name: CUSTOMER_ID
+        description: Unique identifier for the customer who made or received the call.
+        expr: CUSTOMER_ID
+        data_type: VARCHAR(16777216)
+        sample_values:
+          - CUST_691
+          - CUST_645
+          - CUST_935
+      - name: ISSUE_TYPE
+        description: The type of issue or problem that the customer is experiencing, categorized as either billing-related, account access-related, or technical in nature.
+        expr: ISSUE_TYPE
+        data_type: VARCHAR(16777216)
+        sample_values:
+          - billing
+          - account_access
+          - technical
+      - name: RESOLVED
+        description: Indicates whether a call has been resolved or not.
+        expr: RESOLVED
+        data_type: BOOLEAN
+        sample_values:
+          - 'FALSE'
+          - 'TRUE'
+      - name: TRANSCRIPT_ID
+        description: Unique identifier for a call transcript.
+        expr: TRANSCRIPT_ID
+        data_type: VARCHAR(16777216)
+        sample_values:
+          - TRANS_92
+          - TRANS_2
+          - TRANS_70
+    time_dimensions:
+      - name: CALL_END
+        description: The date and time when each call ended.
+        expr: CALL_END
+        data_type: TIMESTAMP_NTZ(9)
+        sample_values:
+          - 2025-04-14T22:31:23.139+0000
+          - 2025-02-11T22:27:23.139+0000
+          - 2025-01-01T22:30:23.139+0000
+      - name: CALL_START
+        description: The date and time when each call started.
+        expr: CALL_START
+        data_type: TIMESTAMP_NTZ(9)
+        sample_values:
+          - 2024-12-30T22:13:23.139+0000
+          - 2025-01-21T22:39:23.139+0000
+          - 2024-10-09T23:00:23.139+0000
+    facts:
+      - name: AGENT_RATING
+        description: The rating given by the customer to the agent after the call, on a scale of 1-100, indicating the level of satisfaction with the agent's performance.
+        expr: AGENT_RATING
+        data_type: NUMBER(38,0)
+        sample_values:
+          - '83'
+          - '45'
+          - '65'
+      - name: SATISFACTION_SCORE
+        description: A measure of the customer's satisfaction with the call, on a scale of 1 (low) to 5 (high), with 1 being the lowest and 5 being the highest level of satisfaction.
+        expr: SATISFACTION_SCORE
+        data_type: NUMBER(38,0)
+        sample_values:
+          - '4'
+          - '2'
+          - '1'
+    primary_key:
+      columns:
+        - CALL_ID
+  - name: TRANSCRIPTS
+    base_table:
+      database: CALL_CENTER_DATA
+      schema: PUBLIC
+      table: TRANSCRIPTS
+    dimensions:
+      - name: CALL_ID
+        description: Unique identifier for a phone call.
+        expr: CALL_ID
+        data_type: VARCHAR(16777216)
+        sample_values:
+          - CALL_3
+          - CALL_130
+          - CALL_41
+      - name: SUMMARY
+        description: A brief description of the reason for the customer's interaction, including the type of issue and whether it was resolved.
+        expr: SUMMARY
+        data_type: VARCHAR(16777216)
+        sample_values:
+          - 'Account Access issue, resolved: True'
+          - 'Billing issue, resolved: True'
+          - 'Technical issue, resolved: True'
+      - name: TRANSCRIPT_ID
+        description: Unique identifier for a specific transcript.
+        expr: TRANSCRIPT_ID
+        data_type: VARCHAR(16777216)
+        sample_values:
+          - TRANS_92
+          - TRANS_2
+          - TRANS_70
+      - name: TRANSCRIPT_TEXT
+        description: This column contains the transcripts of customer support calls, detailing the conversations between agents and customers as they work to resolve various issues, including account login problems, technical difficulties with printers, and billing errors.
+        expr: TRANSCRIPT_TEXT
+        data_type: VARCHAR(16777216)
+        sample_values:
+          - |-
+            Agent: Thank you for calling customer support, this is Mike. How can I help you today?
+
+            Customer: Hi, I'm having trouble logging into my account. I keep getting an error message.
+
+            Agent: Alright, what's your account email address?
+
+            Customer: It's sarah.jones84@email.com
+
+            Agent: *typing sounds* And how long have you been experiencing this issue?
+
+            Customer: Since this morning. I've tried at least 5 times but it keeps saying "invalid credentials."
+
+            Agent: Have you tried resetting your password?
+
+            Customer: Yes, but I never receive the reset email.
+
+            Agent: *sighs* Okay, let me check if there's any system issues... Can you verify the last four digits of your phone number?
+
+            Customer: Um, sure. It's 4721.
+
+            Agent: I see the issue. Your account was temporarily locked due to multiple failed login attempts. That's why the reset emails aren't going through.
+
+            Customer: Oh... well how do I fix that?
+
+            Agent: I can unlock it now. Give me a moment.
+
+            Customer: Thank you. This has been really frustrating.
+
+            Agent: I understand. I've unlocked the account. You'll need to create a new password. I'm sending you a reset link now.
+
+            Customer: Okay, but will it actually work this time?
+
+            Agent: Yes, it will. The link should arrive within 2 minutes. Is there anything else?
+
+            Customer: I just got the email. Let me try it... 
+
+            Agent: While you're doing that, remember passwords need to be at least 8 characters with one capital letter and number.
+
+            Customer: Okay, I've reset it. Let me try logging in... Yes! It worked!
+
+            Agent: Great. Is there anything else you need help with today?
+
+            Customer: No, that's all. Thanks for your help.
+
+            Call outcome: Agent successfully unlocked customer's account and helped them reset their password after it was locked due to multiple failed login attempts.
+          - |-
+            Agent: Thank you for calling Tech Support, my name is Sarah. How can I help you today?
+
+            Customer: Hi Sarah, I'm having trouble connecting my new printer to my WiFi network. It just keeps blinking orange and won't connect.
+
+            Agent: I understand how frustrating that can be. I'll help you get this sorted out. Can you tell me the model of your printer?
+
+            Customer: It's an HP OfficeJet Pro 9015.
+
+            Agent: Thank you. And is this the first time you're setting up this printer, or did it work before?
+
+            Customer: It's brand new, just took it out of the box an hour ago.
+
+            Agent: Got it. First, let's make sure the printer is in setup mode. Can you press and hold the Wireless button on the control panel until you see the blue light flash?
+
+            Customer: Um, okay... doing that now... yes, the blue light is flashing.
+
+            Agent: Perfect. Now, on your computer, can you open your WiFi settings and tell me if you see a network that starts with "HP-Setup" followed by some numbers?
+
+            Customer: I don't see anything like that. Should I wait longer?
+
+            Agent: Let's try resetting the wireless connection completely. Press both the Wireless button and the Cancel button together for 5 seconds, then release.
+
+            Customer: Okay, done. Oh wait - now I see the HP-Setup network!
+
+            Agent: Excellent! Please connect your computer to that network temporarily.
+
+            Customer: Connected. Now what?
+
+            Agent: Now open your web browser and type "123.hp.com" in the address bar. The setup wizard should automatically detect your printer.
+
+            Customer: Yes, I see it! It's asking for my WiFi password now.
+
+            Agent: Perfect! Go ahead and enter your regular WiFi network password. This will allow the printer to connect to your home network.
+
+            Customer: Okay, done... it's processing... Oh! The orange light just turned solid blue!
+
+            Agent: That's exactly what we want to see! The blue light means it's successfully connected to your network. Can you try printing a test page for me?
+
+            Customer: Yes, sending one now... It worked! It's printing!
+
+            Agent: I'm so glad we got that resolved for you! Is there anything else you need help with today?
+
+            Customer: No, that's perfect. Thank you so much for your patience.
+
+            Agent: You're very welcome! Have a great rest of your day!
+
+            Call outcome: The customer's new HP printer was successfully connected to their WiFi network after following the agent's troubleshooting steps, and a test page was printed to confirm the setup.
+          - |-
+            Agent: Thank you for calling customer service, this is Mike. How can I help you today?
+
+            Customer: Hi, I'm calling about my bill - I think there's been a mistake. I'm being charged twice for the same service.
+
+            Agent: Alright, I'll need your account number to look into that.
+
+            Customer: Um, let me find it... okay, it's 847392.
+
+            Agent: *typing sounds* And can I get the name on the account?
+
+            Customer: Sarah Martinez.
+
+            Agent: *sighs* I'm seeing multiple charges here but they're actually for different billing cycles, Ms. Martinez.
+
+            Customer: No, that can't be right. I'm looking at my bill right now and there are two identical charges for $49.99 on the same day.
+
+            Agent: Let me check again... *brief pause* Which date are you referring to?
+
+            Customer: March 15th. There are two separate charges.
+
+            Agent: Okay, I see what you're talking about now. Give me a moment to investigate this.
+
+            Customer: Thank you. I've been a customer for three years and this is the first time this has happened.
+
+            Agent: Right, I can see the duplicate charge now. It looks like there was a system error during processing.
+
+            Customer: So can you refund the extra charge?
+
+            Agent: Yes, I'm processing that refund now. It should appear on your account in 3-5 business days.
+
+            Customer: That long? I was hoping to get it back sooner...
+
+            Agent: Unfortunately, that's our standard refund processing time. There's nothing I can do to speed it up.
+
+            Customer: Well, okay. Is there anything else I need to do?
+
+            Agent: No, it's all taken care of on our end. The refund of $49.99 will process automatically.
+
+            Customer: And this won't happen again next month?
+
+            Agent: No, I've made a note on your account and fixed the billing error. You'll only see one charge going forward.
+
+            Customer: Alright, thank you for your help.
+
+            Agent: Is there anything else you need assistance with today?
+
+            Call outcome: The billing issue was resolved with a refund being processed for the duplicate charge of $49.99, to be received by the customer within 3-5 business days.
+    primary_key:
+      columns:
+        - TRANSCRIPT_ID
+  - name: PRODUCTION_REPORTS
+    base_table:
+      database: OIL_AND_GAS
+      schema: PUBLIC
+      table: PRODUCTION_REPORTS
+    dimensions:
+      - name: COMPANY
+        description: The COMPANY column represents the name of the oil and gas company responsible for the production reported in the PRODUCTION_REPORTS table.
+        expr: COMPANY
+        data_type: VARCHAR(16777216)
+        sample_values:
+          - HUNT OIL COMPANY
+          - MUREX PETROLEUM CORPORATION
+          - EOG RESOURCES, INC.
+      - name: COUNTY
+        description: The county where the production activity took place.
+        expr: COUNTY
+        data_type: VARCHAR(16777216)
+        sample_values:
+          - MTL
+          - DIV
+          - MCK
+      - name: FIELDNAME
+        description: Field Name represents the name of the oil or gas field where production is being reported.
+        expr: FIELDNAME
+        data_type: VARCHAR(16777216)
+        sample_values:
+          - ALEXANDER
+          - ALEXANDRIA
+          - ALGER
+      - name: POOL
+        description: The POOL column represents the specific geographic area or field where oil or gas production is taking place, allowing for tracking and analysis of production levels by distinct regions or pools.
+        expr: POOL
+        data_type: VARCHAR(16777216)
+        sample_values:
+          - SANISH
+          - DUPEROW
+          - RED RIVER
+      - name: QUARTER
+        description: 'The geographic area where the production activity took place, categorized into one of three regions: Northeast (NENW), Southeast/Southwest (SESW), or Lot 1 (LOT1).'
+        expr: QUARTER
+        data_type: VARCHAR(16777216)
+        sample_values:
+          - NENW
+          - SESW
+          - LOT1
+      - name: WELLNAME
+        description: The name of the well that produced the oil or gas, as identified by a unique combination of well name and number.
+        expr: WELLNAME
+        data_type: VARCHAR(16777216)
+        sample_values:
+          - BILL 14-23 6H
+          - ROSS  29-1716H
+          - GARY LEE 31-30H
+    time_dimensions:
+      - name: REPORTDATE
+        description: Date when the production report was generated.
+        expr: REPORTDATE
+        data_type: DATE
+        sample_values:
+          - '2024-08-01'
+          - '2024-09-01'
+          - '2024-07-01'
+    facts:
+      - name: API_WELLNO
+        description: Unique identifier for the well in the American Petroleum Institute (API) format, used to track and report production data for a specific well.
+        expr: API_WELLNO
+        data_type: NUMBER(38,0)
+        sample_values:
+          - '33061021990000'
+          - '33053039010000'
+          - '33053048330000'
+      - name: DAYS
+        description: Number of days required to complete a production task or project.
+        expr: DAYS
+        data_type: NUMBER(38,0)
+        sample_values:
+          - '23'
+          - '31'
+          - '15'
+      - name: FILENO
+        description: Unique identifier for a production report.
+        expr: FILENO
+        data_type: NUMBER(38,0)
+        sample_values:
+          - '22526'
+          - '29489'
+          - '19854'
+      - name: FLARED
+        description: The amount of gas flared during production, measured in million cubic feet.
+        expr: FLARED
+        data_type: NUMBER(38,0)
+        sample_values:
+          - '68'
+          - '42'
+          - '57'
+      - name: GAS
+        description: The total amount of gas produced, measured in units.
+        expr: GAS
+        data_type: NUMBER(38,0)
+        sample_values:
+          - '877'
+          - '676'
+          - '12'
+      - name: GASSOLD
+        description: The total amount of gas sold, measured in units such as cubic meters or therms, as reported in the production reports.
+        expr: GASSOLD
+        data_type: NUMBER(38,0)
+        sample_values:
+          - '658'
+          - '7311'
+          - '4504'
+      - name: LAT
+        description: Latitude of the production location.
+        expr: LAT
+        data_type: NUMBER(38,8)
+        sample_values:
+          - '48.71892459'
+          - '48.22512344'
+          - '48.22679834'
+      - name: LONG
+        description: This column appears to represent a measure of production or performance, with negative values indicating a decrease or loss. The values are likely a percentage change or a ratio, given the decimal format and the presence of negative numbers.
+        expr: LONG
+        data_type: NUMBER(38,8)
+        sample_values:
+          - '-102.52489871'
+          - '-102.61102412'
+          - '-103.55169875'
+      - name: OIL
+        description: The total amount of oil produced, measured in units such as barrels or tons, as recorded in the production reports.
+        expr: OIL
+        data_type: NUMBER(38,0)
+        sample_values:
+          - '1146'
+          - '1272'
+          - '530'
+      - name: RANGE
+        description: The percentage of production that falls within the acceptable range of quality standards.
+        expr: RANGE
+        data_type: NUMBER(38,0)
+        sample_values:
+          - '101'
+          - '92'
+          - '100'
+      - name: RUNS
+        description: The number of production runs completed.
+        expr: RUNS
+        data_type: NUMBER(38,0)
+        sample_values:
+          - '6373'
+          - '700'
+          - '495'
+      - name: SECTION
+        description: The SECTION column represents the different sections or departments within the production process, allowing for the tracking and analysis of production metrics by specific area of the operation.
+        expr: SECTION
+        data_type: NUMBER(38,0)
+        sample_values:
+          - '17'
+          - '14'
+          - '11'
+      - name: TOWNSHIP
+        description: A unique identifier for a geographic area within a county or region, used to organize and report production data.
+        expr: TOWNSHIP
+        data_type: NUMBER(38,0)
+        sample_values:
+          - '160'
+          - '161'
+          - '151'
+      - name: WTR
+        description: Total Water Throughput (in thousands of gallons)
+        expr: WTR
+        data_type: NUMBER(38,0)
+        sample_values:
+          - '1736'
+          - '759'
+          - '1799'
