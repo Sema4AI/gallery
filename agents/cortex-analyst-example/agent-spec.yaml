@@ -30,4 +30,4 @@ agent-package:
   - ./**/.env
   - ./**/.DS_Store
   - ./**/*.pyc
-  - ./*.zi
+  - ./*.zip
