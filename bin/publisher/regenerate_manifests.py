@@ -32,7 +32,7 @@ def regenerate_manifests():
     # Check if S3 content exists
     if not os.path.exists(s3_actions_folder):
         print(f"Error: S3 actions folder not found at {s3_actions_folder}")
-        print("Please run: aws s3 cp s3://downloads.robocorp.com/gallery/actions/ ./s3-actions/ --recursive --profile cicd")
+        print("Please follow the instructions in s3/README.md to download the S3 content first.")
         return
 
     # Clear existing folders (but keep temp-gallery if it exists and has content)
