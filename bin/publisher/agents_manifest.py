@@ -283,7 +283,7 @@ def get_whitelist_entry(kebab_case_agent_name: str, whitelist: list[AgentsWhitel
 
 def save_manifest(manifest: AgentsManifest, file_path: str) -> None:
     with open(file_path, "w") as file:
-        json.dump(manifest, file, indent=2)
+        json.dump(manifest, file)
 
 
 def is_agent_published(published_manifest: AgentsManifest, agent_name: str, version: str) -> bool:

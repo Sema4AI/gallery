@@ -35,6 +35,9 @@ def extract_single_zip(zip_path: str, gallery_actions_folder: str, rcc_path: str
         metadata_src = os.path.join(versioned_extract_path, "__action_server_metadata__.json")
         metadata_dst = os.path.join(versioned_extract_path, "metadata.json")
         if os.path.exists(metadata_src):
+            # Remove existing metadata.json if it exists to avoid rename conflict
+            if os.path.exists(metadata_dst):
+                os.remove(metadata_dst)
             os.rename(metadata_src, metadata_dst)
 
         # Copy the zip file to the versioned target folder

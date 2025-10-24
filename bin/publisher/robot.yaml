@@ -2,11 +2,11 @@
 # https://github.com/robocorp/rcc/blob/master/docs/recipes.md#what-is-in-robotyaml
 
 tasks:
-  Build all packages:
-    shell: python -m robocorp.tasks run build_all_packages.py
-
   Build updated packages:
     shell: python -m robocorp.tasks run build_updated_packages.py
+  
+  Regen actions manifests:
+    shell: python -m robocorp.tasks run regenerate_manifests.py
 
   Build updated agents:
     shell: python -m robocorp.tasks run build_updated_agents.py

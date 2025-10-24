@@ -239,7 +239,7 @@ def save_manifest(
             del whitelist_manifest["packages"][action_name]
 
     with open(file_path, "w") as file:
-        json.dump(whitelist_manifest, file, indent=2)
+        json.dump(whitelist_manifest, file)
 
 
 def generate_actions_manifest_for_spcs(gallery_actions_folder: str) -> ActionsManifest:
