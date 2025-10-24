@@ -242,9 +242,9 @@ def save_manifest(
         json.dump(whitelist_manifest, file, indent=2)
 
 
-def generate_actions_manifest_for_sai(gallery_actions_folder: str) -> ActionsManifest:
+def generate_actions_manifest_for_spcs(gallery_actions_folder: str) -> ActionsManifest:
     """
-    Generates a simplified manifest file for SAI, excluding certain fields.
+    Generates a simplified manifest file for SPCS, excluding certain fields.
 
     Parameters:
         gallery_actions_folder (str): The path to the folder containing prepared gallery action packages.
