@@ -4,7 +4,6 @@ import shutil
 
 from actions_manifest import (
     generate_actions_manifest,
-    generate_actions_manifest_for_spcs,
     save_manifest,
 )
 from extractor import extract_all
@@ -183,14 +182,11 @@ def regenerate_manifests():
     package_versions = _reorganize_extracted_files(temp_gallery_folder, reorganized_folder)
     print(f"Reorganized {len(package_versions)} packages with versions")
 
-    # Generate manifests from reorganized folder
-    print("Generating standard manifest...")
+    # Generate manifest from reorganized folder (same format for both)
+    print("Generating manifest...")
     manifest = generate_actions_manifest(reorganized_folder, base_url)
 
-    print("Generating SPCS manifest...")
-    spcs_manifest = generate_actions_manifest_for_spcs(reorganized_folder)
-
-    # Save manifests
+    # Save manifests with different whitelists
     print("Saving manifests...")
     save_manifest(
         manifest,
@@ -199,14 +195,13 @@ def regenerate_manifests():
     )
 
     save_manifest(
-        spcs_manifest,
+        manifest,
         os.path.join(gallery_actions_folder, "manifest_spcs.json"),
         whitelist["spcs"],
     )
 
-    print(f"Manifests regenerated successfully!")
-    print(f"Standard manifest: {len(manifest['packages'])} packages")
-    print(f"SPCS manifest: {len(spcs_manifest['packages'])} packages")
+    print("Manifests regenerated successfully!")
+    print(f"Manifest: {len(manifest['packages'])} packages before filtering")
 
     # Print version counts for Snowflake packages
     snowflake_packages = [
@@ -215,13 +210,13 @@ def regenerate_manifests():
         "Snowflake Data",
     ]
     for package_name in snowflake_packages:
-        if package_name in spcs_manifest["packages"]:
+        if package_name in manifest["packages"]:
             version_count = len(
-                spcs_manifest["packages"][package_name].get("versions", [])
+                manifest["packages"][package_name].get("versions", [])
             )
             print(f"{package_name}: {version_count} versions")
         else:
-            print(f"{package_name}: NOT FOUND in SPCS manifest")
+            print(f"{package_name}: NOT FOUND in manifest")
 
     # Keep temporary folder for future runs (since S3 packages are immutable)
     print("Keeping extracted packages for future runs...")
