@@ -1,5 +1,6 @@
 import json
 import os
+import re
 import shutil
 
 from actions_manifest import (
@@ -18,12 +19,16 @@ def _parse_package_version(extracted_dir: str) -> tuple[str, str] | None:
     if len(parts) < 2:
         return None
     
-    # Find the last part that looks like a version (contains dots)
-    for i, part in enumerate(parts):
-        if "." in part and part.replace(".", "").isdigit():
+    # Regex pattern for semantic version: digits.digits.digits (with optional extras)
+    version_pattern = re.compile(r"^\d+(\.\d+)+(-[\w.]+)?$")
+    
+    # Look from the end backwards to find where the version starts
+    for i in range(len(parts) - 1, 0, -1):
+        version_candidate = "-".join(parts[i:])
+        if version_pattern.match(version_candidate):
             package_name = "-".join(parts[:i])
-            version = part
-            return package_name, version
+            if package_name:  # Ensure we have a valid package name
+                return package_name, version_candidate
     
     return None
 
@@ -55,26 +60,35 @@ def _reorganize_extracted_files(temp_gallery_folder: str, reorganized_folder: st
             version_folder = os.path.join(package_folder, version)
             os.makedirs(version_folder, exist_ok=True)
             
-            # Copy contents, handling nested directory structure
-            for item in os.listdir(source_path):
-                item_path = os.path.join(source_path, item)
-                if os.path.isdir(item_path):
-                    # Check if this directory contains the actual package files
-                    if any(f.endswith(".yaml") or f.endswith(".json") for f in os.listdir(item_path)):
-                        # Copy contents of nested directory
-                        for nested_item in os.listdir(item_path):
-                            nested_item_path = os.path.join(item_path, nested_item)
-                            nested_dest = os.path.join(version_folder, nested_item)
-                            if os.path.isdir(nested_item_path):
-                                shutil.copytree(nested_item_path, nested_dest)
-                            else:
-                                shutil.copy2(nested_item_path, nested_dest)
+            # Check if there's a subdirectory containing package files
+            package_subdir = None
+            for item_name in os.listdir(source_path):
+                item_path = os.path.join(source_path, item_name)
+                if os.path.isdir(item_path) and any(
+                    f.endswith(".yaml") or f.endswith(".json")
+                    for f in os.listdir(item_path)
+                ):
+                    package_subdir = item_path
+                    break
+            
+            # Copy files using os.walk
+            for root, dirs, files in os.walk(source_path):
+                for file_name in files:
+                    src_file = os.path.join(root, file_name)
+                    
+                    # If this file is inside the package subdirectory, copy directly to version_folder
+                    if package_subdir and root.startswith(package_subdir):
+                        rel_dir = os.path.relpath(root, package_subdir)
                     else:
-                        # Regular directory, copy as is
-                        shutil.copytree(item_path, os.path.join(version_folder, item))
-                else:
-                    # Regular file, copy directly
-                    shutil.copy2(item_path, os.path.join(version_folder, item))
+                        rel_dir = os.path.relpath(root, source_path)
+                    
+                    if rel_dir == ".":
+                        dst_file = os.path.join(version_folder, file_name)
+                    else:
+                        dst_file = os.path.join(version_folder, rel_dir, file_name)
+                        os.makedirs(os.path.dirname(dst_file), exist_ok=True)
+                    
+                    shutil.copy2(src_file, dst_file)
             
             print(f"  Reorganized: {package_name}/{version}")
     
@@ -116,7 +130,7 @@ def regenerate_manifests():
         clear_folders(temp_gallery_folder)
 
     # Load whitelist first to know which packages to process
-    with open("action_packages_whitelist.json", "r") as f:
+    with open("action_packages_whitelist.json", "r", encoding='utf-8') as f:
         whitelist = json.load(f)
 
     # Combine both standard and spcs whitelists to get all packages we care about
@@ -135,7 +149,7 @@ def regenerate_manifests():
             item_path = os.path.join(s3_actions_folder, item)
 
             # Skip manifest files
-            if item.endswith(".json"):
+            if "manifest" in item.lower() and item.endswith(".json"):
                 continue
 
             # Only process whitelisted packages

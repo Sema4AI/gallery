@@ -138,7 +138,7 @@ def get_actions_info(metadata_path: str) -> list[ActionInfo]:
     actions_info: list[ActionInfo] = []
 
     if os.path.exists(metadata_path):
-        with open(metadata_path, "r") as file:
+        with open(metadata_path, "r", encoding='utf-8') as file:
             metadata = json.load(file)
             openapi_section = metadata.get("openapi.json", {})
             paths = openapi_section.get("paths", {})
@@ -163,7 +163,7 @@ def get_detailed_actions_info(metadata_path: str) -> list[ActionMethodInfo]:
     actions_info: list[ActionMethodInfo] = []
 
     if os.path.exists(metadata_path):
-        with open(metadata_path, "r") as file:
+        with open(metadata_path, "r", encoding='utf-8') as file:
             metadata = json.load(file)
             openapi_section = metadata.get("openapi.json", {})
             paths = openapi_section.get("paths", {})
@@ -238,7 +238,7 @@ def save_manifest(
         if action_name.lower().replace(" ", "-") not in whitelist:
             del whitelist_manifest["packages"][action_name]
 
-    with open(file_path, "w") as file:
+    with open(file_path, "w", encoding='utf-8', newline='\n') as file:
         json.dump(whitelist_manifest, file)
 
 

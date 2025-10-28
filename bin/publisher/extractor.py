@@ -45,7 +45,7 @@ def extract_single_zip(zip_path: str, gallery_actions_folder: str, rcc_path: str
 
         # Calculate the hash of the zip file and save it to package.hash
         zip_hash = sha256(zip_path)
-        with open(os.path.join(versioned_extract_path, "package.hash"), 'w') as hash_file:
+        with open(os.path.join(versioned_extract_path, "package.hash"), 'w', encoding='utf-8', newline='\n') as hash_file:
             hash_file.write(zip_hash)
 
         # If package.yaml was extracted, run RCC command on it

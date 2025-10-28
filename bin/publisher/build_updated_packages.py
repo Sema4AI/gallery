@@ -99,7 +99,7 @@ def build_updated_packages():
     )
     new_manifest_spcs["organization"] = "Sema4.ai"
     
-    with open("action_packages_whitelist.json", "r") as f:
+    with open("action_packages_whitelist.json", "r", encoding='utf-8') as f:
         whitelist = json.load(f)
 
     save_manifest(

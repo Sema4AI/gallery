@@ -35,7 +35,7 @@ def build_all_packages():
     manifest = generate_actions_manifest(gallery_actions_folder, base_url)
     spcs_manifest = generate_actions_manifest_for_spcs(gallery_actions_folder)
 
-    with open("action_packages_whitelist.json", "r") as f:
+    with open("action_packages_whitelist.json", "r", encoding='utf-8') as f:
         import json
         whitelist = json.load(f)
 
