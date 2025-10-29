@@ -2,7 +2,7 @@ import os
 
 from actions_manifest import (
     generate_actions_manifest,
-    generate_actions_manifest_for_sai,
+    generate_actions_manifest_for_spcs,
     save_manifest,
 )
 from extractor import extract_all
@@ -33,19 +33,16 @@ def build_all_packages():
     extract_all(zips_folder, gallery_actions_folder, rcc_path)
 
     manifest = generate_actions_manifest(gallery_actions_folder, base_url)
-    sai_manifest = generate_actions_manifest_for_sai(gallery_actions_folder)
+    spcs_manifest = generate_actions_manifest_for_spcs(gallery_actions_folder)
 
-    with open("action_packages_whitelist.json", "r") as f:
+    with open("action_packages_whitelist.json", "r", encoding='utf-8') as f:
         import json
         whitelist = json.load(f)
 
     # Write manifest to file
     save_manifest(manifest, os.path.join(gallery_actions_folder, "manifest.json"), whitelist["standard"])
     save_manifest(
-        sai_manifest, os.path.join(gallery_actions_folder, "manifest_sai.json"), whitelist["standard"]
-    )
-    save_manifest(
-        sai_manifest, os.path.join(gallery_actions_folder, "manifest_sai_spcs.json"), whitelist["spcs"]
+        spcs_manifest, os.path.join(gallery_actions_folder, "manifest_spcs.json"), whitelist["spcs"]
     )
 
     print(f"\n\n-> Gallery generated in: {gallery_actions_folder}")
