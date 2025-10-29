@@ -63,6 +63,16 @@ def parse_semantic_model_input(input_value: str) -> tuple[str, str | list[str]]:
         else:
             return 'semantic_views', entries
 
+def _extract_session_token(connection) -> str | None:
+    """Retrieve the primary REST token from a Snowpark session."""
+    rest_connection = getattr(connection, "rest", None)
+    if rest_connection is None:
+        raise ValueError("No REST connection found for Cortex runtime session")
+    token = getattr(rest_connection, "token", None)
+    if token:
+        return token
+    return None
+
 
 @action
 def ask_cortex_analyst(
@@ -110,16 +120,18 @@ def ask_cortex_analyst(
                 with open("/snowflake/session/token", "r") as f:
                     token = f.read().strip()
                 token_type = "OAUTH"
+                headers = {
+                    "Authorization": f"Bearer {token}",
+                    "X-Snowflake-Authorization-Token-Type": token_type,
+                    "Content-Type": "application/json",
+                }
             else:
                 base_url = f"https://{conn.account.replace('_', '-')}.snowflakecomputing.com/api/v2/cortex/analyst/message"
-                token_type = "KEYPAIR_JWT"
-                token = conn.auth_class._jwt_token
-
-            headers = {
-                "Authorization": f"Bearer {token}",
-                "X-Snowflake-Authorization-Token-Type": token_type,
-                "Content-Type": "application/json",
-            }
+                token =_extract_session_token(conn)
+                headers = {
+                    "Authorization": f'Snowflake Token="{token}"',
+                    "Content-Type": "application/json",
+                }
             
             try:
                 response = requests.post(
