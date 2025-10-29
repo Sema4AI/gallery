@@ -33,7 +33,7 @@ def calculate_file_hash(filepath: str) -> str:
 
 
 def log_error(error_message: str, sub_folder_path: str = None) -> None:
-    with open("log.txt", "a") as log_file:
+    with open("log.txt", "a", encoding='utf-8', newline='\n') as log_file:
         message = f"Error in folder {sub_folder_path}: " if sub_folder_path else ""
         message += f"{error_message}\n"
 
@@ -41,17 +41,17 @@ def log_error(error_message: str, sub_folder_path: str = None) -> None:
 
 
 def read_file_contents(file_path: str) -> str:
-    with open(file_path, "r") as file:
+    with open(file_path, "r", encoding='utf-8') as file:
         return file.read().strip()
 
 
 def read_json_file(file_path: str) -> dict[str, Any]:
-    with open(file_path, "r") as file:
+    with open(file_path, "r", encoding='utf-8') as file:
         return json.load(file)
 
 
 def read_yaml_file(file_path: str) -> dict[str, Any]:
-    with open(file_path, "r") as file:
+    with open(file_path, "r", encoding='utf-8') as file:
         return yaml.safe_load(file)
 
 

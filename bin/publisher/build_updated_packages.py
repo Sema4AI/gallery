@@ -3,7 +3,6 @@ import os
 
 from actions_manifest import (
     generate_actions_manifest,
-    generate_actions_manifest_for_sai,
     generate_consolidated_manifest,
     save_manifest,
 )
@@ -32,27 +31,27 @@ base_url = "https://cdn.sema4.ai/gallery/actions/"
 def build_updated_packages():
     working_dir = get_working_dir()
     published_manifest_path = os.path.join(working_dir, "published_manifest.json")
-    published_manifest_sai_path = os.path.join(working_dir, "published_manifest_sai.json")
+    published_manifest_spcs_path = os.path.join(working_dir, "published_manifest_spcs.json")
 
     download_file(
         "https://cdn.sema4.ai/gallery/actions/manifest.json", published_manifest_path
     )
     download_file(
-        "https://cdn.sema4.ai/gallery/actions/manifest_sai.json", published_manifest_sai_path
+        "https://cdn.sema4.ai/gallery/actions/manifest_spcs.json", published_manifest_spcs_path
     )
 
     published_manifest: ActionsManifest
-    published_manifest_sai: ActionsManifest
+    published_manifest_spcs: ActionsManifest
 
     try:
         published_manifest = read_json_file(published_manifest_path)
-        published_manifest_sai = read_json_file(published_manifest_sai_path)
+        published_manifest_spcs = read_json_file(published_manifest_spcs_path)
     except Exception:
         log_error("Reading published manifest(s) failed, exiting...")
         return
 
     # Check both manifests
-    if is_manifest_empty(published_manifest) or is_manifest_empty(published_manifest_sai):
+    if is_manifest_empty(published_manifest) or is_manifest_empty(published_manifest_spcs):
         log_error("No published manifest available, exiting...")
         return
 
@@ -87,8 +86,6 @@ def build_updated_packages():
     # one later on in the pipeline.
     update_manifest = generate_actions_manifest(gallery_actions_folder, base_url)
 
-    update_manifest_for_sai = generate_actions_manifest_for_sai(gallery_actions_folder)
-
     # We consolidate existing manifest with the updates, getting a manifest including updated packages.
     new_manifest: ActionsManifest = generate_consolidated_manifest(
         published_manifest, update_manifest
@@ -96,13 +93,13 @@ def build_updated_packages():
 
     new_manifest["organization"] = "Sema4.ai"
 
-    # Create consolidated SAI manifest using the published SAI manifest
-    new_manifest_sai: ActionsManifest = generate_consolidated_manifest(
-        published_manifest_sai, update_manifest_for_sai
+    # Create consolidated SPCS manifest using the published SPCS manifest as base
+    new_manifest_spcs: ActionsManifest = generate_consolidated_manifest(
+        published_manifest_spcs, update_manifest
     )
-    new_manifest_sai["organization"] = "Sema4.ai"
-
-    with open("action_packages_whitelist.json", "r") as f:
+    new_manifest_spcs["organization"] = "Sema4.ai"
+    
+    with open("action_packages_whitelist.json", "r", encoding='utf-8') as f:
         whitelist = json.load(f)
 
     save_manifest(
@@ -112,20 +109,8 @@ def build_updated_packages():
     )
 
     save_manifest(
-        new_manifest_sai,
-        os.path.join(gallery_actions_folder, "manifest_sai.json"),
-        whitelist["standard"],
-    )
-
-    save_manifest(
-        new_manifest,
+        new_manifest_spcs,
         os.path.join(gallery_actions_folder, "manifest_spcs.json"),
-        whitelist["spcs"],
-    )
-
-    save_manifest(
-        new_manifest_sai,
-        os.path.join(gallery_actions_folder, "manifest_sai_spcs.json"),
         whitelist["spcs"],
     )
 

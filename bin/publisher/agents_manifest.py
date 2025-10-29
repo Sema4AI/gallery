@@ -124,7 +124,7 @@ def generate_agents_manifest(
         if not whitelist_entry or is_agent_published(published_manifest, agent_name, agent_version):
             continue
 
-        with open(os.path.join(agent_folder, "runbook.md")) as file:
+        with open(os.path.join(agent_folder, "runbook.md"), encoding='utf-8') as file:
             runbook_content = file.read()
 
         # Build the agent package
@@ -282,8 +282,8 @@ def get_whitelist_entry(kebab_case_agent_name: str, whitelist: list[AgentsWhitel
     return next((entry for entry in whitelist if entry["name"] == kebab_case_agent_name), None)
 
 def save_manifest(manifest: AgentsManifest, file_path: str) -> None:
-    with open(file_path, "w") as file:
-        json.dump(manifest, file, indent=2)
+    with open(file_path, "w", encoding='utf-8', newline='\n') as file:
+        json.dump(manifest, file)
 
 
 def is_agent_published(published_manifest: AgentsManifest, agent_name: str, version: str) -> bool:
