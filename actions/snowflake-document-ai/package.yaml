@@ -13,21 +13,21 @@ spec-version: v2
 
 dependencies:
   conda-forge:
-  - python=3.11.14
-  - uv=0.8.17
+    - python=3.11.14
+    - uv=0.8.17
   pypi:
-  - sema4ai-actions=1.5.0
-  - sema4ai-data=1.1.0
-  - snowflake-connector-python[pandas]=3.18.0
-  - snowflake=1.8.0
-  - pyjwt=2.10.1
+    - sema4ai-actions=1.5.0
+    - sema4ai-data=1.1.0
+    - snowflake-connector-python[pandas]=3.18.0
+    - snowflake=1.8.0
+    - pyjwt=2.10.1
 
 dev-dependencies:
   conda-forge:
-  - pytest=8.4.1
-  - types-requests=2.32.4.20250611
-  - ruff=0.12.8
-  - mypy=1.17.1
+    - pytest=8.4.1
+    - types-requests=2.32.4.20250611
+    - ruff=0.12.8
+    - mypy=1.17.1
 
 dev-tasks:
   test: pytest tests
@@ -42,17 +42,17 @@ packaging:
   # By default, all files and folders in this directory are packaged when uploaded.
   # Add exclusion rules below (expects glob format: https://docs.python.org/3/library/glob.html)
   exclude:
-  - ./.git/**
-  - ./.vscode/**
-  - ./devdata/**
-  - ./output/**
-  - ./venv/**
-  - ./.venv/**
-  - ./.DS_store/**
-  - ./**/*.pyc
-  - ./**/*.zip
-  - ./**/.env
-  - ./**/__MACOSX
-  - ./**/__pycache__
-  - ./**/.git
-  - ./node_modules/**
+    - ./.git/**
+    - ./.vscode/**
+    - ./devdata/**
+    - ./output/**
+    - ./venv/**
+    - ./.venv/**
+    - ./.DS_store/**
+    - ./**/*.pyc
+    - ./**/*.zip
+    - ./**/.env
+    - ./**/__MACOSX
+    - ./**/__pycache__
+    - ./**/.git
+    - ./node_modules/**
