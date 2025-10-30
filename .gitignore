@@ -18,3 +18,4 @@ published_agents_manifest_spcs_v2.json
 published_agents_manifest_v2.json
 **/.DS_STORE
 !runbooks/manifest.json
+.beads/
