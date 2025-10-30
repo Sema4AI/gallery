@@ -5,7 +5,7 @@ from decimal import Decimal
 from contextlib import closing
 
 from sema4ai.actions import ActionError, Response, Secret, action, Table, chat
-from utils import execute_query, get_snowflake_connection
+from sema4ai.data import get_snowflake_connection, execute_snowflake_query
 
 
 def serialize_value(value):
@@ -1166,7 +1166,7 @@ def snowflake_execute_query(
     """
 
     try:
-        result = execute_query(
+        result = execute_snowflake_query(
             query=query,
             warehouse=warehouse.value,
             numeric_args=numeric_args,
@@ -1185,7 +1185,7 @@ def snowflake_execute_query(
             return Response(result=Table(columns=[], rows=[]))
     
     except ValueError as e:
-        # Convert ValueError (from utils.py) to ActionError for proper error reporting
+        # Convert ValueError to ActionError for proper error reporting
         raise ActionError(str(e)) from e
     except Exception as e:
         # Catch any other unexpected errors
