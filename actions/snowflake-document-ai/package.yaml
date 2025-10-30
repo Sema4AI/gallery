@@ -7,7 +7,7 @@ name: Snowflake Document AI
 description: Upload PDF files to Snowflake and read their content with one-shot parse. No training required.
 
 # Package version number, recommend using semver.org
-version: 0.0.2
+version: 0.0.3
 
 spec-version: v2
 
@@ -16,18 +16,16 @@ dependencies:
     - python=3.11.14
     - uv=0.8.17
   pypi:
-    - sema4ai-actions=1.5.0
-    - sema4ai-data=1.1.0
-    - snowflake-connector-python[pandas]=3.18.0
+    - sema4ai-actions=1.6.1
+    - sema4ai-data=1.2.1
     - snowflake=1.8.0
-    - pyjwt=2.10.1
 
 dev-dependencies:
   conda-forge:
-    - pytest=8.4.1
-    - types-requests=2.32.4.20250611
-    - ruff=0.12.8
-    - mypy=1.17.1
+    - pytest=8.4.2
+    - types-requests=2.32.4.20250913
+    - ruff=0.14.2
+    - mypy=1.18.2
 
 dev-tasks:
   test: pytest tests
