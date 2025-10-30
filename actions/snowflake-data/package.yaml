@@ -17,7 +17,7 @@ dependencies:
     - uv=0.8.17
   pypi:
     - sema4ai-actions=1.6.1
-    - sema4ai-data=1.2.0
+    - sema4ai-data=1.2.1
     - pandas=2.3.3
 
 packaging:
