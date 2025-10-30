@@ -1,8 +1,10 @@
-import os
-
 import requests
 from sema4ai.actions import ActionError, Response, Secret, action
-from utils import get_snowflake_connection, is_running_in_spcs
+from sema4ai.data import (
+    get_snowflake_connection,
+    get_snowflake_cortex_api_base_url,
+    get_snowflake_rest_api_headers
+)
 
 
 def parse_semantic_model_input(input_value: str) -> tuple[str, str | list[str]]:
@@ -63,15 +65,6 @@ def parse_semantic_model_input(input_value: str) -> tuple[str, str | list[str]]:
         else:
             return 'semantic_views', entries
 
-def _extract_session_token(connection) -> str | None:
-    """Retrieve the primary REST token from a Snowpark session."""
-    rest_connection = getattr(connection, "rest", None)
-    if rest_connection is None:
-        raise ValueError("No REST connection found for Cortex runtime session")
-    token = getattr(rest_connection, "token", None)
-    if token:
-        return token
-    return None
 
 
 @action
@@ -107,31 +100,9 @@ def ask_cortex_analyst(
                 field_name: field_value,
             }
 
-            if is_running_in_spcs():
-                snowflake_account = os.getenv("SNOWFLAKE_ACCOUNT")
-                snowflake_host = os.getenv("SNOWFLAKE_HOST")
-
-                if snowflake_host.startswith("snowflake."):
-                    snowflake_host = snowflake_host.replace(
-                        "snowflake", snowflake_account.lower().replace("_", "-"), 1
-                    )
-
-                base_url = f"https://{snowflake_host}/api/v2/cortex/analyst/message"
-                with open("/snowflake/session/token", "r") as f:
-                    token = f.read().strip()
-                token_type = "OAUTH"
-                headers = {
-                    "Authorization": f"Bearer {token}",
-                    "X-Snowflake-Authorization-Token-Type": token_type,
-                    "Content-Type": "application/json",
-                }
-            else:
-                base_url = f"https://{conn.account.replace('_', '-')}.snowflakecomputing.com/api/v2/cortex/analyst/message"
-                token =_extract_session_token(conn)
-                headers = {
-                    "Authorization": f'Snowflake Token="{token}"',
-                    "Content-Type": "application/json",
-                }
+            # Get REST API headers and base URL using library functions (handles both SPCS and local)
+            headers = get_snowflake_rest_api_headers(conn)
+            base_url = get_snowflake_cortex_api_base_url(conn, "/api/v2/cortex/analyst/message")
             
             try:
                 response = requests.post(
