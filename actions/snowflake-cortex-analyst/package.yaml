@@ -16,8 +16,7 @@ dependencies:
   pypi:
     - sema4ai-actions=1.6.1
     - pandas=2.3.3
-    #- sema4ai-data=1.2.0 
-    - sema4ai_data-1.2.101-py3-none-any.whl
+    - sema4ai-data=1.2.0
     - snowflake=1.8.0
 
 packaging:
