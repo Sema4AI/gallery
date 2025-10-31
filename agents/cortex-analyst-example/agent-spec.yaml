@@ -10,6 +10,7 @@ agent-package:
     architecture: agent
     reasoning: disabled
     runbook: runbook.md
+    conversation-guide: conversation-guide.yaml
     action-packages:
     - name: Snowflake Cortex Analyst
       organization: Sema4.ai
