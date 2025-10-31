@@ -1,0 +1,8 @@
+question-groups:
+- title: Examples
+  questions:
+  - What can you tell me about the data you have?
+  - Can you analyze the different types of cancellation policies by room type?
+  - Tell me more about the super strict policies
+  - Can you perform a pricing analysis for all properties with a super strict policy?
+  - Tell me more about Moderate and do the same analysis
