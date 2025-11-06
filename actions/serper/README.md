@@ -7,6 +7,7 @@ The Serper Action Package provides an interface to interact with the Serper API,
 - Perform Google searches using the Serper API.
 - Retrieve structured search results, including knowledge graph, organic results, places, people also ask, and related searches.
 - Securely manage API keys using Sema4.ai's Secret management.
+- Built-in retry logic with exponential backoff for handling connection failures.
 
 ## Installation
 
