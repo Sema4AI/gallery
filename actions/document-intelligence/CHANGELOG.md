@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [2.2.0] - 2025-11-06
+
+- Update package dependencies
+- `query_document` action now returns a `Table` in case there is only one view for the document, otherwise it returns a dict with the Table results for each view, if any.
+- `execute_natural_language_query` now returns a dictionary with `description` key instead of `query` to support Dataframe auto creation.
+
 ## [2.1.1] - 2025-10-14
 
 - Update package dependencies
