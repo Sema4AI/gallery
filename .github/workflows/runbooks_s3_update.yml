@@ -29,7 +29,7 @@ jobs:
           ls -la
 
           # Copy the updated manifest
-          aws s3 cp manifest.json $S3_BASE_URL/manifest.json --cache-control max-age=120 --content-type "text/plain"
+          aws s3 cp manifest.json $S3_BASE_URL/manifest.json --cache-control max-age=120 --content-type "application/json"
 
           # Extract and upload markdown files listed in the manifest
           for file in $(jq -r '.templates[].url' manifest.json | sed 's#.*/##'); do
