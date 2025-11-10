@@ -28,7 +28,8 @@ def parse(
     local_file: Path = get_file(file_name)
 
     extraction_service = build_extraction_service(sema4_api_key.value)
-    parse_resp: ParseResponse = extraction_service.parse_file(local_file)
+    document_id = extraction_service.upload(local_file)
+    parse_resp: ParseResponse = extraction_service.parse(document_id)
 
     # The sema4ai-docint library guarantees a ResultFullResult, but the types don't reflect that.
     if not isinstance(parse_resp.result, ResultFullResult):

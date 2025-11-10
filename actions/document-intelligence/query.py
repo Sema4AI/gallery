@@ -163,7 +163,7 @@ def execute_natural_language_query(
                 result_dict = {
                     "columns": table.columns,
                     "rows": table.rows,
-                    "query": sql_query,
+                    "description": f"Generated SQL query: {sql_query}",
                 }
                 if not table.rows:
                     result_dict["message"] = "No data found for the given document."

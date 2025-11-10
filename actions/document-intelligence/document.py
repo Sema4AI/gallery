@@ -4,7 +4,7 @@ from typing import Annotated, Any
 
 from data_sources import DocumentIntelligenceDataSource
 from pydantic import BaseModel
-from sema4ai.actions import ActionError, Response, Secret, SecretSpec, action
+from sema4ai.actions import ActionError, Response, Secret, SecretSpec, Table, action
 from sema4ai.actions.chat import get_file
 from sema4ai.data import query
 from sema4ai_docint import build_di_service
@@ -18,14 +18,11 @@ from sema4ai_docint.extraction.process import (
 )
 from sema4ai_docint.extraction.transform import _apply_mapping
 from sema4ai_docint.models import (
-    DataModel,
     Document,
     ExtractionResult,
     Mapping,
     MappingRow,
-    initialize_dataserver,
 )
-from sema4ai_docint.models.constants import PROJECT_NAME
 from sema4ai_docint.utils import normalize_name
 
 logger = logging.getLogger(__name__)
@@ -231,7 +228,10 @@ def ingest(
         ActionError: If document processing fails after all retry attempts
     """
     try:
-        di_service = build_di_service(datasource, sema4_api_key.value)
+        di_service = build_di_service(
+            datasource,
+            sema4_api_key.value,
+        )
         response_data = di_service.document.ingest(
             file_name,
             data_model_name,
@@ -265,8 +265,10 @@ def list_documents(
 
 @query
 def query_document(
-    datasource: DocumentIntelligenceDataSource, document_id: str
-) -> Response[dict[str, Any]]:
+    sema4_api_key: Annotated[Secret, SecretSpec(tag="document-intelligence")],
+    datasource: DocumentIntelligenceDataSource,
+    document_id: str,
+) -> Response[dict[str, Table | None] | Table | None]:
     """Get document in data model format.
     Args:
         datasource: Document intelligence data source connection
@@ -276,44 +278,8 @@ def query_document(
     Raises:
         ActionError: If document or data model not found
     """
-    document = Document.find_by_id(datasource, document_id)
-    if not document:
-        raise ActionError(f"Document with ID {document_id} not found")
-
-    data_model = DataModel.find_by_name(datasource, document.data_model)
-    if not data_model:
-        raise ActionError(f"Data model with name {document.data_model} not found")
-
-    # Collect all view names from the data model's views
-    view_names = []
-    if data_model.views:
-        for view in data_model.views:
-            if isinstance(view, dict) and "name" in view:
-                view_names.append(view["name"])
-
-    if not view_names:
-        raise ActionError(f"No views found for data model {document.data_model}")
-
-    # Initialize the objects in MindsDB (project)
-    try:
-        initialize_dataserver(PROJECT_NAME, data_model.views)
-    except Exception as e:
-        raise ActionError(
-            "Failed to create the document intelligence data-server project"
-        ) from e
-
-    # Loop over all view names and collect results
-    results_dict = {}
-    for view_name in view_names:
-        sql = (
-            f"SELECT * FROM {PROJECT_NAME}.{view_name} where document_id = $document_id"
-        )
-
-        results = datasource.execute_sql(sql, params={"document_id": document_id})
-        if results:
-            results_dict[view_name] = results.to_table()
-        else:
-            results_dict[view_name] = None
+    di_service = build_di_service(datasource, sema4_api_key.value)
+    results_dict = di_service.document.query(document_id)
 
     return Response(result=results_dict)
 
@@ -351,7 +317,10 @@ def extract_and_transform_content(
     """
 
     try:
-        di_service = build_di_service(datasource, sema4_api_key.value)
+        di_service = build_di_service(
+            datasource,
+            sema4_api_key.value,
+        )
         response_data = di_service.document.extract_with_schema(params)
         return Response(result=response_data)
 
