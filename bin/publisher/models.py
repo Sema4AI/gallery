@@ -59,6 +59,8 @@ class AgentVersionInfo(TypedDict):
     version: str
     description: str
     agent_spec: str
+    agent_package_zip_url: str
+    agent_package_zip_hash: str
     changelog: str
     runbook: str
     architecture: str

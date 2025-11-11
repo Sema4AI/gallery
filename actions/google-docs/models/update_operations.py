@@ -479,7 +479,7 @@ class _Line:
         return None, self.data
 
     def get_update_operations(
-        self, start_index: int
+        self, start_index: int, image_data: dict = None
     ) -> Generator[UpdateRequest, None, int]:
         """Helper method to generate Google Update Operations.
         It will yield all the operations for this specific line.
@@ -518,23 +518,23 @@ class _Line:
 
         # Process emojis and other markdown
         update_requests, processed_text = self._parse_line(
-            parsed_text, start_index=start_index
+            parsed_text, start_index=start_index, image_data=image_data
         )
 
         # Use the processed text for insertion
         text_to_insert = processed_text
-        
+
         yield InsertTextRequest.new(text_to_insert, index=start_index)
 
         # Google Docs API uses UTF-16 code units for indexing, not Python character count
         # Emojis are 2 UTF-16 code units but 1 Python character, causing index misalignment
         def get_utf16_length(text: str) -> int:
             return len(text.encode('utf-16le')) // 2
-        
+
         # Calculate end_index using UTF-16 length (Google Docs API standard)
         utf16_length = get_utf16_length(text_to_insert)
         end_index = start_index + utf16_length
-        
+
         # For paragraph-level styles (headings), use UTF-16 length for correct indices
         text_without_newline = text_to_insert.rstrip("\n")
         if text_without_newline:
@@ -552,7 +552,7 @@ class _Line:
             yield request
 
         yield from update_requests
-        
+
         if not heading_number and style_end_index is not None:
             # For all non-heading text (empty or not), explicitly set NORMAL_TEXT style
             # to prevent heading style inheritance.
@@ -570,9 +570,9 @@ class _Line:
         return end_index
 
     def _parse_line(
-        self, data: str, *, start_index: int
+        self, data: str, *, start_index: int, image_data: dict = None
     ) -> tuple[list["UpdateRequest"], str]:
-        parser = self._parse_string(data, current_index=start_index)
+        parser = self._parse_string(data, current_index=start_index, image_data=image_data)
 
         requests = []
 
@@ -583,7 +583,7 @@ class _Line:
                 return requests, exc.value
 
     def _parse_string(
-        self, text: str, *, current_index=1
+        self, text: str, *, current_index=1, image_data: dict = None
     ) -> Generator[_BaseUpdateRequest, None, str]:
         parsed_text = ""
         while len(text):
@@ -648,8 +648,14 @@ class _Line:
                             token_end_index = token_start_index
                             parsed_text = parsed_text[: -len(value)]
 
+                            # Check if this is a local image reference
+                            image_url = item_match.group(2)
+                            if image_data and image_url in image_data:
+                                # Use Google Drive file ID for uploaded images
+                                image_url = f"https://drive.google.com/uc?id={image_data[image_url]}"
+
                             yield InsertInlineImageRequest.new(
-                                item_match.group(2), index=token_start_index
+                                image_url, index=token_start_index
                             )
 
                         case self.EMOJI_PATTERN:
@@ -690,7 +696,7 @@ class _TableLine:
         self.data = text
 
     def get_update_operations(
-        self, start_index: int
+        self, start_index: int, image_data: dict = None
     ) -> Generator[UpdateRequest, None, int]:
         rows = []
         row_count = 0
@@ -751,7 +757,7 @@ class _TableLine:
             current_index += 1
             for cell in row:
                 current_index += 2
-                operations = cell.get_update_operations(current_index)
+                operations = cell.get_update_operations(current_index, image_data=image_data)
                 try:
                     while True:
                         op = next(operations)
@@ -782,7 +788,7 @@ class BatchUpdateBody(_BaseUpdateRequest):
 
     @classmethod
     def from_markdown(
-        cls, text: str, *, start_index: int = 1, is_append: bool = False
+        cls, text: str, *, start_index: int = 1, is_append: bool = False, image_data: dict = None
     ) -> Self:
         # Normalize the text by removing trailing spaces before newlines
         # This ensures consistent parsing regardless of input formatting
@@ -803,7 +809,7 @@ class BatchUpdateBody(_BaseUpdateRequest):
             line_paragraph_style_requests = []
             line_images = []
 
-            operations = line.get_update_operations(start_index=current_index)
+            operations = line.get_update_operations(start_index=current_index, image_data=image_data)
             while True:
                 try:
                     op = next(operations)

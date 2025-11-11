@@ -169,14 +169,13 @@ class _ParagraphData(
 
         if self.list_id:
             spacing = " " * (self.nesting_level * 2)
-            match self.list_id:
-                case _OrderedListId(list_id):
-                    i = ctx.get_next_list_index(str(list_id), self.nesting_level)
-                    return f"{spacing}{i}. {body}"
-                case _UnorderedListId():
-                    return f"{spacing}* {body}"
-                case _:
-                    raise ValueError(f"Invalid list id type: {self.list_id:r}")
+            if isinstance(self.list_id, _OrderedListId):
+                i = ctx.get_next_list_index(str(self.list_id), self.nesting_level)
+                return f"{spacing}{i}. {body}"
+            elif isinstance(self.list_id, _UnorderedListId):
+                return f"{spacing}* {body}"
+            else:
+                raise ValueError(f"Invalid list id type: {self.list_id:r}")
 
         elif self.style and self.style.startswith("HEADING_"):
             if not body.strip():
@@ -342,9 +341,25 @@ class DocumentInfo(BaseModel, extra="ignore", populate_by_name=True):
             validation_alias="documentId",
         ),
     ]
+    document_url: Annotated[str, Field(description="The direct link to the Google Document.")]
     current_tab: Annotated[TabInfo | None, Field(description="Information about the current tab being displayed.", default=None)]
     tabs: Annotated[list[TabInfo], Field(description="List of all tabs in the document.", default_factory=list)]
     comments: Annotated[list[CommentInfo], Field(description="List of comments on the document.", default_factory=list)]
+
+
+class SearchResult(BaseModel, extra="ignore", populate_by_name=True):
+    """Information about a document found in search results."""
+    document_id: Annotated[str, Field(description="The ID of the document.")]
+    name: Annotated[str, Field(description="The title/name of the document.")]
+    similarity_score: Annotated[float, Field(description="Similarity score between 0 and 1, where 1 is a perfect match.", ge=0, le=1)]
+    match_reasons: Annotated[list[str], Field(description="List of reasons why this document matched (e.g., 'name (0.85)', 'content (0.60)').", default_factory=list)]
+    created_time: Annotated[str | None, Field(description="ISO timestamp when the document was created.", default=None)]
+    modified_time: Annotated[str | None, Field(description="ISO timestamp when the document was last modified.", default=None)]
+    owners: Annotated[list[str], Field(description="List of document owners (display names or email addresses).", default_factory=list)]
+    web_view_link: Annotated[str | None, Field(description="Link to view the document in Google Docs web interface.", default=None)]
+    document_url: Annotated[str, Field(description="Direct link to edit the document in Google Docs.")]
+    description: Annotated[str | None, Field(description="Document description if available.", default=None)]
+    content_preview: Annotated[str | None, Field(description="Preview snippet of document content around the search match.", default=None)]
 
 
 class RawDocument(DocumentInfo):
@@ -427,6 +442,7 @@ class RawDocument(DocumentInfo):
                 processed_data = {
                     "documentId": data.get("documentId"),
                     "title": data.get("title", "Untitled"),
+                    "document_url": f"https://docs.google.com/document/d/{data.get('documentId')}/edit",
                     "body": {"content": []},  # Empty body for documents with tabs
                     "current_tab": current_tab_info,
                     "tabs": all_tabs,
@@ -439,6 +455,7 @@ class RawDocument(DocumentInfo):
                 processed_data = {
                     "documentId": data.get("documentId"),
                     "title": data.get("title", "Untitled"),
+                    "document_url": f"https://docs.google.com/document/d/{data.get('documentId')}/edit",
                     "body": {"content": []},
                     "current_tab": None,
                     "tabs": [],
@@ -518,6 +535,10 @@ class MarkdownDocument(DocumentInfo):
         list[dict] | None,
         Field(description="All tab contents with their metadata.", default=None)
     ] = None
+    download_info: Annotated[
+        dict | None,
+        Field(description="Information about downloaded file if download=True was used.", default=None)
+    ] = None
 
     @classmethod
     def from_raw_document(cls, document: RawDocument, include_all_tabs: bool = False) -> Self:
@@ -547,9 +568,11 @@ class MarkdownDocument(DocumentInfo):
         return MarkdownDocument(
             title=document.title,
             document_id=document.document_id,
+            document_url=document.document_url,
             body=body,
             current_tab=document.current_tab,
             tabs=document.tabs,
             tab_contents=serialized_tab_contents,
             comments=document.comments,
+            download_info=None,  # Will be set by the action if download=True
         )

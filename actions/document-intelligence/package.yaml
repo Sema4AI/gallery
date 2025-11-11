@@ -1,0 +1,44 @@
+name: Document Intelligence
+description: Actions for Sema4.ai Document Intelligence
+version: 2.2.0
+spec-version: v2
+dependencies:
+  conda-forge:
+  - python=3.11.12
+  - uv=0.8.2
+  pypi:
+  - jsonschema=4.25.1      # https://github.com/python-jsonschema/jsonschema/blob/main/CHANGELOG.rst
+  - pdf2image=1.17.0        # https://github.com/Belval/pdf2image/releases
+  - sema4ai-actions=1.6.2  # https://github.com/Sema4AI/actions/blob/master/actions/docs/CHANGELOG.md
+  - sema4ai-data=1.2.1
+  - reductoai=0.9.0         # https://github.com/reductoai/reducto-python-sdk/blob/main/CHANGELOG.m
+  - sema4ai-docint=0.12.0
+dev-dependencies:
+  conda-forge:
+  - pytest=8.4.2
+  - ruff=0.14.3
+  - mypy=1.18.2
+dev-tasks:
+  test: pytest tests
+  lint: |
+    ruff check .
+    ruff format --check .
+  typecheck: "true" # TODO re-enable: mypy --follow-imports=silent --strict .
+  format: |
+    ruff format .
+packaging:
+  exclude:
+  - ./.git/**
+  - ./.vscode/**
+  - ./devdata/**
+  - ./output/**
+  - ./venv/**
+  - ./.venv/**
+  - ./.DS_store/**
+  - ./**/*.pyc
+  - ./**/*.zip
+  - ./**/.env
+  - ./tests/**
+  - ./.mypy_cache/**
+  - ./.pytest_cache/**
+  - ./.ruff_cache/**

@@ -26,6 +26,44 @@ load_dotenv(Path(__file__).absolute().parent / "devdata" / ".env")
 ALPHA_LENGTH = ord("Z") - ord("A") + 1
 
 
+def _open_spreadsheet(gc: gspread.Client, spreadsheet: str) -> gspread.Spreadsheet:
+    """Open a spreadsheet by name, ID, or URL.
+
+    Args:
+        gc: Authorized gspread client
+        spreadsheet: Spreadsheet name, ID, or URL
+
+    Returns:
+        Opened spreadsheet object
+
+    Raises:
+        ActionError: If spreadsheet cannot be found or opened
+    """
+    spreadsheet = spreadsheet.strip()
+
+    # Check if it's a URL
+    if spreadsheet.startswith("https://docs.google.com/spreadsheets/"):
+        try:
+            return gc.open_by_url(spreadsheet)
+        except Exception as e:
+            raise ActionError(f"SpreadsheetNotFound: Could not open spreadsheet by URL '{spreadsheet}': {str(e)}")
+
+    # Check if it's a spreadsheet ID (alphanumeric, hyphens, underscores)
+    # IDs are typically long strings without spaces
+    if len(spreadsheet) > 20 and " " not in spreadsheet and "/" not in spreadsheet:
+        try:
+            return gc.open_by_key(spreadsheet)
+        except Exception:
+            # If opening by key fails, try by name as fallback
+            pass
+
+    # Try opening by name
+    try:
+        return gc.open(spreadsheet)
+    except Exception as e:
+        raise ActionError(f"SpreadsheetNotFound: Could not find spreadsheet with name '{spreadsheet}': {str(e)}")
+
+
 class _Credentials(Credentials):
     @classmethod
     def from_oauth2_secret(cls, secret: OAuth2Secret) -> Self:
@@ -95,7 +133,7 @@ def create_worksheet(
     """Creates a new Worksheet.
 
     Args:
-        spreadsheet: Name of the Spreadsheet where to add the new Worksheet.
+        spreadsheet: Name, ID, or URL of the Spreadsheet where to add the new Worksheet.
         title: The title of the new Worksheet.
         rows: Number of rows to be added in the new Worksheet.
         columns: Number of columns to be added in the new Worksheet.
@@ -107,8 +145,8 @@ def create_worksheet(
 
     gc = gspread.authorize(_Credentials.from_oauth2_secret(oauth_access_token))
 
-    spreadsheet = gc.open(spreadsheet)
-    worksheet = spreadsheet.add_worksheet(title=title, rows=rows, cols=columns)
+    spreadsheet_obj = _open_spreadsheet(gc, spreadsheet)
+    worksheet = spreadsheet_obj.add_worksheet(title=title, rows=rows, cols=columns)
 
     return Response(
         result=f"Worksheet successfully created the worksheet: {worksheet.title}: {worksheet.url}"
@@ -137,7 +175,7 @@ def get_sheet_content(
     from `from_row`. Default is 100 rows.
 
     Args:
-        spreadsheet: Spreadsheet object or name of the spreadsheet from which to get the data.
+        spreadsheet: Name, ID, or URL of the spreadsheet from which to get the data.
         worksheet: Name of the worksheet within the spreadsheet.
         from_row: Used for pagination, default is first row.
         limit: How many rows to retrieve starting from line number defined in `from_row`.
@@ -149,8 +187,8 @@ def get_sheet_content(
 
     gc = gspread.authorize(_Credentials.from_oauth2_secret(oauth_access_token))
 
-    spreadsheet = gc.open(spreadsheet)
-    worksheet = spreadsheet.worksheet(worksheet)
+    spreadsheet_obj = _open_spreadsheet(gc, spreadsheet)
+    worksheet = spreadsheet_obj.worksheet(worksheet)
 
     return Response(result=_get_sheet_content(worksheet, from_row, limit))
 
@@ -173,7 +211,7 @@ def get_spreadsheet_schema(
     Method will return the first few rows of each Sheet as an example.
 
     Args:
-        spreadsheet: Name of the spreadsheet from which to get the data.
+        spreadsheet: Name, ID, or URL of the spreadsheet from which to get the data.
         oauth_access_token: The OAuth2 access token .
 
     Returns:
@@ -181,7 +219,7 @@ def get_spreadsheet_schema(
     """
 
     gc = gspread.authorize(_Credentials.from_oauth2_secret(oauth_access_token))
-    sh = gc.open(spreadsheet)
+    sh = _open_spreadsheet(gc, spreadsheet)
 
     output = "Here are the sheets and their first rows.\n\n"
     content = []
@@ -214,7 +252,7 @@ def add_sheet_rows(
     Make sure the values are in correct columns (needs to be ordered the same as in the document).
 
     Args:
-        spreadsheet: Name of the spreadsheet you want to work on.
+        spreadsheet: Name, ID, or URL of the spreadsheet you want to work on.
         worksheet: Name of the sheet where the data is added to.
         rows_to_add: The rows to be added to the end of the sheet.
         oauth_access_token: The OAuth2 access token .
@@ -225,8 +263,8 @@ def add_sheet_rows(
 
     gc = gspread.authorize(_Credentials.from_oauth2_secret(oauth_access_token))
 
-    spreadsheet = gc.open(spreadsheet)
-    worksheet = spreadsheet.worksheet(worksheet)
+    spreadsheet_obj = _open_spreadsheet(gc, spreadsheet)
+    worksheet = spreadsheet_obj.worksheet(worksheet)
 
     worksheet.append_rows(values=rows_to_add.to_raw_data())
 
@@ -252,7 +290,7 @@ def update_sheet_rows(
     """Update a cell or a range of cells in a worksheet using A1 or R1:C1 notation.
 
     Args:
-        spreadsheet: Name of the spreadsheet from which to get the data.
+        spreadsheet: Name, ID, or URL of the spreadsheet from which to get the data.
         worksheet: Name of the sheet where the data is added to.
         cells: Cell or range of cells to update.
         data: Data to be inserted into the cell or cells.
@@ -271,8 +309,8 @@ def update_sheet_rows(
 
     gc = gspread.authorize(_Credentials.from_oauth2_secret(oauth_access_token))
 
-    spreadsheet = gc.open(spreadsheet)
-    worksheet = spreadsheet.worksheet(worksheet)
+    spreadsheet_obj = _open_spreadsheet(gc, spreadsheet)
+    worksheet = spreadsheet_obj.worksheet(worksheet)
 
     worksheet.update(data.to_raw_data(), range_name=cells)
 

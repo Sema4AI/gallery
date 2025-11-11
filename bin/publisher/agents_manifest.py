@@ -7,7 +7,72 @@ from pathlib import Path
 
 from models import AgentsWhitelistEntry, AgentInfo
 from models import AgentActionPackage, AgentsManifest, AgentVersionInfo
-from utils import read_yaml_file
+from utils import read_yaml_file, calculate_file_hash
+
+
+def build_agent_package(
+    agent_folder: str, agent_name: str, agent_version: str, agent_cli_path: str
+) -> tuple[str, str] | None:
+    """
+    Build an agent package zip file using agent-cli package build command.
+    
+    Parameters:
+        agent_folder (str): The path to the agent folder.
+        agent_name (str): The name of the agent.
+        agent_version (str): The version of the agent.
+        agent_cli_path (str): The path to the agent cli executable.
+    
+    Returns:
+        tuple[str, str] | None: A tuple of (zip_file_path, zip_hash) if successful, None if failed.
+    """
+    # Create a zips directory in the project root for building packages
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    zips_dir = os.path.join(script_dir, "zips")
+    os.makedirs(zips_dir, exist_ok=True)
+    
+    kebab_case_agent_name = to_kebab_case(agent_name)
+    zip_filename = f"{kebab_case_agent_name}.zip"
+    zip_file_path = os.path.join(zips_dir, zip_filename)
+    
+    # Build the agent package using agent-cli
+    command = [
+        agent_cli_path,
+        "package",
+        "build",
+        "--input-dir", agent_folder,
+        "--name", zip_filename,
+        "--output-dir", zips_dir,
+        "--overwrite"
+    ]
+    
+    print(f"Building agent package: {' '.join(command)}")
+    
+    try:
+        result = subprocess.run(
+            command,
+            capture_output=True,
+            text=True,
+            cwd=agent_folder
+        )
+        
+        if result.returncode != 0:
+            print(f"Agent package build failed for {agent_name} {agent_version}: {result.stderr}")
+            return None
+        
+        # Check if the zip file was created
+        if not os.path.exists(zip_file_path):
+            print(f"Agent package zip file not found after build: {zip_file_path}")
+            return None
+        
+        # Calculate the hash of the zip file
+        zip_hash = calculate_file_hash(zip_file_path)
+        
+        print(f"Successfully built agent package for {agent_name} {agent_version}")
+        return (zip_file_path, zip_hash)
+        
+    except Exception as e:
+        print(f"Error building agent package for {agent_name} {agent_version}: {str(e)}")
+        return None
 
 
 def generate_agents_manifest(
@@ -39,9 +104,11 @@ def generate_agents_manifest(
         if not os.path.isdir(agent_folder):
             continue
 
-        is_agent_valid = validate_agent(agent_folder, agent_cli_path)
-        if not is_agent_valid:
-            continue
+        # TODO (Kari 2025-09-29): Validation logic is moving to agent-server, away from agent-cli
+        #                         Re-enable agent validation after the logic is provided in some new way
+        #is_agent_valid = validate_agent(agent_folder, agent_cli_path)
+        #if not is_agent_valid:
+        #    continue
 
         agent_spec_data = read_yaml_file(os.path.join(agent_folder, "agent-spec.yaml"))[
             "agent-package"
@@ -57,8 +124,16 @@ def generate_agents_manifest(
         if not whitelist_entry or is_agent_published(published_manifest, agent_name, agent_version):
             continue
 
-        with open(os.path.join(agent_folder, "runbook.md")) as file:
+        with open(os.path.join(agent_folder, "runbook.md"), encoding='utf-8') as file:
             runbook_content = file.read()
+
+        # Build the agent package
+        package_result = build_agent_package(agent_folder, agent_name, agent_version, agent_cli_path)
+        if not package_result:
+            print(f"Skipping agent {agent_name} {agent_version} due to package build failure")
+            continue
+        
+        zip_file_path, zip_hash = package_result
 
         actions = get_actions_info(agent_spec_data["action-packages"])
         base_url = "https://cdn.sema4.ai/gallery/agents/"
@@ -75,6 +150,8 @@ def generate_agents_manifest(
             "knowledge": agent_spec_data["knowledge"],
             "metadata": agent_spec_data["metadata"],
             "action_packages": actions,
+            "agent_package_zip_url": f"{base_url}{kebab_case_agent_name}/{agent_version}/{kebab_case_agent_name}.zip",
+            "agent_package_zip_hash": zip_hash,
         }
 
         # Copy the interesting files to be uploaded in S3
@@ -89,6 +166,25 @@ def generate_agents_manifest(
                 Path(agent_folder) / "agent-spec.yaml", dest / "agent-spec.yaml"
             )
             shutil.copyfile(Path(agent_folder) / "CHANGELOG.md", dest / "CHANGELOG.md")
+        
+        # Always copy the zip file if it doesn't exist (zip files are version-specific)
+        zip_dest_path = dest / f"{kebab_case_agent_name}.zip"
+        if not os.path.exists(zip_dest_path):
+            shutil.copyfile(zip_file_path, zip_dest_path)
+        
+        # Extract and copy the agent package metadata from the zip file
+        metadata_dest_path = dest / "__agent_package_metadata__.json"
+        if not os.path.exists(metadata_dest_path):
+            import zipfile
+            try:
+                with zipfile.ZipFile(zip_file_path, 'r') as zip_ref:
+                    if "__agent_package_metadata__.json" in zip_ref.namelist():
+                        zip_ref.extract("__agent_package_metadata__.json", dest)
+                        print(f"Extracted agent package metadata for {agent_name} {agent_version}")
+                    else:
+                        print(f"Warning: __agent_package_metadata__.json not found in zip for {agent_name} {agent_version}")
+            except Exception as e:
+                print(f"Error extracting metadata from zip for {agent_name} {agent_version}: {str(e)}")
 
         agent_info: AgentInfo = {
             "name": agent_name,
@@ -132,7 +228,20 @@ def generate_consolidated_manifest(
         if not is_agent_published(
             new_manifest, updated_agent_name, updated_agent_version
         ):
-            versions_info.append(updated_agent_info["versions"][0])
+            # Check if this version already exists in the manifest
+            existing_version_index = None
+            for i, existing_version in enumerate(versions_info):
+                if existing_version.get("version") == updated_agent_version:
+                    existing_version_index = i
+                    break
+            
+            if existing_version_index is not None:
+                # Update existing version with new fields
+                versions_info[existing_version_index] = updated_agent_info["versions"][0]
+            else:
+                # Add new version
+                versions_info.append(updated_agent_info["versions"][0])
+            
             agent_info["versions"] = sorted(versions_info, key=lambda x: x["version"])
 
     return new_manifest
@@ -173,8 +282,8 @@ def get_whitelist_entry(kebab_case_agent_name: str, whitelist: list[AgentsWhitel
     return next((entry for entry in whitelist if entry["name"] == kebab_case_agent_name), None)
 
 def save_manifest(manifest: AgentsManifest, file_path: str) -> None:
-    with open(file_path, "w") as file:
-        json.dump(manifest, file, indent=2)
+    with open(file_path, "w", encoding='utf-8', newline='\n') as file:
+        json.dump(manifest, file)
 
 
 def is_agent_published(published_manifest: AgentsManifest, agent_name: str, version: str) -> bool:
@@ -185,6 +294,15 @@ def is_agent_published(published_manifest: AgentsManifest, agent_name: str, vers
 
     if version not in versions:
         return False
+
+    # Check if the agent version has the required zip file fields
+    agent_versions = published_manifest.get("agents", {}).get(agent_name, {}).get("versions", [])
+    for agent_version in agent_versions:
+        if agent_version.get("version") == version:
+            # Check if both zip URL and hash are present
+            if "agent_package_zip_url" not in agent_version or "agent_package_zip_hash" not in agent_version:
+                return False
+            break
 
     return True
 

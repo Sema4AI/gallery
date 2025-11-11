@@ -1,0 +1,71 @@
+{
+    "inputs": [
+        {
+            "inputName": "Prepend to existing document",
+            "inputValue": {
+                "name": "Sema4.ai Actions - Test Document",
+                "body": "PREPENDED: This content should appear at the beginning of the document.",
+                "position": "prepend",
+                "tab_index": 0,
+                "tab_title": "",
+                "vscode:request:oauth2": {
+                    "oauth_access_token": {
+                        "type": "OAuth2Secret",
+                        "provider": "google",
+                        "scopes": [
+                            "https://www.googleapis.com/auth/drive.file",
+                            "https://www.googleapis.com/auth/documents"
+                        ],
+                        "access_token": "<access-token-will-be-requested-by-vscode>"
+                    }
+                }
+            }
+        },
+        {
+            "inputName": "Append to existing document",
+            "inputValue": {
+                "name": "Sema4.ai Actions - Test Document",
+                "body": "APPENDED: This content should appear at the end of the document.",
+                "position": "append",
+                "tab_index": 0,
+                "tab_title": "",
+                "vscode:request:oauth2": {
+                    "oauth_access_token": {
+                        "type": "OAuth2Secret",
+                        "provider": "google",
+                        "scopes": [
+                            "https://www.googleapis.com/auth/drive.file",
+                            "https://www.googleapis.com/auth/documents"
+                        ],
+                        "access_token": "<access-token-will-be-requested-by-vscode>"
+                    }
+                }
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "insert_content_to_document_by_name",
+        "actionRelativePath": "actions.py",
+        "schemaDescription": [
+            "name: string: The Google Document name",
+            "body: string: The Google Document body as an Extended Markdown string",
+            "position: ['prepend', 'append'] (Whether to prepend (insert at beginning) or append (insert at end) content)",
+            "tab_index: integer: Optional tab index to insert content into a specific tab",
+            "tab_title: string: Optional tab title to insert content into a specific tab"
+        ],
+        "managedParamsSchemaDescription": {
+            "oauth_access_token": {
+                "type": "OAuth2Secret",
+                "description": "The OAuth2 Google access token",
+                "provider": "google",
+                "scopes": [
+                    "https://www.googleapis.com/auth/drive.file",
+                    "https://www.googleapis.com/auth/documents"
+                ]
+            }
+        },
+        "inputFileVersion": "v3",
+        "kind": "action",
+        "actionSignature": "action/args: \"name: str, body: str, oauth_access_token: OAuth2Secret[Literal['google'], list[Literal['https://www.googleapis.com/auth/drive.file', 'https://www.googleapis.com/auth/documents']]], position: Literal['prepend', 'append']='append', tab_index: int=None, tab_title: str=None\""
+    }
+}

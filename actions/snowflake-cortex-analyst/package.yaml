@@ -1,3 +1,5 @@
+spec-version: v2
+
 # Required: A short name for the action package
 name: Snowflake Cortex Analyst
 
@@ -5,21 +7,17 @@ name: Snowflake Cortex Analyst
 description: Snowflake Cortex reliably answers business questions based on your structured data in Snowflake.
 
 # Package version number, recommend using semver.org
-version: 1.0.5
-
-spec-version: v2
+version: 2.0.5
 
 dependencies:
   conda-forge:
-    - python=3.11.11
-    - uv=0.6.11
+    - python=3.12.12
+    - uv=0.8.17
   pypi:
-    - sema4ai-actions=1.4.1
-    - sema4ai-data=1.0.6
-    - snowflake-connector-python[pandas]=3.15.0
-    - pandas=2.2.3
-    - snowflake=1.5.0
-    - pyjwt=2.10.1
+    - sema4ai-actions=1.6.4
+    - sema4ai-data=1.2.1
+    - pandas=2.3.3
+    - snowflake=1.8.0
 
 packaging:
   # By default, all files and folders in this directory are packaged when uploaded.

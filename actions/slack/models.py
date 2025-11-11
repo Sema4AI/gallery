@@ -114,3 +114,10 @@ class ThreadMessageList(BaseMessages):
     messages: Annotated[
         list[ThreadMessage], Field(description="List of thread messages")
     ]
+
+
+class MessageSendResult(BaseModel):
+    success: Annotated[bool, Field(description="Whether the message was sent successfully")]
+    channel_id: Annotated[str, Field(description="The ID of the channel where the message was sent")]
+    message_ts: Annotated[str, Field(description="The timestamp of the sent message")]
+    thread_ts: Annotated[str | None, Field(None, description="The timestamp of the thread (same as message_ts for parent messages, or the parent's ts for replies)")]

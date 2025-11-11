@@ -5,7 +5,7 @@ name: Microsoft Mail
 description: Actions for Microsoft 365 Outlook emails including category management (add/remove categories).
 
 # Package version number, recommend using semver.org
-version: 2.1.0
+version: 2.1.1
 
 # The version of the `package.yaml` format.
 spec-version: v2
