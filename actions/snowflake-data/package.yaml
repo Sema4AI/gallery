@@ -7,16 +7,14 @@ name: Snowflake Data
 description: Actions for interacting with any data in Snowflake
 
 # Package version number, recommend using semver.org
-version: 0.0.4
-
-spec-version: v2
+version: 0.0.5
 
 dependencies:
   conda-forge:
-    - python=3.11.14
+    - python=3.12.12
     - uv=0.8.17
   pypi:
-    - sema4ai-actions=1.6.1
+    - sema4ai-actions=1.6.4
     - sema4ai-data=1.2.1
     - pandas=2.3.3
 
