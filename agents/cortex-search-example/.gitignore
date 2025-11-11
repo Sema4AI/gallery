@@ -1,0 +1,15 @@
+*.pyc
+*.zip
+.DS_Store
+.env
+.project
+.pydevproject
+.use
+.venv/
+.vscode
+metadata.json
+output/
+temp/
+venv/
+**/.env
+**/__action_server_metadata__.json

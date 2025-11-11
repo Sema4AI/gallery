@@ -2,8 +2,8 @@ agent-package:
   spec-version: v2
   agents:
   - name: Cortex Analyst Example
-    description: 'Example agent that works directly with Snowflake Cortex Analyst.
-      Guide at: https://sema4.ai/docs/team-edition/templates/template-analyst'
+    description: "Example agent that works directly with Snowflake Cortex Analyst.
+      \nGuide at: https://sema4.ai/docs/team-edition/templates/template-analyst"
     model:
       provider: Snowflake Cortex AI
       name: claude-3-5-sonnet
