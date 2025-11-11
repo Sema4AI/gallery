@@ -54,4 +54,4 @@ def extract(
         end_page=extract_req.end_page,
     )
 
-    return Sema4aiExtractResponse(result=extract_resp.results)  # type: ignore
+    return Sema4aiExtractResponse(result=extract_resp.results)

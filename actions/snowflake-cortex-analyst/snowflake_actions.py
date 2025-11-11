@@ -3,7 +3,7 @@ import datetime
 from decimal import Decimal
 
 from sema4ai.actions import ActionError, Response, Secret, action, Table
-from utils import execute_query
+from sema4ai.data import execute_snowflake_query
 
 
 def serialize_value(value):
@@ -66,7 +66,7 @@ def snowflake_execute_query(
     """
 
     try:
-        result = execute_query(
+        result = execute_snowflake_query(
             query=query,
             warehouse=warehouse.value,
             numeric_args=numeric_args,

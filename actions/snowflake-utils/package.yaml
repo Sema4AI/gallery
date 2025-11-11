@@ -1,3 +1,5 @@
+spec-version: v2
+
 # Required: A short name for the action package
 name: Snowflake Dev Utils
 
@@ -5,21 +7,17 @@ name: Snowflake Dev Utils
 description: Utilities and helpers for working with Snowflake in Sema4.ai Studio. See the grants, debug errors and more!
 
 # Package version number, recommend using semver.org
-version: 0.0.2
-
-spec-version: v2
+version: 0.0.4
 
 dependencies:
   conda-forge:
-    - python=3.11.14
+    - python=3.12.12
     - uv=0.8.17
   pypi:
-    - sema4ai-actions=1.5.0
-    - sema4ai-data=1.1.0
-    - snowflake-connector-python[pandas]=4.0.0
+    - sema4ai-actions=1.6.4
+    - sema4ai-data=1.2.1
     - pandas=2.3.3
     - snowflake=1.8.0
-    - pyjwt=2.10.1
 
 packaging:
   # By default, all files and folders in this directory are packaged when uploaded.

@@ -5,7 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
-## [1.1.0] - 2025-10-14
+## [1.1.2] - 2025-11-06
+
+- Update package dependencies
+
+## [1.1.1] - 2025-10-14
 
 - Fix `parse` and `extract` functions
 - Update package dependencies

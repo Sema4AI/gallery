@@ -1,9 +1,8 @@
 from sema4ai.actions import ActionError, Response, Table, action, Secret
 import concurrent.futures
-from typing import Dict, Any, List
-import snowflake.connector
+from typing import Dict, Any
 from contextlib import closing
-from snowflake_connection import get_snowflake_connection
+from sema4ai.data import get_snowflake_connection
 
 def process_single_table(table_name: str, warehouse: str, database: str, schema: str) -> Dict[str, Any]:
     """Process a single table to get its columns, sample data, and row count."""

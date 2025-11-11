@@ -12,10 +12,7 @@
     "metadata": {
         "actionName": "who_am_I",
         "actionRelativePath": "snowflake_actions.py",
-        "schemaDescription": [
-            "database: string: The Snowflake database to use  ",
-            "schema: string: The Snowflake schema to use"
-        ],
+        "schemaDescription": [],
         "managedParamsSchemaDescription": {
             "warehouse": {
                 "type": "Secret",
@@ -24,6 +21,6 @@
         },
         "inputFileVersion": "v3",
         "kind": "action",
-        "actionSignature": "action/args: 'warehouse: Secret, database: str, schema: str'"
+        "actionSignature": "action/args: 'warehouse: Secret'"
     }
 }

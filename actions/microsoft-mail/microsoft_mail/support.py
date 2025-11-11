@@ -3,7 +3,7 @@ from pathlib import Path
 
 import sema4ai_http
 from microsoft_mail.models import Email
-from sema4ai.actions import ActionError
+from sema4ai.actions import ActionError, chat
 
 BASE_GRAPH_URL = "https://graph.microsoft.com/v1.0"
 
@@ -66,10 +66,43 @@ def _read_file(attachment):
 
 
 def _base64_attachment(attachment):
-    c_bytes = (
-        attachment.content_bytes if attachment.content_bytes else _read_file(attachment)
-    )
-    if attachment.filepath != "" and (attachment.name is None or attachment.name == ""):
+    """Convert attachment to base64-encoded data for Microsoft Graph API.
+
+    Supports three input methods:
+    1. content_bytes - Pre-encoded base64 string
+    2. filepath - Chat file name (tries chat.get_file_content first)
+    3. filepath - Local filesystem path (fallback)
+    """
+    c_bytes = ""
+
+    # Method 1: Pre-encoded content
+    if attachment.content_bytes:
+        c_bytes = attachment.content_bytes
+
+    # Method 2 & 3: File path (chat file or local)
+    elif attachment.filepath:
+        filepath = Path(attachment.filepath)
+        basename = filepath.name
+
+        try:
+            # Try to get file from chat first
+            file_content_bytes = chat.get_file_content(basename)
+            # get_file_content returns bytes, need to encode to base64
+            c_bytes = base64.b64encode(file_content_bytes).decode("utf-8")
+
+            # Set name from basename if not provided
+            if not attachment.name:
+                attachment.name = basename
+
+        except Exception as e:
+            # Fallback to local filesystem
+            print(f"File not in chat, trying local path: {e}")
+            c_bytes = _read_file(attachment)
+    else:
+        raise ActionError("Attachment must have either content_bytes or filepath")
+
+    # Extract name from filepath if needed
+    if attachment.filepath and (not attachment.name or attachment.name == ""):
         attachment.name = Path(attachment.filepath).name
 
     data = {
