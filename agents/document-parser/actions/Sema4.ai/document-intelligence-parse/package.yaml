@@ -1,7 +1,7 @@
-name: Document Insights
-description: Explore structured and unstructured documents with Sema4.ai
+name: Document Intelligence Parse
+description: Parse documents with Sema4.ai's Document Intelligence
 spec-version: v2
-version: 1.1.2
+version: 0.1.0
 dependencies:
   conda-forge:
   - python=3.11.12
@@ -23,7 +23,7 @@ dev-tasks:
   lint: |
     ruff check src tests
     ruff format --check src tests
-  typecheck: "true" # TODO reenable: mypy --follow-imports=silent --strict src tests
+  typecheck: mypy --follow-imports=silent --strict src tests
   format: |
     ruff format src tests
 packaging:

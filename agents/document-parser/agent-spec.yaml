@@ -1,27 +1,29 @@
 agent-package:
   spec-version: v2
   agents:
-  - name: Document Explorer
-    description: Analyze documents using Sema4.ai Document Intelligence.
+  - name: Document Parser
+    description: Parses and analyzes complex documents.
     model:
       provider: OpenAI
-      name: gpt-4o
-    version: 1.0.3
+      name: gpt-5-minimal
+    version: 0.0.1
     architecture: agent
     reasoning: disabled
     runbook: runbook.md
     action-packages:
-    - name: Document Insights
+    - name: Document Intelligence Parse
       organization: Sema4.ai
+      version: 0.1.0
+      path: Sema4.ai/document-intelligence-parse
       type: folder
-      version: 1.1.2
       whitelist: ''
-      path: Sema4.ai/document-insights
     knowledge: []
     metadata:
       mode: conversational
+    document-intelligence: v2
     agent-settings:
-      di-persistence: database
+      user_interfaces: di-parse-only
+      di-persistence: file
   exclude:
   - ./.git/**
   - ./.vscode/**
@@ -33,6 +35,3 @@ agent-package:
   - ./**/.DS_Store
   - ./**/*.pyc
   - ./*.zip
-  - ./**/.mypy_cache
-  - ./**/.pytest_cache
-  - ./**/.ruff_cache
