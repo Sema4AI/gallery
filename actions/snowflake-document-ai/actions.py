@@ -4,7 +4,7 @@ import os
 import shutil
 import tempfile
 import datetime
-
+from pathlib import Path
 
 @action
 def list_stage_files(
@@ -138,8 +138,9 @@ def parse_document(
                 upload_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
                 print(f"Upload time: {upload_time}")
 
-                # Execute PUT command with the correctly named file
-                put_command = f"PUT 'file://{correct_name_path}' '{stage_location}' OVERWRITE=TRUE AUTO_COMPRESS=FALSE SOURCE_COMPRESSION=NONE"
+                # Convert file path to file:// URL using pathlib for cross-platform compatibility
+                file_url = Path(correct_name_path).as_uri()
+                put_command = f"PUT '{file_url}' '{stage_location}' OVERWRITE=TRUE AUTO_COMPRESS=FALSE SOURCE_COMPRESSION=NONE"
                 print(
                     f"[{datetime.datetime.now().strftime('%H:%M:%S.%f')}] Executing PUT command to upload file..."
                 )
