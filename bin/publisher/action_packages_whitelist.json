@@ -64,10 +64,10 @@
     "wayback-machine",
     "youtube",
     "zendesk",
+    "snowflake-cortex-aisql",
     "snowflake-cortex-analyst",
     "snowflake-cortex-search",
     "snowflake-data",
-    "snowflake-document-ai",
     "serper",
     "perplexity",
     "robocorp"
