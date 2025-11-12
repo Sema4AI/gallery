@@ -2,7 +2,8 @@ agent-package:
   spec-version: v2
   agents:
   - name: Document Parser
-    description: Parses and analyzes complex documents.
+    description: Parses uploaded documents to extract key information, generate concise
+      summaries, and suggest relevant follow-up questions for analysis.
     model:
       provider: OpenAI
       name: gpt-5-minimal
@@ -20,10 +21,6 @@ agent-package:
     knowledge: []
     metadata:
       mode: conversational
-    document-intelligence: v2
-    agent-settings:
-      user_interfaces: di-parse-only
-      di-persistence: file
   exclude:
   - ./.git/**
   - ./.vscode/**
