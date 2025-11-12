@@ -4,10 +4,10 @@ spec-version: v2
 name: Snowflake Document AI
 
 # Required: A description of what's in the action package.
-description: Upload PDF files to Snowflake and read their content with one-shot parse. No training required.
+description: (DEPRECATED) This package is replaced by the Snowflake Cortex AISQL package. Please swith over to the new package for up to date functionality.
 
 # Package version number, recommend using semver.org
-version: 0.0.4
+version: 0.0.5
 
 dependencies:
   conda-forge:
