@@ -1,0 +1,45 @@
+{
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "database_name": "OIL_AND_GAS",
+                "schema_name": "PUBLIC",
+                "stage_name": "FILE_INPUT"
+            }
+        },
+        {
+            "inputName": "input-limited",
+            "inputValue": {
+                "database_name": "OIL_AND_GAS",
+                "schema_name": "PUBLIC",
+                "stage_name": "FILE_INPUT",
+                "limit": 2
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "list_stage_files",
+        "actionRelativePath": "actions.py",
+        "schemaDescription": [
+            "limit: integer: Maximum number of files to return (default: 10)"
+        ],
+        "managedParamsSchemaDescription": {
+            "database_name": {
+                "type": "Secret",
+                "description": "The name of the database containing the stage"
+            },
+            "schema_name": {
+                "type": "Secret",
+                "description": "The name of the schema containing the stage"
+            },
+            "stage_name": {
+                "type": "Secret",
+                "description": "The name of the stage"
+            }
+        },
+        "inputFileVersion": "v3",
+        "kind": "action",
+        "actionSignature": "action/args: 'database_name: Secret, schema_name: Secret, stage_name: Secret, limit: int=10'"
+    }
+}
