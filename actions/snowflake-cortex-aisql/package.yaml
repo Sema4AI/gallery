@@ -1,13 +1,13 @@
 spec-version: v2
 
 # Required: A short name for the action package
-name: Snowflake Document AI
+name: Snowflake Cortex AISQL
 
 # Required: A description of what's in the action package.
-description: (DEPRECATED) This package is replaced by the Snowflake Cortex AISQL package. Please swith over to the new package for up to date functionality.
+description: Parse content from documents using the latest Cortex AISQL features including AI_PARSE_DOCUMENT. No training required! The package will get more AISQL features in the future.
 
 # Package version number, recommend using semver.org
-version: 0.0.5
+version: 0.0.1
 
 dependencies:
   conda-forge:
