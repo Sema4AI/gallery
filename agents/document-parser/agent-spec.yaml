@@ -21,6 +21,10 @@ agent-package:
     knowledge: []
     metadata:
       mode: conversational
+    document-intelligence: v2
+    agent-settings:
+      user_interfaces: di-parse-only
+      di-persistence: file
   exclude:
   - ./.git/**
   - ./.vscode/**
