@@ -1,7 +1,9 @@
+from typing import Annotated, Literal
+
 from pydantic import BaseModel, Field
 from reducto.types.shared.parse_response import (
-    ResultFullResult,
     ParseResponse,
+    ResultFullResult,
     ResultFullResultChunk,
     ResultFullResultChunkBlock,
 )
@@ -66,10 +68,18 @@ class Sema4aiParseResponse(BaseModel):
     Response from Parse output.
     """
 
-    job_id: str = Field(description="The job ID of the parse.")
-    chunks: list[Sema4aiParseResponseChunk] = Field(
-        description="The chunks of the parsed document."
-    )
+    job_id: Annotated[
+        str,
+        Field(description="The job ID of the parse."),
+    ]
+    chunks: Annotated[
+        list[Sema4aiParseResponseChunk] | None,
+        Field(description="The chunks of the parsed document if full_output is False."),
+    ] = None
+    full_result: Annotated[
+        ResultFullResult | None,
+        Field(description="The full result of the parse if full_output is True."),
+    ] = None
 
     @classmethod
     def from_result(
@@ -78,6 +88,7 @@ class Sema4aiParseResponse(BaseModel):
         *,
         include_embed: bool = False,
         include_blocks: bool = False,
+        full_output: bool = False,
     ) -> "Sema4aiParseResponse":
         """
         Convert a ResultFullResult to a Sema4aiParseResponse.
@@ -85,6 +96,12 @@ class Sema4aiParseResponse(BaseModel):
         # sema4ai-docint will localize the result to a ResultFullResult automatically.
         if not isinstance(response.result, ResultFullResult):
             raise ValueError(f"Expected ResultFullResult, got {type(response.result)}")
+
+        if full_output:
+            return cls(
+                job_id=response.job_id,
+                full_result=response.result,
+            )
 
         return cls(
             job_id=response.job_id,
@@ -95,3 +112,44 @@ class Sema4aiParseResponse(BaseModel):
                 for chunk in response.result.chunks
             ],
         )
+
+
+class ParseInput(BaseModel):
+    """Input model for parse function parameters"""
+
+    file_name: Annotated[
+        str,
+        Field(
+            description=(
+                "The name of the file to parse. This should be the file name only "
+                "and not a path or URL."
+            )
+        ),
+    ]
+    chunking_mode: Annotated[
+        Literal["disabled", "page", "variable"],
+        Field(
+            description=(
+                "Chunking strategy for the document. Use 'page' for most documents "
+                "(chunks by page), 'variable' for multi-page documents where content "
+                "flows across pages, 'disabled' to return the entire document as a single chunk. "
+                "Defaults to 'disabled'."
+            )
+        ),
+    ] = "disabled"
+    full_output: Annotated[
+        bool,
+        Field(
+            description=(
+                "If True, returns complete document structure with coordinates, metadata, "
+                "and job details (recommended for tables/complex documents). If False, "
+                "returns only basic text content."
+            )
+        ),
+    ] = False
+    force_reload: Annotated[
+        bool,
+        Field(
+            description="Force a new parse even if the file has already been parsed."
+        ),
+    ] = False

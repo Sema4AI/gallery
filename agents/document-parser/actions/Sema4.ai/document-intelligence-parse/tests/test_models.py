@@ -4,7 +4,6 @@ from typing import Any
 
 import pytest
 from reducto.types.shared.parse_response import ParseResponse, ResultFullResult
-
 from src.models import (
     Sema4aiParseResponse,
     Sema4aiParseResponseBlock,
@@ -250,7 +249,9 @@ class TestSema4aiParseResponse:
         # Verify the conversion
         assert isinstance(response, Sema4aiParseResponse)
         assert response.job_id == "3808c7d1-8189-4659-b58a-0d36abf6f774"
+        assert response.chunks is not None
         assert len(response.chunks) == 1
+        assert response.full_result is None
 
         # Verify defaults: embed and blocks should be None
         chunk = response.chunks[0]
@@ -266,7 +267,9 @@ class TestSema4aiParseResponse:
         # Verify the conversion
         assert isinstance(response, Sema4aiParseResponse)
         assert response.job_id == "3808c7d1-8189-4659-b58a-0d36abf6f774"
+        assert response.chunks is not None
         assert len(response.chunks) == 1
+        assert response.full_result is None
 
         # Verify embed is included but blocks are not
         chunk = response.chunks[0]
@@ -282,7 +285,9 @@ class TestSema4aiParseResponse:
         # Verify the conversion
         assert isinstance(response, Sema4aiParseResponse)
         assert response.job_id == "3808c7d1-8189-4659-b58a-0d36abf6f774"
+        assert response.chunks is not None
         assert len(response.chunks) == 1
+        assert response.full_result is None
 
         # Verify blocks are included but embed is not
         chunk = response.chunks[0]
@@ -301,7 +306,9 @@ class TestSema4aiParseResponse:
         # Verify the conversion
         assert isinstance(response, Sema4aiParseResponse)
         assert response.job_id == "3808c7d1-8189-4659-b58a-0d36abf6f774"
+        assert response.chunks is not None
         assert len(response.chunks) == 1
+        assert response.full_result is None
 
         # Verify both embed and blocks are included
         chunk = response.chunks[0]
@@ -309,15 +316,31 @@ class TestSema4aiParseResponse:
         assert chunk.blocks is not None
         assert len(chunk.blocks) == 7
 
+    def test_from_result_conversion_with_full_output(
+        self, parse_response: ParseResponse
+    ) -> None:
+        """Test converting a ParseResponse with full_output=True."""
+        response = Sema4aiParseResponse.from_result(parse_response, full_output=True)
+
+        # Verify the conversion
+        assert isinstance(response, Sema4aiParseResponse)
+        assert response.job_id == "3808c7d1-8189-4659-b58a-0d36abf6f774"
+        assert response.chunks is None
+        assert response.full_result is not None
+
+        # Verify full_result is a ResultFullResult instance
+        assert isinstance(response.full_result, ResultFullResult)
+        assert len(response.full_result.chunks) == 1
+
     def test_response_only_includes_expected_fields(
         self, parse_response: ParseResponse
     ) -> None:
-        """Test that the response only includes job_id and chunks fields."""
+        """Test that the response only includes job_id, chunks, and full_result fields."""
         response = Sema4aiParseResponse.from_result(parse_response)
 
         # Verify only expected fields are present
         response_dict = response.model_dump()
-        assert set(response_dict.keys()) == {"job_id", "chunks"}
+        assert set(response_dict.keys()) == {"job_id", "chunks", "full_result"}
 
         # Verify fields that should be excluded are not present
         assert "duration" not in response_dict
@@ -335,6 +358,7 @@ class TestSema4aiParseResponse:
         )
 
         # Verify all chunks are Sema4aiParseResponseChunk instances
+        assert response.chunks is not None
         assert all(
             isinstance(chunk, Sema4aiParseResponseChunk) for chunk in response.chunks
         )
@@ -361,6 +385,7 @@ class TestSema4aiParseResponse:
         assert response.job_id == "3808c7d1-8189-4659-b58a-0d36abf6f774"
 
         # Verify chunks
+        assert response.chunks is not None
         assert len(response.chunks) == 1
         chunk = response.chunks[0]
         assert chunk.content.startswith("SkiGear Co.")
@@ -394,9 +419,11 @@ class TestSema4aiParseResponse:
         # Verify it's valid JSON
         parsed = json.loads(json_str)
         assert parsed["job_id"] == "3808c7d1-8189-4659-b58a-0d36abf6f774"
+        assert parsed["chunks"] is not None
         assert len(parsed["chunks"]) == 1
         assert parsed["chunks"][0]["embed"] is not None
         assert parsed["chunks"][0]["blocks"] is not None
+        assert parsed["full_result"] is None
 
     def test_model_can_be_deserialized_from_dict(
         self, parse_response: ParseResponse
@@ -412,6 +439,8 @@ class TestSema4aiParseResponse:
 
         # Verify it matches the original
         assert recreated.job_id == response.job_id
+        assert recreated.chunks is not None
+        assert response.chunks is not None
         assert len(recreated.chunks) == len(response.chunks)
         assert recreated.model_dump() == response.model_dump()
 
@@ -460,3 +489,6 @@ class TestModelFieldDescriptions:
 
         assert "chunks" in schema["properties"]
         assert "description" in schema["properties"]["chunks"]
+
+        assert "full_result" in schema["properties"]
+        assert "description" in schema["properties"]["full_result"]
