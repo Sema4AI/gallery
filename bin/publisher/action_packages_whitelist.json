@@ -34,7 +34,8 @@
     "perplexity",
     "robocorp",
     "document-intelligence",
-    "document-insights"
+    "document-insights",
+    "document-intelligence-parse"
   ],
   "spcs": [
     "ai-browsing",
