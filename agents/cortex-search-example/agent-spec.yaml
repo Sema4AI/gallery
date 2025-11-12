@@ -2,7 +2,8 @@ agent-package:
   spec-version: v2
   agents:
   - name: Cortex Search Example
-    description: Example agent that works directly with Snowflake Cortex Search.
+    description: "Example agent that works directly with Snowflake Cortex Search.
+      \nGuide at: https://sema4.ai/docs/team-edition/templates/template-search"
     model:
       provider: Snowflake Cortex AI
       name: claude-3-5-sonnet
@@ -14,10 +15,10 @@ agent-package:
     action-packages:
     - name: Snowflake Cortex Search
       organization: Sema4.ai
-      version: 1.0.10
-      path: Sema4.ai/snowflake-cortex-search
       type: folder
-      whitelist: ''
+      version: 1.0.11
+      whitelist: ""
+      path: Sema4.ai/snowflake-cortex-search
     knowledge: []
     metadata:
       mode: conversational
