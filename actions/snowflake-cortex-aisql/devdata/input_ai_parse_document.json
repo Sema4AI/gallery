@@ -5,6 +5,7 @@
             "inputValue": {
                 "filename": "2025monthlystats.pdf",
                 "stage_path": "",
+                "warehouse": "COMPUTE_WH",
                 "database_name": "OIL_AND_GAS",
                 "schema_name": "PUBLIC",
                 "stage_name": "FILE_INPUT"
@@ -15,6 +16,7 @@
             "inputValue": {
                 "filename": "dynamo-invoice.png",
                 "stage_path": "",
+                "warehouse": "COMPUTE_WH",
                 "database_name": "OIL_AND_GAS",
                 "schema_name": "PUBLIC",
                 "stage_name": "FILE_INPUT"
@@ -25,6 +27,7 @@
             "inputValue": {
                 "filename": "test-presentation.pptx",
                 "stage_path": "",
+                "warehouse": "COMPUTE_WH",
                 "database_name": "OIL_AND_GAS",
                 "schema_name": "PUBLIC",
                 "stage_name": "FILE_INPUT"
@@ -39,6 +42,10 @@
             "stage_path: string: Optional subfolder path within the stage"
         ],
         "managedParamsSchemaDescription": {
+            "warehouse": {
+                "type": "Secret",
+                "description": "The warehouse to use for the query"
+            },
             "database_name": {
                 "type": "Secret",
                 "description": "The database containing the stage"
@@ -54,6 +61,6 @@
         },
         "inputFileVersion": "v3",
         "kind": "action",
-        "actionSignature": "action/args: \"filename: str, database_name: Secret, schema_name: Secret, stage_name: Secret, stage_path: str=''\""
+        "actionSignature": "action/args: \"filename: str, warehouse: Secret, database_name: Secret, schema_name: Secret, stage_name: Secret, stage_path: str=''\""
     }
 }

@@ -63,6 +63,7 @@ def list_stage_files(
 @action
 def ai_parse_document(
     filename: str,
+    warehouse: Secret,
     database_name: Secret,
     schema_name: Secret,
     stage_name: Secret,
@@ -73,6 +74,7 @@ def ai_parse_document(
 
     Args:
         filename: The name of the file to upload from chat
+        warehouse: The warehouse to use for the query
         database_name: The database containing the stage
         schema_name: The schema containing the stage
         stage_name: The name of the stage
@@ -196,6 +198,10 @@ def ai_parse_document(
                 print("Upload completed successfully")
 
                 # TODO: handle image (OCR) files differently than others - page splitting does not work for them
+
+                # Set the warehouse
+                cursor.execute(f"USE WAREHOUSE {warehouse.value}")
+                print(f"Set warehouse to {warehouse.value}")
 
                 # Now do the parsing
                 query = f"""
