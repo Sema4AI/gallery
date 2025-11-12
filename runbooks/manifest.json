@@ -11,13 +11,13 @@
     {
       "name": "Worker Runbook",
       "description": "Helps you create a worker agent to perform tasks.",
-      "url": "https://cdn.sema4.ai/gallery/runbooks/runbook-template-worker.md",
+      "url": "https://cdn.sema4.ai/gallery/runbooks/runbook-template-agent-worker.md",
       "agent-type": "worker"
     },
     {
       "name": "Conversational Runbook",
       "description": "Helps you create a conversational agent to interact with users.",
-      "url": "https://cdn.sema4.ai/gallery/runbooks/runbook-template-conversational.md",
+      "url": "https://cdn.sema4.ai/gallery/runbooks/runbook-template-agent-conversational.md",
       "agent-type": "conversational"
     }
   ]
