@@ -1,31 +1,24 @@
 {
-  "version": "1.0",
+  "version": "2.0",
   "templates": [
     {
       "name": "Start from Scratch",
       "description": "Basic Runbook structure to get you started.",
       "url": "https://cdn.sema4.ai/gallery/runbooks/runbook-from-scratch.md",
-      "type": "from-scratch"
+      "type": "from-scratch",
+      "deprecated": true
     },
     {
-      "name": "Start from Scratch",
-      "description": "Basic Runbook structure to get you started.",
-      "url": "https://cdn.sema4.ai/gallery/runbooks/runbook-from-scratch.md"
+      "name": "Worker Runbook",
+      "description": "Helps you create a worker agent to perform tasks.",
+      "url": "https://cdn.sema4.ai/gallery/runbooks/runbook-template-agent-worker.md",
+      "agent-type": "worker"
     },
     {
-      "name": "Action Writer Runbook",
-      "description": "Helps you create new actions using public API documentation.",
-      "url": "https://cdn.sema4.ai/gallery/runbooks/runbook-template-action-writer.md"
-    },
-    {
-      "name": "Vitality AI - Your Personal Multi-Agent Health Team",
-      "description": "Vitality AI is a multi-agent system designed to provide personalized, comprehensive, and real-time health insights. Led by Doctor Vitality, the Vitality Medical AI 8-Agent Team integrates advanced AI capabilities to analyze and interpret a vast array of health data sourced from the Health Lake, a comprehensive repository of an individual's health-related data spanning over a decade.",
-      "url": "https://cdn.sema4.ai/gallery/runbooks/runbook-template-vitality.md"
-    },
-    {
-      "name": "Wayback Machine Runbook",
-      "description": "Helps you analyze websites and summarizes changes over a time period.",
-      "url": "https://cdn.sema4.ai/gallery/runbooks/runbook-template-wayback.md"
+      "name": "Conversational Runbook",
+      "description": "Helps you create a conversational agent to interact with users.",
+      "url": "https://cdn.sema4.ai/gallery/runbooks/runbook-template-agent-conversational.md",
+      "agent-type": "conversational"
     }
   ]
 }
