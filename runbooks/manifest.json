@@ -9,16 +9,16 @@
       "deprecated": true
     },
     {
-      "name": "Worker Runbook",
-      "description": "Helps you create a worker agent to perform tasks.",
+      "name": "Worker Agent",
+      "description": "Agents that process work items without supervision",
       "url": "https://cdn.sema4.ai/gallery/runbooks/runbook-template-agent-worker.md",
-      "agent-type": "worker"
+      "type": "worker"
     },
     {
-      "name": "Conversational Runbook",
-      "description": "Helps you create a conversational agent to interact with users.",
+      "name": "Conversational Agent",
+      "description": "Interactive agents that collaborate with your team",
       "url": "https://cdn.sema4.ai/gallery/runbooks/runbook-template-agent-conversational.md",
-      "agent-type": "conversational"
+      "type": "conversational"
     }
   ]
 }
