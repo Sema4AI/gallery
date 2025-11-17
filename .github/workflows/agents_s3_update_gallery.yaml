@@ -126,10 +126,19 @@ jobs:
               fi
           done
 
-          # Copy the updated manifest
+          # Upload the updated manifests & hash files
           aws s3 cp manifest.json $S3_BASE_URL/manifest.json --cache-control max-age=120 --content-type "application/json"
-          aws s3 cp manifest_v2.json $S3_BASE_URL/manifest_v2.json --cache-control max-age=120 --content-type "application/json"
+          sha256sum manifest.json | awk '{printf "%s", $1}' > manifest.sha256
+          aws s3 cp manifest.sha256 $S3_BASE_URL/manifest.sha256 --cache-control max-age=120 --content-type "text/plain"
 
-          # Copy the updated manifest_spcs.json
+          aws s3 cp manifest_v2.json $S3_BASE_URL/manifest_v2.json --cache-control max-age=120 --content-type "application/json"
+          sha256sum manifest_v2.json | awk '{printf "%s", $1}' > manifest_v2.sha256
+          aws s3 cp manifest_v2.sha256 $S3_BASE_URL/manifest_v2.sha256 --cache-control max-age=120 --content-type "text/plain"
+
           aws s3 cp manifest_spcs.json $S3_BASE_URL/manifest_spcs.json --cache-control max-age=120 --content-type "application/json"
+          sha256sum manifest_spcs.json | awk '{printf "%s", $1}' > manifest_spcs.sha256
+          aws s3 cp manifest_spcs.sha256 $S3_BASE_URL/manifest_spcs.sha256 --cache-control max-age=120 --content-type "text/plain"
+
           aws s3 cp manifest_spcs_v2.json $S3_BASE_URL/manifest_spcs_v2.json --cache-control max-age=120 --content-type "application/json"
+          sha256sum manifest_spcs_v2.json | awk '{printf "%s", $1}' > manifest_spcs_v2.sha256
+          aws s3 cp manifest_spcs_v2.sha256 $S3_BASE_URL/manifest_spcs_v2.sha256 --cache-control max-age=120 --content-type "text/plain"
