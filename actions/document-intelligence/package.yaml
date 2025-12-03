@@ -1,6 +1,6 @@
 name: Document Intelligence
 description: Actions for Sema4.ai Document Intelligence
-version: 2.2.1
+version: 2.2.2
 spec-version: v2
 dependencies:
   conda-forge:
