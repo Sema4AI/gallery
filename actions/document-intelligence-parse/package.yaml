@@ -1,7 +1,7 @@
 name: Document Intelligence Parse
 description: Parse documents with Sema4.ai's Document Intelligence
 spec-version: v2
-version: 0.1.0
+version: 0.1.1
 dependencies:
   conda-forge:
   - python=3.11.12
