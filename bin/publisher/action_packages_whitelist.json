@@ -71,6 +71,9 @@
     "snowflake-data",
     "serper",
     "perplexity",
-    "robocorp"
+    "robocorp",
+    "document-intelligence",
+    "document-insights",
+    "document-intelligence-parse"
   ]
 }
