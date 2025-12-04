@@ -6,12 +6,23 @@ from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
+import html2text
 import markdown
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
 from sema4ai.actions import ActionError, chat
 
 from google_mail._models import Attachment, Draft, Drafts, Email
+
+
+def _html_to_markdown(html_content):
+    """Convert HTML to markdown for better readability."""
+    converter = html2text.HTML2Text()
+    converter.ignore_links = False
+    converter.ignore_images = True
+    converter.ignore_emphasis = False
+    converter.body_width = 0  # No wrapping
+    return converter.handle(html_content).strip()
 
 
 def _create_message(sender, to, subject, body, cc=None, bcc=None, attachments=None):
@@ -98,7 +109,41 @@ def _get_message_by_id(service, user_id, message_id):
         raise ActionError(f"An error occurred: {error}") from error
 
 
-def _get_message_details(service, message, return_content=False, fetch_attachments=False):
+def _extract_body_from_parts(parts, return_content=False):
+    """Recursively extract plain text and HTML body from message parts."""
+    body = ""
+    html_body = ""
+    attachments_info = []
+
+    for part in parts:
+        mime_type = part.get("mimeType", "")
+
+        # Recurse into nested multipart structures
+        if mime_type.startswith("multipart/") and "parts" in part:
+            nested_body, nested_html, nested_attachments = _extract_body_from_parts(
+                part["parts"], return_content
+            )
+            body += nested_body
+            html_body += nested_html
+            attachments_info.extend(nested_attachments)
+        elif return_content:
+            if mime_type == "text/plain" and "data" in part.get("body", {}):
+                body += base64.urlsafe_b64decode(part["body"]["data"]).decode("utf-8")
+            elif mime_type == "text/html" and "data" in part.get("body", {}):
+                html_body += base64.urlsafe_b64decode(part["body"]["data"]).decode(
+                    "utf-8"
+                )
+
+        # Collect attachment info
+        if part.get("filename"):
+            attachments_info.append(part)
+
+    return body, html_body, attachments_info
+
+
+def _get_message_details(
+    service, message, return_content=False, fetch_attachments=False
+):
     headers = message["payload"]["headers"]
     email = Email()
     email.id_ = message["id"]
@@ -116,35 +161,61 @@ def _get_message_details(service, message, return_content=False, fetch_attachmen
     email.attachments = []
     body = ""
     html_body = ""
-    for part in message["payload"].get("parts", []):
-        if return_content:
-            if part["mimeType"] == "text/plain" and "data" in part["body"]:
-                body += base64.urlsafe_b64decode(part["body"]["data"]).decode("utf-8")
-            elif part["mimeType"] == "text/html" and "data" in part["body"]:
-                html_body += base64.urlsafe_b64decode(part["body"]["data"]).decode(
-                    "utf-8"
+
+    payload = message["payload"]
+
+    # Check if body is directly in payload (simple non-multipart emails)
+    if "parts" not in payload and "body" in payload and "data" in payload["body"]:
+        mime_type = payload.get("mimeType", "")
+        decoded_body = base64.urlsafe_b64decode(payload["body"]["data"]).decode("utf-8")
+        if mime_type == "text/plain":
+            body = decoded_body
+        elif mime_type == "text/html":
+            html_body = decoded_body
+        else:
+            # Default to treating unknown mime types as plain text
+            body = decoded_body
+        attachments_info = []
+    else:
+        # Handle multipart emails with recursive extraction
+        body, html_body, attachments_info = _extract_body_from_parts(
+            payload.get("parts", []), return_content
+        )
+
+    # Process attachments
+    for part in attachments_info:
+        attachment = Attachment()
+        attachment.filename = part["filename"]
+        attachment.mimetype = part["mimeType"]
+        attachment.filesize = int(part["body"]["size"])
+        if fetch_attachments:
+            if "data" in part["body"]:
+                file_bytes = base64.urlsafe_b64decode(part["body"]["data"])
+                chat.attach_file_content(
+                    attachment.filename, file_bytes, attachment.mimetype
                 )
-        if part["filename"]:
-            attachment = Attachment()
-            attachment.filename = part["filename"]
-            attachment.mimetype = part["mimeType"]
-            attachment.filesize = int(part["body"]["size"])
-            if fetch_attachments:
-                if "data" in part["body"]:
-                    file_bytes = base64.urlsafe_b64decode(part["body"]["data"])
-                    chat.attach_file_content(attachment.filename, file_bytes, attachment.mimetype)
-                elif "attachmentId" in part["body"]:
-                    attachment_id = part["body"]["attachmentId"]
-                    attachment_data = service.users().messages().attachments().get(
-                        userId="me", messageId=message["id"], id=attachment_id
-                    ).execute()
-                    file_bytes = base64.urlsafe_b64decode(attachment_data["data"])
-                    chat.attach_file_content(attachment.filename, file_bytes, attachment.mimetype)
-                else:
-                    raise ActionError("No data or attachmentId found in the attachment")
-            email.attachments.append(attachment)
-    # NOTE. Returning the html_body only if body is empty (for now)
-    email.body = body if body else html_body
+            elif "attachmentId" in part["body"]:
+                attachment_id = part["body"]["attachmentId"]
+                attachment_data = (
+                    service.users()
+                    .messages()
+                    .attachments()
+                    .get(userId="me", messageId=message["id"], id=attachment_id)
+                    .execute()
+                )
+                file_bytes = base64.urlsafe_b64decode(attachment_data["data"])
+                chat.attach_file_content(
+                    attachment.filename, file_bytes, attachment.mimetype
+                )
+            else:
+                raise ActionError("No data or attachmentId found in the attachment")
+        email.attachments.append(attachment)
+
+    # Prefer plain text body, fall back to HTML converted to plain text
+    if body:
+        email.body = body
+    elif html_body:
+        email.body = _html_to_markdown(html_body)
     return email
 
 
@@ -157,7 +228,9 @@ def _get_label_id(service, label_name):
                 return label["id"]
         raise ActionError(f'Label "{label_name}" not found.')
     except Exception as error:
-        raise ActionError(f"An error occurred while fetching label ID: {error}") from error
+        raise ActionError(
+            f"An error occurred while fetching label ID: {error}"
+        ) from error
 
 
 def _get_current_labels(service, message_id):
@@ -170,7 +243,9 @@ def _get_current_labels(service, message_id):
         )
         return message["labelIds"]
     except Exception as error:
-        raise ActionError(f"An error occurred while fetching labels: {error}") from error
+        raise ActionError(
+            f"An error occurred while fetching labels: {error}"
+        ) from error
 
 
 def _move_email_to_label(service, email_ids, new_label_id):
@@ -251,7 +326,7 @@ def _create_draft(service, message_body):
             .create(userId="me", body={"message": message_body})
             .execute()
         )
-        print(f'Draft created with ID: {draft["id"]}')
+        print(f"Draft created with ID: {draft['id']}")
         return draft["id"]
     except Exception as error:
         raise ActionError(f"An error occurred: {error}") from error
@@ -353,4 +428,6 @@ def _remove_labels_from_emails(service, email_ids, label_ids):
                 )
             _execute_batch_with_retry(batch)
     except Exception as error:
-        raise ActionError(f"An error occurred while removing labels: {error}") from error
+        raise ActionError(
+            f"An error occurred while removing labels: {error}"
+        ) from error

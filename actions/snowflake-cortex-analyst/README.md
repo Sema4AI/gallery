@@ -21,7 +21,7 @@ Provides direct query execution capabilities against Snowflake:
 #### Cortex Analyst Configuration
 
 When using these actions, you need to configure several secrets:
-- Semantic Model File location
+- Semantic Model File location or a view name
 - Warehouse
 - Database
 - Schema
@@ -30,7 +30,7 @@ These values are stored in your Sema4.ai Studio or Control Room and requested fr
 
 Example values:
 
-- Semantic Model File: "@PRODUCTION_RESULTS.PUBLIC.STAGE1/oil_gas.yml"
+- Semantic Model File: "@PRODUCTION_RESULTS.PUBLIC.STAGE1/oil_gas.yml" or "PRODUCTION_RESULTS.PUBLIC.VIEW1"
 - Warehouse: COMPUTE_WH
 - Database: PRODUCTION_RESULTS
 - Schema: PUBLIC

@@ -1,0 +1,29 @@
+{
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "file_path": "@CALL_CENTER_DATA.PUBLIC.FILES/TWO_DBS.yaml",
+                "target_folder": "",
+                "warehouse": "COMPUTE_WH"
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "download_stage_file",
+        "actionRelativePath": "snowflake_actions.py",
+        "schemaDescription": [
+            "file_path: string: The full stage path to the file (e.g., \"@DATABASE.SCHEMA.STAGE/path/to/file.csv\"\nor \"DATABASE.SCHEMA.STAGE/path/to/file.csv\")",
+            "target_folder: string: Local folder to download the file to (default: current working directory)"
+        ],
+        "managedParamsSchemaDescription": {
+            "warehouse": {
+                "type": "Secret",
+                "description": "The Snowflake warehouse to use"
+            }
+        },
+        "inputFileVersion": "v3",
+        "kind": "action",
+        "actionSignature": "action/args: \"warehouse: Secret, file_path: str, target_folder: str=''\""
+    }
+}

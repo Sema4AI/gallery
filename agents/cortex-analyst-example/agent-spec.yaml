@@ -2,21 +2,23 @@ agent-package:
   spec-version: v2
   agents:
   - name: Cortex Analyst Example
-    description: Example agent that works directly with Snowflake Cortex Analyst.
+    description: "Example agent that works directly with Snowflake Cortex Analyst.
+      \nGuide at: https://sema4.ai/docs/team-edition/templates/template-analyst"
     model:
       provider: Snowflake Cortex AI
       name: claude-3-5-sonnet
-    version: 0.1.3
+    version: 0.1.5
     architecture: agent
     reasoning: disabled
     runbook: runbook.md
+    conversation-guide: conversation-guide.yaml
     action-packages:
     - name: Snowflake Cortex Analyst
       organization: Sema4.ai
-      version: 1.0.4
-      path: Sema4.ai/snowflake-cortex-analyst
       type: folder
-      whitelist: ''
+      version: 2.0.5
+      whitelist: ""
+      path: Sema4.ai/snowflake-cortex-analyst
     knowledge: []
     metadata:
       mode: conversational
@@ -30,4 +32,4 @@ agent-package:
   - ./**/.env
   - ./**/.DS_Store
   - ./**/*.pyc
-  - ./*.zi
+  - ./*.zip

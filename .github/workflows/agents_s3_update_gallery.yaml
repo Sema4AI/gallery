@@ -91,30 +91,54 @@ jobs:
           cd bin/publisher/agents
           ls -la
 
-          # Copy the Agents subdirectories. Note that since this is an update workflow,
+          # Sync the Agents subdirectories. Note that since this is an update workflow,
           # subdirectories will only contain agents which version's was actually bumped.
           # cache-control max-age=31536000, because these should be immutable.
+          # Check if files exist before uploading to avoid overwriting existing files.
           for dir in */; do
-            aws s3 cp "$dir" "$S3_BASE_URL/$dir" --recursive --cache-control max-age=31536000
-
-              returnCode=$?
+              find "$dir" -type f | while read -r file; do
+                  s3_key="gallery/agents/${file}"
+                  cdn_url="https://cdn.sema4.ai/$s3_key"
+                  
+                  # Check if file exists in S3 using curl
+                  if curl --head --silent --fail "$cdn_url" > /dev/null; then
+                      echo "File $s3_key already exists in S3, skipping..."
+                  else
+                      echo "Uploading $file to s3://downloads.robocorp.com/$s3_key"
+                      aws s3 cp "$file" "s3://downloads.robocorp.com/$s3_key" --cache-control "max-age=31536000"
+                      
+                      returnCode=$?
+                      if [ $returnCode -ne 0 ]; then
+                        echo "Upload of '$file' failed, exiting..."
+                        exit 1
+                      fi
+                  fi
+              done
 
               # If the upload of any agent fails, we want to break the workflow, as to not update the manifest,
               # which should be the only source of truth.
               # Even if some agent will be uploaded before other one fails, manifest won't include them,
               # and therefore they won't be available in clients to download, and will be eligible to re-upload
               # on the next Gallery update run.
-              if [ $returnCode -ne 0 ]; then
+              if [ $? -ne 0 ]; then
                 echo "Upload of '$dir' agent failed, exiting..."
                 exit 1
               fi
-
           done
 
-          # Copy the updated manifest
-          aws s3 cp manifest.json $S3_BASE_URL/manifest.json --cache-control max-age=120 --content-type "text/plain"
-          aws s3 cp manifest_v2.json $S3_BASE_URL/manifest_v2.json --cache-control max-age=120 --content-type "text/plain"
+          # Upload the updated manifests & hash files
+          aws s3 cp manifest.json $S3_BASE_URL/manifest.json --cache-control max-age=120 --content-type "application/json"
+          sha256sum manifest.json | awk '{printf "%s", $1}' > manifest.sha256
+          aws s3 cp manifest.sha256 $S3_BASE_URL/manifest.sha256 --cache-control max-age=120 --content-type "text/plain"
 
-          # Copy the updated manifest_spcs.json
-          aws s3 cp manifest_spcs.json $S3_BASE_URL/manifest_spcs.json --cache-control max-age=120 --content-type "text/plain"
-          aws s3 cp manifest_spcs_v2.json $S3_BASE_URL/manifest_spcs_v2.json --cache-control max-age=120 --content-type "text/plain"
+          aws s3 cp manifest_v2.json $S3_BASE_URL/manifest_v2.json --cache-control max-age=120 --content-type "application/json"
+          sha256sum manifest_v2.json | awk '{printf "%s", $1}' > manifest_v2.sha256
+          aws s3 cp manifest_v2.sha256 $S3_BASE_URL/manifest_v2.sha256 --cache-control max-age=120 --content-type "text/plain"
+
+          aws s3 cp manifest_spcs.json $S3_BASE_URL/manifest_spcs.json --cache-control max-age=120 --content-type "application/json"
+          sha256sum manifest_spcs.json | awk '{printf "%s", $1}' > manifest_spcs.sha256
+          aws s3 cp manifest_spcs.sha256 $S3_BASE_URL/manifest_spcs.sha256 --cache-control max-age=120 --content-type "text/plain"
+
+          aws s3 cp manifest_spcs_v2.json $S3_BASE_URL/manifest_spcs_v2.json --cache-control max-age=120 --content-type "application/json"
+          sha256sum manifest_spcs_v2.json | awk '{printf "%s", $1}' > manifest_spcs_v2.sha256
+          aws s3 cp manifest_spcs_v2.sha256 $S3_BASE_URL/manifest_spcs_v2.sha256 --cache-control max-age=120 --content-type "text/plain"

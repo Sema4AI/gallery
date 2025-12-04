@@ -42,6 +42,6 @@ def search_emails(
     emails = Emails(items=[])
     messages = _list_messages_with_query(service, query=query, max_results=max_results)
     for message in messages:
-        email = _get_message_details(service, message, fetch_attachments=fetch_attachments)
+        email = _get_message_details(service, message, return_content=True, fetch_attachments=fetch_attachments)
         emails.items.append(email)
     return Response(result=emails)

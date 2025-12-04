@@ -2,7 +2,7 @@ from sema4ai.actions import Response, Secret, action
 from snowflake.core import Root
 from pydantic import BaseModel, Field
 from typing import Annotated
-from utils import execute_query, get_snowflake_connection
+from sema4ai.data import execute_snowflake_query, get_snowflake_connection
 
 class CortexSearchRequest(BaseModel):
     """Request model for Cortex search operations."""
@@ -73,7 +73,7 @@ def cortex_get_search_specification(
         INFORMATION_SCHEMA.CORTEX_SEARCH_SERVICES
         WHERE SERVICE_NAME = :1
     """
-    result = execute_query(
+    result = execute_snowflake_query(
         query=query,
         warehouse=warehouse.value.upper(),
         database=database.value.upper(),
@@ -126,7 +126,9 @@ def cortex_search(
             validated_columns = None
 
         with get_snowflake_connection(
-            warehouse=warehouse.value.upper(), database=database.value.upper(), schema=schema.value.upper()
+            warehouse=warehouse.value.upper(), 
+            database=database.value.upper(), 
+            schema=schema.value.upper()
         ) as conn:
             print(f"Established Snowflake connection to {database.value.upper()}.{schema.value.upper()}")
             

@@ -1,0 +1,42 @@
+{
+    "inputs": [
+        {
+            "inputName": "input-1",
+            "inputValue": {
+                "stage_name": "CALL_CENTER_DATA.PUBLIC.FILES",
+                "warehouse": "COMPUTE_WH"
+            }
+        },
+        {
+            "inputName": "input-error",
+            "inputValue": {
+                "stage_name": "CALL_CENTER_DATA.PIBLIC.FILES",
+                "warehouse": "COMPUTE_WH"
+            }
+        }, {
+            "inputName": "input-limit",
+            "inputValue": {
+                "stage_name": "CALL_CENTER_DATA.PUBLIC.FILES",
+                "limit": 2,
+                "warehouse": "COMPUTE_WH"
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "get_stage_files",
+        "actionRelativePath": "snowflake_actions.py",
+        "schemaDescription": [
+            "stage_name: string: The fully qualified stage name in format \"database.schema.stage_name\" \n(e.g., \"MY_DB.PUBLIC.MY_STAGE\") or stage name with @ prefix (e.g., \"@MY_DB.PUBLIC.MY_STAGE\")",
+            "limit: integer: Maximum number of files to return, sorted by newest first (default: 20)"
+        ],
+        "managedParamsSchemaDescription": {
+            "warehouse": {
+                "type": "Secret",
+                "description": "The Snowflake warehouse to use"
+            }
+        },
+        "inputFileVersion": "v3",
+        "kind": "action",
+        "actionSignature": "action/args: 'warehouse: Secret, stage_name: str, limit: int=20'"
+    }
+}

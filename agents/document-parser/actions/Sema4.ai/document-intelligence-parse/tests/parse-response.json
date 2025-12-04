@@ -1,0 +1,151 @@
+{
+    "job_id": "3808c7d1-8189-4659-b58a-0d36abf6f774",
+    "duration": 11.05430293083191,
+    "pdf_url": null,
+    "studio_link": "https://studio.reducto.ai/job/3808c7d1-8189-4659-b58a-0d36abf6f774",
+    "usage": {
+      "num_pages": 1,
+      "credits": 2
+    },
+    "result": {
+      "type": "full",
+      "chunks": [
+        {
+          "content": "SkiGear Co.\n1661 Mesa Drive\nLas Vegas, Nevada\n123-555-5555\n\n# EQUIPMENT INSPECTION\n\nMACHINE: Injection Molder\nSERIAL NUMBER: SGMM-12345\nINSPECTION GRADE: PASS\n\n## INSPECTION SUMMARY\n\nFollowing a thorough inspection of the injection molder, no issues or concerns were found. The technician meticulously examined the machine's components and operating systems, ensuring they were all in proper working order. Additionally, the safety measures underwent a comprehensive assessment and were determined to be fully compliant with standards, functioning effectively. As a preventive measure, the technician recommended regular maintenance to sustain the machine's excellent condition for future production runs. Overall, the inspection confirmed that the machine was operating optimally, meeting safety regulations, and ready for immediate use.\n\nMold Clamping Unit:\nInjection Unit: Good [x]\nMold Clamping Unit: Good [x]\nHydraulic System: Good [x]\nTemperature Control System: Good [x]\nEjector System: Good [x]\nLubrication System: Good [x]\nSafety Devices: Good [x]\nControl Software: Good [x]\n\nInspetced by: Emily Johnson\nDate: 2022-02-01",
+          "embed": "SkiGear Co.\n1661 Mesa Drive\nLas Vegas, Nevada\n123-555-5555\n\n# EQUIPMENT INSPECTION\n\nMACHINE: Injection Molder\nSERIAL NUMBER: SGMM-12345\nINSPECTION GRADE: PASS\n\n## INSPECTION SUMMARY\n\nFollowing a thorough inspection of the injection molder, no issues or concerns were found. The technician meticulously examined the machine's components and operating systems, ensuring they were all in proper working order. Additionally, the safety measures underwent a comprehensive assessment and were determined to be fully compliant with standards, functioning effectively. As a preventive measure, the technician recommended regular maintenance to sustain the machine's excellent condition for future production runs. Overall, the inspection confirmed that the machine was operating optimally, meeting safety regulations, and ready for immediate use.\n\nMold Clamping Unit:\nInjection Unit: Good [x]\nMold Clamping Unit: Good [x]\nHydraulic System: Good [x]\nTemperature Control System: Good [x]\nEjector System: Good [x]\nLubrication System: Good [x]\nSafety Devices: Good [x]\nControl Software: Good [x]\n\nInspetced by: Emily Johnson\nDate: 2022-02-01",
+          "enriched": "SkiGear Co.\n1661 Mesa Drive\nLas Vegas, Nevada\n123-555-5555\n\n# EQUIPMENT INSPECTION\n\nMACHINE: Injection Molder\nSERIAL NUMBER: SGMM-12345\nINSPECTION GRADE: PASS\n\n## INSPECTION SUMMARY\n\nFollowing a thorough inspection of the injection molder, no issues or concerns were found. The technician meticulously examined the machine's components and operating systems, ensuring they were all in proper working order. Additionally, the safety measures underwent a comprehensive assessment and were determined to be fully compliant with standards, functioning effectively. As a preventive measure, the technician recommended regular maintenance to sustain the machine's excellent condition for future production runs. Overall, the inspection confirmed that the machine was operating optimally, meeting safety regulations, and ready for immediate use.\n\nMold Clamping Unit:\nInjection Unit: Good [x]\nMold Clamping Unit: Good [x]\nHydraulic System: Good [x]\nTemperature Control System: Good [x]\nEjector System: Good [x]\nLubrication System: Good [x]\nSafety Devices: Good [x]\nControl Software: Good [x]\n\nInspetced by: Emily Johnson\nDate: 2022-02-01",
+          "enrichment_success": true,
+          "blocks": [
+            {
+              "type": "Text",
+              "bbox": {
+                "left": 0.43935519991376226,
+                "top": 0.15069575674597566,
+                "width": 0.12038366713803765,
+                "height": 0.05529799865278719,
+                "page": 1,
+                "original_page": 1
+              },
+              "content": "SkiGear Co.\n1661 Mesa Drive\nLas Vegas, Nevada\n123-555-5555",
+              "image_url": null,
+              "confidence": "high",
+              "granular_confidence": {
+                "extract_confidence": null,
+                "parse_confidence": 0.7268212795257569
+              }
+            },
+            {
+              "type": "Title",
+              "bbox": {
+                "left": 0.3768952396338808,
+                "top": 0.236367816053254,
+                "width": 0.24272414947791932,
+                "height": 0.015907434233700612,
+                "page": 1,
+                "original_page": 1
+              },
+              "content": "EQUIPMENT INSPECTION",
+              "image_url": null,
+              "confidence": "high",
+              "granular_confidence": {
+                "extract_confidence": null,
+                "parse_confidence": 0.9207716703414917
+              }
+            },
+            {
+              "type": "Key Value",
+              "bbox": {
+                "left": 0.18507134577373846,
+                "top": 0.26796554992212607,
+                "width": 0.6270464203468517,
+                "height": 0.03529553391381036,
+                "page": 1,
+                "original_page": 1
+              },
+              "content": "MACHINE: Injection Molder\nSERIAL NUMBER: SGMM-12345\nINSPECTION GRADE: PASS",
+              "image_url": null,
+              "confidence": "high",
+              "granular_confidence": {
+                "extract_confidence": null,
+                "parse_confidence": 0.9109222412109375
+              }
+            },
+            {
+              "type": "Section Header",
+              "bbox": {
+                "left": 0.1926943599197795,
+                "top": 0.32125583157708004,
+                "width": 0.13075742319588943,
+                "height": 0.007982991480287513,
+                "page": 1,
+                "original_page": 1
+              },
+              "content": "INSPECTION SUMMARY",
+              "image_url": null,
+              "confidence": "high",
+              "granular_confidence": {
+                "extract_confidence": null,
+                "parse_confidence": 0.8562262952327728
+              }
+            },
+            {
+              "type": "Text",
+              "bbox": {
+                "left": 0.19276683455867277,
+                "top": 0.33365797901364164,
+                "width": 0.608450935951063,
+                "height": 0.11931721186384436,
+                "page": 1,
+                "original_page": 1
+              },
+              "content": "Following a thorough inspection of the injection molder, no issues or concerns were found. The technician meticulously examined the machine's components and operating systems, ensuring they were all in proper working order. Additionally, the safety measures underwent a comprehensive assessment and were determined to be fully compliant with standards, functioning effectively. As a preventive measure, the technician recommended regular maintenance to sustain the machine's excellent condition for future production runs. Overall, the inspection confirmed that the machine was operating optimally, meeting safety regulations, and ready for immediate use.",
+              "image_url": null,
+              "confidence": "high",
+              "granular_confidence": {
+                "extract_confidence": null,
+                "parse_confidence": 0.9569496452808379
+              }
+            },
+            {
+              "type": "Key Value",
+              "bbox": {
+                "left": 0.1869194490494245,
+                "top": 0.46556819715776826,
+                "width": 0.6258405509128033,
+                "height": 0.1602553213836594,
+                "page": 1,
+                "original_page": 1
+              },
+              "content": "Mold Clamping Unit:\nInjection Unit: Good [x]\nMold Clamping Unit: Good [x]\nHydraulic System: Good [x]\nTemperature Control System: Good [x]\nEjector System: Good [x]\nLubrication System: Good [x]\nSafety Devices: Good [x]\nControl Software: Good [x]",
+              "image_url": null,
+              "confidence": "high",
+              "granular_confidence": {
+                "extract_confidence": null,
+                "parse_confidence": 0.9282279968261719
+              }
+            },
+            {
+              "type": "Key Value",
+              "bbox": {
+                "left": 0.18325899731130493,
+                "top": 0.6371101492317716,
+                "width": 0.6268663265604556,
+                "height": 0.04986387108246992,
+                "page": 1,
+                "original_page": 1
+              },
+              "content": "Inspetced by: Emily Johnson\nDate: 2022-02-01",
+              "image_url": null,
+              "confidence": "high",
+              "granular_confidence": {
+                "extract_confidence": null,
+                "parse_confidence": 0.9303357124328613
+              }
+            }
+          ]
+        }
+      ],
+      "ocr": null,
+      "custom": null
+    }
+  }

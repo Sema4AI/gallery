@@ -6,8 +6,8 @@ The tooling and maintence in here allows us to add/update/remove runbook templat
 
 [runbook-from-scratch.md](runbook-from-scratch.md) is the default runbook shown to Studio user when there is no Runbook defined, others are shown to the user separately.
 
-> When adding new templates, make sure the [manifest.json](manifest.json) is up to date. the `"type": "from-scratch"` must only be defined on one.
-
+> When adding new templates, make sure the [manifest.json](manifest.json) is up to date.
+> `[DEPRECATED]` The `"type": "from-scratch"` must only be defined on one.
 
 ## Deployment
 

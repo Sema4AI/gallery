@@ -28,8 +28,10 @@ jobs:
           cd runbooks
           ls -la
 
-          # Copy the updated manifest
-          aws s3 cp manifest.json $S3_BASE_URL/manifest.json --cache-control max-age=120 --content-type "text/plain"
+          # Upload the updated manifest & hash file
+          aws s3 cp manifest.json $S3_BASE_URL/manifest.json --cache-control max-age=120 --content-type "application/json"
+          sha256sum manifest.json | awk '{printf "%s", $1}' > manifest.sha256
+          aws s3 cp manifest.sha256 $S3_BASE_URL/manifest.sha256 --cache-control max-age=120 --content-type "text/plain"
 
           # Extract and upload markdown files listed in the manifest
           for file in $(jq -r '.templates[].url' manifest.json | sed 's#.*/##'); do

@@ -21,3 +21,7 @@ agents/
 demos/
 log.txt
 environments/
+s3/reorganized-extracts/**
+s3/temp-extracts/**
+s3/s3-actions/**
+!s3/history/**

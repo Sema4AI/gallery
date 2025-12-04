@@ -1,0 +1,59 @@
+{
+    "inputs": [
+        {
+            "inputName": "documents updated today",
+            "inputValue": {
+                "days": 1,
+                "max_results": 10,
+                "vscode:request:oauth2": {
+                    "oauth_access_token": {
+                        "type": "OAuth2Secret",
+                        "provider": "google",
+                        "scopes": [
+                            "https://www.googleapis.com/auth/drive.readonly"
+                        ],
+                        "access_token": "<access-token-will-be-requested-by-vscode>"
+                    }
+                }
+            }
+        },
+        {
+            "inputName": "documents modified this week",
+            "inputValue": {
+                "days": 7,
+                "max_results": 20,
+                "vscode:request:oauth2": {
+                    "oauth_access_token": {
+                        "type": "OAuth2Secret",
+                        "provider": "google",
+                        "scopes": [
+                            "https://www.googleapis.com/auth/drive.readonly"
+                        ],
+                        "access_token": "<access-token-will-be-requested-by-vscode>"
+                    }
+                }
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "list_recent_documents",
+        "actionRelativePath": "actions.py",
+        "schemaDescription": [
+            "days: integer: Number of days to look back for modifications (default: 7)",
+            "max_results: integer: Maximum number of results to return (default: 20, max: 100)"
+        ],
+        "managedParamsSchemaDescription": {
+            "oauth_access_token": {
+                "type": "OAuth2Secret",
+                "description": "The OAuth2 Google access token",
+                "provider": "google",
+                "scopes": [
+                    "https://www.googleapis.com/auth/drive.readonly"
+                ]
+            }
+        },
+        "inputFileVersion": "v3",
+        "kind": "action",
+        "actionSignature": "action/args: \"oauth_access_token: OAuth2Secret[Literal['google'], list[Literal['https://www.googleapis.com/auth/drive.readonly']]], days: int=7, max_results: int=20\""
+    }
+}

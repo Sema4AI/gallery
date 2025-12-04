@@ -1,27 +1,30 @@
 {
     "inputs": [
         {
-            "inputName": "input-with-wrapping",
+            "inputName": "input-valid-query",
             "inputValue": {
-                "query": "SELECT * FROM snowflake_database (SELECT COUNT(*) FROM PRODUCTION_REPORTS);"
+                "query": "SELECT * FROM PRODUCTION_REPORTS LIMIT 10;",
+                "warehouse": "COMPUTE_WH",
+                "database": "OIL_AND_GAS",
+                "schema": "PUBLIC"
             }
         },
         {
-            "inputName": "input-without-wrapping",
+            "inputName": "input-invalid-query",
             "inputValue": {
-                "query": "SELECT COUNT(*) FROM PRODUCTION_REPORTS;"
+                "query": "SELECT * FROM INVALID_TABLE LIMIT 10;",
+                "warehouse": "COMPUTE_WH",
+                "database": "OIL_AND_GAS",
+                "schema": "PUBLIC"
             }
         },
         {
-            "inputName": "input-with-dangerous-operation",
+            "inputName": "input-invalid-db-name",
             "inputValue": {
-                "query": "DROP TABLE PRODUCTION_REPORTS;"
-            }
-        },
-        {
-            "inputName": "input-with-syntax-error",
-            "inputValue": {
-                "query": "SELECT * FROM PRODUCTION_REPORTS WHERE;"
+                "query": "SELECT * FROM PRODUCTION_REPORTS LIMIT 10;",
+                "warehouse": "COMPUTE_WH",
+                "database": "OIL_AND_GASSSSUSS",
+                "schema": "PUBLIC"
             }
         }
     ],
@@ -31,9 +34,22 @@
         "schemaDescription": [
             "query: string: The Snowflake SQL query to execute."
         ],
-        "managedParamsSchemaDescription": {},
+        "managedParamsSchemaDescription": {
+            "warehouse": {
+                "type": "Secret",
+                "description": "The Snowflake warehouse to use"
+            },
+            "database": {
+                "type": "Secret",
+                "description": "The Snowflake database to use  "
+            },
+            "schema": {
+                "type": "Secret",
+                "description": "The Snowflake schema to use"
+            }
+        },
         "inputFileVersion": "v3",
-        "kind": "query",
-        "actionSignature": "query/args: 'query: str'"
+        "kind": "action",
+        "actionSignature": "action/args: 'query: str, warehouse: Secret, database: Secret, schema: Secret'"
     }
 }

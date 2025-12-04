@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.0.11] - 2025-11-10
+
+### Changed
+
+- Updated dependencies
+
+## [1.0.10] - 2025-10-30
+
+- Updated dependencies
+- `sema4ai-data` v1.2.0 moved a lot of the Snowflake connection handling to the library side, simplifying the action codes.
+
+## [1.0.8] - 2025-08-07
+
+### Changed
+
+- Update sema4ai-actions to `1.4.1` version
+
 ## [1.0.7] - 2025-06-18
 
 - Updated sema4ai-actions version carrying a new version of pydantic
