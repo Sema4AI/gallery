@@ -7,14 +7,14 @@ agent-package:
     model:
       provider: OpenAI
       name: gpt-5-minimal
-    version: 0.1.0
+    version: 0.1.1
     architecture: agent
     reasoning: disabled
     runbook: runbook.md
     action-packages:
     - name: Document Intelligence Parse
       organization: Sema4.ai
-      version: 0.1.0
+      version: 0.1.2
       path: Sema4.ai/document-intelligence-parse
       type: folder
       whitelist: ''
