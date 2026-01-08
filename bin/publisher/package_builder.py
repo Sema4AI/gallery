@@ -1,6 +1,5 @@
 import os
 import subprocess
-from pathlib import Path
 
 from models import ActionsManifest
 from utils import get_version_strings_from_package_info, log_error, read_yaml_file
