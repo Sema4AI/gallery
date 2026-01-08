@@ -16,8 +16,8 @@ If for whatever reason we run into a case where the action pack manifests are br
 region = eu-west-1
 sso_start_url = https://d-9067b8f409.awsapps.com/start/#
 sso_region = us-east-1
-sso_account_id = 710450854638
-sso_role_name = ProductionAccountAdmin
+sso_account_id = <account id from AWS portal>
+sso_role_name = <role name from AWS portal>
 output = json
 ```
 
