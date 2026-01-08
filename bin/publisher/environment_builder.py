@@ -59,8 +59,10 @@ def build_package_environments(gallery_actions_folder: str, environments_folder:
             for version_dir in os.listdir(action_package_path):
                 version_path = os.path.join(action_package_path, version_dir)
 
-                env_hash_path = os.path.join(version_path, "env.hash")
-                python_env_hash = read_file_contents(env_hash_path)
+                # For debugging the exact envs
+                #env_hash_path = os.path.join(version_path, "env.hash")
+                #python_env_hash = read_file_contents(env_hash_path)
+                #print(f"python_env_hash: {python_env_hash}")
 
                 build_package_environment(version_path, environments_folder)
 
