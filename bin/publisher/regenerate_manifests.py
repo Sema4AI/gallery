@@ -110,6 +110,9 @@ def regenerate_manifests():
 
     print("Starting manifest regeneration from local S3 content...")
 
+    # Check for SKIP_CLEAN environment variable
+    skip_clean = os.environ.get("SKIP_CLEAN", "").lower() in ("1", "true", "yes")
+
     # Check if S3 content exists
     if not os.path.exists(s3_actions_folder):
         print(f"Error: S3 actions folder not found at {s3_actions_folder}")
@@ -118,15 +121,15 @@ def regenerate_manifests():
         )
         return
 
-    # Clear existing folders (but keep temp-gallery if it exists and has content)
+    # Clear existing folders
     clear_folders(zips_folder)
     clear_folders(gallery_actions_folder)
 
-    # Only clear temp folder if it's empty or doesn't exist
-    if (
-        not os.path.exists(temp_gallery_folder)
-        or len(os.listdir(temp_gallery_folder)) == 0
-    ):
+    # Clear temp folder by default (use SKIP_CLEAN=1 to preserve cache)
+    if skip_clean and os.path.exists(temp_gallery_folder) and len(os.listdir(temp_gallery_folder)) > 0:
+        print("SKIP_CLEAN enabled: Using existing extracted packages from temp folder...")
+    else:
+        print("Clearing temp-extracts cache...")
         clear_folders(temp_gallery_folder)
 
     # Load whitelist first to know which packages to process
@@ -137,10 +140,8 @@ def regenerate_manifests():
     all_whitelisted_packages = set(whitelist["standard"] + whitelist["spcs"])
     print(f"Processing {len(all_whitelisted_packages)} whitelisted packages")
 
-    # Check if temp folder already has extracted content
-    if os.path.exists(temp_gallery_folder) and len(os.listdir(temp_gallery_folder)) > 0:
-        print("Using existing extracted packages from temp folder...")
-    else:
+    # Extract packages if temp folder is empty
+    if not os.path.exists(temp_gallery_folder) or len(os.listdir(temp_gallery_folder)) == 0:
         # Copy individual zip files from S3 content to zips folder (only whitelisted packages)
         print("Copying zip files from S3 content (whitelisted packages only)...")
         copied_count = 0
@@ -232,8 +233,6 @@ def regenerate_manifests():
         else:
             print(f"{package_name}: NOT FOUND in manifest")
 
-    # Keep temporary folder for future runs (since S3 packages are immutable)
-    print("Keeping extracted packages for future runs...")
 
 
 if __name__ == "__main__":
