@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+### [4.2.0] - 2026-01-27
+
+### Added
+
+- New `create_work_item_for_agent()` action for creating Work Items by agent name
+- Optional Work Item attachments with chat file lookup support
+- Work Item API URL override plus v2-to-v1 fallback on 404
+- Documentation updates for Work Item and attachment usage
+
 ### [4.1.0] - 2025-08-21
 
 ### Added

@@ -1,10 +1,12 @@
 import json
+import mimetypes
 import os
 import platform
 from copy import copy
 from urllib.parse import urljoin, urlparse
 
 import sema4ai_http
+from sema4ai.actions import chat
 from pydantic import BaseModel
 
 
@@ -210,6 +212,158 @@ class _AgentAPIClient:
 
         return response
 
+    def _request_with_base_url(
+        self,
+        base_url: str,
+        path: str,
+        method="GET",
+        json_data: dict | None = None,
+        headers: dict | None = None,
+        success_codes: tuple[int, ...] = (200, 201, 204),
+    ) -> sema4ai_http.ResponseWrapper:
+        """Make a request to an explicit base URL (used for Work Item API)."""
+        if not base_url.endswith("/"):
+            base_url += "/"
+        url = urljoin(base_url, path)
+
+        request_headers = copy(headers) if headers else {}
+        if self.api_key:
+            request_headers["Authorization"] = f"Bearer {self.api_key}"
+
+        if method == "GET":
+            response = sema4ai_http.get(url, json=json_data, headers=request_headers)
+        elif method == "POST":
+            response = sema4ai_http.post(url, json=json_data, headers=request_headers)
+        elif method == "DELETE":
+            response = sema4ai_http.delete(url, headers=request_headers)
+        else:
+            raise ValueError(f"Unsupported HTTP method: {method}")
+
+        if response.status_code not in success_codes:
+            error_msg = f"HTTP {response.status_code}"
+            if response.text:
+                error_msg += f": {response.text}"
+            else:
+                error_msg += f": {response.reason or 'Unknown error'}"
+
+            raise AgentApiClientException(error_msg)
+
+        return response
+
+    def _get_work_item_fallback_url(self, work_item_api_url: str) -> str | None:
+        if "/api/v2/" in work_item_api_url:
+            return work_item_api_url.replace("/api/v2/", "/api/v1/", 1)
+        return None
+
+    def _request_work_item_api(
+        self,
+        base_url: str,
+        path: str,
+        method="GET",
+        json_data: dict | None = None,
+        headers: dict | None = None,
+        success_codes: tuple[int, ...] = (200, 201, 204),
+    ) -> tuple[sema4ai_http.ResponseWrapper, str]:
+        fallback_url = self._get_work_item_fallback_url(base_url)
+        try:
+            return (
+                self._request_with_base_url(
+                    base_url,
+                    path,
+                    method=method,
+                    json_data=json_data,
+                    headers=headers,
+                    success_codes=success_codes,
+                ),
+                base_url,
+            )
+        except AgentApiClientException as exc:
+            if fallback_url and "HTTP 404" in str(exc):
+                response = self._request_with_base_url(
+                    fallback_url,
+                    path,
+                    method=method,
+                    json_data=json_data,
+                    headers=headers,
+                    success_codes=success_codes,
+                )
+                print(f"Work Item API URL fallback to: {fallback_url}")
+                return response, fallback_url
+            raise
+
+    def _post_work_item_upload(
+        self, base_url: str, fields: dict, headers: dict | None
+    ) -> tuple[sema4ai_http.ResponseWrapper, str]:
+        fallback_url = self._get_work_item_fallback_url(base_url)
+        upload_url = urljoin(base_url.rstrip("/") + "/", "upload-file")
+        response = sema4ai_http.post(upload_url, headers=headers, fields=fields)
+        if response.status_code == 404 and fallback_url:
+            fallback_upload_url = urljoin(
+                fallback_url.rstrip("/") + "/", "upload-file"
+            )
+            response = sema4ai_http.post(
+                fallback_upload_url, headers=headers, fields=fields
+            )
+            print(f"Work Item API URL fallback to: {fallback_url}")
+            return response, fallback_url
+        return response, base_url
+
+    def _get_work_item_api_url(self) -> str:
+        """Resolve the Work Item API base URL.
+
+        Priority:
+        1) SEMA4AI_WORK_ITEM_API_URL (supports endpoint URL or /api/v1[/work-items])
+        2) Derive from the Agent API URL (replace /api/public/v1 -> /api/v1)
+        """
+        env_url = os.getenv("SEMA4AI_WORK_ITEM_API_URL")
+        if env_url:
+            return self._normalize_work_item_url(env_url)
+
+        derived_url = self._derive_work_item_url_from_agent_api(self.api_url)
+        if derived_url:
+            return derived_url
+
+        raise AgentApiClientException(
+            "Work Item API URL not configured. Set SEMA4AI_WORK_ITEM_API_URL."
+        )
+
+    def _normalize_work_item_url(self, url: str) -> str:
+        normalized = url.rstrip("/")
+        if "/work-items" in normalized:
+            return normalized
+        if normalized.endswith("/api/v1") or normalized.endswith("/api/v2"):
+            return f"{normalized}/work-items"
+        if "/api/v1/" in normalized or "/api/v2/" in normalized:
+            if "/api/v2/" in normalized:
+                base = normalized.split("/api/v2")[0] + "/api/v2"
+            else:
+                base = normalized.split("/api/v1")[0] + "/api/v1"
+            return f"{base}/work-items"
+        return f"{normalized}/api/v2/work-items"
+
+    def _derive_work_item_url_from_agent_api(self, agent_api_url: str) -> str | None:
+        normalized = agent_api_url.rstrip("/")
+        if "/api/public/" in normalized:
+            normalized = normalized.replace("/api/public/", "/api/")
+        if normalized.endswith("/v2"):
+            return f"{normalized}/work-items"
+        if normalized.endswith("/work-items"):
+            return normalized
+        if normalized.endswith("/api/v1"):
+            base = normalized.rsplit("/api/v1", 1)[0]
+            return f"{base}/api/v2/work-items"
+        if normalized.endswith("/api/v2"):
+            return f"{normalized}/work-items"
+        if "/api/v2/" in normalized:
+            base = normalized.split("/api/v2")[0] + "/api/v2"
+            return f"{base}/work-items"
+        if "/api/v1/" in normalized:
+            base = normalized.split("/api/v1")[0] + "/api/v2"
+            return f"{base}/work-items"
+        if "/api/" not in normalized:
+            return f"{normalized}/api/v2/work-items"
+        return None
+
     def _get_all_pages(self, endpoint: str) -> list:
         all_data = []
         next_token = None
@@ -378,3 +532,128 @@ class _AgentAPIClient:
             )
 
         return json.dumps(response_json)
+
+    def _upload_work_item_file(
+        self,
+        file_path: str,
+        work_item_api_url: str,
+        work_item_id: str | None = None,
+    ) -> tuple[str, str]:
+        filename = os.path.basename(file_path)
+        content_type = mimetypes.guess_type(filename)[0] or "application/octet-stream"
+        request_headers = (
+            {"Authorization": f"Bearer {self.api_key}"} if self.api_key else None
+        )
+
+        if os.path.exists(file_path):
+            with open(file_path, "rb") as file_handle:
+                file_bytes = file_handle.read()
+        else:
+            try:
+                # Try resolving relative/basename from chat file store.
+                file_bytes = chat.get_file_content(filename)
+            except Exception as exc:
+                raise AgentApiClientException(
+                    f"Attachment not found locally or in chat files: {file_path}"
+                ) from exc
+
+        fields = {"file": (filename, file_bytes, content_type)}
+        if work_item_id:
+            fields["work_item_id"] = work_item_id
+        upload_response, effective_base_url = self._post_work_item_upload(
+            work_item_api_url, fields, request_headers
+        )
+
+        if upload_response.status_code not in (200, 201):
+            error_msg = f"HTTP {upload_response.status_code}"
+            if upload_response.text:
+                error_msg += f": {upload_response.text}"
+            else:
+                error_msg += f": {upload_response.reason or 'Unknown error'}"
+            raise AgentApiClientException(error_msg)
+
+        upload_info = upload_response.json()
+        work_item_id = upload_info.get("work_item_id") or upload_info.get("id")
+        if not work_item_id:
+            raise AgentApiClientException(
+                f"Work item ID missing from upload response: {upload_info}"
+            )
+
+        upload_url = upload_info.get("upload_url")
+        upload_form_data = upload_info.get("upload_form_data") or {}
+        file_id = upload_info.get("file_id")
+        file_ref = upload_info.get("file_ref") or filename
+
+        if upload_url:
+            fields = dict(upload_form_data)
+            fields["file"] = (filename, file_bytes, content_type)
+            remote_upload = sema4ai_http.post(upload_url, fields=fields)
+
+            if remote_upload.status_code not in (200, 201, 204):
+                error_msg = f"HTTP {remote_upload.status_code}"
+                if remote_upload.text:
+                    error_msg += f": {remote_upload.text}"
+                else:
+                    error_msg += f": {remote_upload.reason or 'Unknown error'}"
+                raise AgentApiClientException(error_msg)
+
+            if file_id:
+                self._request_work_item_api(
+                    effective_base_url,
+                    f"{work_item_id}/confirm-file",
+                    method="POST",
+                    json_data={"file_ref": file_ref, "file_id": file_id},
+                    success_codes=(200, 201, 204),
+                )
+
+        return work_item_id, effective_base_url
+
+    def create_work_item(
+        self,
+        agent_id: str,
+        payload: dict,
+        attachments: list[str] | None = None,
+        work_item_api_url: str | None = None,
+    ) -> dict:
+        if work_item_api_url:
+            work_item_api_url = self._normalize_work_item_url(work_item_api_url)
+        else:
+            work_item_api_url = self._get_work_item_api_url()
+        print(f"Work Item API URL: {work_item_api_url}")
+        if attachments:
+            work_item_id = None
+            effective_base_url = work_item_api_url
+            for file_path in attachments:
+                work_item_id, effective_base_url = self._upload_work_item_file(
+                    file_path=file_path,
+                    work_item_api_url=effective_base_url,
+                    work_item_id=work_item_id,
+                )
+
+            create_payload = {
+                "work_item_id": work_item_id,
+                "agent_id": agent_id,
+                "payload": payload,
+            }
+        else:
+            create_payload = {"agent_id": agent_id, "payload": payload}
+
+        response, effective_base_url = self._request_work_item_api(
+            effective_base_url if attachments else work_item_api_url,
+            "",
+            method="POST",
+            json_data=create_payload,
+        )
+        work_item = response.json()
+
+        if attachments:
+            work_item_id = work_item.get("work_item_id") or work_item.get("id")
+            if work_item_id:
+                details_response, _ = self._request_work_item_api(
+                    effective_base_url,
+                    f"{work_item_id}?results=true",
+                    method="GET",
+                )
+                work_item = details_response.json()
+
+        return work_item
