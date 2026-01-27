@@ -109,6 +109,12 @@ class MessageResponse(BaseModel):
     response: str
     agent_name: str
 
+
+class WorkItemResponse(BaseModel):
+    work_item: dict
+    agent_name: str
+    agent_id: str
+
 @action
 def ask_agent(
     agent_name: str, 
@@ -301,3 +307,44 @@ def send_message(
     )
 
     return Response(result=response)
+
+
+@action
+def create_work_item_for_agent(
+    agent_name: str,
+    payload: dict,
+    sema4_api_key: Secret,
+    attachments: list[str] | None = None,
+    work_item_api_url: str | None = None,
+) -> Response[WorkItemResponse]:
+    """Creates a Work Item for a specific agent by name.
+
+    Args:
+        agent_name: The name of the agent to run the Work Item
+        payload: JSON payload to send as the Work Item payload
+        sema4_api_key: The API key for the Sema4 API if running in cloud. Use LOCAL if in Studio or SDK!
+        attachments: Optional list of file paths to attach to the Work Item
+        work_item_api_url: Optional Work Item API URL override
+
+    Returns:
+        Response containing the created Work Item details
+    """
+    client = _AgentAPIClient(api_key=sema4_api_key.value)
+    agent_result = resolve_agent_by_name(client, agent_name)
+    if not agent_result.found:
+        raise ActionError(agent_result.message)
+
+    agent = agent_result.agent
+    work_item = client.create_work_item(
+        agent_id=agent.id,
+        payload=payload,
+        attachments=attachments,
+        work_item_api_url=work_item_api_url,
+    )
+    return Response(
+        result=WorkItemResponse(
+            work_item=work_item,
+            agent_name=agent.name,
+            agent_id=agent.id,
+        )
+    )

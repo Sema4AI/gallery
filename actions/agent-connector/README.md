@@ -27,6 +27,9 @@ The easiest way to interact with agents is using the `ask_agent` function:
 - Create a conversation
 - Send a message to existing conversation
 
+**Work Items:**
+- Create a Work Item for an agent by name
+
 ## Example Usage
 
 ### Simple Agent Interaction
@@ -56,6 +59,26 @@ What agents do I have available?
 > Here are the agents you currently have running:
 > 1. Data Agent Example
 > 2. The Ultimate Data Sources Test
+
+### Create a Work Item
+
+```
+Create a work item for "Invoice Agent" with payload {"invoice_id": "ABC123", "priority": "high"}
+```
+
+### Create a Work Item With Attachments
+
+```
+Create a work item for "Invoice Agent" with payload {"invoice_id": "ABC123"} and attachments ["/path/to/invoice.pdf", "/path/to/notes.txt"]
+```
+
+### Attachments From Chat Files
+
+If an attachment path is not found locally, the action will try to fetch it from the chat files API using the filename (basename). This supports agent inputs that pass relative file names.
+
+```
+Create a work item for "Invoice Worker" with payload {"invoice_id": "IN-100017"} and attachments ["ad03f9489278c8e19d01ea5e05ee0aeb.pdf"]
+```
 
 ### Intelligent Suggestions
 
