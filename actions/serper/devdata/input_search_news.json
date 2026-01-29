@@ -1,0 +1,38 @@
+{
+    "inputs": [
+        {
+            "inputName": "Search for AI news",
+            "inputValue": {
+                "q": "artificial intelligence news",
+                "num": 5,
+                "gl": "us",
+                "hl": "en",
+                "tbs": "qdr:d",
+                "api_key": ""
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "search_news",
+        "actionRelativePath": "actions.py",
+        "schemaDescription": [
+            "q: string: The news search query.",
+            "num: integer: Number of results (default: 10).",
+            "gl: string: Country code.",
+            "hl: string: Language code.",
+            "tbs: string: Time-based filter for news recency."
+        ],
+        "managedParamsSchemaDescription": {
+            "api_key": {
+                "type": "Secret",
+                "description": "The API key for authentication."
+            }
+        },
+        "inputFileVersion": "v3",
+        "kind": "action",
+        "actionSignature": "action/args: 'q: str, api_key: Secret, gl: Optional[str] = None, location: Optional[str] = None, hl: Optional[str] = None, tbs: Optional[str] = None, autocorrect: Optional[bool] = None, num: int = 10, page: int = 1'"
+    }
+}
+
+
+
