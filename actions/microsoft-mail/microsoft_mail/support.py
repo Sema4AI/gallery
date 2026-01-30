@@ -59,7 +59,6 @@ def _get_me(token):
 
 
 def _read_file(attachment):
-    file_content = ""
     with open(attachment.filepath, "rb") as file:
         file_content = file.read()
     return base64.b64encode(file_content).decode("utf-8")
@@ -73,8 +72,6 @@ def _base64_attachment(attachment):
     2. filepath - Chat file name (tries chat.get_file_content first)
     3. filepath - Local filesystem path (fallback)
     """
-    c_bytes = ""
-
     # Method 1: Pre-encoded content
     if attachment.content_bytes:
         c_bytes = attachment.content_bytes
@@ -96,22 +93,17 @@ def _base64_attachment(attachment):
 
         except Exception as e:
             # Fallback to local filesystem
-            print(f"File not in chat, trying local path: {e}")
             c_bytes = _read_file(attachment)
     else:
         raise ActionError("Attachment must have either content_bytes or filepath")
 
     # Extract name from filepath if needed
-    if attachment.filepath and (not attachment.name or attachment.name == ""):
+    if attachment.filepath and not attachment.name:
         attachment.name = Path(attachment.filepath).name
 
     data = {
         "@odata.type": "#microsoft.graph.fileAttachment",
-        "name": (
-            attachment.name
-            if attachment.name and len(attachment.name) > 0
-            else "UNNAMED_ATTACHMENT"
-        ),
+        "name": attachment.name or "UNNAMED_ATTACHMENT",
         "contentBytes": c_bytes,
     }
     return data
@@ -165,7 +157,7 @@ def _set_message_data(message: Email, html_content: bool, reply: bool = False) -
                 "name": (
                     message.reply_to.name
                     if message.reply_to.name
-                    else message.reply_to.name.address
+                    else message.reply_to.address
                 ),
             }
         }
@@ -221,10 +213,10 @@ def _get_inbox_folder_id(token):
         "get inbox folder",
         headers=headers,
     )
-    if response and "id" in response.keys():
+    if response and "id" in response:
         return response["id"]
     else:
-        raise ValueError("Inbox folder not found")
+        raise ActionError("Inbox folder not found")
 
 
 def _find_folder(folders, folder_to_search):
