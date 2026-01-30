@@ -26,7 +26,7 @@ Currently supporting:
 """
 
 from sema4ai.actions import action, OAuth2Secret, Response, ActionError
-from sema4ai.actions.chat import attach_file
+from sema4ai.actions.chat import attach_file, attach_file_content
 from microsoft_mail.models import Email, EmailAttachment, Emails, MessageFlag, Category
 from microsoft_mail.support import (
     _find_folder,
@@ -38,15 +38,17 @@ from microsoft_mail.support import (
     _get_me,
     _ensure_category_exists,
     _get_category_info,
+    build_headers,
+    send_request,
 )
 from dotenv import load_dotenv
 from typing import Literal
 from pathlib import Path
 import os
 import base64
+import csv
+import io
 import tempfile
-
-from microsoft_mail.support import build_headers, send_request
 
 
 load_dotenv(Path(__file__).absolute().parent.parent / "devdata" / ".env")
@@ -154,7 +156,9 @@ def list_emails(
             search_query = f"({search_query}) AND hasAttachments eq true"
     else:
         # Keep "*" as "*" for "get all" queries, only convert empty string
-        search_query = "*" if search_query == "*" else ("" if search_query == "" else search_query)
+        search_query = (
+            "*" if search_query == "*" else ("" if search_query == "" else search_query)
+        )
 
     # Handle folder filtering
     use_folder_endpoint = False
@@ -198,8 +202,13 @@ def list_emails(
     # Use folder-specific endpoint for inbox to avoid parentFolderId filter issues
     if use_folder_endpoint and folder_to_search == "inbox":
         # Remove parentFolderId from search_query since we're using folder endpoint
-        search_query_for_endpoint = search_query.replace(f" AND parentFolderId eq '{inbox_folder_id}'", "").replace(f"parentFolderId eq '{inbox_folder_id}'", "")
-        if search_query_for_endpoint.strip() == "" or search_query_for_endpoint.strip() == "*":
+        search_query_for_endpoint = search_query.replace(
+            f" AND parentFolderId eq '{inbox_folder_id}'", ""
+        ).replace(f"parentFolderId eq '{inbox_folder_id}'", "")
+        if (
+            search_query_for_endpoint.strip() == ""
+            or search_query_for_endpoint.strip() == "*"
+        ):
             # For "get all" queries, don't use $filter parameter
             query = f"/me/mailFolders/{inbox_folder_id}/messages?{items_per_query}{count_param}"
         else:
@@ -209,14 +218,23 @@ def list_emails(
             # For "get all" queries, don't use $filter parameter
             query = f"/me/messages?{items_per_query}{count_param}"
         else:
-            query = f"/me/messages?{items_per_query}{count_param}&$filter={search_query}"
+            query = (
+                f"/me/messages?{items_per_query}{count_param}&$filter={search_query}"
+            )
 
     # If we're doing client-side filtering, remove hasAttachments from the query
     if needs_client_side_filtering:
         # Remove hasAttachments from the query since we'll filter client-side
-        query_without_attachments = query.replace("&$filter=hasAttachments eq true", "").replace("&$filter=hasAttachments eq true AND", "&$filter=")
-        if "&$filter=" in query_without_attachments and query_without_attachments.split("&$filter=")[1].strip() == "":
-            query_without_attachments = query_without_attachments.replace("&$filter=", "")
+        query_without_attachments = query.replace(
+            "&$filter=hasAttachments eq true", ""
+        ).replace("&$filter=hasAttachments eq true AND", "&$filter=")
+        if (
+            "&$filter=" in query_without_attachments
+            and query_without_attachments.split("&$filter=")[1].strip() == ""
+        ):
+            query_without_attachments = query_without_attachments.replace(
+                "&$filter=", ""
+            )
         query = query_without_attachments
 
     while query:
@@ -256,6 +274,126 @@ def list_emails(
     if return_only_count:
         emails.items = emails.items[:50]
     return Response(result=emails)
+
+
+@action
+def emails_as_csv(
+    token: OAuth2Secret[
+        Literal["microsoft"],
+        list[Literal["Mail.Read", "User.Read"]],
+    ],
+    search_query: str,
+    csv_filename: str,
+    properties_to_return: str = "id,subject,from,bodyPreview,receivedDateTime,hasAttachments",
+    folder_to_search: str = "inbox",
+) -> Response[str]:
+    """List emails matching a search query and save them to a CSV file.
+
+    Microsoft Graph API Query Syntax Examples:
+
+    Basic Queries:
+        - "*" or "" - Get all emails
+        - "hasAttachments eq true" - Emails with attachments
+        - "isRead eq false" - Unread emails
+        - "importance eq 'high'" - High importance emails
+        - "flag/flagStatus eq 'flagged'" - Flagged emails
+
+    Date/Time Queries:
+        - "receivedDateTime ge 2024-01-01T00:00:00Z" - Emails from 2024 onwards
+        - "receivedDateTime ge 2024-01-01" - Emails from 2024 onwards (date only)
+        - "receivedDateTime ge 2024-01-01 AND receivedDateTime le 2024-12-31" - Emails in 2024
+        - "createdDateTime ge 2024-01-01T00:00:00Z" - Emails created from 2024
+
+    Subject/Body Queries:
+        - "contains(subject, 'meeting')" - Subject contains 'meeting'
+        - "subject eq 'Important Update'" - Exact subject match
+        - "contains(body/content, 'urgent')" - Body contains 'urgent'
+        - "startswith(subject, 'RE:')" - Subject starts with 'RE:'
+
+    Sender/Recipient Queries:
+        - "from/emailAddress/address eq 'john@example.com'" - From specific sender
+        - "contains(from/emailAddress/address, '@company.com')" - From company domain
+        - "toRecipients/any(r: r/emailAddress/address eq 'jane@example.com')" - To specific recipient
+
+    Combined Queries:
+        - "hasAttachments eq true AND receivedDateTime ge 2024-01-01" - Attachments from 2024
+        - "isRead eq false AND importance eq 'high'" - Unread high importance
+        - "contains(subject, 'urgent') OR importance eq 'high'" - Urgent subject OR high importance
+        - "receivedDateTime ge 2024-01-01 AND (hasAttachments eq true OR importance eq 'high')" - Complex query
+
+    Query Rules:
+        - Use uppercase boolean operators: AND, OR, NOT
+        - Use single quotes for string values: 'value'
+        - Use ISO 8601 format for dates: 2024-01-01T00:00:00Z
+        - Use comparison operators: eq, ne, gt, ge, lt, le
+        - Use functions: contains(), startswith(), endswith()
+        - Group conditions with parentheses: (condition1 OR condition2) AND condition3
+
+    Args:
+        token: OAuth2 token to use for the operation.
+        search_query: OData query to search for emails. Use Microsoft Graph API syntax. Use '*' or '' for all emails.
+        csv_filename: The filename for the CSV output file (will be created in temp directory).
+        properties_to_return: Comma separated list of properties to include as CSV columns. Default is 'id,subject,from,bodyPreview,receivedDateTime,hasAttachments'.
+        folder_to_search: The folder to search for emails. Default is 'inbox'.
+
+    Returns:
+        The path to the created CSV file.
+    """
+    # Get emails using list_emails
+    emails_result = list_emails(
+        token=token,
+        search_query=search_query,
+        properties_to_return=properties_to_return,
+        folder_to_search=folder_to_search,
+    ).result
+
+    if not emails_result.items:
+        raise ActionError("No emails found matching the search query.")
+
+    # Parse properties to return
+    properties = [p.strip() for p in properties_to_return.split(",")]
+
+    # Ensure filename has .csv extension
+    if not csv_filename.endswith(".csv"):
+        csv_filename = f"{csv_filename}.csv"
+
+    # Create CSV content in memory
+    output = io.StringIO()
+    writer = csv.writer(output)
+
+    # Write header row
+    writer.writerow(properties)
+
+    # Write data rows
+    for email in emails_result.items:
+        row = []
+        for prop in properties:
+            value = email.get(prop, "")
+            # Handle nested structures like 'from' and recipients
+            if prop == "from" and isinstance(value, dict):
+                email_addr = value.get("emailAddress", {})
+                value = email_addr.get("address", "")
+            elif prop in [
+                "toRecipients",
+                "ccRecipients",
+                "bccRecipients",
+            ] and isinstance(value, list):
+                addresses = [
+                    r.get("emailAddress", {}).get("address", "") for r in value
+                ]
+                value = "; ".join(addresses)
+            elif isinstance(value, (dict, list)):
+                value = str(value)
+            row.append(value)
+        writer.writerow(row)
+
+    # Attach the file content to the chat
+    csv_content = output.getvalue().encode("utf-8")
+    attach_file_content(name=csv_filename, data=csv_content, content_type="text/csv")
+
+    return Response(
+        result=f"CSV file created with {len(emails_result.items)} emails: {csv_filename}"
+    )
 
 
 @action(is_consequential=False)
@@ -323,7 +461,7 @@ def filter_by_recipients(
             continue
         if (
             froms
-            and "emailAddress" in email_from.keys()
+            and "emailAddress" in email_from
             and email_from["emailAddress"]["address"] == froms
         ):
             filtered_emails.append(email)
@@ -470,7 +608,7 @@ def add_attachment(
         data=data,
         headers=headers,
     )
-    if "id" in attachment_response.keys():
+    if "id" in attachment_response:
         return Response(result="Attachment added successfully")
     else:
         raise ActionError(f"Error on 'add attachment': {attachment_response.text}")
@@ -596,8 +734,9 @@ def reply_to_email(
         headers=headers,
     )
     draft_message_id = reply_response["id"]
-    for attachment in reply.attachments.attachments:
-        add_attachment(token, draft_message_id, attachment)
+    if reply.attachments and len(reply.attachments.attachments) > 0:
+        for attachment in reply.attachments.attachments:
+            add_attachment(token, draft_message_id, attachment)
     send_request(
         "post",
         f"/me/messages/{draft_message_id}/send",
@@ -645,7 +784,7 @@ def forward_email(
         data=data,
         headers=headers,
     )
-    return Response(result=forward_response)
+    return Response(result="Email forwarded successfully")
 
 
 @action(is_consequential=True)
@@ -676,7 +815,7 @@ def move_email(
         data={"destinationId": destination_folder_id},
         headers=headers,
     )
-    return Response(result=move_response)
+    return Response(result="Email moved successfully")
 
 
 @action
@@ -738,7 +877,9 @@ def get_email_by_id(
             attachment_content = attachment["contentBytes"]
 
             # Create a temporary file to save the attachment
-            with tempfile.NamedTemporaryFile(delete=False, suffix=f"_{attachment_name}") as temp_file:
+            with tempfile.NamedTemporaryFile(
+                delete=False, suffix=f"_{attachment_name}"
+            ) as temp_file:
                 temp_file.write(base64.b64decode(attachment_content))
                 temp_file_path = temp_file.name
 
@@ -857,7 +998,9 @@ def get_email_by_subject(
             attachment_content = attachment["contentBytes"]
 
             # Create a temporary file to save the attachment
-            with tempfile.NamedTemporaryFile(delete=False, suffix=f"_{attachment_name}") as temp_file:
+            with tempfile.NamedTemporaryFile(
+                delete=False, suffix=f"_{attachment_name}"
+            ) as temp_file:
                 temp_file.write(base64.b64decode(attachment_content))
                 temp_file_path = temp_file.name
 
@@ -893,7 +1036,7 @@ def list_folders(
     return Response(result=folders)
 
 
-@action
+@action(is_consequential=True)
 def subscribe_notifications(
     token: OAuth2Secret[
         Literal["microsoft"], list[Literal["Mail.ReadWrite", "User.Read"]]
@@ -946,9 +1089,9 @@ def subscribe_notifications(
     return Response(result=message)
 
 
-@action
+@action(is_consequential=True)
 def delete_all_subscriptions(
-    token: OAuth2Secret[Literal["microsoft"], list[Literal["Mail.ReadWrite"]]]
+    token: OAuth2Secret[Literal["microsoft"], list[Literal["Mail.ReadWrite"]]],
 ) -> Response:
     """
     Delete all existing subscriptions.
@@ -971,7 +1114,7 @@ def delete_all_subscriptions(
     return Response(result="All subscriptions deleted")
 
 
-@action
+@action(is_consequential=True)
 def delete_subscription(
     token: OAuth2Secret[Literal["microsoft"], list[Literal["Mail.ReadWrite"]]],
     subscription_id: str,
@@ -993,7 +1136,7 @@ def delete_subscription(
 
 @action
 def get_subscriptions(
-    token: OAuth2Secret[Literal["microsoft"], list[Literal["Mail.Read"]]]
+    token: OAuth2Secret[Literal["microsoft"], list[Literal["Mail.Read"]]],
 ) -> Response:
     """
     Get a list of all active subscriptions.
@@ -1044,7 +1187,7 @@ def get_folder(
     return Response(result=folder)
 
 
-@action
+@action(is_consequential=True)
 def flag_email(
     token: OAuth2Secret[Literal["microsoft"], list[Literal["Mail.ReadWrite"]]],
     email_id: str,
@@ -1108,13 +1251,6 @@ def add_category(
     # 1. Creates the category if it doesn't exist - Check if category exists in master categories and create if needed
     _ensure_category_exists(token, category.display_name, headers, category.color)
 
-    # Verify the category was created with the correct color
-    category_info = _get_category_info(token, category.display_name, headers)
-    if category_info and category_info.get("color", "").lower() != category.color.lower():
-        print(f"Warning: Category color mismatch. Expected {category.color}, but found {category_info.get('color')}")
-    else:
-        print(f"Category '{category.display_name}' created successfully with color {category_info.get('color') if category_info else category.color}")
-
     # 2. Preserves existing categories - Get the current categories and add the new one without removing existing ones
     current_message = send_request(
         "get",
@@ -1130,21 +1266,23 @@ def add_category(
     if category.display_name not in existing_categories:
         existing_categories.append(category.display_name)
     else:
-        return Response(result=f"Category '{category.display_name}' already exists on this email")
+        return Response(
+            result=f"Category '{category.display_name}' already exists on this email"
+        )
 
     # Update the email with the new categories
-    data = {
-        "categories": existing_categories
-    }
+    data = {"categories": existing_categories}
 
-    update_response = send_request(
+    send_request(
         "patch",
         f"/me/messages/{email_id}",
         "add category to email",
         data=data,
         headers=headers,
     )
-    return Response(result=update_response)
+    return Response(
+        result=f"Category '{category.display_name}' added to email successfully"
+    )
 
 
 @action(is_consequential=True)
@@ -1186,18 +1324,18 @@ def remove_category(
     updated_categories = [cat for cat in existing_categories if cat != category_name]
 
     # Update the email with the updated categories
-    data = {
-        "categories": updated_categories
-    }
+    data = {"categories": updated_categories}
 
-    update_response = send_request(
+    send_request(
         "patch",
         f"/me/messages/{email_id}",
         "remove category from email",
         data=data,
         headers=headers,
     )
-    return Response(result=update_response)
+    return Response(
+        result=f"Category '{category_name}' removed from email successfully"
+    )
 
 
 @action
@@ -1224,10 +1362,7 @@ def list_master_categories(
         )
         if response and "value" in response:
             categories = response["value"]
-            return Response(result={
-                "categories": categories,
-                "count": len(categories)
-            })
+            return Response(result={"categories": categories, "count": len(categories)})
         else:
             return Response(result={"categories": [], "count": 0})
     except Exception as e:

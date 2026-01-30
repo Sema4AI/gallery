@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2.2.0] - 2026-01-30
+
+### Added
+
+- Added `emails_as_csv` action for exporting email search results as CSV files attached to chat
+
+### Fixed
+
+- Fixed `add_category` to return a descriptive success message instead of the raw API response
+- Fixed `remove_category` to return a descriptive success message instead of the raw API response
+- Removed debug `print()` statements from `add_category` and attachment handling in `support.py`
+
 ## [2.1.1] - 2025-10-30
 
 ### Changed

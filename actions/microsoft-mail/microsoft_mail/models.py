@@ -1,11 +1,11 @@
 from enum import Enum
 from pydantic import BaseModel, Field
-from typing import Optional, List, Annotated, Literal, Union, Dict
+from typing import Optional, List, Annotated, Literal, Dict
 
 
 class Recipient(BaseModel):
     address: str = Field(description="Email address of the recipient")
-    name: Optional[Union[str, None]] = Field(description="Name of the recipient")
+    name: Optional[str] = Field(description="Name of the recipient")
 
 
 class CC_Recipient(Recipient):
@@ -45,9 +45,10 @@ class Email(BaseModel):
         default_factory=list, description="BCC recipients of the email"
     )
     attachments: Optional["EmailAttachmentList"] = Field(
-        default_factory=list, description="Attachments to include with the email"
+        default_factory=EmailAttachmentList,
+        description="Attachments to include with the email",
     )
-    importance: Optional[Union[Literal["low", "normal", "high"], None]] = Field(
+    importance: Optional[Literal["low", "normal", "high"]] = Field(
         default="normal", description="Importance level of the email"
     )
     reply_to: Optional["Recipient"] = Field(
@@ -75,7 +76,10 @@ class MessageFlag(BaseModel):
 
 class Category(BaseModel):
     display_name: str = Field(description="Display name of the category")
-    color: Optional[str] = Field(default="Preset19", description="Color of the category (e.g., Preset19, Preset0, etc.)")
+    color: Optional[str] = Field(
+        default="Preset19",
+        description="Color of the category (e.g., Preset19, Preset0, etc.)",
+    )
 
 
 class CategoryList(BaseModel):

@@ -2,10 +2,10 @@
 name: Microsoft Mail
 
 # Required: A description of what's in the action package.
-description: Actions for Microsoft 365 Outlook emails including category management (add/remove categories).
+description: Actions for Microsoft 365 Outlook emails including category management (add/remove categories) and CSV export.
 
 # Package version number, recommend using semver.org
-version: 2.1.1
+version: 2.2.0
 
 # The version of the `package.yaml` format.
 spec-version: v2
@@ -13,11 +13,11 @@ spec-version: v2
 dependencies:
   conda-forge:
     - python=3.11.11
-    - python-dotenv=1.1.1
+    - python-dotenv=1.2.1
     - uv=0.6.11
   pypi:
-    - sema4ai-actions=1.4.2
-    - pydantic=2.11.7
+    - sema4ai-actions=1.6.6
+    - pydantic=2.12.5
 
 external-endpoints:
   - name: "Microsoft Graph API"
