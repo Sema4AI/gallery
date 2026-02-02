@@ -4,20 +4,20 @@ spec-version: v2
 name: Snowflake Cortex Analyst
 
 # Required: A description of what's in the action package.
-description: Snowflake Cortex reliably answers business questions based on your structured data in Snowflake.
+description: Snowflake Cortex reliably answers business questions based on your structured data in Snowflake and execute queries against Snowflake databases.
 
 # Package version number, recommend using semver.org
-version: 2.0.5
+version: 2.0.6
 
 dependencies:
   conda-forge:
     - python=3.12.12
     - uv=0.8.17
   pypi:
-    - sema4ai-actions=1.6.4
-    - sema4ai-data=1.2.1
+    - sema4ai-actions=1.6.6
+    - sema4ai-data=1.2.2
     - pandas=2.3.3
-    - snowflake=1.8.0
+    - snowflake=1.11.0
 
 packaging:
   # By default, all files and folders in this directory are packaged when uploaded.
