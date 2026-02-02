@@ -48,10 +48,13 @@ def snowflake_execute_query(
     row_limit: int = 10000,
 ) -> Response[Table]:
     """
-    Executes a specific query and returns results as a Table.
+    Executes a specific query in Snowflake and returns results as a Table.
     
     All table and column references in the query should use fully qualified names 
     (e.g., DATABASE.SCHEMA.TABLE) to work across different databases and schemas.
+
+    ONLY use this tool when querying data from Snowflake databases, never with for
+    example Data Frames.
 
     Args:
         query: The query to execute. Use fully qualified table names (DATABASE.SCHEMA.TABLE).
