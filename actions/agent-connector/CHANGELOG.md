@@ -5,7 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
-### [4.2.0] - 2026-01-27
+### [4.2.1] - 2026-02-10
+
+### Changed
+
+- Updated `create_work_item_for_agent()` payload parameter from `dict` to `WorkItemPayload` Pydantic model with `extra="allow"` for flexible payload structure
+- Updated sema4ai-actions to `1.6.6`
+
+### [4.1.1] - 2026-01-27
 
 ### Added
 
