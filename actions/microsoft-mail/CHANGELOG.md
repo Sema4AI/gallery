@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2.3.0] - 2026-02-10
+
+### Added
+
+- Added `max_emails_to_return` parameter to `emails_as_csv` action to limit the number of emails exported
+- Added `EmailCategoryAssignment` and `EmailCategoryRemoval` models for batch category operations
+
+### Changed
+
+- `get_email_by_id` now accepts `email_ids: str | list[str]` to retrieve multiple emails in one call
+  - Handles duplicate attachment names across emails by appending a counter
+- `add_category` now accepts batch assignments via `EmailCategoryAssignment` model
+  - Different emails can receive different categories in a single call
+  - Categories are deduplicated and created only once
+- `remove_category` now accepts batch removals via `EmailCategoryRemoval` model
+  - Different categories can be removed from different emails in a single call
+
 ## [2.2.0] - 2026-01-30
 
 ### Added
