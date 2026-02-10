@@ -1296,19 +1296,19 @@ def add_category(
     headers = build_headers(token)
 
     # 1. Collect unique categories and create them first (deduplicated)
-    unique_categories: dict[str, Category] = {}
+    unique_categories: dict[str, str] = {}  # name -> color
     for assignment in assignments:
-        if assignment.category.display_name not in unique_categories:
-            unique_categories[assignment.category.display_name] = assignment.category
+        if assignment.category_name not in unique_categories:
+            unique_categories[assignment.category_name] = assignment.category_color or "Preset19"
 
-    for category in unique_categories.values():
-        _ensure_category_exists(token, category.display_name, headers, category.color)
+    for cat_name, cat_color in unique_categories.items():
+        _ensure_category_exists(token, cat_name, headers, cat_color)
 
     # 2. Process each assignment
     results = []
     for assignment in assignments:
         email_id = assignment.email_id
-        category_name = assignment.category.display_name
+        category_name = assignment.category_name
 
         current_message = send_request(
             "get",
@@ -1335,7 +1335,7 @@ def add_category(
             results.append(f"{email_id}: '{category_name}' already exists")
 
     if len(assignments) == 1:
-        category_name = assignments[0].category.display_name
+        category_name = assignments[0].category_name
         if "added" in results[0]:
             return Response(
                 result=f"Category '{category_name}' added to email successfully"

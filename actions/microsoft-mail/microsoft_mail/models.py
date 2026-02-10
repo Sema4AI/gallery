@@ -92,7 +92,11 @@ class EmailCategoryAssignment(BaseModel):
     """Assignment of a category to an email."""
 
     email_id: str = Field(description="The unique identifier of the email")
-    category: Category = Field(description="The category to add to the email")
+    category_name: str = Field(description="Display name of the category to add")
+    category_color: Optional[str] = Field(
+        default="Preset19",
+        description="Color of the category (e.g., Preset19, Preset0, etc.)",
+    )
 
 
 class EmailCategoryRemoval(BaseModel):
