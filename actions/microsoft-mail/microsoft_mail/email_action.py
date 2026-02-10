@@ -286,6 +286,7 @@ def emails_as_csv(
     csv_filename: str,
     properties_to_return: str = "id,subject,from,bodyPreview,receivedDateTime,hasAttachments",
     folder_to_search: str = "inbox",
+    max_emails_to_return: int = -1,
 ) -> Response[str]:
     """List emails matching a search query and save them to a CSV file.
 
@@ -335,6 +336,7 @@ def emails_as_csv(
         csv_filename: The filename for the CSV output file (will be created in temp directory).
         properties_to_return: Comma separated list of properties to include as CSV columns. Default is 'id,subject,from,bodyPreview,receivedDateTime,hasAttachments'.
         folder_to_search: The folder to search for emails. Default is 'inbox'.
+        max_emails_to_return: Maximum number of emails to include in the CSV. Default is -1 (include all emails).
 
     Returns:
         The path to the created CSV file.
@@ -345,6 +347,7 @@ def emails_as_csv(
         search_query=search_query,
         properties_to_return=properties_to_return,
         folder_to_search=folder_to_search,
+        max_emails_to_return=max_emails_to_return,
     ).result
 
     if not emails_result.items:
@@ -824,12 +827,12 @@ def get_email_by_id(
         Literal["microsoft"],
         list[Literal["Mail.Read"]],
     ],
-    email_id: str,
+    email_ids: str | list[str],
     show_full_body: bool = False,
     save_attachments: bool = False,
 ) -> Response:
     """
-    Get the details of a specific email and optionally attach files to the chat.
+    Get the details of one or more emails and optionally attach files to the chat.
 
     By default shows email's body preview. If you want to see the full body,
     set 'show_full_body' to True.
@@ -838,56 +841,89 @@ def get_email_by_id(
 
     Args:
         token: OAuth2 token to use for the operation.
-        email_id: The unique identifier of the email to retrieve.
+        email_ids: The unique identifier(s) of the email(s) to retrieve.
+            Can be a single email ID string or a list of email IDs.
         show_full_body: Whether to show the full body content.
         save_attachments: Whether to attach the email attachments to the chat using sema4ai.actions.chat.
 
     Returns:
-        The message details.
+        The message details. Returns a single message dict for one email,
+        or a list of message dicts for multiple emails.
     """
-    # The environment variable is used to test the action
-    email_id = email_id or os.getenv("EMAIL_WITH_ATTACHMENTS")
-    if not email_id:
-        raise ActionError("Email ID is required")
-    headers = build_headers(token)
-    message = send_request(
-        "get",
-        f"/me/messages/{email_id}",
-        "get email",
-        headers=headers,
-    )
-    if show_full_body:
-        message.pop("bodyPreview", None)
-    else:
-        message.pop("body", None)
+    # Normalize email_ids to a list
+    if isinstance(email_ids, str):
+        email_ids = [email_ids]
 
-    if save_attachments:
-        # Fetch attachments separately
-        attachments_response = send_request(
+    # The environment variable is used to test the action
+    if not email_ids or (len(email_ids) == 1 and not email_ids[0]):
+        test_email_id = os.getenv("EMAIL_WITH_ATTACHMENTS")
+        if test_email_id:
+            email_ids = [test_email_id]
+        else:
+            raise ActionError("Email ID is required")
+
+    headers = build_headers(token)
+    messages = []
+    # Track attachment names to handle duplicates across emails
+    attachment_name_counts: dict[str, int] = {}
+
+    for email_id in email_ids:
+        message = send_request(
             "get",
-            f"/me/messages/{email_id}/attachments",
-            "get email attachments",
+            f"/me/messages/{email_id}",
+            "get email",
             headers=headers,
         )
-        attachments = attachments_response.get("value", [])
+        if show_full_body:
+            message.pop("bodyPreview", None)
+        else:
+            message.pop("body", None)
 
-        message["attachments"] = []
-        for attachment in attachments:
-            attachment_name = attachment["name"]
-            attachment_content = attachment["contentBytes"]
+        if save_attachments:
+            # Fetch attachments separately
+            attachments_response = send_request(
+                "get",
+                f"/me/messages/{email_id}/attachments",
+                "get email attachments",
+                headers=headers,
+            )
+            attachments = attachments_response.get("value", [])
 
-            # Create a temporary file to save the attachment
-            with tempfile.NamedTemporaryFile(
-                delete=False, suffix=f"_{attachment_name}"
-            ) as temp_file:
-                temp_file.write(base64.b64decode(attachment_content))
-                temp_file_path = temp_file.name
+            message["attachments"] = []
+            for attachment in attachments:
+                attachment_name = attachment["name"]
+                attachment_content = attachment["contentBytes"]
 
-            # Attach the file to the chat using sema4ai.actions.chat
-            attach_file(temp_file_path, name=attachment_name)
-            message["attachments"].append(attachment_name)
+                # Handle duplicate attachment names across emails
+                if attachment_name in attachment_name_counts:
+                    attachment_name_counts[attachment_name] += 1
+                    # Split name and extension to insert counter
+                    name_parts = attachment_name.rsplit(".", 1)
+                    if len(name_parts) == 2:
+                        unique_name = f"{name_parts[0]}_{attachment_name_counts[attachment_name]}.{name_parts[1]}"
+                    else:
+                        unique_name = f"{attachment_name}_{attachment_name_counts[attachment_name]}"
+                else:
+                    attachment_name_counts[attachment_name] = 1
+                    unique_name = attachment_name
 
-    return Response(result=message)
+                # Create a temporary file to save the attachment
+                with tempfile.NamedTemporaryFile(
+                    delete=False, suffix=f"_{unique_name}"
+                ) as temp_file:
+                    temp_file.write(base64.b64decode(attachment_content))
+                    temp_file_path = temp_file.name
+
+                # Attach the file to the chat using sema4ai.actions.chat
+                attach_file(temp_file_path, name=unique_name)
+                message["attachments"].append(unique_name)
+
+        messages.append(message)
+
+    # Return single message for single email, list for multiple
+    if len(messages) == 1:
+        return Response(result=messages[0])
+    return Response(result=messages)
 
 
 @action
@@ -1231,16 +1267,17 @@ def flag_email(
 @action(is_consequential=True)
 def add_category(
     token: OAuth2Secret[Literal["microsoft"], list[Literal["Mail.ReadWrite"]]],
-    email_id: str,
+    email_ids: str | list[str],
     category: Category,
 ) -> Response:
     """
-    Add a category to an email while preserving existing categories.
+    Add a category to one or more emails while preserving existing categories.
     Creates the category in master categories if it doesn't exist.
 
     Args:
         token: The OAuth2 token for authentication.
-        email_id: The unique identifier of the email to add the category to.
+        email_ids: The unique identifier(s) of the email(s) to add the category to.
+            Can be a single email ID string or a list of email IDs.
         category: The category to add to the email (includes display_name and color).
 
     Returns:
@@ -1248,55 +1285,72 @@ def add_category(
     """
     headers = build_headers(token)
 
+    # Normalize email_ids to a list
+    if isinstance(email_ids, str):
+        email_ids = [email_ids]
+
     # 1. Creates the category if it doesn't exist - Check if category exists in master categories and create if needed
     _ensure_category_exists(token, category.display_name, headers, category.color)
 
-    # 2. Preserves existing categories - Get the current categories and add the new one without removing existing ones
-    current_message = send_request(
-        "get",
-        f"/me/messages/{email_id}",
-        "get email for categories",
-        headers=headers,
-    )
-
-    # Get existing categories or initialize empty list
-    existing_categories = current_message.get("categories", [])
-
-    # Add the new category if it doesn't already exist (preserve existing categories)
-    if category.display_name not in existing_categories:
-        existing_categories.append(category.display_name)
-    else:
-        return Response(
-            result=f"Category '{category.display_name}' already exists on this email"
+    results = []
+    for email_id in email_ids:
+        # 2. Preserves existing categories - Get the current categories and add the new one without removing existing ones
+        current_message = send_request(
+            "get",
+            f"/me/messages/{email_id}",
+            "get email for categories",
+            headers=headers,
         )
 
-    # Update the email with the new categories
-    data = {"categories": existing_categories}
+        # Get existing categories or initialize empty list
+        existing_categories = current_message.get("categories", [])
 
-    send_request(
-        "patch",
-        f"/me/messages/{email_id}",
-        "add category to email",
-        data=data,
-        headers=headers,
-    )
+        # Add the new category if it doesn't already exist (preserve existing categories)
+        if category.display_name not in existing_categories:
+            existing_categories.append(category.display_name)
+
+            # Update the email with the new categories
+            data = {"categories": existing_categories}
+
+            send_request(
+                "patch",
+                f"/me/messages/{email_id}",
+                "add category to email",
+                data=data,
+                headers=headers,
+            )
+            results.append(f"{email_id}: added")
+        else:
+            results.append(f"{email_id}: already exists")
+
+    if len(email_ids) == 1:
+        if "added" in results[0]:
+            return Response(
+                result=f"Category '{category.display_name}' added to email successfully"
+            )
+        else:
+            return Response(
+                result=f"Category '{category.display_name}' already exists on this email"
+            )
+
     return Response(
-        result=f"Category '{category.display_name}' added to email successfully"
+        result=f"Category '{category.display_name}' processed for {len(email_ids)} emails: {', '.join(results)}"
     )
 
 
 @action(is_consequential=True)
 def remove_category(
     token: OAuth2Secret[Literal["microsoft"], list[Literal["Mail.ReadWrite"]]],
-    email_id: str,
+    email_ids: str | list[str],
     category_name: str,
 ) -> Response:
     """
-    Remove a category from an email.
+    Remove a category from one or more emails.
 
     Args:
         token: The OAuth2 token for authentication.
-        email_id: The unique identifier of the email to remove the category from.
+        email_ids: The unique identifier(s) of the email(s) to remove the category from.
+            Can be a single email ID string or a list of email IDs.
         category_name: The name of the category to remove.
 
     Returns:
@@ -1304,37 +1358,54 @@ def remove_category(
     """
     headers = build_headers(token)
 
-    # First, get the current categories of the email
-    current_message = send_request(
-        "get",
-        f"/me/messages/{email_id}",
-        "get email for categories",
-        headers=headers,
-    )
+    # Normalize email_ids to a list
+    if isinstance(email_ids, str):
+        email_ids = [email_ids]
 
-    # Get existing categories or initialize empty list
-    # Categories are returned as an array of strings (category names)
-    existing_categories = current_message.get("categories", [])
+    results = []
+    for email_id in email_ids:
+        # First, get the current categories of the email
+        current_message = send_request(
+            "get",
+            f"/me/messages/{email_id}",
+            "get email for categories",
+            headers=headers,
+        )
 
-    # Check if category exists and remove it
-    if category_name not in existing_categories:
-        raise ActionError(f"Category '{category_name}' not found on this email")
+        # Get existing categories or initialize empty list
+        # Categories are returned as an array of strings (category names)
+        existing_categories = current_message.get("categories", [])
 
-    # Remove the category from the list
-    updated_categories = [cat for cat in existing_categories if cat != category_name]
+        # Check if category exists and remove it
+        if category_name not in existing_categories:
+            results.append(f"{email_id}: not found")
+            continue
 
-    # Update the email with the updated categories
-    data = {"categories": updated_categories}
+        # Remove the category from the list
+        updated_categories = [cat for cat in existing_categories if cat != category_name]
 
-    send_request(
-        "patch",
-        f"/me/messages/{email_id}",
-        "remove category from email",
-        data=data,
-        headers=headers,
-    )
+        # Update the email with the updated categories
+        data = {"categories": updated_categories}
+
+        send_request(
+            "patch",
+            f"/me/messages/{email_id}",
+            "remove category from email",
+            data=data,
+            headers=headers,
+        )
+        results.append(f"{email_id}: removed")
+
+    if len(email_ids) == 1:
+        if "removed" in results[0]:
+            return Response(
+                result=f"Category '{category_name}' removed from email successfully"
+            )
+        else:
+            raise ActionError(f"Category '{category_name}' not found on this email")
+
     return Response(
-        result=f"Category '{category_name}' removed from email successfully"
+        result=f"Category '{category_name}' processed for {len(email_ids)} emails: {', '.join(results)}"
     )
 
 
