@@ -1275,7 +1275,7 @@ def flag_email(
 @action(is_consequential=True)
 def add_category(
     token: OAuth2Secret[Literal["microsoft"], list[Literal["Mail.ReadWrite"]]],
-    assignments: EmailCategoryAssignment | list[EmailCategoryAssignment],
+    assignments: list[EmailCategoryAssignment],
 ) -> Response:
     """
     Add categories to emails while preserving existing categories.
@@ -1286,7 +1286,7 @@ def add_category(
 
     Args:
         token: The OAuth2 token for authentication.
-        assignments: One or more email-category assignments. Each assignment specifies
+        assignments: List of email-category assignments. Each assignment specifies
             an email_id and the category to add to it. Different emails can have
             different categories assigned in one call.
 
@@ -1294,10 +1294,6 @@ def add_category(
         Response indicating the result of the category addition operations.
     """
     headers = build_headers(token)
-
-    # Normalize to list
-    if isinstance(assignments, EmailCategoryAssignment):
-        assignments = [assignments]
 
     # 1. Collect unique categories and create them first (deduplicated)
     unique_categories: dict[str, Category] = {}
@@ -1357,7 +1353,7 @@ def add_category(
 @action(is_consequential=True)
 def remove_category(
     token: OAuth2Secret[Literal["microsoft"], list[Literal["Mail.ReadWrite"]]],
-    removals: EmailCategoryRemoval | list[EmailCategoryRemoval],
+    removals: list[EmailCategoryRemoval],
 ) -> Response:
     """
     Remove categories from emails.
@@ -1367,7 +1363,7 @@ def remove_category(
 
     Args:
         token: The OAuth2 token for authentication.
-        removals: One or more email-category removals. Each removal specifies
+        removals: List of email-category removals. Each removal specifies
             an email_id and the category_name to remove from it. Different emails
             can have different categories removed in one call.
 
@@ -1375,10 +1371,6 @@ def remove_category(
         Response indicating the result of the category removal operations.
     """
     headers = build_headers(token)
-
-    # Normalize to list
-    if isinstance(removals, EmailCategoryRemoval):
-        removals = [removals]
 
     results = []
     for removal in removals:
