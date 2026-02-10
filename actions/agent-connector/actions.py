@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from sema4ai.actions import (
     ActionError,
     Response,
@@ -114,6 +114,12 @@ class WorkItemResponse(BaseModel):
     work_item: dict
     agent_name: str
     agent_id: str
+
+
+class WorkItemPayload(BaseModel):
+    """Payload for creating a work item. Accepts any additional properties."""
+
+    model_config = ConfigDict(extra="allow")
 
 @action
 def ask_agent(
@@ -312,7 +318,7 @@ def send_message(
 @action
 def create_work_item_for_agent(
     agent_name: str,
-    payload: dict,
+    payload: WorkItemPayload,
     sema4_api_key: Secret,
     attachments: list[str] | None = None,
     work_item_api_url: str | None = None,
@@ -321,7 +327,7 @@ def create_work_item_for_agent(
 
     Args:
         agent_name: The name of the agent to run the Work Item
-        payload: JSON payload to send as the Work Item payload
+        payload: JSON payload to send as the Work Item payload (any properties allowed)
         sema4_api_key: The API key for the Sema4 API if running in cloud. Use LOCAL if in Studio or SDK!
         attachments: Optional list of file paths to attach to the Work Item
         work_item_api_url: Optional Work Item API URL override
@@ -337,7 +343,7 @@ def create_work_item_for_agent(
     agent = agent_result.agent
     work_item = client.create_work_item(
         agent_id=agent.id,
-        payload=payload,
+        payload=payload.model_dump(exclude_none=True),
         attachments=attachments,
         work_item_api_url=work_item_api_url,
     )

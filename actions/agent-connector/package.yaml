@@ -5,7 +5,7 @@ name: Agent Connector
 description: Actions to connect agents with each other
 
 # Package version number, recommend using semver.org
-version: 4.1.1
+version: 4.2.1
 
 # The version of the `package.yaml` format.
 spec-version: v2
@@ -18,7 +18,7 @@ dependencies:
     - python=3.11.11
     - uv=0.6.11
   pypi:
-    - sema4ai-actions=1.4.2
+    - sema4ai-actions=1.6.6
 
 packaging:
   # By default, all files and folders in this directory are packaged when uploaded.
