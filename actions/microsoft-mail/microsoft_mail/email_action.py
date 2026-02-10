@@ -27,7 +27,15 @@ Currently supporting:
 
 from sema4ai.actions import action, OAuth2Secret, Response, ActionError
 from sema4ai.actions.chat import attach_file, attach_file_content
-from microsoft_mail.models import Email, EmailAttachment, Emails, MessageFlag, Category
+from microsoft_mail.models import (
+    Email,
+    EmailAttachment,
+    Emails,
+    MessageFlag,
+    Category,
+    EmailCategoryAssignment,
+    EmailCategoryRemoval,
+)
 from microsoft_mail.support import (
     _find_folder,
     _get_inbox_folder_id,
@@ -1267,34 +1275,45 @@ def flag_email(
 @action(is_consequential=True)
 def add_category(
     token: OAuth2Secret[Literal["microsoft"], list[Literal["Mail.ReadWrite"]]],
-    email_ids: str | list[str],
-    category: Category,
+    assignments: EmailCategoryAssignment | list[EmailCategoryAssignment],
 ) -> Response:
     """
-    Add a category to one or more emails while preserving existing categories.
-    Creates the category in master categories if it doesn't exist.
+    Add categories to emails while preserving existing categories.
+    Creates categories in master categories if they don't exist.
+
+    Supports batch operations where different emails can receive different categories
+    in a single call.
 
     Args:
         token: The OAuth2 token for authentication.
-        email_ids: The unique identifier(s) of the email(s) to add the category to.
-            Can be a single email ID string or a list of email IDs.
-        category: The category to add to the email (includes display_name and color).
+        assignments: One or more email-category assignments. Each assignment specifies
+            an email_id and the category to add to it. Different emails can have
+            different categories assigned in one call.
 
     Returns:
-        Response indicating the result of the category addition operation.
+        Response indicating the result of the category addition operations.
     """
     headers = build_headers(token)
 
-    # Normalize email_ids to a list
-    if isinstance(email_ids, str):
-        email_ids = [email_ids]
+    # Normalize to list
+    if isinstance(assignments, EmailCategoryAssignment):
+        assignments = [assignments]
 
-    # 1. Creates the category if it doesn't exist - Check if category exists in master categories and create if needed
-    _ensure_category_exists(token, category.display_name, headers, category.color)
+    # 1. Collect unique categories and create them first (deduplicated)
+    unique_categories: dict[str, Category] = {}
+    for assignment in assignments:
+        if assignment.category.display_name not in unique_categories:
+            unique_categories[assignment.category.display_name] = assignment.category
 
+    for category in unique_categories.values():
+        _ensure_category_exists(token, category.display_name, headers, category.color)
+
+    # 2. Process each assignment
     results = []
-    for email_id in email_ids:
-        # 2. Preserves existing categories - Get the current categories and add the new one without removing existing ones
+    for assignment in assignments:
+        email_id = assignment.email_id
+        category_name = assignment.category.display_name
+
         current_message = send_request(
             "get",
             f"/me/messages/{email_id}",
@@ -1302,14 +1321,10 @@ def add_category(
             headers=headers,
         )
 
-        # Get existing categories or initialize empty list
         existing_categories = current_message.get("categories", [])
 
-        # Add the new category if it doesn't already exist (preserve existing categories)
-        if category.display_name not in existing_categories:
-            existing_categories.append(category.display_name)
-
-            # Update the email with the new categories
+        if category_name not in existing_categories:
+            existing_categories.append(category_name)
             data = {"categories": existing_categories}
 
             send_request(
@@ -1319,52 +1334,57 @@ def add_category(
                 data=data,
                 headers=headers,
             )
-            results.append(f"{email_id}: added")
+            results.append(f"{email_id}: added '{category_name}'")
         else:
-            results.append(f"{email_id}: already exists")
+            results.append(f"{email_id}: '{category_name}' already exists")
 
-    if len(email_ids) == 1:
+    if len(assignments) == 1:
+        category_name = assignments[0].category.display_name
         if "added" in results[0]:
             return Response(
-                result=f"Category '{category.display_name}' added to email successfully"
+                result=f"Category '{category_name}' added to email successfully"
             )
         else:
             return Response(
-                result=f"Category '{category.display_name}' already exists on this email"
+                result=f"Category '{category_name}' already exists on this email"
             )
 
     return Response(
-        result=f"Category '{category.display_name}' processed for {len(email_ids)} emails: {', '.join(results)}"
+        result=f"Processed {len(assignments)} category assignments: {'; '.join(results)}"
     )
 
 
 @action(is_consequential=True)
 def remove_category(
     token: OAuth2Secret[Literal["microsoft"], list[Literal["Mail.ReadWrite"]]],
-    email_ids: str | list[str],
-    category_name: str,
+    removals: EmailCategoryRemoval | list[EmailCategoryRemoval],
 ) -> Response:
     """
-    Remove a category from one or more emails.
+    Remove categories from emails.
+
+    Supports batch operations where different categories can be removed from
+    different emails in a single call.
 
     Args:
         token: The OAuth2 token for authentication.
-        email_ids: The unique identifier(s) of the email(s) to remove the category from.
-            Can be a single email ID string or a list of email IDs.
-        category_name: The name of the category to remove.
+        removals: One or more email-category removals. Each removal specifies
+            an email_id and the category_name to remove from it. Different emails
+            can have different categories removed in one call.
 
     Returns:
-        Response indicating the result of the category removal operation.
+        Response indicating the result of the category removal operations.
     """
     headers = build_headers(token)
 
-    # Normalize email_ids to a list
-    if isinstance(email_ids, str):
-        email_ids = [email_ids]
+    # Normalize to list
+    if isinstance(removals, EmailCategoryRemoval):
+        removals = [removals]
 
     results = []
-    for email_id in email_ids:
-        # First, get the current categories of the email
+    for removal in removals:
+        email_id = removal.email_id
+        category_name = removal.category_name
+
         current_message = send_request(
             "get",
             f"/me/messages/{email_id}",
@@ -1372,19 +1392,13 @@ def remove_category(
             headers=headers,
         )
 
-        # Get existing categories or initialize empty list
-        # Categories are returned as an array of strings (category names)
         existing_categories = current_message.get("categories", [])
 
-        # Check if category exists and remove it
         if category_name not in existing_categories:
-            results.append(f"{email_id}: not found")
+            results.append(f"{email_id}: '{category_name}' not found")
             continue
 
-        # Remove the category from the list
         updated_categories = [cat for cat in existing_categories if cat != category_name]
-
-        # Update the email with the updated categories
         data = {"categories": updated_categories}
 
         send_request(
@@ -1394,9 +1408,10 @@ def remove_category(
             data=data,
             headers=headers,
         )
-        results.append(f"{email_id}: removed")
+        results.append(f"{email_id}: removed '{category_name}'")
 
-    if len(email_ids) == 1:
+    if len(removals) == 1:
+        category_name = removals[0].category_name
         if "removed" in results[0]:
             return Response(
                 result=f"Category '{category_name}' removed from email successfully"
@@ -1405,7 +1420,7 @@ def remove_category(
             raise ActionError(f"Category '{category_name}' not found on this email")
 
     return Response(
-        result=f"Category '{category_name}' processed for {len(email_ids)} emails: {', '.join(results)}"
+        result=f"Processed {len(removals)} category removals: {'; '.join(results)}"
     )
 
 

@@ -86,3 +86,17 @@ class CategoryList(BaseModel):
     categories: Annotated[
         List[Category], Field(description="A list of categories")
     ] = []
+
+
+class EmailCategoryAssignment(BaseModel):
+    """Assignment of a category to an email."""
+
+    email_id: str = Field(description="The unique identifier of the email")
+    category: Category = Field(description="The category to add to the email")
+
+
+class EmailCategoryRemoval(BaseModel):
+    """Removal of a category from an email."""
+
+    email_id: str = Field(description="The unique identifier of the email")
+    category_name: str = Field(description="The name of the category to remove")
