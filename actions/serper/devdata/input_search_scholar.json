@@ -1,0 +1,34 @@
+{
+    "inputs": [
+        {
+            "inputName": "Search for machine learning papers",
+            "inputValue": {
+                "q": "machine learning algorithms",
+                "gl": "us",
+                "hl": "en",
+                "api_key": ""
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "search_scholar",
+        "actionRelativePath": "actions.py",
+        "schemaDescription": [
+            "q: string: The academic search query.",
+            "gl: string: Country code.",
+            "hl: string: Language code."
+        ],
+        "managedParamsSchemaDescription": {
+            "api_key": {
+                "type": "Secret",
+                "description": "The API key for authentication."
+            }
+        },
+        "inputFileVersion": "v3",
+        "kind": "action",
+        "actionSignature": "action/args: 'q: str, api_key: Secret, gl: Optional[str] = None, location: Optional[str] = None, hl: Optional[str] = None, autocorrect: Optional[bool] = None, page: int = 1'"
+    }
+}
+
+
+
