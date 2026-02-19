@@ -7,7 +7,7 @@ agent-package:
       provider: Amazon
       name: anthropic.claude-3-5-sonnet-20240620-v1:0
     version: 0.0.1
-    architecture: agent
+    architecture: agent_platform.architectures.experimental_1
     reasoning: disabled
     runbook: runbook.md
     conversation-guide: conversation-guide.yaml

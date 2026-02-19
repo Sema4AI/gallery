@@ -20,7 +20,7 @@ agent-package:
       provider: Snowflake Cortex AI
       name: claude-3-5-sonnet
     version: 1.0.2
-    architecture: agent
+    architecture: agent_platform.architectures.experimental_1
     reasoning: disabled
     runbook: runbook.md
     action-packages:
