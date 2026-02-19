@@ -7,8 +7,8 @@ agent-package:
     model:
       provider: OpenAI
       name: gpt-5-minimal
-    version: 0.1.1
-    architecture: agent
+    version: 0.2.0
+    architecture: agent_platform.architectures.experimental_1
     reasoning: disabled
     runbook: runbook.md
     action-packages:
