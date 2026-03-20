@@ -29,6 +29,8 @@ The easiest way to interact with agents is using the `ask_agent` function:
 
 **Work Items:**
 - Create a Work Item for an agent by name
+- Create multiple Work Items in a single batch call
+- Get the current conversation ID (for passing back to a parent agent)
 
 ## Example Usage
 
@@ -80,6 +82,28 @@ If an attachment path is not found locally, the action will try to fetch it from
 Create a work item for "Invoice Worker" with payload {"invoice_id": "IN-100017"} and attachments ["ad03f9489278c8e19d01ea5e05ee0aeb.pdf"]
 ```
 
+### Create Multiple Work Items in One Call
+
+Use `create_work_items_for_agent` to dispatch several items at once. Each entry can have its own message, payload, and attachments:
+
+```
+Create work items for "Invoice Agent":
+[
+  {"message": "Process invoice IN-001", "payload": {"invoice_id": "IN-001"}},
+  {"message": "Process invoice IN-002", "payload": {"invoice_id": "IN-002"}, "attachments": ["IN-002.pdf"]}
+]
+```
+
+The `message` field is automatically merged into the payload so the worker receives it as `payload["message"]`.
+
+### Pass the Current Conversation ID to Worker Agents
+
+When orchestrating workers, use `get_current_conversation_id` to retrieve the calling conversation's ID and include it in the work item payload so workers can send replies back:
+
+```
+Get the current conversation ID and create a work item for "Summarizer Agent" with payload {"conversation_id": "<id>", "document": "report.pdf"}
+```
+
 ### Intelligent Suggestions
 
 If you mistype an agent name, the system will suggest the closest match:
@@ -109,10 +133,18 @@ For more control, you can also use the individual actions:
 2. **Conversation Management**: Create conversations manually or retrieve existing ones
 3. **Message Sending**: Send messages to specific conversations with full control over the process
 
-### Authentication
+### Authentication & API URL
 
-- **Cloud Environment**: Uses Bearer token authentication with your API key
-- **Local Development**: Use "LOCAL" as the API key value (no authentication required)
+All actions require two Secret parameters:
+
+| Parameter | Description |
+|---|---|
+| `sema4_api_key` | API key for the Sema4 API. Use `LOCAL` when running in Studio or SDK. |
+| `sema4_api_url` | Base URL for the Sema4 API. Use `LOCAL` when running in Studio or SDK. |
+
+- **Cloud Environment**: Provide your API key and the deployment base URL (e.g. `https://your-tenant.sema4.ai`).
+- **Snowflake Environment**: Provide the Snowflake endpoint URL — the connector automatically uses `Snowflake Token` authentication and normalises the URL to end with `/api/v1`.
+- **Local Development**: Use `LOCAL` for both values — the connector discovers the agent server automatically via environment variable or PID file.
 
 ### Intelligent Features
 
