@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+### [4.3.0] - 2026-03-20
+
+### Added
+
+- New `sema4_api_url` Secret parameter to all actions, enabling explicit API URL configuration
+- New `create_work_items_for_agent()` action for batch-creating multiple Work Items for an agent in one call
+- New `get_current_conversation_id()` action to retrieve the current thread/conversation ID for passing to worker agents
+- Snowflake deployment support: URL normalization and `Snowflake Token` auth header for `snowflakecomputing` endpoints
+- Auto-detection fallback: when `SEMA4AI_API_V1_URL` env var is set, explicit URL is ignored in favor of auto-detection
+- Better JSON parse error reporting with status code and response body on failed API responses
+
+### Changed
+
+- `_AgentAPIClient` now accepts an optional `api_url` parameter alongside `api_key`
+- `create_work_item_for_agent()` derives Work Item API URL from `sema4_api_url` instead of a separate `work_item_api_url` parameter (removed)
+- Auth header logic extracted to `_get_auth_header()` helper, used consistently across all request paths
+
 ### [4.2.1] - 2026-02-10
 
 ### Changed

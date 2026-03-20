@@ -30,13 +30,45 @@ class AgentApiClientException(Exception):
 class _AgentAPIClient:
     PID_FILE_NAME = "agent-server.pid"
 
-    def __init__(self, api_key: str | None = None):
+    def __init__(self, api_key: str | None = None, api_url: str | None = None):
         """Initialize the AgentServerClient."""
-        self.api_key = api_key if api_key != "LOCAL" else None
-        self.api_url = self._get_api_url()
-        self.is_v2 = "v2" in self.api_url
+        self.api_key = api_key if (api_key and api_key.upper() != "LOCAL") else None
+        resolved_url = api_url if (api_url and api_url.upper() != "LOCAL") else None
+        # When SEMA4AI_API_V1_URL is set (e.g. running inside Snowflake), the agent
+        # server is reachable via that internal URL. Ignore the explicit URL so that
+        # auto-detection picks it up instead of trying to reach the external hostname.
+        if resolved_url and os.getenv("SEMA4AI_API_V1_URL"):
+            print(
+                f"SEMA4AI_API_V1_URL env var detected — ignoring explicit URL '{resolved_url}', using auto-detect"
+            )
+            resolved_url = None
+        if resolved_url:
+            self.api_url = self._normalize_api_url(resolved_url)
+            self.is_v2 = "v2" in self.api_url
+            print(f"API URL (explicit): {self.api_url}")
+        else:
+            self.api_url = self._get_api_url()
+            self.is_v2 = "v2" in self.api_url
+            print(f"API URL: {self.api_url}")
 
-        print(f"API URL: {self.api_url}")
+    def _normalize_api_url(self, url: str) -> str:
+        """Ensure the URL ends with /api/v1 for Snowflake deployments."""
+        url = url.rstrip("/")
+        if "snowflakecomputing" in url:
+            if not url.endswith("/v1") and not url.endswith("/v2"):
+                if url.endswith("/api"):
+                    url = f"{url}/v1"
+                elif not url.endswith("/api/v1") and "/api/" not in url:
+                    url = f"{url}/api/v1"
+        return url
+
+    def _get_auth_header(self) -> dict:
+        """Return the correct Authorization header based on deployment environment."""
+        if not self.api_key:
+            return {}
+        if "snowflakecomputing" in getattr(self, "api_url", ""):
+            return {"Authorization": f'Snowflake Token="{self.api_key}"'}
+        return {"Authorization": f"Bearer {self.api_key}"}
 
     def _get_api_url(self) -> str:
         """Determine the correct API URL by checking environment variable or agent-server.pid file
@@ -112,9 +144,7 @@ class _AgentAPIClient:
             if parsed_url.scheme not in ("http", "https"):
                 return False
 
-            headers = (
-                {"Authorization": f"Bearer {self.api_key}"} if self.api_key else None
-            )
+            headers = self._get_auth_header() or None
             print(f"Testing URL: {url}")
             sema4ai_http.get(url, headers=headers, timeout=1).raise_for_status()
             return True
@@ -188,9 +218,7 @@ class _AgentAPIClient:
             url += "/"
 
         request_headers = copy(headers) if headers else {}
-
-        if self.api_key:
-            request_headers["Authorization"] = f"Bearer {self.api_key}"
+        request_headers.update(self._get_auth_header())
 
         if method == "GET":
             response = sema4ai_http.get(url, json=json_data, headers=request_headers)
@@ -227,8 +255,7 @@ class _AgentAPIClient:
         url = urljoin(base_url, path)
 
         request_headers = copy(headers) if headers else {}
-        if self.api_key:
-            request_headers["Authorization"] = f"Bearer {self.api_key}"
+        request_headers.update(self._get_auth_header())
 
         if method == "GET":
             response = sema4ai_http.get(url, json=json_data, headers=request_headers)
@@ -298,9 +325,7 @@ class _AgentAPIClient:
         upload_url = urljoin(base_url.rstrip("/") + "/", "upload-file")
         response = sema4ai_http.post(upload_url, headers=headers, fields=fields)
         if response.status_code == 404 and fallback_url:
-            fallback_upload_url = urljoin(
-                fallback_url.rstrip("/") + "/", "upload-file"
-            )
+            fallback_upload_url = urljoin(fallback_url.rstrip("/") + "/", "upload-file")
             response = sema4ai_http.post(
                 fallback_upload_url, headers=headers, fields=fields
             )
@@ -374,7 +399,13 @@ class _AgentAPIClient:
                 paginated_endpoint = f"{endpoint}?next={next_token}"
 
             response = self.request(paginated_endpoint)
-            response_json = response.json()
+            try:
+                response_json = response.json()
+            except Exception as e:
+                raise AgentApiClientException(
+                    f"Failed to parse response as JSON from {self.api_url}. "
+                    f"Status: {response.status_code}, Body: {response.text!r}"
+                ) from e
 
             all_data.extend(
                 response_json.get("data", response_json.get("messages", []))
@@ -541,9 +572,7 @@ class _AgentAPIClient:
     ) -> tuple[str, str]:
         filename = os.path.basename(file_path)
         content_type = mimetypes.guess_type(filename)[0] or "application/octet-stream"
-        request_headers = (
-            {"Authorization": f"Bearer {self.api_key}"} if self.api_key else None
-        )
+        request_headers = self._get_auth_header() or None
 
         if os.path.exists(file_path):
             with open(file_path, "rb") as file_handle:
