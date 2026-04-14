@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [2.1.0] - 2026-04-14
+
+### Fixed
+
+- Fixed HTTP 400 error when using multiple semantic models (multi-SDM). The API request now correctly uses the `semantic_models` array field instead of the non-existent `semantic_model_files` and `semantic_views` fields.
+
+### Changed
+
+- Multiple semantic model entries now support mixing file paths and view names in the same request (e.g., `@DB.SCHEMA.STAGE/file.yaml, DB.SCHEMA.VIEW_NAME`).
+
 ## [2.0.6] - 2026-02-02
 
 ### Changed

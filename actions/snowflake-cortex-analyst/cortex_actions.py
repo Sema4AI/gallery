@@ -7,25 +7,26 @@ from sema4ai.data import (
 )
 
 
-def parse_semantic_model_input(input_value: str) -> tuple[str, str | list[str]]:
+def parse_semantic_model_input(input_value: str) -> tuple[str, str | list[dict]]:
     """
     Parse semantic model input and determine type and value(s).
-    
+
     Args:
         input_value: The raw input string containing file path(s) or view name(s).
-    
+            Supports mixing file paths and view names when comma-separated.
+
     Returns:
         tuple of (field_name, field_value)
-        field_name: One of 'semantic_model_file', 'semantic_model_files', 
-                    'semantic_view', 'semantic_views'
-        field_value: Either a string (single) or list of strings (multiple)
-    
+        - Single file: ('semantic_model_file', '@DB.SCHEMA.STAGE/file.yaml')
+        - Single view: ('semantic_view', 'DB.SCHEMA.VIEW')
+        - Multiple (any mix): ('semantic_models', [{'semantic_model_file': '...'}, {'semantic_view': '...'}])
+
     Raises:
-        ValueError: If input is invalid or mixes file paths with view names.
+        ValueError: If input is invalid.
     """
     # Clean the input value from potential surrounding quotes
     cleaned = input_value.strip()
-    
+
     # Remove surrounding single or double quotes if present (wrapping quotes only)
     # Don't strip if the string contains the same quote character internally
     # (which indicates quoted identifiers like "DB"."SCHEMA"."VIEW")
@@ -33,37 +34,30 @@ def parse_semantic_model_input(input_value: str) -> tuple[str, str | list[str]]:
         cleaned = cleaned[1:-1]
     elif cleaned.startswith('"') and cleaned.endswith('"') and cleaned.count('"') == 2:
         cleaned = cleaned[1:-1]
-    
+
     # Split by comma to detect multiple entries
     entries = [entry.strip() for entry in cleaned.split(',')]
     # Remove empty entries
     entries = [entry for entry in entries if entry]
-    
+
     if not entries:
         raise ValueError("No valid semantic model entries found in input")
-    
-    # Detect type based on first entry (all must be same type)
-    is_file = entries[0].startswith('@')
-    
-    # Validate all entries are the same type
-    for entry in entries:
-        if entry.startswith('@') != is_file:
-            raise ValueError(
-                "Cannot mix file paths (starting with @) and view names in the same request. "
-                f"Found mixed types in input: {entries}"
-            )
-    
-    # Determine field name and return appropriate structure
+
+    # Single entry: use the singular field directly
     if len(entries) == 1:
-        if is_file:
+        if entries[0].startswith('@'):
             return 'semantic_model_file', entries[0]
         else:
             return 'semantic_view', entries[0]
-    else:
-        if is_file:
-            return 'semantic_model_files', entries
+
+    # Multiple entries: use the semantic_models array (supports mixed types)
+    models = []
+    for entry in entries:
+        if entry.startswith('@'):
+            models.append({'semantic_model_file': entry})
         else:
-            return 'semantic_views', entries
+            models.append({'semantic_view': entry})
+    return 'semantic_models', models
 
 
 
@@ -79,8 +73,7 @@ def ask_cortex_analyst(
         semantic_model: The semantic model file path or view name. Can be:
             - A single file path (starts with @): '@DB.SCHEMA.STAGE/file.yaml'
             - A single view name fully qualified: 'DB.SCHEMA.VIEW_NAME'
-            - Multiple file paths (comma-separated): '@DB.SCHEMA.STAGE/file1.yaml, @DB.SCHEMA.STAGE/file2.yaml'
-            - Multiple view names (comma-separated): 'DB.SCHEMA.VIEW1, DB.SCHEMA.VIEW2'
+            - Multiple entries (comma-separated, can mix types): '@DB.SCHEMA.STAGE/file.yaml, DB.SCHEMA.VIEW_NAME'
         message: The message to send.
 
     Returns:
