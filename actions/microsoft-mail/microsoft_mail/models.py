@@ -86,3 +86,21 @@ class CategoryList(BaseModel):
     categories: Annotated[
         List[Category], Field(description="A list of categories")
     ] = []
+
+
+class EmailCategoryAssignment(BaseModel):
+    """Assignment of a category to an email."""
+
+    email_id: str = Field(description="The unique identifier of the email")
+    category_name: str = Field(description="Display name of the category to add")
+    category_color: Optional[str] = Field(
+        default="Preset19",
+        description="Color of the category (e.g., Preset19, Preset0, etc.)",
+    )
+
+
+class EmailCategoryRemoval(BaseModel):
+    """Removal of a category from an email."""
+
+    email_id: str = Field(description="The unique identifier of the email")
+    category_name: str = Field(description="The name of the category to remove")
