@@ -1,5 +1,6 @@
 import json
 import os
+import time
 from pathlib import Path
 from typing import List, Optional
 
@@ -10,6 +11,58 @@ from sema4ai.actions import ActionError, Response, Secret, action
 from urllib3.exceptions import HTTPError
 
 load_dotenv(Path(__file__).absolute().parent / "devdata" / ".env")
+
+def retry_with_exponential_backoff(func, max_retries=3, base_delay=1.0, max_delay=5.0):
+    """
+    Retry a function with exponential backoff for connection-related exceptions.
+    
+    Args:
+        func: The function to retry
+        max_retries: Maximum number of retry attempts (default: 3)
+        base_delay: Base delay in seconds for exponential backoff (default: 1.0)
+        max_delay: Maximum delay in seconds (default: 5.0)
+    
+    Returns:
+        The result of the function call
+        
+    Raises:
+        ActionError: If all retries are exhausted
+    """
+    last_exception = None
+    
+    for attempt in range(max_retries + 1):
+        try:
+            return func()
+        except (HTTPError, Exception) as e:
+            last_exception = e
+            
+            # Check if it's a connection-related error that should be retried
+            error_str = str(e).lower()
+            is_connection_error = (
+                "remote end closed connection" in error_str or
+                "connection aborted" in error_str or
+                "remotedisconnected" in error_str or
+                "connection reset" in error_str or
+                "broken pipe" in error_str
+            )
+            
+            if not is_connection_error and not isinstance(e, HTTPError):
+                # Not a retryable error, raise immediately
+                raise ActionError(f"Non-retryable error occurred: {str(e)}")
+            
+            if attempt == max_retries:
+                # Last attempt failed, raise the exception
+                if is_connection_error:
+                    raise ActionError(f"Remote connection failed after {max_retries} retries: {str(e)}")
+                else:
+                    raise ActionError(f"HTTP error occurred: {str(e)}")
+            
+            # Calculate delay with exponential backoff
+            delay = min(base_delay * (2 ** attempt), max_delay)
+            time.sleep(delay)
+    
+    # This should never be reached, but just in case
+    raise ActionError(f"Unexpected error: {str(last_exception)}")
 
 
 # Define Pydantic models for the response
@@ -81,7 +134,7 @@ def search_google(q: str, num: int, api_key: Secret) -> Response[SearchResult]:
     if not api_key:
         raise ActionError("API key is required but not provided")
 
-    try:
+    def make_request():
         headers = {"X-API-KEY": api_key, "Content-Type": "application/json"}
         payload = json.dumps({"q": q, "num": num})
 
@@ -92,10 +145,12 @@ def search_google(q: str, num: int, api_key: Secret) -> Response[SearchResult]:
         )
 
         response.raise_for_status()
+        return response
 
+    try:
+        # Use retry logic with exponential backoff
+        response = retry_with_exponential_backoff(make_request)
         search_result = SearchResult(**response.json())
         return Response(result=search_result)
-    except HTTPError as e:
-        raise ActionError(f"HTTP error occurred: {str(e)}")
     except Exception as e:
         raise ActionError(f"An unexpected error occurred: {str(e)}")
