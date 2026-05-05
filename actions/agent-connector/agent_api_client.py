@@ -250,9 +250,12 @@ class _AgentAPIClient:
         success_codes: tuple[int, ...] = (200, 201, 204),
     ) -> sema4ai_http.ResponseWrapper:
         """Make a request to an explicit base URL (used for Work Item API)."""
-        if not base_url.endswith("/"):
-            base_url += "/"
-        url = urljoin(base_url, path)
+        if path:
+            if not base_url.endswith("/"):
+                base_url += "/"
+            url = urljoin(base_url, path)
+        else:
+            url = base_url
 
         request_headers = copy(headers) if headers else {}
         request_headers.update(self._get_auth_header())
@@ -292,31 +295,39 @@ class _AgentAPIClient:
         success_codes: tuple[int, ...] = (200, 201, 204),
     ) -> tuple[sema4ai_http.ResponseWrapper, str]:
         fallback_url = self._get_work_item_fallback_url(base_url)
-        try:
-            return (
-                self._request_with_base_url(
-                    base_url,
-                    path,
-                    method=method,
-                    json_data=json_data,
-                    headers=headers,
-                    success_codes=success_codes,
-                ),
-                base_url,
-            )
-        except AgentApiClientException as exc:
-            if fallback_url and "HTTP 404" in str(exc):
+        url_bases = [base_url]
+        if fallback_url:
+            url_bases.append(fallback_url)
+        # For the empty-path creation POST, some servers need a trailing slash
+        # (local Python) while others reject it (cloud Express). Try both variants
+        # of each base URL so a single code path works everywhere.
+        if not path:
+            candidates = [
+                variant
+                for u in url_bases
+                for variant in (u.rstrip("/") + "/", u.rstrip("/"))
+            ]
+        else:
+            candidates = url_bases
+        last_exc: AgentApiClientException | None = None
+        for i, url in enumerate(candidates):
+            try:
                 response = self._request_with_base_url(
-                    fallback_url,
+                    url,
                     path,
                     method=method,
                     json_data=json_data,
                     headers=headers,
                     success_codes=success_codes,
                 )
-                print(f"Work Item API URL fallback to: {fallback_url}")
-                return response, fallback_url
-            raise
+                if i > 0:
+                    print(f"Work Item API URL fallback to: {url}")
+                return response, url
+            except AgentApiClientException as exc:
+                if "HTTP 404" not in str(exc):
+                    raise
+                last_exc = exc
+        raise last_exc  # type: ignore[misc]
 
     def _post_work_item_upload(
         self, base_url: str, fields: dict, headers: dict | None
@@ -386,7 +397,8 @@ class _AgentAPIClient:
             base = normalized.split("/api/v1")[0] + "/api/v2"
             return f"{base}/work-items"
         if "/api/" not in normalized:
-            return f"{normalized}/api/v2/work-items"
+            version = "v2" if self.is_v2 else "v1"
+            return f"{normalized}/api/{version}/work-items"
         return None
 
     def _get_all_pages(self, endpoint: str) -> list:

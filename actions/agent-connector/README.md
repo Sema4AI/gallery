@@ -142,7 +142,7 @@ All actions require two Secret parameters:
 | `sema4_api_key` | API key for the Sema4 API. Use `LOCAL` when running in Studio or SDK. |
 | `sema4_api_url` | Base URL for the Sema4 API. Use `LOCAL` when running in Studio or SDK. |
 
-- **Cloud Environment**: Provide your API key and the deployment base URL (e.g. `https://your-tenant.sema4.ai`).
+- **Cloud Environment**: Provide your API key and the **full workspace base URL including the tenant path** (e.g. `https://your-deployment.sema4ai.work/tenants/{tenant-id}/api/v1`). Using a URL without the tenant segment will cause work-item creation to fail.
 - **Snowflake Environment**: Provide the Snowflake endpoint URL — the connector automatically uses `Snowflake Token` authentication and normalises the URL to end with `/api/v1`.
 - **Local Development**: Use `LOCAL` for both values — the connector discovers the agent server automatically via environment variable or PID file.
 
