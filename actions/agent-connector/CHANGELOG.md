@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+### [4.3.1] - 2026-05-05
+
+### Fixed
+
+- Work-item creation now works across all deployment environments without manual URL tweaking:
+  - **Cloud (Express)**: trailing slash on the creation endpoint caused a 404; the connector now tries both slash and no-slash variants and picks the one that succeeds
+  - **Local development**: v2 work-item endpoint (with trailing slash) is tried first, falling back through v1 variants
+  - **Snowflake**: unchanged behaviour — v1 with trailing slash continues to work
+- `_request_with_base_url` no longer appends a trailing slash when the request path is empty, preventing double-slash URLs on bare-endpoint POSTs
+
+### Changed
+
+- `sema4_api_url` for cloud deployments must be the full tenant-scoped workspace URL (e.g. `https://your-deployment.sema4ai.work/tenants/{tenant-id}/api/v1`); updated README to document this requirement
+
 ### [4.3.0] - 2026-03-20
 
 ### Added
