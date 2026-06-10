@@ -30,6 +30,7 @@ The easiest way to interact with agents is using the `ask_agent` function:
 **Work Items:**
 - Create a Work Item for an agent by name
 - Create multiple Work Items in a single batch call
+- Create one Work Item per row from a dataframe available in the current thread
 - Get the current conversation ID (for passing back to a parent agent)
 
 ## Example Usage
@@ -95,6 +96,18 @@ Create work items for "Invoice Agent":
 ```
 
 The `message` field is automatically merged into the payload so the worker receives it as `payload["message"]`.
+
+### Create Work Items From a Dataframe
+
+Use `create_work_items_from_dataframe` to dispatch one Work Item per row of a dataframe that is available in the current thread. Each row becomes the payload for a separate Work Item.
+
+```
+Create work items for "Invoice Agent" using the dataframe "invoices"
+```
+
+> Created 5 work items for "Invoice Agent" from dataframe "invoices".
+
+The column names become the payload keys, so a dataframe with columns `invoice_id`, `amount`, `due_date` will produce payloads like `{"invoice_id": "IN-001", "amount": 250.00, "due_date": "2026-06-01"}`.
 
 ### Pass the Current Conversation ID to Worker Agents
 

@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+### [4.3.3] - 2026-05-08
+
+### Added
+
+- New `create_work_items_from_dataframe()` action: creates one Work Item per row of a named dataframe for a specified agent
+
+### Fixed
+
+- `create_work_items_from_dataframe()` works across all server versions by bypassing the library's `get_data_frame()`, which is incompatible with servers that return dataframe rows as a list of dicts instead of `{"columns": [...], "rows": [[...]]}`:
+  - Tries `threads/{thread_id}/data-frames/{name}` first (newer local servers)
+  - Falls back to `data-frames/{name}` (cloud servers, where thread context is carried via the invocation header)
+  - Logs the full URL attempted and outcome for each candidate path
+
 ### [4.3.1] - 2026-05-05
 
 ### Fixed

@@ -452,3 +452,112 @@ def create_work_item_for_agent(
             agent_id=agent.id,
         )
     )
+
+
+def _fetch_dataframe(name: str):
+    """Fetch a dataframe from the agent server, handling multiple server versions.
+
+    Different server versions use different endpoint paths and response formats:
+    - Newer servers: threads/{thread_id}/data-frames/{name} → list of row dicts
+    - Cloud servers: data-frames/{name} → list of row dicts (thread from context header)
+    - Older servers: data-frames/{name} → {"columns": [...], "rows": [[...]]}
+    """
+    from sema4ai.actions import Table
+    from sema4ai.actions.agent._client import (
+        _AgentAPIClient as _AgentServerClient,
+        AgentApiClientException,
+    )
+
+    thread_id = get_thread_id()
+    server_client = _AgentServerClient()
+
+    # Try thread-scoped path first (newer local servers), then fall back to
+    # the flat path (cloud/older servers that use invocation context for thread).
+    candidates = [
+        f"threads/{thread_id}/data-frames/{name}",
+        f"data-frames/{name}",
+    ]
+    last_exc = None
+    data = None
+    for path in candidates:
+        full_url = f"{server_client.api_url}{path}"
+        print(f"[_fetch_dataframe] GET {full_url}")
+        try:
+            response = server_client.request(path, method="GET")
+            data = response.json()
+            print(f"[_fetch_dataframe] success: {path}, response type={type(data).__name__}, len={len(data) if isinstance(data, (list, dict)) else 'n/a'}")
+            break
+        except AgentApiClientException as e:
+            print(f"[_fetch_dataframe] failed: {path} → {e}")
+            if e.status_code != 404:
+                raise ActionError(f"Failed to fetch dataframe '{name}': {e}") from e
+            last_exc = e
+
+    if data is None:
+        raise ActionError(f"Dataframe '{name}' not found") from last_exc
+
+    if isinstance(data, dict):
+        return Table(
+            columns=data["columns"],
+            rows=data["rows"],
+            name=data.get("name"),
+            description=data.get("description"),
+        )
+    if isinstance(data, list):
+        if not data:
+            return Table(columns=[], rows=[])
+        first = data[0]
+        if isinstance(first, dict):
+            columns = list(first.keys())
+            rows = [[row.get(col) for col in columns] for row in data]
+        else:
+            rows = data
+            columns = [str(i) for i in range(len(first) if first else 0)]
+        return Table(columns=columns, rows=rows)
+    raise ActionError(f"Unexpected response format for dataframe '{name}'")
+
+
+@action
+def create_work_items_from_dataframe(
+    dataframe_name: str,
+    agent_name: str,
+    sema4_api_key: Secret,
+    sema4_api_url: Secret,
+) -> Response[list[WorkItemResponse]]:
+    """Creates one Work Item per row of a named dataframe for a specific agent.
+
+    Args:
+        dataframe_name: Name of the dataframe available in the current thread
+        agent_name: Name of the agent to receive the work items
+        sema4_api_key: The API key for the Sema4 API. Use LOCAL if in Studio or SDK!
+        sema4_api_url: The base URL for the Sema4 API. Use LOCAL if in Studio or SDK!
+
+    Returns:
+        Response containing a list of created Work Item details, one per row
+    """
+    table = _fetch_dataframe(dataframe_name)
+
+    client = _make_client(sema4_api_key, sema4_api_url)
+    agent_result = resolve_agent_by_name(client, agent_name)
+    if not agent_result.found:
+        raise ActionError(agent_result.message)
+
+    wi_url = sema4_api_url.value if sema4_api_url.value.upper() != "LOCAL" else None
+    agent = agent_result.agent
+
+    results = []
+    for row in table.rows:
+        payload = dict(zip(table.columns, row))
+        work_item = client.create_work_item(
+            agent_id=agent.id,
+            payload=payload,
+            work_item_api_url=wi_url,
+        )
+        results.append(
+            WorkItemResponse(
+                work_item=work_item,
+                agent_name=agent.name,
+                agent_id=agent.id,
+            )
+        )
+    return Response(result=results)
