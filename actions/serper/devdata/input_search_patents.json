@@ -1,0 +1,32 @@
+{
+    "inputs": [
+        {
+            "inputName": "Search for AI patents",
+            "inputValue": {
+                "q": "artificial intelligence patent",
+                "num": 5,
+                "api_key": ""
+            }
+        }
+    ],
+    "metadata": {
+        "actionName": "search_patents",
+        "actionRelativePath": "actions.py",
+        "schemaDescription": [
+            "q: string: The patent search query.",
+            "num: integer: Number of results (default: 10)."
+        ],
+        "managedParamsSchemaDescription": {
+            "api_key": {
+                "type": "Secret",
+                "description": "The API key for authentication."
+            }
+        },
+        "inputFileVersion": "v3",
+        "kind": "action",
+        "actionSignature": "action/args: 'q: str, api_key: Secret, num: int = 10, page: int = 1'"
+    }
+}
+
+
+
