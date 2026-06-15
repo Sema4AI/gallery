@@ -17,8 +17,8 @@ agent-package:
     model:
       provider: OpenAI
       name: gpt-4o
-    version: 1.0.2
-    architecture: agent
+    version: 1.1.0
+    architecture: agent_platform.architectures.experimental_1
     reasoning: disabled
     runbook: runbook.md
     action-packages:
