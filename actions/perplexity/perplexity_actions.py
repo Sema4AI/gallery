@@ -38,6 +38,7 @@ def search(api_key: Secret, query: str) -> Response[SearchResult]:
     headers = {
         "Authorization": f"Bearer {api_key.value}",
         "Content-Type": "application/json",
+        "X-Pplx-Integration": "sema4ai",
     }
 
     response = sema4ai_http.post(
